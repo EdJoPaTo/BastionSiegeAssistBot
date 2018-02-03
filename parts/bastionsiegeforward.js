@@ -44,12 +44,17 @@ bot.on('text', ctx => {
 
     const minutesNeeded = calcMinutesNeeded(cost, information.townhall, information.houses, information.sawmill, information.mine, information.gold, information.wood, information.stone)
     if (minutesNeeded === 0) {
-      text += '✅\n'
-      continue
+      text += '✅'
+    } else {
+      text += `${formatTime(minutesNeeded)} needed`
     }
 
     const neededMaterialString = getNeededMaterialString(cost, information.gold, information.wood, information.stone)
-    text += `${formatTime(minutesNeeded)} needed (${neededMaterialString})\n`
+    if (neededMaterialString.length > 0) {
+      text += ` (${neededMaterialString})\n`
+    } else {
+      text += '\n'
+    }
   }
 
   const fullStorage = {
