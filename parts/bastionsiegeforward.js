@@ -59,9 +59,9 @@ bot.on('text', ctx => {
   text += '\n'
 
   const goldCapacity = calcGoldCapacity(information.townhall)
-  const goldFillTimeNeeded = goldCapacity / calcGoldIncome(information.townhall, information.houses)
-  const woodFillTimeNeeded = storageCapacity / calcProduction(information.sawmill)
-  const stoneFillTimeNeeded = storageCapacity / calcProduction(information.mine)
+  const goldFillTimeNeeded = (goldCapacity - information.gold) / calcGoldIncome(information.townhall, information.houses)
+  const woodFillTimeNeeded = (storageCapacity - information.wood) / calcProduction(information.sawmill)
+  const stoneFillTimeNeeded = (storageCapacity - information.stone) / calcProduction(information.mine)
   const foodProduction = calcProductionFood(information.farm, information.houses)
 
   text += `${emoji.gold} full in ${formatTime(goldFillTimeNeeded)} (${formatNumberShort(goldCapacity - information.gold)}${emoji.gold})\n`
@@ -69,7 +69,7 @@ bot.on('text', ctx => {
   text += `${emoji.stone} full in ${formatTime(stoneFillTimeNeeded)} (${formatNumberShort(storageCapacity - information.stone)}${emoji.stone})\n`
 
   if (foodProduction > 0) {
-    const foodFillTimeNeeded = storageCapacity / calcProduction(information.mine)
+    const foodFillTimeNeeded = (storageCapacity - information.food) / calcProduction(information.mine)
     text += `${emoji.food} full in ${formatTime(foodFillTimeNeeded)} (${formatNumberShort(storageCapacity - information.food)}${emoji.food})\n`
   } else if (foodProduction < 0) {
     const foodEmptyTimeNeeded = information.food / -foodProduction
