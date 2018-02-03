@@ -20,9 +20,7 @@ const localSession = new LocalSession({
   format: {
     serialize: (obj) => JSON.stringify(obj, null, 2), // null & 2 for pretty-formatted JSON
     deserialize: (str) => JSON.parse(str)
-  },
-  // We will use `messages` array in our database to store user messages using exported lowdb instance from LocalSession via Telegraf Context
-  state: { messages: [] }
+  }
 })
 bot.use(localSession.middleware())
 
