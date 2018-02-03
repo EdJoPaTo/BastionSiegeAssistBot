@@ -2,13 +2,26 @@ const Telegraf = require('telegraf')
 
 const { Extra, Markup } = Telegraf
 
-const { detectgamescreen } = require('../lib/detectgamescreen')
+const { detectgamescreen, getScreenInformation } = require('../lib/detectgamescreen')
 
 const bot = new Telegraf.Composer()
 
+bot.on('text', (ctx, next) => {
+  if (!ctx.session.gameInformation) {
+    ctx.session.gameInformation = {}
+  }
+
+  const newInformation = getScreenInformation(ctx.message.text)
+  ctx.session.gameInformation = Object.assign(ctx.session.gameInformation, newInformation)
+  return next()
+})
+
 bot.on('text', ctx => {
-  console.log('bastion siege message', ctx.message.text)
-  return ctx.reply(detectgamescreen(ctx.message))
+  console.log('bastion siege message')
+  const screentype = detectgamescreen(ctx.message.text)
+  const information = getScreenInformation(ctx.message.text)
+
+  return ctx.reply(screentype + '\n' + JSON.stringify(ctx.session.gameInformation, null, '  '))
 })
 
 const abstraction = new Telegraf.Composer()
