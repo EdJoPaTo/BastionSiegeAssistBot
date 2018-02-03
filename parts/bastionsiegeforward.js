@@ -2,7 +2,7 @@ const Telegraf = require('telegraf')
 
 const { emoji, getScreenInformation } = require('../lib/gamescreen')
 const { formatNumberShort, formatTime } = require('../lib/numberFunctions')
-const { calcGoldCapacity, calcBuildingCost, calcStorageCapacity, calcMinutesNeeded } = require('../lib/siegemath')
+const { calcGoldCapacity, calcBuildingCost, calcStorageCapacity, calcStorageLevelNeededForUpgrade, calcMinutesNeeded } = require('../lib/siegemath')
 
 const bot = new Telegraf.Composer()
 
@@ -38,7 +38,7 @@ bot.on('text', ctx => {
 
     const cost = calcBuildingCost(buildingName, information[buildingName])
     if (cost.wood > storageCapacity || cost.stone > storageCapacity) {
-      text += '⚠️ storage upgrade needed first\n'
+      text += `⚠️ storage level ${calcStorageLevelNeededForUpgrade(buildingName, information[buildingName] + 1)} needed\n`
       continue
     }
 
