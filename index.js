@@ -2,8 +2,6 @@ const fs = require('fs')
 const LocalSession = require('telegraf-session-local')
 const Telegraf = require('telegraf')
 
-const { Extra, Markup } = Telegraf
-
 const bastionsiegeforward = require('./parts/bastionsiegeforward')
 
 const tokenFilePath = process.env.NODE_ENV === 'production' ? process.env.npm_package_config_tokenpath : process.env.npm_package_config_tokenpathdebug
