@@ -2,7 +2,7 @@ const Telegraf = require('telegraf')
 
 const { emoji, getScreenInformation } = require('../lib/gamescreen')
 const { formatNumberShort, formatTime } = require('../lib/numberFunctions')
-const { calcGoldCapacity, calcBuildingCost, calcStorageCapacity, calcStorageLevelNeededForUpgrade, calcMinutesNeeded } = require('../lib/siegemath')
+const { calcGoldCapacity, calcGoldIncome, calcBuildingCost, calcProduction, calcProductionFood, calcStorageCapacity, calcStorageLevelNeededForUpgrade, calcMinutesNeeded } = require('../lib/siegemath')
 
 const bot = new Telegraf.Composer()
 
@@ -56,18 +56,27 @@ bot.on('text', ctx => {
       text += '\n'
     }
   }
+  text += '\n'
 
-  const fullStorage = {
-    gold: calcGoldCapacity(information.townhall),
-    wood: storageCapacity,
-    stone: storageCapacity
+  const goldCapacity = calcGoldCapacity(information.townhall)
+  const goldFillTimeNeeded = goldCapacity / calcGoldIncome(information.townhall, information.houses)
+  const woodFillTimeNeeded = storageCapacity / calcProduction(information.sawmill)
+  const stoneFillTimeNeeded = storageCapacity / calcProduction(information.mine)
+  const foodProduction = calcProductionFood(information.farm, information.houses)
+
+  text += `${emoji.gold} full in ${formatTime(goldFillTimeNeeded)} (${formatNumberShort(goldCapacity - information.gold)}${emoji.gold})\n`
+  text += `${emoji.wood} full in ${formatTime(woodFillTimeNeeded)} (${formatNumberShort(storageCapacity - information.wood)}${emoji.wood})\n`
+  text += `${emoji.stone} full in ${formatTime(stoneFillTimeNeeded)} (${formatNumberShort(storageCapacity - information.stone)}${emoji.stone})\n`
+
+  if (foodProduction > 0) {
+    const foodFillTimeNeeded = storageCapacity / calcProduction(information.mine)
+    text += `${emoji.food} full in ${formatTime(foodFillTimeNeeded)} (${formatNumberShort(storageCapacity - information.food)}${emoji.food})\n`
+  } else if (foodProduction < 0) {
+    const foodEmptyTimeNeeded = information.food / -foodProduction
+    text += `${emoji.food} empty in ${formatTime(foodEmptyTimeNeeded)} (${formatNumberShort(information.food)}${emoji.food})\n`
   }
-  const storageFillTimeNeeded = calcMinutesNeeded(fullStorage, information.townhall, information.houses, information.sawmill, information.mine, information.gold, information.wood, information.stone)
 
-  const neededMaterialString = getNeededMaterialString(fullStorage, information.gold, information.wood, information.stone)
-  text += `\nstorages full in ${formatTime(storageFillTimeNeeded)} (${neededMaterialString})\n`
-
-  text += '\n\n🔜 in order to increase accuracy provide me updated resources or buildings of your game'
+  text += '\n🔜 in order to increase accuracy provide me updated resources or buildings of your game'
   return ctx.reply(text)
 })
 
