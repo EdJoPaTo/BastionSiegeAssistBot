@@ -1,0 +1,1 @@
+This bot can calculate times you need to get the resources for a bulding upgrade in Bastion Siege.
