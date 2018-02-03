@@ -14,6 +14,8 @@ bot.telegram.getMe().then((botInfo) => {
 })
 
 const localSession = new LocalSession({
+  // Database name/path, where sessions will be located (default: 'sessions.json')
+  database: 'persist/sessions.json',
   // Format of storage/database (default: JSON.stringify / JSON.parse)
   format: {
     serialize: (obj) => JSON.stringify(obj, null, 2), // null & 2 for pretty-formatted JSON

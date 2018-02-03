@@ -4,5 +4,5 @@ botfather-settings/userpic.png
 node_modules
 
 # botfiles
-sessions.json
+persist
 token.txt

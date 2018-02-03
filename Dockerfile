@@ -1,6 +1,6 @@
 FROM node:9-alpine
 WORKDIR /app
-VOLUME /app/tmp
+VOLUME /app/persist
 
 ENV NODE_ENV=production
 ADD package.json .
