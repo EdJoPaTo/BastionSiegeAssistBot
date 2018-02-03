@@ -1,7 +1,7 @@
 const Telegraf = require('telegraf')
 
 const { emoji, getScreenInformation } = require('../lib/gamescreen')
-const { formatNumberShort } = require('../lib/numberFunctions')
+const { formatNumberShort, formatTime } = require('../lib/numberFunctions')
 const { calcGoldCapacity, calcBuildingCost, calcStorageCapacity, calcMinutesNeeded } = require('../lib/siegemath')
 
 const bot = new Telegraf.Composer()
@@ -49,10 +49,9 @@ bot.on('text', ctx => {
     }
 
     const neededMaterialString = getNeededMaterialString(cost, information.gold, information.wood, information.stone)
-    text += `${minutesNeeded} minutes needed (${neededMaterialString})\n`
+    text += `${formatTime(minutesNeeded)} needed (${neededMaterialString})\n`
   }
 
-  text += '\nuntil storage full:\n'
   const fullStorage = {
     gold: calcGoldCapacity(information.townhall),
     wood: storageCapacity,
@@ -61,7 +60,7 @@ bot.on('text', ctx => {
   const storageFillTimeNeeded = calcMinutesNeeded(fullStorage, information.townhall, information.houses, information.sawmill, information.mine, information.gold, information.wood, information.stone)
 
   const neededMaterialString = getNeededMaterialString(fullStorage, information.gold, information.wood, information.stone)
-  text += `${storageFillTimeNeeded} minutes needed (${neededMaterialString})\n`
+  text += `\nstorages full in ${formatTime(storageFillTimeNeeded)} (${neededMaterialString})\n`
 
   text += '\n\n🔜 in order to increase accuracy provide me updated resources or buildings of your game'
   return ctx.reply(text)
