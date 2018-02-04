@@ -22,18 +22,18 @@ bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, (ctx, next) => {
 
   if (newInformation.townhall) {
     newInformation.buildingTimestamp = timestamp
-    if (ctx.session.gameInformation.buildingTimestamp > timestamp) {
-      return ctx.reply('I already know something newer. I will ignore this one.')
+    if (ctx.session.gameInformation.buildingTimestamp >= timestamp) {
+      return ctx.reply('Thats not new to me. I will just ignore it.')
     }
   } else if (newInformation.gold) {
     newInformation.resourceTimestamp = timestamp
-    if (ctx.session.gameInformation.resourceTimestamp > timestamp) {
-      return ctx.reply('I already know something newer. I will ignore this one.')
+    if (ctx.session.gameInformation.resourceTimestamp >= timestamp) {
+      return ctx.reply('Thats not new to me. I will just ignore it.')
     }
   } else if (newInformation.trebuchet) {
     newInformation.workshopTimestamp = timestamp
-    if (ctx.session.gameInformation.workshopTimestamp > timestamp) {
-      return ctx.reply('I already know something newer. I will ignore this one.')
+    if (ctx.session.gameInformation.workshopTimestamp >= timestamp) {
+      return ctx.reply('Thats not new to me. I will just ignore it.')
     }
   }
 
