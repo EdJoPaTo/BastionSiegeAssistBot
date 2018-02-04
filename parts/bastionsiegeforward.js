@@ -57,6 +57,7 @@ function generateStatsText(information) {
   const buildingAgeMinutes = Math.floor((currentTimestamp - information.buildingTimestamp) / 60)
 
   const storageCapacity = calcStorageCapacity(information.storage)
+  const currentResources = { gold: information.gold, wood: information.wood, stone: information.stone, food: information.food }
 
   let text = ''
 
@@ -73,14 +74,14 @@ function generateStatsText(information) {
       continue
     }
 
-    const minutesNeeded = calcMinutesNeeded(cost, information.townhall, information.houses, information.sawmill, information.mine, information.gold, information.wood, information.stone)
+    const minutesNeeded = calcMinutesNeeded(cost, information.townhall, information.houses, information.sawmill, information.mine, currentResources)
     if (minutesNeeded === 0) {
       text += '✅'
     } else {
       text += `${formatTime(minutesNeeded)} needed`
     }
 
-    const neededMaterialString = getNeededMaterialString(cost, information.gold, information.wood, information.stone)
+    const neededMaterialString = getNeededMaterialString(cost, currentResources)
     if (neededMaterialString.length > 0) {
       text += ` (${neededMaterialString})\n`
     } else {
@@ -117,10 +118,10 @@ function generateStatsText(information) {
   return text
 }
 
-function getNeededMaterialString(cost, currentGold, currentWood, currentStone) {
-  const goldNeeded = cost.gold - currentGold
-  const woodNeeded = cost.wood - currentWood
-  const stoneNeeded = cost.stone - currentStone
+function getNeededMaterialString(cost, currentResources) {
+  const goldNeeded = cost.gold - currentResources.gold
+  const woodNeeded = cost.wood - currentResources.wood
+  const stoneNeeded = cost.stone - currentResources.stone
 
   const neededMaterial = []
   if (goldNeeded > 0) { neededMaterial.push(`${formatNumberShort(goldNeeded, true)}${emoji.gold}`) }
