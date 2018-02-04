@@ -37,6 +37,10 @@ bot.on('text', ctx => {
     return ctx.reply('please forward me a screen from the game showing your current resources')
   }
 
+  const currentTimestamp = Math.floor(Date.now() / 1000)
+  const resourceAgeMinutes = Math.floor((currentTimestamp - information.resourceTimestamp) / 60)
+  const buildingAgeMinutes = Math.floor((currentTimestamp - information.buildingTimestamp) / 60)
+
   const storageCapacity = calcStorageCapacity(information.storage)
 
   let text = ''
@@ -88,7 +92,14 @@ bot.on('text', ctx => {
     text += `${emoji.food} empty in ${formatTime(foodEmptyTimeNeeded)} (${formatNumberShort(information.food)}${emoji.food})\n`
   }
 
-  text += '\n🔜 in order to increase accuracy provide me updated resources or buildings of your game'
+  text += '\n'
+  if (resourceAgeMinutes > 30) {
+    text += '⚠️ My knowledge of your ressources is a bit old. This leads to inaccuracy. Consider updating me with a new forwarded resource screen.\n'
+  }
+  if (buildingAgeMinutes > 60 * 5) {
+    text += '⚠️ My knowledge of your buildings is a bit old. This leads to inaccuracy. Consider updating me with a new forwarded building screen.\n'
+  }
+
   return ctx.reply(text)
 })
 
