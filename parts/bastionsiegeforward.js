@@ -11,7 +11,17 @@ bot.on('text', (ctx, next) => {
     ctx.session.gameInformation = {}
   }
 
+  const timestamp = ctx.message.forward_date
   const newInformation = getScreenInformation(ctx.message.text)
+
+  if (newInformation.townhall) {
+    newInformation.buildingTimestamp = timestamp
+  } else if (newInformation.gold) {
+    newInformation.resourceTimestamp = timestamp
+  } else if (newInformation.trebuchet) {
+    newInformation.workshopTimestamp = timestamp
+  }
+
   ctx.session.gameInformation = Object.assign(ctx.session.gameInformation, newInformation)
   return next()
 })
@@ -21,8 +31,10 @@ const buildingsToShow = ['townhall', 'storage', 'houses', 'barracks', 'wall', 't
 bot.on('text', ctx => {
   const information = ctx.session.gameInformation
 
-  if (!information.townhall) {
+  if (!information.buildingTimestamp) {
     return ctx.reply('please forward me the building screen from your game')
+  } else if (!information.resourceTimestamp) {
+    return ctx.reply('please forward me a screen from the game showing your current resources')
   }
 
   const storageCapacity = calcStorageCapacity(information.storage)
