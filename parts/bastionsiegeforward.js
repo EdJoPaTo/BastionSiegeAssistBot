@@ -99,7 +99,7 @@ function generateStatsText(information) {
     if (minutesNeeded === 0) {
       text += '✅'
     } else {
-      text += `${formatTime(minutesNeeded)},`
+      text += `${formatTime(minutesNeeded)}`
     }
 
     const neededMaterialString = getNeededMaterialString(cost, estimatedResources)
@@ -155,7 +155,7 @@ function getNeededMaterialString(cost, currentResources) {
   if (goldNeeded > 0) { neededMaterial.push(`${formatNumberShort(goldNeeded, true)}${emoji.gold}`) }
   if (woodNeeded > 0) { neededMaterial.push(`${formatNumberShort(woodNeeded, true)}${emoji.wood}`) }
   if (stoneNeeded > 0) { neededMaterial.push(`${formatNumberShort(stoneNeeded, true)}${emoji.stone}`) }
-  return neededMaterial.join(', ')
+  return neededMaterial.join(' ')
 }
 
 module.exports = bot
