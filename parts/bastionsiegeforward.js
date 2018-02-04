@@ -46,6 +46,12 @@ bot.on('text', ctx => {
     return ctx.reply('please forward me a screen from the game showing your current resources')
   }
 
+  const statsText = generateStatsText(information)
+
+  return ctx.reply(statsText)
+})
+
+function generateStatsText(information) {
   const currentTimestamp = Math.floor(Date.now() / 1000)
   const resourceAgeMinutes = Math.floor((currentTimestamp - information.resourceTimestamp) / 60)
   const buildingAgeMinutes = Math.floor((currentTimestamp - information.buildingTimestamp) / 60)
@@ -108,9 +114,8 @@ bot.on('text', ctx => {
   if (buildingAgeMinutes > 60 * 5) {
     text += '⚠️ My knowledge of your buildings is a bit old. This leads to inaccuracy. Consider updating me with a new forwarded building screen.\n'
   }
-
-  return ctx.reply(text)
-})
+  return text
+}
 
 function getNeededMaterialString(cost, currentGold, currentWood, currentStone) {
   const goldNeeded = cost.gold - currentGold
