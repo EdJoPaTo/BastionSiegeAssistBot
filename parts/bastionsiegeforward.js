@@ -16,10 +16,19 @@ bot.on('text', (ctx, next) => {
 
   if (newInformation.townhall) {
     newInformation.buildingTimestamp = timestamp
+    if (ctx.session.gameInformation.buildingTimestamp > timestamp) {
+      return ctx.reply('I already know something newer. I will ignore this one.')
+    }
   } else if (newInformation.gold) {
     newInformation.resourceTimestamp = timestamp
+    if (ctx.session.gameInformation.resourceTimestamp > timestamp) {
+      return ctx.reply('I already know something newer. I will ignore this one.')
+    }
   } else if (newInformation.trebuchet) {
     newInformation.workshopTimestamp = timestamp
+    if (ctx.session.gameInformation.workshopTimestamp > timestamp) {
+      return ctx.reply('I already know something newer. I will ignore this one.')
+    }
   }
 
   ctx.session.gameInformation = Object.assign(ctx.session.gameInformation, newInformation)
