@@ -63,7 +63,7 @@ bot.action('estimate', async ctx => {
   const newStats = generateStatsText(ctx.session.gameInformation)
   const oldStats = ctx.callbackQuery.message.text
 
-  if (newStats.localeCompare(oldStats) >= 0) { // not sure why not === 0, but seems like it works
+  if (compareStrAsSimpleOne(newStats, oldStats) === 0) {
     return ctx.answerCbQuery('thats already as good as I can estimate!')
   } else {
     await ctx.editMessageText(newStats, updateMarkup)
@@ -137,6 +137,13 @@ function generateStatsText(information) {
     text += '⚠️ My knowledge of your buildings is a bit old. This leads to inaccuracy. Consider updating me with a new forwarded building screen.\n'
   }
   return text
+}
+
+function compareStrAsSimpleOne(str1, str2) {
+  const tmp1 = str1.replace(/[^\w\d]/g, '')
+  const tmp2 = str2.replace(/[^\w\d]/g, '')
+
+  return tmp1.localeCompare(tmp2)
 }
 
 function getNeededMaterialString(cost, currentResources) {
