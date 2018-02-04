@@ -99,12 +99,12 @@ function generateStatsText(information) {
     if (minutesNeeded === 0) {
       text += '✅'
     } else {
-      text += `${formatTime(minutesNeeded)} needed`
+      text += `${formatTime(minutesNeeded)},`
     }
 
     const neededMaterialString = getNeededMaterialString(cost, estimatedResources)
     if (neededMaterialString.length > 0) {
-      text += ` (${neededMaterialString})\n`
+      text += ` ${neededMaterialString}\n`
     } else {
       text += '\n'
     }
