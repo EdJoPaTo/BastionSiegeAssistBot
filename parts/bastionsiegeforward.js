@@ -1,12 +1,18 @@
 const Telegraf = require('telegraf')
 
+const { Markup, Extra } = Telegraf
+
 const { emoji, getScreenInformation } = require('../lib/gamescreen')
 const { formatNumberShort, formatTime } = require('../lib/numberFunctions')
-const { calcGoldCapacity, calcGoldIncome, calcBuildingCost, calcProduction, calcProductionFood, calcStorageCapacity, calcStorageLevelNeededForUpgrade, calcMinutesNeeded } = require('../lib/siegemath')
+const { calcGoldCapacity, calcGoldIncome, calcBuildingCost, calcProduction, calcProductionFood, calcStorageCapacity, calcStorageLevelNeededForUpgrade, calcMinutesNeeded, estimateResourcesAfterTimespan } = require('../lib/siegemath')
 
 const bot = new Telegraf.Composer()
 
-bot.on('text', (ctx, next) => {
+function isForwardedFromBastionSiege(ctx) {
+  return ctx && ctx.message && ctx.message.forward_from && ctx.message.forward_from.id === 252148344
+}
+
+bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, (ctx, next) => {
   if (!ctx.session.gameInformation) {
     ctx.session.gameInformation = {}
   }
@@ -33,11 +39,14 @@ bot.on('text', (ctx, next) => {
 
   ctx.session.gameInformation = Object.assign(ctx.session.gameInformation, newInformation)
   return next()
-})
+}))
 
 const buildingsToShow = ['townhall', 'storage', 'houses', 'barracks', 'wall', 'trebuchet']
+const updateMarkup = Extra.markup(Markup.inlineKeyboard([
+  Markup.callbackButton('estimate current situation', 'estimate')
+]))
 
-bot.on('text', ctx => {
+bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, ctx => {
   const information = ctx.session.gameInformation
 
   if (!information.buildingTimestamp) {
@@ -47,8 +56,19 @@ bot.on('text', ctx => {
   }
 
   const statsText = generateStatsText(information)
+  return ctx.reply(statsText, updateMarkup)
+}))
 
-  return ctx.reply(statsText)
+bot.action('estimate', async ctx => {
+  const newStats = generateStatsText(ctx.session.gameInformation)
+  const oldStats = ctx.callbackQuery.message.text
+
+  if (newStats.localeCompare(oldStats) >= 0) { // not sure why not === 0, but seems like it works
+    return ctx.answerCbQuery('thats already as good as I can estimate!')
+  } else {
+    await ctx.editMessageText(newStats, updateMarkup)
+    return ctx.answerCbQuery('updated!')
+  }
 })
 
 function generateStatsText(information) {
@@ -58,6 +78,7 @@ function generateStatsText(information) {
 
   const storageCapacity = calcStorageCapacity(information.storage)
   const currentResources = { gold: information.gold, wood: information.wood, stone: information.stone, food: information.food }
+  const estimatedResources = estimateResourcesAfterTimespan(currentResources, information.townhall, information.storage, information.houses, information.sawmill, information.mine, information.farm, resourceAgeMinutes)
 
   let text = ''
 
@@ -74,14 +95,14 @@ function generateStatsText(information) {
       continue
     }
 
-    const minutesNeeded = calcMinutesNeeded(cost, information.townhall, information.houses, information.sawmill, information.mine, currentResources)
+    const minutesNeeded = calcMinutesNeeded(cost, information.townhall, information.houses, information.sawmill, information.mine, estimatedResources)
     if (minutesNeeded === 0) {
       text += '✅'
     } else {
       text += `${formatTime(minutesNeeded)} needed`
     }
 
-    const neededMaterialString = getNeededMaterialString(cost, currentResources)
+    const neededMaterialString = getNeededMaterialString(cost, estimatedResources)
     if (neededMaterialString.length > 0) {
       text += ` (${neededMaterialString})\n`
     } else {
@@ -130,6 +151,4 @@ function getNeededMaterialString(cost, currentResources) {
   return neededMaterial.join(', ')
 }
 
-const abstraction = new Telegraf.Composer()
-abstraction.use(Telegraf.optional(ctx => ctx && ctx.message && ctx.message.forward_from && ctx.message.forward_from.id === 252148344, bot))
-module.exports = abstraction
+module.exports = bot
