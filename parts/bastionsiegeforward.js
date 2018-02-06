@@ -127,6 +127,7 @@ function generateStatsText(information) {
   } else if (foodProduction < 0) {
     const foodEmptyTimeNeeded = information.food / -foodProduction
     text += `${emoji.food} empty in ${formatTime(foodEmptyTimeNeeded)} (${formatNumberShort(information.food)}${emoji.food})\n`
+    text += `${emoji.food} fill with ${formatNumberShort(storageCapacity - information.food)}${emoji.food}\n`
   }
 
   text += '\n'
