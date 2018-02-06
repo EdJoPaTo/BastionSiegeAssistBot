@@ -150,11 +150,13 @@ function getNeededMaterialString(cost, currentResources) {
   const goldNeeded = cost.gold - currentResources.gold
   const woodNeeded = cost.wood - currentResources.wood
   const stoneNeeded = cost.stone - currentResources.stone
+  const foodNeeded = cost.food - currentResources.food
 
   const neededMaterial = []
   if (goldNeeded > 0) { neededMaterial.push(`${formatNumberShort(goldNeeded, true)}${emoji.gold}`) }
   if (woodNeeded > 0) { neededMaterial.push(`${formatNumberShort(woodNeeded, true)}${emoji.wood}`) }
   if (stoneNeeded > 0) { neededMaterial.push(`${formatNumberShort(stoneNeeded, true)}${emoji.stone}`) }
+  if (foodNeeded > 0) { neededMaterial.push(`${formatNumberShort(foodNeeded, true)}${emoji.food}`) }
   return neededMaterial.join(' ')
 }
 
