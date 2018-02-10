@@ -112,22 +112,22 @@ function generateStatsText(information) {
   text += '\n'
 
   const goldCapacity = calcGoldCapacity(information.townhall)
-  const goldFillTimeNeeded = (goldCapacity - information.gold) / calcGoldIncome(information.townhall, information.houses)
-  const woodFillTimeNeeded = (storageCapacity - information.wood) / calcProduction(information.sawmill)
-  const stoneFillTimeNeeded = (storageCapacity - information.stone) / calcProduction(information.mine)
+  const goldFillTimeNeeded = (goldCapacity - estimatedResources.gold) / calcGoldIncome(information.townhall, information.houses)
+  const woodFillTimeNeeded = (storageCapacity - estimatedResources.wood) / calcProduction(information.sawmill)
+  const stoneFillTimeNeeded = (storageCapacity - estimatedResources.stone) / calcProduction(information.mine)
   const foodProduction = calcProductionFood(information.farm, information.houses)
 
-  text += `${emoji.gold} full in ${formatTime(goldFillTimeNeeded)} (${formatNumberShort(goldCapacity - information.gold)}${emoji.gold})\n`
-  text += `${emoji.wood} full in ${formatTime(woodFillTimeNeeded)} (${formatNumberShort(storageCapacity - information.wood)}${emoji.wood})\n`
-  text += `${emoji.stone} full in ${formatTime(stoneFillTimeNeeded)} (${formatNumberShort(storageCapacity - information.stone)}${emoji.stone})\n`
+  text += `${emoji.gold} full in ${formatTime(goldFillTimeNeeded)} (${formatNumberShort(goldCapacity - estimatedResources.gold)}${emoji.gold})\n`
+  text += `${emoji.wood} full in ${formatTime(woodFillTimeNeeded)} (${formatNumberShort(storageCapacity - estimatedResources.wood)}${emoji.wood})\n`
+  text += `${emoji.stone} full in ${formatTime(stoneFillTimeNeeded)} (${formatNumberShort(storageCapacity - estimatedResources.stone)}${emoji.stone})\n`
 
   if (foodProduction > 0) {
-    const foodFillTimeNeeded = (storageCapacity - information.food) / calcProduction(information.mine)
-    text += `${emoji.food} full in ${formatTime(foodFillTimeNeeded)} (${formatNumberShort(storageCapacity - information.food)}${emoji.food})\n`
+    const foodFillTimeNeeded = (storageCapacity - estimatedResources.food) / calcProduction(information.mine)
+    text += `${emoji.food} full in ${formatTime(foodFillTimeNeeded)} (${formatNumberShort(storageCapacity - estimatedResources.food)}${emoji.food})\n`
   } else if (foodProduction < 0) {
-    const foodEmptyTimeNeeded = information.food / -foodProduction
-    text += `${emoji.food} fill with ${formatNumberShort(storageCapacity - information.food)}${emoji.food}\n`
-    text += `${emoji.food} empty in ${formatTime(foodEmptyTimeNeeded)} (${formatNumberShort(information.food)}${emoji.food})\n`
+    const foodEmptyTimeNeeded = estimatedResources.food / -foodProduction
+    text += `${emoji.food} fill with ${formatNumberShort(storageCapacity - estimatedResources.food)}${emoji.food}\n`
+    text += `${emoji.food} empty in ${formatTime(foodEmptyTimeNeeded)} (${formatNumberShort(estimatedResources.food)}${emoji.food})\n`
   }
 
   text += '\n'
