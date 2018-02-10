@@ -60,14 +60,18 @@ bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, ctx => {
 }))
 
 bot.action('estimate', async ctx => {
-  const newStats = generateStatsText(ctx.session.gameInformation)
-  const oldStats = ctx.callbackQuery.message.text
+  try {
+    const newStats = generateStatsText(ctx.session.gameInformation)
+    const oldStats = ctx.callbackQuery.message.text
 
-  if (compareStrAsSimpleOne(newStats, oldStats) === 0) {
-    return ctx.answerCbQuery('thats already as good as I can estimate!')
-  } else {
-    await ctx.editMessageText(newStats, updateMarkup)
-    return ctx.answerCbQuery('updated!')
+    if (compareStrAsSimpleOne(newStats, oldStats) === 0) {
+      return ctx.answerCbQuery('thats already as good as I can estimate!')
+    } else {
+      await ctx.editMessageText(newStats, updateMarkup)
+      return ctx.answerCbQuery('updated!')
+    }
+  } catch (ex) {
+    return ctx.answerCbQuery('please provide new game screens')
   }
 })
 
