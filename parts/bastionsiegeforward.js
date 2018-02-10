@@ -2,9 +2,9 @@ const Telegraf = require('telegraf')
 
 const { Markup, Extra } = Telegraf
 
-const { emoji, getScreenInformation } = require('../lib/gamescreen')
-const { formatNumberShort, formatTime } = require('../lib/numberFunctions')
-const { calcGoldCapacity, calcGoldIncome, calcBuildingCost, calcProduction, calcProductionFood, calcStorageCapacity, calcStorageLevelNeededForUpgrade, calcMinutesNeeded, estimateResourcesAfterTimespan } = require('../lib/siegemath')
+const { createBuildingTimeStatsString, createFillTimeStatsString } = require('../lib/createStatsStrings')
+const { getScreenInformation } = require('../lib/gamescreen')
+const { estimateResourcesAfterTimespan } = require('../lib/siegemath')
 
 const bot = new Telegraf.Composer()
 
@@ -76,59 +76,20 @@ function generateStatsText(information) {
   const resourceAgeMinutes = Math.floor((currentTimestamp - information.resourceTimestamp) / 60)
   const buildingAgeMinutes = Math.floor((currentTimestamp - information.buildingTimestamp) / 60)
 
-  const storageCapacity = calcStorageCapacity(information.storage)
+  // lousy but works for now
+  const buildings = information
+
   const currentResources = { gold: information.gold, wood: information.wood, stone: information.stone, food: information.food }
   const estimatedResources = estimateResourcesAfterTimespan(currentResources, information.townhall, information.storage, information.houses, information.sawmill, information.mine, information.farm, resourceAgeMinutes)
 
   let text = ''
 
   for (const buildingName of buildingsToShow) {
-    text += emoji[buildingName] + ' '
-    if (!information[buildingName]) {
-      text += `⚠️ unknown ${buildingName} level\n`
-      continue
-    }
-
-    const cost = calcBuildingCost(buildingName, information[buildingName])
-    if (cost.wood > storageCapacity || cost.stone > storageCapacity) {
-      text += `⚠️ storage level ${calcStorageLevelNeededForUpgrade(buildingName, information[buildingName] + 1)} needed\n`
-      continue
-    }
-
-    const minutesNeeded = calcMinutesNeeded(cost, information.townhall, information.houses, information.sawmill, information.mine, estimatedResources)
-    if (minutesNeeded === 0) {
-      text += '✅'
-    } else {
-      text += `${formatTime(minutesNeeded)}`
-    }
-
-    const neededMaterialString = getNeededMaterialString(cost, estimatedResources)
-    if (neededMaterialString.length > 0) {
-      text += ` ${neededMaterialString}\n`
-    } else {
-      text += '\n'
-    }
+    text += createBuildingTimeStatsString(buildingName, buildings, estimatedResources)
   }
   text += '\n'
 
-  const goldCapacity = calcGoldCapacity(information.townhall)
-  const goldFillTimeNeeded = (goldCapacity - estimatedResources.gold) / calcGoldIncome(information.townhall, information.houses)
-  const woodFillTimeNeeded = (storageCapacity - estimatedResources.wood) / calcProduction(information.sawmill)
-  const stoneFillTimeNeeded = (storageCapacity - estimatedResources.stone) / calcProduction(information.mine)
-  const foodProduction = calcProductionFood(information.farm, information.houses)
-
-  text += `${emoji.gold} full in ${formatTime(goldFillTimeNeeded)} (${formatNumberShort(goldCapacity - estimatedResources.gold)}${emoji.gold})\n`
-  text += `${emoji.wood} full in ${formatTime(woodFillTimeNeeded)} (${formatNumberShort(storageCapacity - estimatedResources.wood)}${emoji.wood})\n`
-  text += `${emoji.stone} full in ${formatTime(stoneFillTimeNeeded)} (${formatNumberShort(storageCapacity - estimatedResources.stone)}${emoji.stone})\n`
-
-  if (foodProduction > 0) {
-    const foodFillTimeNeeded = (storageCapacity - estimatedResources.food) / calcProduction(information.mine)
-    text += `${emoji.food} full in ${formatTime(foodFillTimeNeeded)} (${formatNumberShort(storageCapacity - estimatedResources.food)}${emoji.food})\n`
-  } else if (foodProduction < 0) {
-    const foodEmptyTimeNeeded = estimatedResources.food / -foodProduction
-    text += `${emoji.food} fill with ${formatNumberShort(storageCapacity - estimatedResources.food)}${emoji.food}\n`
-    text += `${emoji.food} empty in ${formatTime(foodEmptyTimeNeeded)} (${formatNumberShort(estimatedResources.food)}${emoji.food})\n`
-  }
+  text += createFillTimeStatsString(buildings, estimatedResources)
 
   text += '\n'
   if (resourceAgeMinutes > 30) {
@@ -145,20 +106,6 @@ function compareStrAsSimpleOne(str1, str2) {
   const tmp2 = str2.replace(/[^\w\d]/g, '')
 
   return tmp1.localeCompare(tmp2)
-}
-
-function getNeededMaterialString(cost, currentResources) {
-  const goldNeeded = cost.gold - currentResources.gold
-  const woodNeeded = cost.wood - currentResources.wood
-  const stoneNeeded = cost.stone - currentResources.stone
-  const foodNeeded = cost.food - currentResources.food
-
-  const neededMaterial = []
-  if (goldNeeded > 0) { neededMaterial.push(`${formatNumberShort(goldNeeded, true)}${emoji.gold}`) }
-  if (woodNeeded > 0) { neededMaterial.push(`${formatNumberShort(woodNeeded, true)}${emoji.wood}`) }
-  if (stoneNeeded > 0) { neededMaterial.push(`${formatNumberShort(stoneNeeded, true)}${emoji.stone}`) }
-  if (foodNeeded > 0) { neededMaterial.push(`${formatNumberShort(foodNeeded, true)}${emoji.food}`) }
-  return neededMaterial.join(' ')
 }
 
 module.exports = bot
