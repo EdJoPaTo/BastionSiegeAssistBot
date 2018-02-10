@@ -14,7 +14,11 @@ function isForwardedFromBastionSiege(ctx) {
 
 bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, (ctx, next) => {
   if (!ctx.session.gameInformation) {
-    ctx.session.gameInformation = {}
+    ctx.session.gameInformation = {
+      buildings: null,
+      workshop: null,
+      resources: null
+    }
   }
 
   const timestamp = ctx.message.forward_date
