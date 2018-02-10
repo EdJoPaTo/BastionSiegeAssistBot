@@ -20,17 +20,17 @@ bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, (ctx, next) => {
   const timestamp = ctx.message.forward_date
   const newInformation = getScreenInformation(ctx.message.text)
 
-  if (newInformation.townhall) {
+  if (newInformation.buildings) {
     newInformation.buildingTimestamp = timestamp
     if (ctx.session.gameInformation.buildingTimestamp >= timestamp) {
       return ctx.reply('Thats not new to me. I will just ignore it.')
     }
-  } else if (newInformation.gold) {
+  } else if (newInformation.resources) {
     newInformation.resourceTimestamp = timestamp
     if (ctx.session.gameInformation.resourceTimestamp >= timestamp) {
       return ctx.reply('Thats not new to me. I will just ignore it.')
     }
-  } else if (newInformation.trebuchet) {
+  } else if (newInformation.workshop) {
     newInformation.workshopTimestamp = timestamp
     if (ctx.session.gameInformation.workshopTimestamp >= timestamp) {
       return ctx.reply('Thats not new to me. I will just ignore it.')
@@ -76,11 +76,9 @@ function generateStatsText(information) {
   const resourceAgeMinutes = Math.floor((currentTimestamp - information.resourceTimestamp) / 60)
   const buildingAgeMinutes = Math.floor((currentTimestamp - information.buildingTimestamp) / 60)
 
-  // lousy but works for now
-  const buildings = information
+  const buildings = information.buildings
 
-  const currentResources = { gold: information.gold, wood: information.wood, stone: information.stone, food: information.food }
-  const estimatedResources = estimateResourcesAfterTimespan(currentResources, information.townhall, information.storage, information.houses, information.sawmill, information.mine, information.farm, resourceAgeMinutes)
+  const estimatedResources = estimateResourcesAfterTimespan(information.resources, buildings.townhall, buildings.storage, buildings.houses, buildings.sawmill, buildings.mine, buildings.farm, resourceAgeMinutes)
 
   let text = ''
 
