@@ -85,7 +85,7 @@ function generateStatsText(information) {
   let text = ''
 
   for (const buildingName of buildingsToShow) {
-    text += createBuildingTimeStatsString(buildingName, buildings, estimatedResources)
+    text += createBuildingTimeStatsString(buildingName, buildings, estimatedResources) + '\n'
   }
   text += '\n'
 
