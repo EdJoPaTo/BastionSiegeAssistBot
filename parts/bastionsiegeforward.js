@@ -1,10 +1,10 @@
 const Telegraf = require('telegraf')
 
-const { Markup, Extra } = Telegraf
+const {Markup, Extra} = Telegraf
 
-const { createBuildingTimeStatsString, createFillTimeStatsString } = require('../lib/create-stats-strings')
-const { getScreenInformation } = require('../lib/gamescreen')
-const { estimateResourcesAfterTimespan } = require('../lib/siegemath')
+const {createBuildingTimeStatsString, createFillTimeStatsString} = require('../lib/create-stats-strings')
+const {getScreenInformation} = require('../lib/gamescreen')
+const {estimateResourcesAfterTimespan} = require('../lib/siegemath')
 
 const bot = new Telegraf.Composer()
 
