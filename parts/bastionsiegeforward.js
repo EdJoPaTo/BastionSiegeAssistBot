@@ -55,7 +55,8 @@ bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, ctx => {
 
   if (!information.buildingTimestamp) {
     return ctx.reply('please forward me the building screen from your game')
-  } else if (!information.resourceTimestamp) {
+  }
+  if (!information.resourceTimestamp) {
     return ctx.reply('please forward me a screen from the game showing your current resources')
   }
 
@@ -70,10 +71,9 @@ bot.action('estimate', async ctx => {
 
     if (compareStrAsSimpleOne(newStats, oldStats) === 0) {
       return ctx.answerCbQuery('thats already as good as I can estimate!')
-    } else {
-      await ctx.editMessageText(newStats, updateMarkup)
-      return ctx.answerCbQuery('updated!')
     }
+    await ctx.editMessageText(newStats, updateMarkup)
+    return ctx.answerCbQuery('updated!')
   } catch (ex) {
     return ctx.answerCbQuery('please provide new game screens')
   }
