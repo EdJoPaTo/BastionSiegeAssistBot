@@ -18,7 +18,7 @@ const localSession = new LocalSession({
   database: 'persist/sessions.json',
   // Format of storage/database (default: JSON.stringify / JSON.parse)
   format: {
-    serialize: obj => JSON.stringify(obj, null, 2), // null & 2 for pretty-formatted JSON
+    serialize: obj => JSON.stringify(obj, null, 2),
     deserialize: str => JSON.parse(str)
   }
 })
