@@ -9,7 +9,7 @@ const token = fs.readFileSync(tokenFilePath, 'utf8').trim()
 const bot = new Telegraf(token)
 
 // For handling group/supergroup commands (/start@your_bot) you need to provide bot username.
-bot.telegram.getMe().then((botInfo) => {
+bot.telegram.getMe().then(botInfo => {
   bot.options.username = botInfo.username
 })
 
@@ -18,8 +18,8 @@ const localSession = new LocalSession({
   database: 'persist/sessions.json',
   // Format of storage/database (default: JSON.stringify / JSON.parse)
   format: {
-    serialize: (obj) => JSON.stringify(obj, null, 2), // null & 2 for pretty-formatted JSON
-    deserialize: (str) => JSON.parse(str)
+    serialize: obj => JSON.stringify(obj, null, 2), // null & 2 for pretty-formatted JSON
+    deserialize: str => JSON.parse(str)
   }
 })
 bot.use(localSession.middleware())
