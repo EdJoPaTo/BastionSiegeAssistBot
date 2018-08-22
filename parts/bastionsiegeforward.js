@@ -2,7 +2,7 @@ const Telegraf = require('telegraf')
 
 const { Markup, Extra } = Telegraf
 
-const { createBuildingTimeStatsString, createFillTimeStatsString } = require('../lib/createStatsStrings')
+const { createBuildingTimeStatsString, createFillTimeStatsString } = require('../lib/create-stats-strings')
 const { getScreenInformation } = require('../lib/gamescreen')
 const { estimateResourcesAfterTimespan } = require('../lib/siegemath')
 
