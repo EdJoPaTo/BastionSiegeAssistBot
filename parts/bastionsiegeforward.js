@@ -86,7 +86,7 @@ function generateStatsText(information) {
 
   const buildings = Object.assign(information.buildings, information.workshop)
 
-  const estimatedResources = estimateResourcesAfterTimespan(information.resources, buildings.townhall, buildings.storage, buildings.houses, buildings.sawmill, buildings.mine, buildings.farm, resourceAgeMinutes)
+  const estimatedResources = estimateResourcesAfterTimespan(information.resources, buildings, resourceAgeMinutes)
 
   let text = ''
 
