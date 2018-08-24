@@ -41,7 +41,7 @@ bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, (ctx, next) => {
     }
   }
 
-  ctx.session.gameInformation = Object.assign(ctx.session.gameInformation, newInformation)
+  Object.assign(ctx.session.gameInformation, newInformation)
   return next()
 }))
 
@@ -84,7 +84,7 @@ function generateStatsText(information) {
   const resourceAgeMinutes = Math.floor((currentTimestamp - information.resourceTimestamp) / 60)
   const buildingAgeMinutes = Math.floor((currentTimestamp - information.buildingTimestamp) / 60)
 
-  const buildings = Object.assign(information.buildings, information.workshop)
+  const buildings = Object.assign({}, information.buildings, information.workshop)
 
   const estimatedResources = estimateResourcesAfterTimespan(information.resources, buildings, resourceAgeMinutes)
 
