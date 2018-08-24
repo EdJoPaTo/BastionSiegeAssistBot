@@ -45,7 +45,7 @@ bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, (ctx, next) => {
   return next()
 }))
 
-const buildingsToShow = ['townhall', 'storage', 'houses', 'barracks', 'wall', 'trebuchet']
+const buildingsToShow = ['townhall', 'storage', 'houses', 'barracks', 'wall', 'trebuchet', 'ballista']
 const updateMarkup = Extra.markup(Markup.inlineKeyboard([
   Markup.callbackButton('estimate current situation', 'estimate')
 ]))
