@@ -1,5 +1,6 @@
 {
   "private": "true",
+  "version": "1.0.0",
   "main": "index.js",
   "engines": {
     "node": ">=7.6"
@@ -7,6 +8,8 @@
   "scripts": {
     "ava": "ava",
     "ava:watch": "ava -w",
+    "prerelease": "npm test",
+    "release": "standard-version",
     "start": "node index.js",
     "pretest": "xo",
     "test": "ava",
@@ -22,6 +25,7 @@
   },
   "devDependencies": {
     "ava": "^0.25.0",
+    "standard-version": "^4.4.0",
     "xo": "^0.22.0"
   },
   "ava": {
