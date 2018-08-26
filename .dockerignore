@@ -1,8 +1,8 @@
 .*
+*.md
 botfather-settings
 Dockerfile
 node_modules
-README.md
 
 # botfiles
 persist
