@@ -1,5 +1,6 @@
 .*
 *.md
+**/*.test.js
 botfather-settings
 Dockerfile
 node_modules
