@@ -8,11 +8,12 @@
   "scripts": {
     "ava": "ava",
     "ava:watch": "ava -w",
+    "nyc": "nyc",
     "prerelease": "npm test",
     "release": "standard-version",
     "start": "node index.js",
     "pretest": "xo",
-    "test": "ava",
+    "test": "nyc ava",
     "xo": "xo"
   },
   "config": {
@@ -25,6 +26,7 @@
   },
   "devDependencies": {
     "ava": "^0.25.0",
+    "nyc": "^12.0.2",
     "standard-version": "^4.4.0",
     "xo": "^0.22.0"
   },
