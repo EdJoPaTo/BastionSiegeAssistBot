@@ -28,8 +28,8 @@ bot.use(bastionsiegeforward)
 
 bot.use(ctx => ctx.reply('just forward me ingame screens like the building screen or a screen with your current resources'))
 
-bot.catch(err => {
-  console.error('Telegraf Error', err.response || err)
+bot.catch(error => {
+  console.error('Telegraf Error', error.response || error)
 })
 
 bot.startPolling()

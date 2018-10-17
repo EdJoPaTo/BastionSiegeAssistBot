@@ -74,7 +74,7 @@ bot.action('estimate', async ctx => {
     }
     await ctx.editMessageText(newStats, updateMarkup)
     return ctx.answerCbQuery('updated!')
-  } catch (ex) {
+  } catch (error) {
     return ctx.answerCbQuery('please provide new game screens')
   }
 })
