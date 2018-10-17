@@ -21,23 +21,20 @@
     "tokenpathdebug": "token.txt"
   },
   "dependencies": {
-    "telegraf": "^3.22.2",
-    "telegraf-session-local": "0.0.5"
+    "telegraf": "^3.24.1",
+    "telegraf-session-local": "0.0.6"
   },
   "devDependencies": {
     "ava": "^0.25.0",
-    "nyc": "^12.0.2",
+    "nyc": "^13.1.0",
     "standard-version": "^4.4.0",
-    "xo": "^0.22.0"
+    "xo": "^0.23.0"
   },
   "ava": {
     "modules": false
   },
   "xo": {
     "space": true,
-    "semicolon": false,
-    "rules": {
-      "require-await": "error"
-    }
+    "semicolon": false
   }
 }
