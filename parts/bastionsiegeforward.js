@@ -2,6 +2,7 @@ const Telegraf = require('telegraf')
 
 const {Markup, Extra} = Telegraf
 
+const battlereports = require('../lib/battlereports')
 const {createBuildingTimeStatsString, createFillTimeStatsString} = require('../lib/create-stats-strings')
 const {getScreenInformation} = require('../lib/gamescreen')
 const {estimateResourcesAfterTimespan} = require('../lib/siegemath')
@@ -12,7 +13,7 @@ function isForwardedFromBastionSiege(ctx) {
   return ctx && ctx.message && ctx.message.forward_from && ctx.message.forward_from.id === 252148344
 }
 
-bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, (ctx, next) => {
+bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, async (ctx, next) => {
   if (!ctx.session.gameInformation) {
     ctx.session.gameInformation = {
       buildings: null,
@@ -23,6 +24,13 @@ bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, (ctx, next) => {
 
   const timestamp = ctx.message.forward_date
   const newInformation = getScreenInformation(ctx.message.text)
+
+  if (Object.keys(newInformation).length === 0) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('newInformation is empty')
+    }
+    return next()
+  }
 
   if (newInformation.buildings) {
     newInformation.buildingTimestamp = timestamp
@@ -39,6 +47,16 @@ bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, (ctx, next) => {
     if (ctx.session.gameInformation.workshopTimestamp >= timestamp) {
       return ctx.reply('Thats not new to me. I will just ignore it.')
     }
+  } else if (newInformation.battlereport) {
+    const currentlyExisting = await battlereports.get(ctx.from.id, timestamp)
+    if (currentlyExisting) {
+      return ctx.reply('Thats not new to me. I will just ignore it.')
+    }
+    await battlereports.add(ctx.from.id, timestamp, newInformation.battlereport)
+    return ctx.replyWithMarkdown('battlereport added:\n```\n' + JSON.stringify(newInformation.battlereport, null, 2) + '\n```')
+  } else {
+    // There is some information in there that is not being handled
+    console.log('information incoming that is not being handled:', newInformation)
   }
 
   Object.assign(ctx.session.gameInformation, newInformation)
