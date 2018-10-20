@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.3.0"></a>
+# [1.3.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.2.0...v1.3.0) (2018-10-20)
+
+
+### Bug Fixes
+
+* **battlestats:** correctly parse the negative karma emoji ([70804ac](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/70804ac))
+* **battlestats:** detect alliance wars correctly ([f9ccefa](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/f9ccefa))
+* **battlestats:** only show battle stats after battle reports ([03a80a0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/03a80a0))
+* **battlestats:** only use valid numbers for stats calculation ([cd57ae2](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/cd57ae2))
+* **battlestats:** show average as floating point ([dbfe198](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/dbfe198))
+
+
+### Features
+
+* **battlestats:** add karma, terra and overall rewards ([11b932e](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/11b932e))
+* **battlestats:** seperate dragon and undead battles ([6cb4fc1](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/6cb4fc1))
+* **battlestats:** show alliance battle rewards ([bc6c13c](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/bc6c13c))
+
+
+
 <a name="1.2.0"></a>
 # [1.2.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.1.0...v1.2.0) (2018-10-20)
 
