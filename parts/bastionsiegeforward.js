@@ -50,7 +50,7 @@ bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, async (ctx, next) 
     }
   } else if (newInformation.battlereport) {
     const currentlyExisting = await battlereports.get(ctx.from.id, timestamp)
-    if (currentlyExisting) {
+    if (stringify(currentlyExisting) === stringify(newInformation.battlereport)) {
       return ctx.reply('Thats not new to me. I will just ignore it.')
     }
     await battlereports.add(ctx.from.id, timestamp, newInformation.battlereport)
