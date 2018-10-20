@@ -55,6 +55,15 @@ bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, async (ctx, next) 
     }
     await battlereports.add(ctx.from.id, timestamp, newInformation.battlereport)
     await ctx.replyWithMarkdown('battlereport added:\n```\n' + stringify(newInformation.battlereport, {space: 2}) + '\n```')
+
+    const allReportsOfMyself = await battlereports.getAllFrom(ctx.from.id)
+    const reportsFiltered = Object.keys(allReportsOfMyself)
+      .map(key => allReportsOfMyself[key])
+      .filter(() => true)
+
+    return ctx.replyWithMarkdown(
+      createBattleStatsString(reportsFiltered)
+    )
   } else {
     // There is some information in there that is not being handled
     console.log('information incoming that is not being handled:', newInformation)
@@ -69,19 +78,8 @@ const updateMarkup = Extra.markup(Markup.inlineKeyboard([
   Markup.callbackButton('estimate current situation', 'estimate')
 ]))
 
-bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, async ctx => {
+bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, ctx => {
   const information = ctx.session.gameInformation
-
-  if (information.battlereport) {
-    const allReportsOfMyself = await battlereports.getAllFrom(ctx.from.id)
-    const reportsFiltered = Object.keys(allReportsOfMyself)
-      .map(key => allReportsOfMyself[key])
-      .filter(() => true)
-
-    return ctx.replyWithMarkdown(
-      createBattleStatsString(reportsFiltered)
-    )
-  }
 
   if (!information.buildingTimestamp) {
     return ctx.reply('please forward me the building screen from your game')
