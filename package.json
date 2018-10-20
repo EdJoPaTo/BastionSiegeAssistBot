@@ -21,6 +21,7 @@
     "tokenpathdebug": "token.txt"
   },
   "dependencies": {
+    "json-stable-stringify": "^1.0.1",
     "telegraf": "^3.24.1",
     "telegraf-session-local": "0.0.6"
   },

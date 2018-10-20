@@ -1,4 +1,5 @@
 const Telegraf = require('telegraf')
+const stringify = require('json-stable-stringify')
 
 const {Markup, Extra} = Telegraf
 
@@ -53,7 +54,7 @@ bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, async (ctx, next) 
       return ctx.reply('Thats not new to me. I will just ignore it.')
     }
     await battlereports.add(ctx.from.id, timestamp, newInformation.battlereport)
-    return ctx.replyWithMarkdown('battlereport added:\n```\n' + JSON.stringify(newInformation.battlereport, null, 2) + '\n```')
+    return ctx.replyWithMarkdown('battlereport added:\n```\n' + stringify(newInformation.battlereport, {space: 2}) + '\n```')
   } else {
     // There is some information in there that is not being handled
     console.log('information incoming that is not being handled:', newInformation)
