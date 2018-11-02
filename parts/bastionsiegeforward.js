@@ -6,12 +6,13 @@ const {Markup, Extra} = Telegraf
 const battlereports = require('../lib/battlereports')
 const {isForwardedFromBastionSiege} = require('../lib/bastion-siege-bot')
 const {createBuildingTimeStatsString, createFillTimeStatsString, createBattleStatsString} = require('../lib/create-stats-strings')
-const {getScreenInformation} = require('../lib/gamescreen')
+const {detectgamescreen, getScreenInformation} = require('../lib/gamescreen')
 const {estimateResourcesAfterTimespan} = require('../lib/siegemath')
 
 const bot = new Telegraf.Composer()
 
-bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, async (ctx, next) => {
+// Init User session
+bot.use((ctx, next) => {
   if (!ctx.session.gameInformation) {
     ctx.session.gameInformation = {
       buildings: null,
@@ -19,16 +20,39 @@ bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, async (ctx, next) 
       resources: null
     }
   }
+  return next()
+})
 
-  const timestamp = ctx.message.forward_date
-  const newInformation = getScreenInformation(ctx.message.text)
+// Load game screen type and information
+bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, (ctx, next) => {
+  ctx.state.screen = {
+    type: detectgamescreen(ctx.message.text),
+    information: getScreenInformation(ctx.message.text),
+    timestamp: ctx.message.forward_date
+  }
 
-  if (Object.keys(newInformation).length === 0) {
+  if (Object.keys(ctx.state.screen.information).length === 0) {
     if (process.env.NODE_ENV !== 'production') {
       console.log('newInformation is empty')
     }
     return next()
   }
+
+  return next()
+}))
+
+function isBuildingsOrResources(ctx) {
+  if (!ctx.state.screen) {
+    return false
+  }
+  const {buildings, resources, workshop} = ctx.state.screen.information || {}
+  return buildings || resources || workshop
+}
+
+// Save buildings and resource
+bot.on('text', Telegraf.optional(isBuildingsOrResources, (ctx, next) => {
+  const newInformation = ctx.state.screen.information
+  const {timestamp} = ctx.state.screen
 
   if (newInformation.buildings) {
     newInformation.buildingTimestamp = timestamp
@@ -45,29 +69,43 @@ bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, async (ctx, next) 
     if (ctx.session.gameInformation.workshopTimestamp >= timestamp) {
       return ctx.reply('Thats not new to me. I will just ignore it.')
     }
-  } else if (newInformation.battlereport) {
-    const currentlyExisting = await battlereports.get(ctx.from.id, timestamp)
-    if (stringify(currentlyExisting) === stringify(newInformation.battlereport)) {
-      return ctx.reply('Thats not new to me. I will just ignore it.')
-    }
-    await battlereports.add(ctx.from.id, timestamp, newInformation.battlereport)
-    await ctx.replyWithMarkdown('battlereport added:\n```\n' + stringify(newInformation.battlereport, {space: 2}) + '\n```')
-
-    const allReportsOfMyself = await battlereports.getAllFrom(ctx.from.id)
-    const reportsFiltered = Object.keys(allReportsOfMyself)
-      .map(key => allReportsOfMyself[key])
-      .filter(() => true)
-
-    return ctx.replyWithMarkdown(
-      createBattleStatsString(reportsFiltered)
-    )
-  } else {
-    // There is some information in there that is not being handled
-    console.log('information incoming that is not being handled:', newInformation)
   }
 
   Object.assign(ctx.session.gameInformation, newInformation)
   return next()
+}))
+
+function isBattleReport(ctx) {
+  return ctx.state.screen &&
+         ctx.state.screen.information &&
+         ctx.state.screen.information.battlereport
+}
+
+// Save battlereport
+bot.on('text', Telegraf.optional(isBattleReport, async (ctx, next) => {
+  const newInformation = ctx.state.screen.information
+  const {timestamp} = ctx.state.screen
+
+  const currentlyExisting = await battlereports.get(ctx.from.id, timestamp)
+  if (stringify(currentlyExisting) === stringify(newInformation.battlereport)) {
+    return ctx.reply('Thats not new to me. I will just ignore it.')
+  }
+  await battlereports.add(ctx.from.id, timestamp, newInformation.battlereport)
+  await ctx.replyWithMarkdown('battlereport added:\n```\n' + stringify(newInformation.battlereport, {space: 2}) + '\n```')
+
+  return next()
+}))
+
+// Send battle stats
+bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
+  const allReportsOfMyself = await battlereports.getAllFrom(ctx.from.id)
+  const reportsFiltered = Object.keys(allReportsOfMyself)
+    .map(key => allReportsOfMyself[key])
+    .filter(() => true)
+
+  return ctx.replyWithMarkdown(
+    createBattleStatsString(reportsFiltered)
+  )
 }))
 
 const buildingsToShow = ['townhall', 'storage', 'houses', 'barracks', 'wall', 'trebuchet', 'ballista']
@@ -75,7 +113,7 @@ const updateMarkup = Extra.markup(Markup.inlineKeyboard([
   Markup.callbackButton('estimate current situation', 'estimate')
 ]))
 
-bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, ctx => {
+bot.on('text', Telegraf.optional(isBuildingsOrResources, ctx => {
   const information = ctx.session.gameInformation
 
   if (!information.buildingTimestamp) {
