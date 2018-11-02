@@ -1,5 +1,6 @@
 const Telegraf = require('telegraf')
 const stringify = require('json-stable-stringify')
+const debounce = require('debounce-promise')
 
 const {Markup, Extra} = Telegraf
 
@@ -8,6 +9,8 @@ const {isForwardedFromBastionSiege} = require('../lib/bastion-siege-bot')
 const {createBuildingTimeStatsString, createFillTimeStatsString, createBattleStatsString} = require('../lib/create-stats-strings')
 const {detectgamescreen, getScreenInformation} = require('../lib/gamescreen')
 const {estimateResourcesAfterTimespan} = require('../lib/siegemath')
+
+const DEBOUNCE_TIME = 100 // Milliseconds
 
 const bot = new Telegraf.Composer()
 
@@ -97,7 +100,16 @@ bot.on('text', Telegraf.optional(isBattleReport, async (ctx, next) => {
 }))
 
 // Send battle stats
-bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
+const debouncedBattleStats = {}
+bot.on('text', Telegraf.optional(isBattleReport, ctx => {
+  const {id} = ctx.from
+  if (!debouncedBattleStats[id]) {
+    debouncedBattleStats[id] = debounce(sendBattleReport, DEBOUNCE_TIME)
+  }
+  debouncedBattleStats[id](ctx)
+}))
+
+async function sendBattleReport(ctx) {
   const allReportsOfMyself = await battlereports.getAllFrom(ctx.from.id)
   const reportsFiltered = Object.keys(allReportsOfMyself)
     .map(key => allReportsOfMyself[key])
@@ -106,14 +118,23 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
   return ctx.replyWithMarkdown(
     createBattleStatsString(reportsFiltered)
   )
-}))
+}
 
 const buildingsToShow = ['townhall', 'storage', 'houses', 'barracks', 'wall', 'trebuchet', 'ballista']
 const updateMarkup = Extra.markup(Markup.inlineKeyboard([
   Markup.callbackButton('estimate current situation', 'estimate')
 ]))
 
+const debouncedBuildStats = {}
 bot.on('text', Telegraf.optional(isBuildingsOrResources, ctx => {
+  const {id} = ctx.from
+  if (!debouncedBuildStats[id]) {
+    debouncedBuildStats[id] = debounce(sendBuildStats, DEBOUNCE_TIME)
+  }
+  debouncedBuildStats[id](ctx)
+}))
+
+function sendBuildStats(ctx) {
   const information = ctx.session.gameInformation
 
   if (!information.buildingTimestamp) {
@@ -125,7 +146,7 @@ bot.on('text', Telegraf.optional(isBuildingsOrResources, ctx => {
 
   const statsText = generateStatsText(information)
   return ctx.reply(statsText, updateMarkup)
-}))
+}
 
 bot.action('estimate', async ctx => {
   try {
