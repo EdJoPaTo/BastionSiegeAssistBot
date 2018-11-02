@@ -4,15 +4,12 @@ const stringify = require('json-stable-stringify')
 const {Markup, Extra} = Telegraf
 
 const battlereports = require('../lib/battlereports')
+const {isForwardedFromBastionSiege} = require('../lib/bastion-siege-bot')
 const {createBuildingTimeStatsString, createFillTimeStatsString, createBattleStatsString} = require('../lib/create-stats-strings')
 const {getScreenInformation} = require('../lib/gamescreen')
 const {estimateResourcesAfterTimespan} = require('../lib/siegemath')
 
 const bot = new Telegraf.Composer()
-
-function isForwardedFromBastionSiege(ctx) {
-  return ctx && ctx.message && ctx.message.forward_from && ctx.message.forward_from.id === 252148344
-}
 
 bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, async (ctx, next) => {
   if (!ctx.session.gameInformation) {
