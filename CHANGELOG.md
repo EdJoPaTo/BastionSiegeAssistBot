@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.4.0"></a>
+# [1.4.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.3.2...v1.4.0) (2018-11-03)
+
+
+### Bug Fixes
+
+* **battlestats:** get rid of a zero space joiner ([b5fb974](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/b5fb974))
+* **battlestats:** get rid of emoji variant selector ([5243237](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/5243237))
+* **battlestats:** parse halloween reports ([6950268](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/6950268))
+
+
+### Features
+
+* debounce build and battle stats ([8c5c49c](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/8c5c49c))
+
+
+
 <a name="1.3.2"></a>
 ## [1.3.2](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.3.1...v1.3.2) (2018-10-27)
 
