@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.5.0"></a>
+# [1.5.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.4.0...v1.5.0) (2018-11-07)
+
+
+### Features
+
+* **battlestats:** show stats of last 7d ([3779384](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/3779384))
+
+
+
 <a name="1.4.0"></a>
 # [1.4.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.3.2...v1.4.0) (2018-11-03)
 
