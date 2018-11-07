@@ -109,9 +109,20 @@ bot.on('text', Telegraf.optional(isBattleReport, ctx => {
   debouncedBattleStats[id](ctx)
 }))
 
+function getDate7DaysAgo() {
+  const now = Date.now() / 1000
+  const oneDay = 60 * 60 * 24
+  const sevenDays = oneDay * 7
+  const sevenDaysAgo = now - sevenDays
+  const midnight = Math.ceil(sevenDaysAgo / oneDay) * oneDay
+  return midnight
+}
+
 async function sendBattleReport(ctx) {
   const allReportsOfMyself = await battlereports.getAllFrom(ctx.from.id)
+  const firstTimeRelevant = getDate7DaysAgo()
   const reportsFiltered = Object.keys(allReportsOfMyself)
+    .filter(key => Number(key) > firstTimeRelevant)
     .map(key => allReportsOfMyself[key])
     .filter(() => true)
 
