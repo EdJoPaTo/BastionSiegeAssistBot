@@ -5,6 +5,7 @@ const debounce = require('debounce-promise')
 const {Markup, Extra} = Telegraf
 
 const battlereports = require('../lib/battlereports')
+const {getMidnightXDaysEarlier} = require('../lib/number-functions')
 const {isForwardedFromBastionSiege} = require('../lib/bastion-siege-bot')
 const {createBuildingTimeStatsString, createFillTimeStatsString, createBattleStatsString} = require('../lib/create-stats-strings')
 const {detectgamescreen, getScreenInformation} = require('../lib/gamescreen')
@@ -109,18 +110,9 @@ bot.on('text', Telegraf.optional(isBattleReport, ctx => {
   debouncedBattleStats[id](ctx)
 }))
 
-function getDate7DaysAgo() {
-  const now = Date.now() / 1000
-  const oneDay = 60 * 60 * 24
-  const sevenDays = oneDay * 7
-  const sevenDaysAgo = now - sevenDays
-  const midnight = Math.ceil(sevenDaysAgo / oneDay) * oneDay
-  return midnight
-}
-
 async function sendBattleReport(ctx) {
   const allReportsOfMyself = await battlereports.getAllFrom(ctx.from.id)
-  const firstTimeRelevant = getDate7DaysAgo()
+  const firstTimeRelevant = getMidnightXDaysEarlier(Date.now() / 1000, 7)
   const reportsFiltered = Object.keys(allReportsOfMyself)
     .filter(key => Number(key) > firstTimeRelevant)
     .map(key => allReportsOfMyself[key])
