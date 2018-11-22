@@ -28,6 +28,14 @@ bot.use(localSession.middleware())
 bot.use(bastionsiegeforward)
 bot.use(inlineQuery.bot)
 
+bot.on('text', (ctx, next) => {
+  if (!ctx.message.forward_from && ctx.chat.id === ctx.from.id && ctx.message.text.indexOf('Battles observed') >= 0) {
+    // Thats an inline query. Ignore :)
+    return
+  }
+  return next()
+})
+
 bot.use(ctx => {
   let text = `Hey ${ctx.from.first_name}!\n`
 
