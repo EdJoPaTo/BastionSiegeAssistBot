@@ -28,7 +28,21 @@ bot.use(localSession.middleware())
 bot.use(bastionsiegeforward)
 bot.use(inlineQuery.bot)
 
-bot.use(ctx => ctx.reply('just forward me ingame screens like the building screen or a screen with your current resources'))
+bot.use(ctx => {
+  let text = `Hey ${ctx.from.first_name}!\n`
+
+  text += '\nYou should forward ingame screens from @BastionSiegeBot.'
+
+  text += '\n'
+  text += '\nWith forwarded screens that contain your current buildings or ressources I can predict when upgrades are ready.'
+
+  text += '\n'
+  text += '\nWith battle reports I can show your history in battles.'
+  text += ' Forwarding the "Your scouts found" message shows information about that player when known like possible loot and required army.'
+  text += ' You can also see information about players by using the inline search: Type `@BastionSiegeAssistBot <name part>` into any chat for that.'
+
+  return ctx.replyWithMarkdown(text)
+})
 
 bot.catch(error => {
   console.error('Telegraf Error', error.response || error)
