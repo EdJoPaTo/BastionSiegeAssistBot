@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.7.0"></a>
+# [1.7.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.6.0...v1.7.0) (2018-11-22)
+
+
+### Bug Fixes
+
+* **inline:** use inline query caching in production mode ([f8c8dd6](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/f8c8dd6))
+* **playerstats:** fix 33.33333…% ([d6f38fe](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/d6f38fe))
+* **playerstats:** forward attackscout message now works ([aecc29d](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/aecc29d))
+* **playerstats:** show desciption without starting spaces ([555b4f6](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/555b4f6))
+
+
+### Features
+
+* **number-functions:** show min and max with average, total, … ([13afeec](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/13afeec))
+* **playerstats:** description has now the max gold instead of avg ([263c5a1](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/263c5a1))
+* **playerstats:** every win will included in loot ([dca45cc](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/dca45cc))
+* **playerstats:** show army emoji (unit of number) ([1412be0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/1412be0))
+* update help text ([75248da](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/75248da))
+
+
+
 <a name="1.6.0"></a>
 # [1.6.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.5.0...v1.6.0) (2018-11-22)
 
