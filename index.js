@@ -5,6 +5,8 @@ const Telegraf = require('telegraf')
 const bastionsiegeforward = require('./parts/bastionsiegeforward')
 const inlineQuery = require('./parts/inline-query')
 
+const {Extra, Markup} = Telegraf
+
 const tokenFilePath = process.env.NODE_ENV === 'production' ? process.env.npm_package_config_tokenpath : process.env.npm_package_config_tokenpathdebug
 const token = fs.readFileSync(tokenFilePath, 'utf8').trim()
 const bot = new Telegraf(token)
@@ -49,7 +51,10 @@ bot.use(ctx => {
   text += ' Forwarding the "Your scouts found" message shows information about that player when known like possible loot and required army.'
   text += ' You can also see information about players by using the inline search: Type `@BastionSiegeAssistBot <name part>` into any chat for that.'
 
-  return ctx.replyWithMarkdown(text)
+  const keyboard = Markup.inlineKeyboard([
+    Markup.switchToCurrentChatButton('try player search…', 'Dragon')
+  ])
+  return ctx.replyWithMarkdown(text, Extra.markup(keyboard))
 })
 
 bot.catch(error => {
