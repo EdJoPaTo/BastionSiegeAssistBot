@@ -5,6 +5,8 @@ const debounce = require('debounce-promise')
 const {Markup, Extra} = Telegraf
 
 const battlereports = require('../lib/battlereports')
+const playerStats = require('../lib/player-stats')
+
 const {getMidnightXDaysEarlier} = require('../lib/number-functions')
 const {isForwardedFromBastionSiege} = require('../lib/bastion-siege-bot')
 const {createBuildingTimeStatsString, createFillTimeStatsString, createBattleStatsString, createPlayerStatsString} = require('../lib/create-stats-strings')
@@ -132,9 +134,10 @@ function isAttackScout(ctx) {
 bot.on('text', Telegraf.optional(isAttackScout, async ctx => {
   const {attackscout} = ctx.state.screen.information
   const allBattlereports = await battlereports.getAll()
+  const stats = playerStats.generate(allBattlereports, attackscout.player)
 
   return ctx.replyWithMarkdown(
-    createPlayerStatsString(allBattlereports, attackscout.player)
+    createPlayerStatsString(allBattlereports, stats)
   )
 }))
 
