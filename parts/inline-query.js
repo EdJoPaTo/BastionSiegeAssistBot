@@ -49,10 +49,14 @@ bot.on('inline_query', async ctx => {
       }
     })
 
-  return ctx.answerInlineQuery(results, {
-    cache_time: 2,
+  const options = {
     next_offset: orderedEnemies.length > offset + 50 ? String(offset + 50) : ''
-  })
+  }
+  if (process.env.NODE_ENV !== 'production') {
+    options.cache_time = 2
+  }
+
+  return ctx.answerInlineQuery(results, options)
 })
 
 module.exports = {
