@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.8.0"></a>
+# [1.8.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.7.0...v1.8.0) (2018-11-22)
+
+
+### Bug Fixes
+
+* **playerstats:** ignore inline query result for help message ([f29892e](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/f29892e))
+
+
+### Features
+
+* **playerstats:** add gems to stats when possible ([5a75143](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/5a75143))
+
+
+
 <a name="1.7.0"></a>
 # [1.7.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.6.0...v1.7.0) (2018-11-22)
 
