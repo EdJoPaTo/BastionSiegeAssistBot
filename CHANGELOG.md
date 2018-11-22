@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.6.0"></a>
+# [1.6.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.5.0...v1.6.0) (2018-11-22)
+
+
+### Bug Fixes
+
+* **playerstats:** fix typo ([a766d4f](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/a766d4f))
+* **playerstats:** improve short text for inline mode ([98acd8b](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/98acd8b))
+
+
+### Features
+
+* **playerstats:** add search by inline mode ([69fa224](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/69fa224))
+* **playerstats:** detect attackscouts message from BS ([1595370](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/1595370))
+* **playerstats:** show playerstats to the forwarded attackscouts ([a3ccb54](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/a3ccb54))
+* **playerstats:** show stats as text instead of json ([1c86605](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/1c86605))
+
+
+
 <a name="1.5.0"></a>
 # [1.5.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.4.0...v1.5.0) (2018-11-07)
 
