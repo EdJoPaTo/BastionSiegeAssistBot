@@ -7,7 +7,7 @@ const {Markup, Extra} = Telegraf
 const battlereports = require('../lib/battlereports')
 const {getMidnightXDaysEarlier} = require('../lib/number-functions')
 const {isForwardedFromBastionSiege} = require('../lib/bastion-siege-bot')
-const {createBuildingTimeStatsString, createFillTimeStatsString, createBattleStatsString} = require('../lib/create-stats-strings')
+const {createBuildingTimeStatsString, createFillTimeStatsString, createBattleStatsString, createPlayerStatsString} = require('../lib/create-stats-strings')
 const {detectgamescreen, getScreenInformation} = require('../lib/gamescreen')
 const {estimateResourcesAfterTimespan} = require('../lib/siegemath')
 
@@ -122,6 +122,21 @@ async function sendBattleReport(ctx) {
     createBattleStatsString(reportsFiltered)
   )
 }
+
+function isAttackScout(ctx) {
+  return ctx.state.screen &&
+         ctx.state.screen.information &&
+         ctx.state.screen.information.attackscout
+}
+
+bot.on('text', Telegraf.optional(isAttackScout, async ctx => {
+  const {attackscout} = ctx.state.screen.information
+  const allBattlereports = await battlereports.getAll()
+
+  return ctx.replyWithMarkdown(
+    createPlayerStatsString(allBattlereports, attackscout.player)
+  )
+}))
 
 const buildingsToShow = ['townhall', 'storage', 'houses', 'barracks', 'wall', 'trebuchet', 'ballista']
 const updateMarkup = Extra.markup(Markup.inlineKeyboard([
