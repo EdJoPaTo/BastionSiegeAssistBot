@@ -38,6 +38,21 @@
   },
   "xo": {
     "space": true,
-    "semicolon": false
+    "semicolon": false,
+    "overrides": [
+      {
+        "files": [
+          "parts/inline-query.js"
+        ],
+        "rules": {
+          "camelcase": [
+            "warn",
+            {
+              "properties": "never"
+            }
+          ]
+        }
+      }
+    ]
   }
 }

@@ -3,6 +3,7 @@ const LocalSession = require('telegraf-session-local')
 const Telegraf = require('telegraf')
 
 const bastionsiegeforward = require('./parts/bastionsiegeforward')
+const inlineQuery = require('./parts/inline-query')
 
 const tokenFilePath = process.env.NODE_ENV === 'production' ? process.env.npm_package_config_tokenpath : process.env.npm_package_config_tokenpathdebug
 const token = fs.readFileSync(tokenFilePath, 'utf8').trim()
@@ -25,6 +26,7 @@ const localSession = new LocalSession({
 bot.use(localSession.middleware())
 
 bot.use(bastionsiegeforward)
+bot.use(inlineQuery.bot)
 
 bot.use(ctx => ctx.reply('just forward me ingame screens like the building screen or a screen with your current resources'))
 
