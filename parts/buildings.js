@@ -58,6 +58,8 @@ bot.on('text', Telegraf.optional(isBuildingsOrResources, ctx => {
   debouncedBuildStats[id](ctx)
 }))
 
+bot.command('buildings', sendBuildStats)
+
 function sendBuildStats(ctx) {
   const information = ctx.session.gameInformation
 

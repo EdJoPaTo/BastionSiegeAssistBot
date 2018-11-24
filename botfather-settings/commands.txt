@@ -1,0 +1,3 @@
+buildings - get your remaining time until building upgrade
+battlestats - get battle stats of the last 7d
+help - show the help text

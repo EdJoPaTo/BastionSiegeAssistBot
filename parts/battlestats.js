@@ -41,6 +41,7 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
   await ctx.reply('battlereport added:\n```\n' + stringify(newInformation.battlereport, {space: 2}) + '\n```', extra)
 }))
 
+bot.command('battlestats', sendBattleStats)
 bot.action('battlestats', sendBattleStats)
 
 async function sendBattleStats(ctx) {
