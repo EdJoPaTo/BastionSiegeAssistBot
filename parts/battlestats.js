@@ -1,13 +1,12 @@
 const Telegraf = require('telegraf')
 const stringify = require('json-stable-stringify')
-const debounce = require('debounce-promise')
 
 const battlereports = require('../lib/battlereports')
 
 const {getMidnightXDaysEarlier} = require('../lib/number-functions')
 const {createBattleStatsString} = require('../lib/create-stats-strings')
 
-const DEBOUNCE_TIME = 100 // Milliseconds
+const {Extra, Markup} = Telegraf
 
 const bot = new Telegraf.Composer()
 
@@ -18,31 +17,33 @@ function isBattleReport(ctx) {
 }
 
 // Save battlereport
-bot.on('text', Telegraf.optional(isBattleReport, async (ctx, next) => {
+bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
   const newInformation = ctx.state.screen.information
   const {timestamp} = ctx.state.screen
 
+  const buttons = [
+    Markup.callbackButton('Show your Battle Stats…', 'battlestats')
+  ]
+  if (newInformation.battlereport.enemies.length === 1) {
+    buttons.push(
+      Markup.switchToCurrentChatButton('Show Enemy Player Stats…', newInformation.battlereport.enemies[0])
+    )
+  }
+  const extra = Extra.markdown().markup(
+    Markup.inlineKeyboard(buttons, {columns: 1})
+  )
+
   const currentlyExisting = await battlereports.get(ctx.from.id, timestamp)
   if (stringify(currentlyExisting) === stringify(newInformation.battlereport)) {
-    return ctx.reply('Thats not new to me. I will just ignore it.')
+    return ctx.reply('Thats not new to me. I will just ignore it.', extra)
   }
   await battlereports.add(ctx.from.id, timestamp, newInformation.battlereport)
-  await ctx.replyWithMarkdown('battlereport added:\n```\n' + stringify(newInformation.battlereport, {space: 2}) + '\n```')
-
-  return next()
+  await ctx.reply('battlereport added:\n```\n' + stringify(newInformation.battlereport, {space: 2}) + '\n```', extra)
 }))
 
-// Send battle stats
-const debouncedBattleStats = {}
-bot.on('text', Telegraf.optional(isBattleReport, ctx => {
-  const {id} = ctx.from
-  if (!debouncedBattleStats[id]) {
-    debouncedBattleStats[id] = debounce(sendBattleReport, DEBOUNCE_TIME)
-  }
-  debouncedBattleStats[id](ctx)
-}))
+bot.action('battlestats', sendBattleStats)
 
-async function sendBattleReport(ctx) {
+async function sendBattleStats(ctx) {
   const allReportsOfMyself = await battlereports.getAllFrom(ctx.from.id)
   const firstTimeRelevant = getMidnightXDaysEarlier(Date.now() / 1000, 7)
   const reportsFiltered = Object.keys(allReportsOfMyself)
