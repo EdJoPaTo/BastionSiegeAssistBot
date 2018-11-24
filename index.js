@@ -5,6 +5,10 @@ const Telegraf = require('telegraf')
 const bastionsiegeforward = require('./parts/bastionsiegeforward')
 const inlineQuery = require('./parts/inline-query')
 
+const partBattleStats = require('./parts/battlestats')
+const partBuildings = require('./parts/buildings')
+const partPlayerStats = require('./parts/playerstats')
+
 const {Extra, Markup} = Telegraf
 
 const tokenFilePath = process.env.NODE_ENV === 'production' ? process.env.npm_package_config_tokenpath : process.env.npm_package_config_tokenpathdebug
@@ -27,8 +31,12 @@ const localSession = new LocalSession({
 })
 bot.use(localSession.middleware())
 
-bot.use(bastionsiegeforward)
+bot.use(bastionsiegeforward.bot)
 bot.use(inlineQuery.bot)
+
+bot.use(partBattleStats.bot)
+bot.use(partBuildings.bot)
+bot.use(partPlayerStats.bot)
 
 bot.on('text', (ctx, next) => {
   if (!ctx.message.forward_from && ctx.chat.id === ctx.from.id && ctx.message.text.indexOf('Battles observed') >= 0) {
