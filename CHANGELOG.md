@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.9.0"></a>
+# [1.9.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.8.0...v1.9.0) (2018-11-25)
+
+
+### Bug Fixes
+
+* simplify createSumAverageAmountString with only 1 value ([4425428](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/4425428))
+* **playerstats:** make more clear what the text means ([94c2387](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/94c2387))
+* **playerstats:** rename for easier understanding ([635752e](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/635752e))
+
+
+### Features
+
+* **playerstats:** forward incoming attack to get playerstats ([3f7de68](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/3f7de68))
+* add commands to the bot ([3346856](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/3346856))
+* **battlestats:** dont show battlestats always ([07601f5](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/07601f5))
+* **playerstats:** show army assumption in a more detailed manner ([a439be5](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/a439be5))
+* show an inline query button below the help message ([9693626](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/9693626))
+
+
+
 <a name="1.8.0"></a>
 # [1.8.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.7.0...v1.8.0) (2018-11-22)
 
