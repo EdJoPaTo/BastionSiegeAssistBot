@@ -1,7 +1,7 @@
 const Telegraf = require('telegraf')
 
 const {isForwardedFromBastionSiege} = require('../lib/bastion-siege-bot')
-const {detectgamescreen, getScreenInformation} = require('../lib/gamescreen')
+const {getScreenInformation} = require('../lib/gamescreen')
 
 const bot = new Telegraf.Composer()
 
@@ -20,7 +20,6 @@ bot.use((ctx, next) => {
 // Load game screen type and information
 bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, (ctx, next) => {
   ctx.state.screen = {
-    type: detectgamescreen(ctx.message.text),
     information: getScreenInformation(ctx.message.text),
     timestamp: ctx.message.forward_date
   }
