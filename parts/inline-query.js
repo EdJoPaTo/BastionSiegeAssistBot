@@ -2,6 +2,8 @@ const Telegraf = require('telegraf')
 
 const battlereports = require('../lib/battlereports')
 const playerStats = require('../lib/player-stats')
+
+const {getAllEnemies} = require('../lib/battle-stats')
 const {createPlayerStatsString, createPlayerStatsShortString} = require('../lib/create-stats-strings')
 
 const bot = new Telegraf.Composer()
@@ -20,20 +22,10 @@ bot.on('inline_query', async ctx => {
 
   const allBattlereports = await battlereports.getAll()
 
-  const enemies = allBattlereports
-    .filter(o => o.enemies.length === 1)
-    .map(o => o.enemies[0])
+  const enemies = getAllEnemies(allBattlereports)
     .filter(o => regex.test(o))
 
-  // Order them by occurence count
-  // https://stackoverflow.com/questions/22010520/sort-by-number-of-occurrencecount-in-javascript-array
-  const battlesObserved = enemies.reduce((p, c) => {
-    p[c] = (p[c] || 0) + 1
-    return p
-  }, {})
-  const orderedEnemies = Object.keys(battlesObserved).sort((a, b) => battlesObserved[b] - battlesObserved[a])
-
-  const results = orderedEnemies
+  const results = enemies
     .slice(offset, offset + 50)
     .map(o => playerStats.generate(allBattlereports, o))
     .map(stats => {
@@ -50,7 +42,7 @@ bot.on('inline_query', async ctx => {
     })
 
   const options = {
-    next_offset: orderedEnemies.length > offset + 50 ? String(offset + 50) : ''
+    next_offset: enemies.length > offset + 50 ? String(offset + 50) : ''
   }
   if (process.env.NODE_ENV !== 'production') {
     options.cache_time = 2
