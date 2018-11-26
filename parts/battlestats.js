@@ -22,15 +22,18 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
   const {timestamp} = ctx.state.screen
 
   const buttons = [
-    Markup.callbackButton('Show your Battle Stats…', 'battlestats')
+    [
+      Markup.callbackButton('Your Battle Stats', 'battlestats')
+    ]
   ]
   if (newInformation.battlereport.enemies.length === 1) {
-    buttons.push(
-      Markup.switchToCurrentChatButton('Show Enemy Player Stats…', newInformation.battlereport.enemies[0])
-    )
+    buttons.push([
+      Markup.switchToCurrentChatButton('Enemy Player Stats', newInformation.battlereport.enemies[0]),
+      Markup.switchToChatButton('Share Player Stats…', newInformation.battlereport.enemies[0])
+    ])
   }
   const extra = Extra.markdown().markup(
-    Markup.inlineKeyboard(buttons, {columns: 1})
+    Markup.inlineKeyboard(buttons)
   )
 
   const currentlyExisting = await battlereports.get(ctx.from.id, timestamp)
