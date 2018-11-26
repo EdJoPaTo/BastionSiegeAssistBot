@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.10.0"></a>
+# [1.10.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.9.0...v1.10.0) (2018-11-26)
+
+
+### Bug Fixes
+
+* **playerstats:** only use battles where the army is known ([4d741a4](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/4d741a4))
+
+
+### Features
+
+* **gamescreen:** analyse russian gamescreens ([b9b5cb1](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/b9b5cb1))
+
+
+### Performance Improvements
+
+* **gamescreen:** dont run function multiple times ([55348f1](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/55348f1))
+
+
+
 <a name="1.9.0"></a>
 # [1.9.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.8.0...v1.9.0) (2018-11-25)
 
