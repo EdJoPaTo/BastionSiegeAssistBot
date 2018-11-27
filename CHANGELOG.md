@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.11.0"></a>
+# [1.11.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.10.0...v1.11.0) (2018-11-27)
+
+
+### Bug Fixes
+
+* **playerstats:** send playerstats directly on battlreport button ([e928a96](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/e928a96))
+* dont send help when the user searched for an immune player ([dcb47da](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/dcb47da))
+* **botfather:** simplify command description ([62cdc46](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/62cdc46))
+* **gamescreen:** dont detect lost attack as lost defence ([8937221](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/8937221))
+* **gamescreen:** you only change karma when attacking and winning ([1643e04](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/1643e04))
+* **number-function-strings:** improve spacing ([cb611e7](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/cb611e7))
+* **playerstats:** show loot only for attacks and Dragons 🐲 ([561a297](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/561a297))
+
+
+### Features
+
+* **playerstats:** move playerstats sharing to playerstats ([059e8c3](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/059e8c3))
+* **playerstats:** show loot average and max ([190ea24](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/190ea24))
+* show stats with average and stdDeviation instead of min, max, … ([8546dc1](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/8546dc1))
+* **botstats:** add some botstats ([534074c](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/534074c))
+* **help:** tell about the support group ([bce5e18](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/bce5e18))
+* **playerstats:** share playerstats after adding battlereport ([4068e0a](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/4068e0a))
+
+
+
 <a name="1.10.0"></a>
 # [1.10.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.9.0...v1.10.0) (2018-11-26)
 
