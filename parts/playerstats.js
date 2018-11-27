@@ -5,6 +5,8 @@ const playerStats = require('../lib/player-stats')
 
 const {createPlayerStatsString} = require('../lib/create-stats-strings')
 
+const {Extra, Markup} = Telegraf
+
 const bot = new Telegraf.Composer()
 
 function isAttackIncoming(ctx) {
@@ -38,8 +40,15 @@ async function sendPlayerStats(ctx, playername) {
   const allBattlereports = await battlereports.getAll()
   const stats = playerStats.generate(allBattlereports, playername)
 
+  const buttons = [
+    [
+      Markup.switchToChatButton('Share Player Stats…', playername)
+    ]
+  ]
+
   return ctx.replyWithMarkdown(
-    createPlayerStatsString(allBattlereports, stats)
+    createPlayerStatsString(allBattlereports, stats),
+    Extra.markup(Markup.inlineKeyboard(buttons))
   )
 }
 
