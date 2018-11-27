@@ -28,7 +28,7 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
   ]
   if (newInformation.battlereport.enemies.length === 1) {
     buttons.push([
-      Markup.switchToCurrentChatButton('Enemy Player Stats', newInformation.battlereport.enemies[0]),
+      Markup.callbackButton('Enemy Player Stats', `player-${newInformation.battlereport.enemies[0]}`),
       Markup.switchToChatButton('Share Player Stats…', newInformation.battlereport.enemies[0])
     ])
   }

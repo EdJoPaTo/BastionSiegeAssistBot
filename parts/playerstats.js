@@ -29,6 +29,11 @@ bot.on('text', Telegraf.optional(isAttackScout, ctx => {
   return sendPlayerStats(ctx, attackscout.player)
 }))
 
+bot.action(/player-(.+)/, ctx => {
+  const playername = ctx.match[1]
+  return sendPlayerStats(ctx, playername)
+})
+
 async function sendPlayerStats(ctx, playername) {
   const allBattlereports = await battlereports.getAll()
   const stats = playerStats.generate(allBattlereports, playername)
