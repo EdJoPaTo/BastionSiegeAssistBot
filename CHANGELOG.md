@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.13.1"></a>
+## [1.13.1](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.13.0...v1.13.1) (2018-11-28)
+
+
+### Bug Fixes
+
+* **gamescreen:** prevent error when gamescreen is unknown ([884680e](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/884680e))
+
+
+
 <a name="1.13.0"></a>
 # [1.13.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.12.0...v1.13.0) (2018-11-28)
 
