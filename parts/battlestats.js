@@ -44,7 +44,7 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
   }
 
   if (isNew) {
-    await battlereports.add(ctx.from.id, timestamp, report)
+    await battlereports.add(ctx.from.id, timestamp, report, ctx.message.text)
   }
   return ctx.reply(text, extra)
 }))
