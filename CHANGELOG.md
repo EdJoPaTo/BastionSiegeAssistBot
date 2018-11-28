@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.12.0"></a>
+# [1.12.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.11.0...v1.12.0) (2018-11-28)
+
+
+### Bug Fixes
+
+* **playerstats:** remove additional hint for inactivity ([8c39359](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/8c39359))
+
+
+### Features
+
+* **buildings:** include mine ([485353a](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/485353a))
+* **playerstats:** guess the enemy army based on gold lost to him ([a26b8e1](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/a26b8e1))
+* improve the help text ([c89097b](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/c89097b))
+* **battlestats:** nicer battlereport added message ([6e2362e](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/6e2362e))
+* **battlestats:** show average and total ([e4ee0e9](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/e4ee0e9))
+* **playerstats:** only show time of last known battle ([89fe4a8](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/89fe4a8))
+
+
+
 <a name="1.11.0"></a>
 # [1.11.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.10.0...v1.11.0) (2018-11-27)
 
