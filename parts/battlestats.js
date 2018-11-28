@@ -18,29 +18,35 @@ function isBattleReport(ctx) {
 
 // Save battlereport
 bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
-  const newInformation = ctx.state.screen.information
+  const report = ctx.state.screen.information.battlereport
   const {timestamp} = ctx.state.screen
 
   const buttons = [
     [
       Markup.callbackButton('Your Battle Stats', 'battlestats')
+    ],
+    [
+      Markup.callbackButton('Enemy Player Stats', `player-${report.enemies[0]}`, report.enemies.length > 1)
     ]
   ]
-  if (newInformation.battlereport.enemies.length === 1) {
-    buttons.push([
-      Markup.callbackButton('Enemy Player Stats', `player-${newInformation.battlereport.enemies[0]}`)
-    ])
-  }
   const extra = Extra.markdown().markup(
     Markup.inlineKeyboard(buttons)
   )
 
+  let text = '*Battlereport*'
+
   const currentlyExisting = await battlereports.get(ctx.from.id, timestamp)
-  if (stringify(currentlyExisting) === stringify(newInformation.battlereport)) {
-    return ctx.reply('Thats not new to me. I will just ignore it.', extra)
+  const isNew = stringify(currentlyExisting) !== stringify(report)
+  if (isNew) {
+    text += '\nThanks for that. I added it 👌'
+  } else {
+    text += '\nYou have sent me this one already 🙃'
   }
-  await battlereports.add(ctx.from.id, timestamp, newInformation.battlereport)
-  await ctx.reply('battlereport added:\n```\n' + stringify(newInformation.battlereport, {space: 2}) + '\n```', extra)
+
+  if (isNew) {
+    await battlereports.add(ctx.from.id, timestamp, report)
+  }
+  return ctx.reply(text, extra)
 }))
 
 bot.command('battlestats', sendBattleStats)
