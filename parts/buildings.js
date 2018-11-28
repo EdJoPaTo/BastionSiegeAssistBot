@@ -44,7 +44,7 @@ bot.on('text', Telegraf.optional(isBuildingsOrResources, (ctx, next) => {
   return next()
 }))
 
-const buildingsToShow = ['townhall', 'storage', 'houses', 'barracks', 'wall', 'trebuchet', 'ballista']
+const buildingsToShow = ['townhall', 'storage', 'houses', 'mine', 'barracks', 'wall', 'trebuchet', 'ballista']
 const updateMarkup = Extra.markup(Markup.inlineKeyboard([
   Markup.callbackButton('estimate current situation', 'estimate')
 ]))
