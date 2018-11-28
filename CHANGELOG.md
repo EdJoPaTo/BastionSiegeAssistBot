@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.13.0"></a>
+# [1.13.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.12.0...v1.13.0) (2018-11-28)
+
+
+### Bug Fixes
+
+* **playerstats:** last battle was Infinity days ago ([7121e66](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/7121e66))
+
+
+### Features
+
+* **battlereports:** save raw version and fix battlereports with them ([091e81b](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/091e81b))
+
+
+
 <a name="1.12.0"></a>
 # [1.12.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.11.0...v1.12.0) (2018-11-28)
 
