@@ -54,18 +54,23 @@ bot.on('text', (ctx, next) => {
 bot.use(ctx => {
   let text = `Hey ${ctx.from.first_name}!\n`
 
-  text += '\nYou should forward ingame screens from @BastionSiegeBot.'
+  text += '\nYou should forward ingame screens from @BastionSiegeBot to me.'
 
   text += '\n'
-  text += '\nWith forwarded screens that contain your current buildings or ressources I can predict when upgrades are ready.'
+  text += '\nWith forwarded screens that contain your current buildings or resources I can predict when upgrades are ready.'
 
   text += '\n'
   text += '\nWith battle reports I can show your history in battles.'
-  text += ' Forwarding the "Your scouts found" message shows information about that player when known like possible loot and required army.'
+  text += ' Forwarding the "Your scouts found" message shows information about that player like possible loot and required army.'
   text += ' You can also see information about players by using the inline search: Type `@BastionSiegeAssistBot <name part>` into any chat for that.'
 
   text += '\n'
-  text += '\nYou have an idea or found a bug? Join @BastionSiegeAssist and tell me. Let us make this bot even better :)'
+  text += '\nBattlereports you provide will only be used to assume the enemies strength.'
+  text += ' Your own data known to me will not be considered to tell others your strength.'
+  text += ' It gets even better: As long as you are actively providing data to me you will get immunity and no one can use me to check on you.'
+
+  text += '\n'
+  text += '\nYou have an idea or found a bug? Join @BastionSiegeAssist and share it. Let us make this bot even better :)'
 
   const keyboard = Markup.inlineKeyboard([
     Markup.switchToCurrentChatButton('try player search…', 'Dragon')
