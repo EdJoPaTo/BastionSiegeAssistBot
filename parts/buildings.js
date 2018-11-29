@@ -94,7 +94,7 @@ function generateStatsText(information) {
   const resourceAgeMinutes = Math.floor((currentTimestamp - information.resourceTimestamp) / 60)
   const buildingAgeMinutes = Math.floor((currentTimestamp - information.buildingTimestamp) / 60)
 
-  const buildings = Object.assign({}, information.buildings, information.workshop)
+  const buildings = {...information.buildings, ...information.workshop}
 
   const estimatedResources = estimateResourcesAfterTimespan(information.resources, buildings, resourceAgeMinutes)
 
