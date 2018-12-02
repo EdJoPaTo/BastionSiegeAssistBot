@@ -34,7 +34,7 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
   ]
   const extra = Extra.markdown().markup(
     Markup.inlineKeyboard(buttons)
-  )
+  ).inReplyTo(ctx.message.message_id)
 
   let text = '*Battlereport*'
   text += '\n'
