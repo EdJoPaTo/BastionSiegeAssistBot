@@ -4,7 +4,7 @@ const stringify = require('json-stable-stringify')
 const battlereports = require('../lib/battlereports')
 
 const {emoji} = require('../lib/gamescreen.emoji')
-const {getMidnightXDaysEarlier} = require('../lib/number-functions')
+const {formatNumberShort, getMidnightXDaysEarlier} = require('../lib/number-functions')
 const {createBattleStatsString} = require('../lib/create-stats-strings')
 
 const {Extra, Markup} = Telegraf
@@ -22,7 +22,7 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
   const report = ctx.state.screen.information.battlereport
   const {timestamp} = ctx.state.screen
 
-  const {attack, won} = report
+  const {attack, won, reward} = report
 
   const buttons = [
     [
@@ -41,13 +41,14 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
   text += attack ? emoji.army : emoji.wall
   text += won ? '😏' : '😒'
   text += ' '
+  text += formatNumberShort(reward, true) + emoji.gold
 
   const currentlyExisting = await battlereports.get(ctx.from.id, timestamp)
   const isNew = stringify(currentlyExisting) !== stringify(report)
   if (isNew) {
-    text += 'Thanks for that. I added it 👌'
+    text += '\nThanks for that. I added it 👌'
   } else {
-    text += 'You have sent me this one already 🙃'
+    text += '\nYou have sent me this one already 🙃'
   }
 
   if (isNew) {
