@@ -26,6 +26,12 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
 
   const {attack, won, reward} = report
 
+  const currentlyExisting = await battlereports.get(ctx.from.id, timestamp)
+  const isNew = stringify(currentlyExisting) !== stringify(report)
+  if (isNew) {
+    await battlereports.add(ctx.from.id, timestamp, report, ctx.message.text)
+  }
+
   const allBattlereports = await battlereports.getAll()
 
   const buttons = [
@@ -49,8 +55,6 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
   text += ' '
   text += formatNumberShort(reward, true) + emoji.gold
 
-  const currentlyExisting = await battlereports.get(ctx.from.id, timestamp)
-  const isNew = stringify(currentlyExisting) !== stringify(report)
   if (isNew) {
     text += '\nThanks for that. I added it 👌'
 
@@ -79,9 +83,6 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
     .map(o => createPlayerStatsString(allBattlereports, o))
     .join('\n\n')
 
-  if (isNew) {
-    await battlereports.add(ctx.from.id, timestamp, report, ctx.message.text)
-  }
   return ctx.reply(text, extra)
 }))
 
