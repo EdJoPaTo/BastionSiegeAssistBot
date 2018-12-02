@@ -3,6 +3,7 @@ const stringify = require('json-stable-stringify')
 
 const battlereports = require('../lib/battlereports')
 const playerStats = require('../lib/player-stats')
+const playerStatsSearch = require('../lib/player-stats-search')
 
 const {emoji} = require('../lib/gamescreen.emoji')
 const {formatNumberShort, getMidnightXDaysEarlier} = require('../lib/number-functions')
@@ -52,6 +53,22 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
   const isNew = stringify(currentlyExisting) !== stringify(report)
   if (isNew) {
     text += '\nThanks for that. I added it 👌'
+
+    if (!ctx.session.search) {
+      ctx.session.search = {}
+    }
+    const me = report.friends[0] // Wrong for alliance battles but they are not considered here.
+    const relevantDays = 2
+    const minDate = getMidnightXDaysEarlier(Date.now() / 1000, relevantDays)
+    const relevantReports = allBattlereports
+      // Only solo battles are valued. Adding Alliance battles will end within the min(1)
+      .filter(o => o.friends.length === 1)
+      .filter(o => o.friends[0] === me)
+      .filter(o => o.time > minDate)
+
+    const reward = relevantReports.length / relevantDays / 5
+    const rewardFinal = Math.min(1, Math.max(5, Math.round(reward)))
+    ctx.session.search.remainingSearches = playerStatsSearch.newSearchLimitAfterReward(ctx.session.search.remainingSearches, rewardFinal)
   } else {
     text += '\nYou have sent me this one already 🙃'
   }

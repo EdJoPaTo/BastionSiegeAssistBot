@@ -1,4 +1,5 @@
 buildings - get your remaining time until building upgrade
 battlestats - get battle stats of the last 7d
+search - get info about the search
 botstats - show statistics about the bot
 help - show the help

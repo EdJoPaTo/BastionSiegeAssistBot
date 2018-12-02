@@ -7,10 +7,11 @@ const battlereportsDataFix = require('./lib/battlereports-data-fix')
 const bastionsiegeforward = require('./parts/bastionsiegeforward')
 const inlineQuery = require('./parts/inline-query')
 
-const partBotStats = require('./parts/bot-stats')
 const partBattleStats = require('./parts/battlestats')
+const partBotStats = require('./parts/bot-stats')
 const partBuildings = require('./parts/buildings')
 const partPlayerStats = require('./parts/playerstats')
+const partSearch = require('./parts/search')
 
 const {Extra, Markup} = Telegraf
 
@@ -47,10 +48,11 @@ bot.use((ctx, next) => {
 bot.use(bastionsiegeforward.bot)
 bot.use(inlineQuery.bot)
 
-bot.use(partBotStats.bot)
 bot.use(partBattleStats.bot)
+bot.use(partBotStats.bot)
 bot.use(partBuildings.bot)
 bot.use(partPlayerStats.bot)
+bot.use(partSearch.bot)
 
 bot.on('text', (ctx, next) => {
   if (!ctx.message.forward_from && ctx.chat.id === ctx.from.id &&
@@ -74,7 +76,7 @@ bot.use(ctx => {
   text += '\n'
   text += '\nWith battle reports I can show your history in battles.'
   text += ' Forwarding the "Your scouts found" message shows information about that player like possible loot and required army.'
-  text += ' You can also see information about players by using the inline search: Type `@BastionSiegeAssistBot <name part>` into any chat for that.'
+  text += ' See more about the search at /search.'
 
   text += '\n'
   text += '\nBattlereports you provide will only be used to assume the enemies strength.'
