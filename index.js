@@ -36,6 +36,14 @@ const localSession = new LocalSession({
 })
 bot.use(localSession.middleware())
 
+// Fix previous bot problems
+bot.use((ctx, next) => {
+  if (ctx.session.gameInformation) {
+    delete ctx.session.gameInformation.battlereport
+  }
+  return next()
+})
+
 bot.use(bastionsiegeforward.bot)
 bot.use(inlineQuery.bot)
 
