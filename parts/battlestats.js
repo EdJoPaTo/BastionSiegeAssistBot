@@ -2,10 +2,11 @@ const Telegraf = require('telegraf')
 const stringify = require('json-stable-stringify')
 
 const battlereports = require('../lib/battlereports')
+const playerStats = require('../lib/player-stats')
 
 const {emoji} = require('../lib/gamescreen.emoji')
 const {formatNumberShort, getMidnightXDaysEarlier} = require('../lib/number-functions')
-const {createBattleStatsString} = require('../lib/create-stats-strings')
+const {createBattleStatsString, createPlayerStatsString} = require('../lib/create-stats-strings')
 
 const {Extra, Markup} = Telegraf
 
@@ -24,14 +25,18 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
 
   const {attack, won, reward} = report
 
+  const allBattlereports = await battlereports.getAll()
+
   const buttons = [
     [
       Markup.callbackButton('Your Battle Stats', 'battlestats')
-    ],
-    [
-      Markup.callbackButton('Enemy Player Stats', `player-${report.enemies[0]}`, report.enemies.length > 1)
     ]
   ]
+    .concat(
+      report.enemies.map(
+        o => Markup.switchToChatButton(`Share ${o}…`, o)
+      ).map(o => [o])
+    )
   const extra = Extra.markdown().markup(
     Markup.inlineKeyboard(buttons)
   ).inReplyTo(ctx.message.message_id)
@@ -50,6 +55,12 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
   } else {
     text += '\nYou have sent me this one already 🙃'
   }
+
+  text += '\n\n'
+  text += report.enemies
+    .map(o => playerStats.generate(allBattlereports, o))
+    .map(o => createPlayerStatsString(allBattlereports, o))
+    .join('\n\n')
 
   if (isNew) {
     await battlereports.add(ctx.from.id, timestamp, report, ctx.message.text)
