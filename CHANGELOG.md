@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.14.0"></a>
+# [1.14.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.13.2...v1.14.0) (2018-12-02)
+
+
+### Bug Fixes
+
+* **playerstats:** only show loot with successful attacks ([8fb86e9](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/8fb86e9))
+* fix the data from a previous bot bug ([c4725e4](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/c4725e4))
+
+
+### Features
+
+* **battlereport:** add attack and won emoji ([224ea40](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/224ea40))
+* **battlereport:** reply to the specific report that added the report ([7ede6c9](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/7ede6c9))
+* **battlereport:** show enemy playerstats on adding battlereport ([cf0be41](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/cf0be41))
+* **playerstats:** limit searches ([1e4efbf](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/1e4efbf))
+* **playerstats:** more compact playerstats ([46f4354](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/46f4354))
+
+
+
 <a name="1.13.2"></a>
 ## [1.13.2](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.13.1...v1.13.2) (2018-11-29)
 
