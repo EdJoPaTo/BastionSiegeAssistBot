@@ -24,7 +24,7 @@ bot.command('search', ctx => {
   text += '\n• Forward the *Your domain attacked* message to me'
 
   text += '\n'
-  text += '\nRemaining Searches explained:'
+  text += '\n*Remaining Searches explained*'
   text += '\nWhen you provide reports you get Searches you can use.'
   text += ' When you are more active you get more Searches per provided Report.'
 
