@@ -26,8 +26,8 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
 
   const {attack, won, reward} = report
 
-  const currentlyExisting = await battlereports.get(ctx.from.id, timestamp)
-  const isNew = stringify(currentlyExisting) !== stringify(report)
+  const {reportsRaw} = await battlereports.load(ctx.from.id)
+  const isNew = !reportsRaw[timestamp]
   if (isNew) {
     await battlereports.add(ctx.from.id, timestamp, report, ctx.message.text)
   }
