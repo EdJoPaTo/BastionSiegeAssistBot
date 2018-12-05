@@ -14,9 +14,10 @@ const {Extra, Markup} = Telegraf
 const bot = new Telegraf.Composer()
 
 function isBattleReport(ctx) {
-  return ctx.state.screen &&
-         ctx.state.screen.information &&
-         ctx.state.screen.information.battlereport
+  return ctx.state.screen && (
+    ctx.state.screen.type === 'battlereport' ||
+    ctx.state.screen.type === 'alliance-battlereport'
+  )
 }
 
 // Save battlereport
@@ -24,12 +25,21 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
   const report = ctx.state.screen.information.battlereport
   const {timestamp} = ctx.state.screen
 
-  const {attack, won, reward} = report
-
   const {reportsRaw} = await battlereports.load(ctx.from.id)
   const isNew = !reportsRaw[timestamp]
   if (isNew) {
     await battlereports.add(ctx.from.id, timestamp, report, ctx.message.text)
+  }
+
+  let text = '*Battlereport*'
+
+  const baseExtra = Extra
+    .markdown()
+    .inReplyTo(ctx.message.message_id)
+
+  if (!report) {
+    text += '\nSomething seems fishy here. Please tell @BastionSiegeAssist in order to get this fixed. 😇'
+    return ctx.reply(text, baseExtra)
   }
 
   const allBattlereports = await battlereports.getAll()
@@ -44,11 +54,9 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
         o => Markup.switchToChatButton(`Share ${o}…`, o)
       ).map(o => [o])
     )
-  const extra = Extra.markdown().markup(
-    Markup.inlineKeyboard(buttons)
-  ).inReplyTo(ctx.message.message_id)
+  const markup = Markup.inlineKeyboard(buttons)
 
-  let text = '*Battlereport*'
+  const {attack, won, reward} = report
   text += '\n'
   text += attack ? emoji.army : emoji.wall
   text += won ? '😏' : '😒'
@@ -83,7 +91,7 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
     .map(o => createPlayerStatsString(allBattlereports, o))
     .join('\n\n')
 
-  return ctx.reply(text, extra)
+  return ctx.reply(text, baseExtra.markup(markup))
 }))
 
 bot.command('battlestats', sendBattleStats)
