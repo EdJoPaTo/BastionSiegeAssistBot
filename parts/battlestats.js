@@ -1,5 +1,4 @@
 const Telegraf = require('telegraf')
-const stringify = require('json-stable-stringify')
 
 const battlereports = require('../lib/battlereports')
 const playerStats = require('../lib/player-stats')
