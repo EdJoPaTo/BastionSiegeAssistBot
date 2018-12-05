@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.14.1"></a>
+## [1.14.1](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.14.0...v1.14.1) (2018-12-05)
+
+
+### Bug Fixes
+
+* **battlereport:** save raw at all costs ([92ec141](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/92ec141))
+* **battlereport:** use more extreme win/lost emojis ([3ceebbd](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/3ceebbd))
+* **battlereports:** save reports when raw not existing ([667d49b](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/667d49b))
+* **gamescreen:** read different kind of 'none returned' ([5234c69](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/5234c69))
+* **playerstats:** only show stats for up to date messages ([53c5afa](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/53c5afa))
+
+
+
 <a name="1.14.0"></a>
 # [1.14.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.13.2...v1.14.0) (2018-12-02)
 
