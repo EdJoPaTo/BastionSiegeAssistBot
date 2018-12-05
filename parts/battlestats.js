@@ -59,7 +59,7 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
   const {attack, won, reward} = report
   text += '\n'
   text += attack ? emoji.army : emoji.wall
-  text += won ? '😏' : '😒'
+  text += won ? '🎉' : '😭'
   text += ' '
   text += formatNumberShort(reward, true) + emoji.gold
 
