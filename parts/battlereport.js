@@ -69,7 +69,9 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
   text += attack ? emoji.army : emoji.wall
   text += won ? '🎉' : '😭'
   text += ' '
-  text += formatNumberShort(reward, true) + emoji.gold
+  const additionalStats = []
+  additionalStats.push(formatNumberShort(reward, true) + emoji.gold)
+  text += additionalStats.join(' ')
 
   if (isNew) {
     text += '\nThanks for that. I added it 👌'
