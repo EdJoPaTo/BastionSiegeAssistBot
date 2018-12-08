@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.15.0"></a>
+# [1.15.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.14.1...v1.15.0) (2018-12-08)
+
+
+### Bug Fixes
+
+* **battlestats:** get enemies from alliance battles too ([37763b7](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/37763b7))
+* **buildings:** fix food production when houses < farm ([b3f3711](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/b3f3711))
+* **playerstats:** genderfriendly immunity message ([fdb217a](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/fdb217a))
+
+
+### Features
+
+* **alerts:** add alert system ([3483921](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/3483921))
+* **battlereport:** save timestamp of last solo / alliance attack ([b0ffcbe](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/b0ffcbe))
+* **battlereport:** show terra, gems, karma in stats when possible ([009d9ed](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/009d9ed))
+* **battlereport:** update gold after battlereport ([c28b8f4](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/c28b8f4))
+* **buildings:** show buildings based on user settings ([38960c0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/38960c0))
+* **buildings:** show gold per min / hour ([6b73402](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/6b73402))
+* **playerstats:** ignore battles without loss on army assumption ([31931f3](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/31931f3))
+* **settings:** add settings menu ([e1b0526](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/e1b0526))
+
+
+
 <a name="1.14.1"></a>
 ## [1.14.1](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.14.0...v1.14.1) (2018-12-05)
 
