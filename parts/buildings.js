@@ -1,6 +1,8 @@
 const Telegraf = require('telegraf')
 const debounce = require('debounce-promise')
 
+const {buildingNames, defaultBuildingsToShow} = require('../lib/buildings')
+
 const {Markup, Extra} = Telegraf
 
 const {createBuildingTimeStatsString, createFillTimeStatsString} = require('../lib/create-stats-strings')
@@ -44,7 +46,6 @@ bot.on('text', Telegraf.optional(isBuildingsOrResources, (ctx, next) => {
   return next()
 }))
 
-const buildingsToShow = ['townhall', 'storage', 'houses', 'mine', 'barracks', 'wall', 'trebuchet', 'ballista']
 const updateMarkup = Extra.markup(Markup.inlineKeyboard([
   Markup.callbackButton('estimate current situation', 'estimate')
 ]))
@@ -70,13 +71,13 @@ function sendBuildStats(ctx) {
     return ctx.reply('please forward me a screen from the game showing your current resources')
   }
 
-  const statsText = generateStatsText(information)
+  const statsText = generateStatsText(information, ctx.session.buildings)
   return ctx.reply(statsText, updateMarkup)
 }
 
 bot.action('estimate', async ctx => {
   try {
-    const newStats = generateStatsText(ctx.session.gameInformation)
+    const newStats = generateStatsText(ctx.session.gameInformation, ctx.session.buildings)
     const oldStats = ctx.callbackQuery.message.text
 
     if (compareStrAsSimpleOne(newStats, oldStats) === 0) {
@@ -89,7 +90,7 @@ bot.action('estimate', async ctx => {
   }
 })
 
-function generateStatsText(information) {
+function generateStatsText(information, buildingsToShow) {
   const currentTimestamp = Math.floor(Date.now() / 1000)
   const resourceAgeMinutes = Math.floor((currentTimestamp - information.resourceTimestamp) / 60)
   const buildingAgeMinutes = Math.floor((currentTimestamp - information.buildingTimestamp) / 60)
@@ -100,10 +101,12 @@ function generateStatsText(information) {
 
   let text = ''
 
-  for (const buildingName of buildingsToShow) {
-    text += createBuildingTimeStatsString(buildingName, buildings, estimatedResources) + '\n'
-  }
-  text += '\n'
+  buildingsToShow = buildingsToShow || defaultBuildingsToShow
+  text += Object.keys(buildingNames)
+    .filter(o => buildingsToShow.indexOf(o) >= 0)
+    .map(o => createBuildingTimeStatsString(o, buildings, estimatedResources))
+    .join('\n')
+  text += '\n\n'
 
   text += createFillTimeStatsString(buildings, estimatedResources)
 
