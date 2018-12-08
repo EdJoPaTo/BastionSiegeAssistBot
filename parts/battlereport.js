@@ -48,6 +48,10 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
   if (timestamp > resourceTimestamp) {
     ctx.session.gameInformation.resources.gold += reward
   }
+  if (attack) {
+    const timestampType = ctx.state.screen.type === 'alliance-battlereport' ? 'battleAllianceTimestamp' : 'battleSoloTimestamp'
+    ctx.session.gameInformation[timestampType] = Math.max(ctx.session.gameInformation[timestampType] || 0, timestamp)
+  }
 
   const buttons = [
     [
