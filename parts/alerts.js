@@ -24,7 +24,7 @@ class AlertHandler {
     }
   }
 
-  recreateAlerts(user, alerts, gameInformation) {
+  recreateAlerts(user, alerts = [], gameInformation) {
     const oldAlerts = this.alertsOfUsers[user] || []
     oldAlerts.forEach(o => {
       clearTimeout(o)
