@@ -7,6 +7,7 @@ const battlereportsDataFix = require('./lib/battlereports-data-fix')
 const bastionsiegeforward = require('./parts/bastionsiegeforward')
 const inlineQuery = require('./parts/inline-query')
 
+const partBattlereport = require('./parts/battlereport')
 const partBattleStats = require('./parts/battlestats')
 const partBotStats = require('./parts/bot-stats')
 const partBuildings = require('./parts/buildings')
@@ -48,6 +49,7 @@ bot.use((ctx, next) => {
 bot.use(bastionsiegeforward.bot)
 bot.use(inlineQuery.bot)
 
+bot.use(partBattlereport.bot)
 bot.use(partBattleStats.bot)
 bot.use(partBotStats.bot)
 bot.use(partBuildings.bot)
