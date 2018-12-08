@@ -13,6 +13,7 @@ const partBotStats = require('./parts/bot-stats')
 const partBuildings = require('./parts/buildings')
 const partPlayerStats = require('./parts/playerstats')
 const partSearch = require('./parts/search')
+const partSettings = require('./parts/settings')
 
 const {Extra, Markup} = Telegraf
 
@@ -55,6 +56,7 @@ bot.use(partBotStats.bot)
 bot.use(partBuildings.bot)
 bot.use(partPlayerStats.bot)
 bot.use(partSearch.bot)
+bot.use(partSettings.bot)
 
 bot.on('text', (ctx, next) => {
   if (!ctx.message.forward_from && ctx.chat.id === ctx.from.id &&

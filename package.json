@@ -25,6 +25,7 @@
     "emoji-tree": "^1.1.2",
     "json-stable-stringify": "^1.0.1",
     "telegraf": "^3.25.0",
+    "telegraf-inline-menu": "^3.2.1",
     "telegraf-session-local": "0.0.6"
   },
   "devDependencies": {
