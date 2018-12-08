@@ -42,7 +42,7 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
   }
 
   const allBattlereports = await battlereports.getAll()
-  const {attack, won, reward} = report
+  const {attack, won, terra, reward, gems, karma} = report
 
   const {resourceTimestamp} = ctx.session.gameInformation
   if (timestamp > resourceTimestamp) {
@@ -70,7 +70,16 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
   text += won ? '🎉' : '😭'
   text += ' '
   const additionalStats = []
+  if (terra) {
+    additionalStats.push(formatNumberShort(terra, true) + emoji.terra)
+  }
   additionalStats.push(formatNumberShort(reward, true) + emoji.gold)
+  if (gems) {
+    additionalStats.push(formatNumberShort(gems, true) + emoji.gem)
+  }
+  if (karma) {
+    additionalStats.push(formatNumberShort(karma, true) + emoji.karma)
+  }
   text += additionalStats.join(' ')
 
   if (isNew) {
