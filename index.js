@@ -6,6 +6,7 @@ const battlereportsDataFix = require('./lib/battlereports-data-fix')
 
 const bastionsiegeforward = require('./parts/bastionsiegeforward')
 const inlineQuery = require('./parts/inline-query')
+const {AlertHandler} = require('./parts/alerts')
 
 const partBattlereport = require('./parts/battlereport')
 const partBattleStats = require('./parts/battlestats')
@@ -46,6 +47,16 @@ bot.use((ctx, next) => {
   }
   return next()
 })
+
+const alertHandler = new AlertHandler(bot.telegram)
+localSession.DB
+  .get('sessions').value()
+  .forEach(session => {
+    const user = Number(session.id.split(':')[0])
+    const {alerts, gameInformation} = session.data
+    alertHandler.recreateAlerts(user, alerts, gameInformation)
+  })
+bot.use(alertHandler)
 
 bot.use(bastionsiegeforward.bot)
 bot.use(inlineQuery.bot)
