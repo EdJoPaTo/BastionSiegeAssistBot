@@ -42,6 +42,12 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
   }
 
   const allBattlereports = await battlereports.getAll()
+  const {attack, won, reward} = report
+
+  const {resourceTimestamp} = ctx.session.gameInformation
+  if (timestamp > resourceTimestamp) {
+    ctx.session.gameInformation.resources.gold += reward
+  }
 
   const buttons = [
     [
@@ -55,7 +61,6 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
     )
   const markup = Markup.inlineKeyboard(buttons)
 
-  const {attack, won, reward} = report
   text += '\n'
   text += attack ? emoji.army : emoji.wall
   text += won ? '🎉' : '😭'
