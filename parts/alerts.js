@@ -34,7 +34,8 @@ class AlertHandler {
 
     if (alerts.indexOf('nextBattle') >= 0) {
       const {battleSoloTimestamp, battleAllianceTimestamp} = gameInformation
-      this.createAndAddAlert(user, battleSoloTimestamp + (60 * 10), '🔔⚔️ You can attack again. I wish you luck. ☺️')
+      const lastAttackTimestamp = Math.max(battleSoloTimestamp || 0, battleAllianceTimestamp || 0)
+      this.createAndAddAlert(user, lastAttackTimestamp + (60 * 10), '🔔⚔️ You can attack again. I wish you luck. ☺️')
       this.createAndAddAlert(user, battleAllianceTimestamp + (60 * 59), '🔔⚔️ Your next alliance attack is available in 1 min. Get ready and spread the hype! 🥳😎')
     }
   }
