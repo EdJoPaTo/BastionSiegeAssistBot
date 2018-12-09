@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.15.3"></a>
+## [1.15.3](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.15.2...v1.15.3) (2018-12-09)
+
+
+### Bug Fixes
+
+* **playerstats:** calculate army lost excluding reports without loss ([6518f62](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/6518f62))
+
+
+
 <a name="1.15.2"></a>
 ## [1.15.2](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.15.1...v1.15.2) (2018-12-09)
 
