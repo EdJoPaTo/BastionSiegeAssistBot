@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.15.4"></a>
+## [1.15.4](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.15.3...v1.15.4) (2018-12-09)
+
+
+### Bug Fixes
+
+* **search:** remove free searches ([153876f](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/153876f))
+* **search:** simplify search system by applying it only to inline search ([e74a883](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/e74a883))
+
+
+
 <a name="1.15.3"></a>
 ## [1.15.3](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.15.2...v1.15.3) (2018-12-09)
 
