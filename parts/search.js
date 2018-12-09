@@ -1,7 +1,5 @@
 const Telegraf = require('telegraf')
 
-const playerStatsSearch = require('../lib/player-stats-search')
-
 const {Extra, Markup} = Telegraf
 
 const bot = new Telegraf.Composer()
@@ -12,7 +10,7 @@ bot.command('search', ctx => {
   let text = '🔎 *Search*'
 
   text += '\nRemaining searches: '
-  text += Number(remainingSearches || playerStatsSearch.FREE_SEARCHES)
+  text += Number(remainingSearches)
 
   text += '\n'
   text += '\nYou can search for player stats with multiple methods:'
