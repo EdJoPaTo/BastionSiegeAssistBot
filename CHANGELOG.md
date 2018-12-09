@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.15.5"></a>
+## [1.15.5](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.15.4...v1.15.5) (2018-12-09)
+
+
+### Bug Fixes
+
+* **alerts:** next attack is influnced by alliance attacks too ([98f6bf2](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/98f6bf2))
+
+
+
 <a name="1.15.4"></a>
 ## [1.15.4](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.15.3...v1.15.4) (2018-12-09)
 
