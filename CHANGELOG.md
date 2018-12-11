@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.16.0"></a>
+# [1.16.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.15.5...v1.16.0) (2018-12-11)
+
+
+### Bug Fixes
+
+* **battlereport:** show terra later in quick stats ([034591c](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/034591c))
+* **gamescreen-name:** detect russian undead / dragon ([97a43ff](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/97a43ff))
+
+
+### Features
+
+* **siegemath:** add building cost until calculation ([66354fd](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/66354fd))
+
+
+
 <a name="1.15.5"></a>
 ## [1.15.5](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.15.4...v1.15.5) (2018-12-09)
 
