@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.16.1"></a>
+## [1.16.1](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.16.0...v1.16.1) (2018-12-11)
+
+
+### Bug Fixes
+
+* **gamescreen:** fix detection of alliance battle in russian lang ([3df3358](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/3df3358))
+* **gamescreen:** fix everyone died but won in russian lang ([1b4a790](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/1b4a790))
+
+
+
 <a name="1.16.0"></a>
 # [1.16.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.15.5...v1.16.0) (2018-12-11)
 
