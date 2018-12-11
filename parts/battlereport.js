@@ -70,12 +70,12 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
   text += won ? '🎉' : '😭'
   text += ' '
   const additionalStats = []
-  if (terra) {
-    additionalStats.push(formatNumberShort(terra, true) + emoji.terra)
-  }
   additionalStats.push(formatNumberShort(reward, true) + emoji.gold)
   if (gems) {
     additionalStats.push(formatNumberShort(gems, true) + emoji.gem)
+  }
+  if (terra) {
+    additionalStats.push(formatNumberShort(terra, true) + emoji.terra)
   }
   if (karma) {
     additionalStats.push(formatNumberShort(karma, true) + emoji.karma)
