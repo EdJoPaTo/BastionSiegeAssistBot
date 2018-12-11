@@ -24,11 +24,7 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
   const report = ctx.state.screen.information.battlereport
   const {timestamp} = ctx.state.screen
 
-  const {reportsRaw} = await battlereports.load(ctx.from.id)
-  const isNew = !reportsRaw[timestamp]
-  if (isNew) {
-    await battlereports.add(ctx.from.id, timestamp, report, ctx.message.text)
-  }
+  const isNew = await battlereports.add(ctx.from.id, timestamp, report, ctx.message.text)
 
   let text = '*Battlereport*'
 
