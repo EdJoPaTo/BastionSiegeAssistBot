@@ -2,8 +2,6 @@ const fs = require('fs')
 const LocalSession = require('telegraf-session-local')
 const Telegraf = require('telegraf')
 
-const battlereportsDataFix = require('./lib/battlereports-data-fix')
-
 const bastionsiegeforward = require('./parts/bastionsiegeforward')
 const inlineQuery = require('./parts/inline-query')
 const {AlertHandler} = require('./parts/alerts')
@@ -21,8 +19,6 @@ const {Extra, Markup} = Telegraf
 const tokenFilePath = process.env.NODE_ENV === 'production' ? process.env.npm_package_config_tokenpath : process.env.npm_package_config_tokenpathdebug
 const token = fs.readFileSync(tokenFilePath, 'utf8').trim()
 const bot = new Telegraf(token)
-
-battlereportsDataFix.findAndFixBadBattlereports()
 
 // For handling group/supergroup commands (/start@your_bot) you need to provide bot username.
 bot.telegram.getMe().then(botInfo => {

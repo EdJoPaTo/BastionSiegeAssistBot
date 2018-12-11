@@ -10,8 +10,9 @@ const bot = new Telegraf.Composer()
 bot.command('battlestats', sendBattleStats)
 bot.action('battlestats', sendBattleStats)
 
-async function sendBattleStats(ctx) {
-  const allReportsOfMyself = await battlereports.getAllFrom(ctx.from.id)
+function sendBattleStats(ctx) {
+  const allReportsOfMyself = battlereports.getAll()
+    .filter(o => o.providingTgUser === ctx.from.id)
   const firstTimeRelevant = getMidnightXDaysEarlier(Date.now() / 1000, 7)
   const reportsFiltered = Object.keys(allReportsOfMyself)
     .filter(key => Number(key) > firstTimeRelevant)
