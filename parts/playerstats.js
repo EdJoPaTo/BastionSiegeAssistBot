@@ -1,9 +1,10 @@
 const Telegraf = require('telegraf')
 
-const battlereports = require('../lib/battlereports')
-const playerStats = require('../lib/player-stats')
+const battlereports = require('../lib/data/battlereports')
 
-const {createPlayerStatsString} = require('../lib/create-stats-strings')
+const playerStats = require('../lib/math/player-stats')
+
+const {createPlayerStatsString} = require('../lib/user-interface/player-stats')
 
 const {Extra, Markup} = Telegraf
 

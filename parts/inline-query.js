@@ -1,11 +1,12 @@
 const Telegraf = require('telegraf')
 
-const battlereports = require('../lib/battlereports')
-const playerStats = require('../lib/player-stats')
-const playerStatsSearch = require('../lib/player-stats-search')
+const battlereports = require('../lib/data/battlereports')
 
-const {getAllEnemies} = require('../lib/battle-stats')
-const {createPlayerStatsString, createPlayerStatsShortString} = require('../lib/create-stats-strings')
+const playerStats = require('../lib/math/player-stats')
+const playerStatsSearch = require('../lib/math/player-stats-search')
+const {getAllEnemies} = require('../lib/math/battle-stats')
+
+const {createPlayerStatsString, createPlayerStatsShortString} = require('../lib/user-interface/player-stats')
 
 const bot = new Telegraf.Composer()
 

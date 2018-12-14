@@ -1,12 +1,13 @@
 const Telegraf = require('telegraf')
 
-const battlereports = require('../lib/battlereports')
-const playerStats = require('../lib/player-stats')
-const playerStatsSearch = require('../lib/player-stats-search')
+const battlereports = require('../lib/data/battlereports')
 
-const {emoji} = require('../lib/gamescreen.emoji')
-const {formatNumberShort} = require('../lib/number-functions')
-const {createPlayerStatsString} = require('../lib/create-stats-strings')
+const playerStats = require('../lib/math/player-stats')
+const playerStatsSearch = require('../lib/math/player-stats-search')
+
+const {emoji} = require('../lib/user-interface/output-emojis')
+const {formatNumberShort} = require('../lib/user-interface/format-number')
+const {createPlayerStatsString} = require('../lib/user-interface/player-stats')
 
 const {Extra, Markup} = Telegraf
 

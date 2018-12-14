@@ -1,7 +1,7 @@
 const Telegraf = require('telegraf')
 
-const {isForwardedFromBastionSiege} = require('../lib/bastion-siege-bot')
-const {detectGamescreen, getScreenInformation} = require('../lib/gamescreen')
+const {isForwardedFromBastionSiege} = require('../lib/input/bastion-siege-bot')
+const {detectGamescreen, getScreenInformation} = require('../lib/input/gamescreen')
 
 const bot = new Telegraf.Composer()
 

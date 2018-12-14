@@ -1,6 +1,6 @@
 const stringify = require('json-stable-stringify')
 
-const {createAlertAtTimestamp} = require('../lib/alert')
+const {createAlertAtTimestamp} = require('../lib/javascript-abstraction/alert')
 
 const ALERT_TYPES = {
   nextBattle: 'Next Battle available'

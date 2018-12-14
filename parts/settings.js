@@ -1,8 +1,8 @@
 const Telegraf = require('telegraf')
 const TelegrafInlineMenu = require('telegraf-inline-menu')
 
-const {emoji} = require('../lib/gamescreen.emoji')
-const {buildingNames, defaultBuildingsToShow} = require('../lib/buildings')
+const {emoji} = require('../lib/user-interface/output-emojis')
+const {buildingNames, defaultBuildingsToShow} = require('../lib/user-interface/buildings')
 
 const {ALERT_TYPES} = require('./alerts')
 

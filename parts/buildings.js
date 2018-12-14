@@ -1,12 +1,16 @@
 const Telegraf = require('telegraf')
 const debounce = require('debounce-promise')
 
-const {buildingNames, defaultBuildingsToShow} = require('../lib/buildings')
+const {estimateResourcesAfterTimespan} = require('../lib/math/siegemath')
+
+const {
+  buildingNames,
+  defaultBuildingsToShow,
+  createBuildingTimeStatsString,
+  createFillTimeStatsString
+} = require('../lib/user-interface/buildings')
 
 const {Markup, Extra} = Telegraf
-
-const {createBuildingTimeStatsString, createFillTimeStatsString} = require('../lib/create-stats-strings')
-const {estimateResourcesAfterTimespan} = require('../lib/siegemath')
 
 const DEBOUNCE_TIME = 100 // Milliseconds
 

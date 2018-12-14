@@ -1,9 +1,9 @@
 const Telegraf = require('telegraf')
 
-const battlereports = require('../lib/battlereports')
-const playerStats = require('../lib/player-stats')
+const battlereports = require('../lib/data/battlereports')
 
-const {getHoursEarlier} = require('../lib/number-functions')
+const playerStats = require('../lib/math/player-stats')
+const {getHoursEarlier} = require('../lib/math/unix-timestamp')
 
 const bot = new Telegraf.Composer()
 
