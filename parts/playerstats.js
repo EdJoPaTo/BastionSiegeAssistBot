@@ -58,7 +58,7 @@ async function sendPlayerStats(ctx, playername) {
   ]
 
   return ctx.replyWithMarkdown(
-    createPlayerStatsString(allBattlereports, stats),
+    createPlayerStatsString(stats),
     Extra.markup(Markup.inlineKeyboard(buttons))
   )
 }

@@ -50,9 +50,9 @@ bot.on('inline_query', async ctx => {
         type: 'article',
         id: `player-${stats.player}`,
         title: stats.player,
-        description: createPlayerStatsShortString(allBattlereports, stats),
+        description: createPlayerStatsShortString(stats),
         input_message_content: {
-          message_text: createPlayerStatsString(allBattlereports, stats),
+          message_text: createPlayerStatsString(stats),
           parse_mode: 'markdown'
         }
       }

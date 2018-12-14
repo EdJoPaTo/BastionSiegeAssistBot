@@ -93,7 +93,7 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
   text += '\n\n'
   text += report.enemies
     .map(o => playerStats.generate(allBattlereports, o))
-    .map(o => createPlayerStatsString(allBattlereports, o))
+    .map(o => createPlayerStatsString(o))
     .join('\n\n')
 
   return ctx.reply(text, baseExtra.markup(markup))
