@@ -5,9 +5,8 @@ const battlereports = require('../lib/data/battlereports')
 const playerStats = require('../lib/math/player-stats')
 const playerStatsSearch = require('../lib/math/player-stats-search')
 
-const {emoji} = require('../lib/user-interface/output-emojis')
-const {formatNumberShort} = require('../lib/user-interface/format-number')
 const {createPlayerStatsString} = require('../lib/user-interface/player-stats')
+const {createSingleBattleShortStatsLine} = require('../lib/user-interface/battle-stats')
 
 const {Extra, Markup} = Telegraf
 
@@ -39,7 +38,7 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
   }
 
   const allBattlereports = await battlereports.getAll()
-  const {attack, won, terra, reward, gems, karma} = report
+  const {attack, reward} = report
 
   const {resourceTimestamp} = ctx.session.gameInformation
   if (isNew && timestamp > resourceTimestamp) {
@@ -63,21 +62,7 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
   const markup = Markup.inlineKeyboard(buttons)
 
   text += '\n'
-  text += attack ? emoji.army : emoji.wall
-  text += won ? '🎉' : '😭'
-  text += ' '
-  const additionalStats = []
-  additionalStats.push(formatNumberShort(reward, true) + emoji.gold)
-  if (gems) {
-    additionalStats.push(formatNumberShort(gems, true) + emoji.gem)
-  }
-  if (terra) {
-    additionalStats.push(formatNumberShort(terra, true) + emoji.terra)
-  }
-  if (karma) {
-    additionalStats.push(formatNumberShort(karma, true) + emoji.karma)
-  }
-  text += additionalStats.join(' ')
+  text += createSingleBattleShortStatsLine(report)
 
   if (isNew) {
     text += '\nThanks for that. I added it 👌'
