@@ -3,6 +3,7 @@ const Telegraf = require('telegraf')
 const battlereports = require('../lib/data/battlereports')
 
 const {getMidnightXDaysEarlier} = require('../lib/math/unix-timestamp')
+const battleStats = require('../lib/math/battle-stats')
 
 const {createBattleStatsString} = require('../lib/user-interface/battle-stats')
 
@@ -18,9 +19,13 @@ function sendBattleStats(ctx) {
   const reportsFiltered = allReportsOfMyself
     .filter(report => report.time > firstTimeRelevant)
 
-  return ctx.replyWithMarkdown(
-    createBattleStatsString(reportsFiltered)
-  )
+  const stats = battleStats.generate(reportsFiltered)
+
+  let text = `*Battle Stats* of last 7d (${reportsFiltered.length})`
+  text += '\n\n'
+  text += createBattleStatsString(stats)
+
+  return ctx.replyWithMarkdown(text)
 }
 
 module.exports = {
