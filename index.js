@@ -1,6 +1,7 @@
 const fs = require('fs')
-const LocalSession = require('telegraf-session-local')
 const Telegraf = require('telegraf')
+
+const userSessions = require('./lib/data/user-sessions')
 
 const bastionsiegeforward = require('./parts/bastionsiegeforward')
 const inlineQuery = require('./parts/inline-query')
@@ -25,16 +26,7 @@ bot.telegram.getMe().then(botInfo => {
   bot.options.username = botInfo.username
 })
 
-const localSession = new LocalSession({
-  // Database name/path, where sessions will be located (default: 'sessions.json')
-  database: 'persist/sessions.json',
-  // Format of storage/database (default: JSON.stringify / JSON.parse)
-  format: {
-    serialize: obj => JSON.stringify(obj, null, 2) + '\n',
-    deserialize: str => JSON.parse(str)
-  }
-})
-bot.use(localSession.middleware())
+bot.use(userSessions)
 
 // Fix previous bot problems
 bot.use((ctx, next) => {
@@ -45,11 +37,9 @@ bot.use((ctx, next) => {
 })
 
 const alertHandler = new AlertHandler(bot.telegram)
-localSession.DB
-  .get('sessions').value()
-  .forEach(session => {
-    const user = Number(session.id.split(':')[0])
-    const {alerts, gameInformation} = session.data
+userSessions.getRaw()
+  .forEach(({user, data}) => {
+    const {alerts, gameInformation} = data
     alertHandler.recreateAlerts(user, alerts, gameInformation)
   })
 bot.use(alertHandler)
