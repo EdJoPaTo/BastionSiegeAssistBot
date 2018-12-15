@@ -24,32 +24,6 @@ function isBuildingsOrResources(ctx) {
   return buildings || resources || workshop
 }
 
-// Save buildings and resource
-bot.on('text', Telegraf.optional(isBuildingsOrResources, (ctx, next) => {
-  const newInformation = ctx.state.screen.information
-  const {timestamp} = ctx.state.screen
-
-  if (newInformation.buildings) {
-    newInformation.buildingTimestamp = timestamp
-    if (ctx.session.gameInformation.buildingTimestamp >= timestamp) {
-      return ctx.reply('Thats not new to me. I will just ignore it.')
-    }
-  } else if (newInformation.resources) {
-    newInformation.resourceTimestamp = timestamp
-    if (ctx.session.gameInformation.resourceTimestamp >= timestamp) {
-      return ctx.reply('Thats not new to me. I will just ignore it.')
-    }
-  } else if (newInformation.workshop) {
-    newInformation.workshopTimestamp = timestamp
-    if (ctx.session.gameInformation.workshopTimestamp >= timestamp) {
-      return ctx.reply('Thats not new to me. I will just ignore it.')
-    }
-  }
-
-  Object.assign(ctx.session.gameInformation, newInformation)
-  return next()
-}))
-
 const updateMarkup = Extra.markup(Markup.inlineKeyboard([
   Markup.callbackButton('estimate current situation', 'estimate')
 ]))
