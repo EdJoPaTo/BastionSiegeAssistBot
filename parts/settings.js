@@ -1,6 +1,9 @@
 const Telegraf = require('telegraf')
 const TelegrafInlineMenu = require('telegraf-inline-menu')
 
+const battlereports = require('../lib/data/battlereports')
+const poweruser = require('../lib/data/poweruser')
+
 const {emoji} = require('../lib/user-interface/output-emojis')
 const {buildingNames, defaultBuildingsToShow} = require('../lib/user-interface/buildings')
 
@@ -37,6 +40,51 @@ settingsMenu.submenu(emoji.houses + 'Buildings', 's', new TelegrafInlineMenu(bui
       ctx.session.buildings = toggleInArray(ctx.session.buildings || [...defaultBuildingsToShow], key)
     },
     isSetFunc: (ctx, key) => (ctx.session.buildings || [...defaultBuildingsToShow]).indexOf(key) >= 0
+  })
+
+function poweruserText(ctx) {
+  let text = '*💙 Poweruser*'
+
+  text += '\n'
+  text += '\nYou are a poweruser! 😍'
+
+  text += '\n'
+  text += '\nIf you wish you can disable your immunity.'
+  const {name} = ctx.session.gameInformation.player || {}
+  const {disableImmunity} = ctx.session
+  if (disableImmunity) {
+    text += '\nCurrently *no one* will get immunity.'
+  } else if (name) {
+    text += '\nCurrently your immunity will be granted to:'
+    text += '\n`' + name + '`'
+    text += '\nSend your main menu screen from @BastionSiegeBot to update your current ingame name.'
+  } else {
+    text += '\nI do not have your name. *No one* will get immunity. Send me your main screen and I will grant you immunity.'
+  }
+
+  return text
+}
+settingsMenu.submenu('💙 Poweruser', 'p', new TelegrafInlineMenu(poweruserText), {
+  hide: ctx => !poweruser.isPoweruser(battlereports.getAll(), ctx.from.id)
+})
+  .toggle('🛡 Immunity', 'immunity', {
+    setFunc: (ctx, newState) => {
+      if (newState) {
+        delete ctx.session.disableImmunity
+      } else {
+        ctx.session.disableImmunity = true
+      }
+    },
+    isSetFunc: ctx => {
+      if (ctx.session.disableImmunity) {
+        return false
+      }
+      const {name} = ctx.session.gameInformation.player || {}
+      if (!name) {
+        return '⚠️'
+      }
+      return true
+    }
   })
 
 function toggleInArray(array, key) {

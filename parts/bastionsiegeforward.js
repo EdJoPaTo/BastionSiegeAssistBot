@@ -9,6 +9,7 @@ const bot = new Telegraf.Composer()
 bot.use((ctx, next) => {
   if (!ctx.session.gameInformation) {
     ctx.session.gameInformation = {
+      player: null,
       buildings: null,
       workshop: null,
       resources: null

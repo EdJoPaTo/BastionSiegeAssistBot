@@ -5,6 +5,7 @@ const userSessions = require('./lib/data/user-sessions')
 
 const bastionsiegeforward = require('./parts/bastionsiegeforward')
 const inlineQuery = require('./parts/inline-query')
+const partHints = require('./parts/hints')
 const {AlertHandler} = require('./parts/alerts')
 
 const partBattlereport = require('./parts/battlereport')
@@ -46,6 +47,7 @@ bot.use(alertHandler)
 
 bot.use(bastionsiegeforward.bot)
 bot.use(inlineQuery.bot)
+bot.use(partHints.bot)
 
 bot.use(partBattlereport.bot)
 bot.use(partBattleStats.bot)

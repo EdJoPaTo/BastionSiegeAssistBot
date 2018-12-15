@@ -2,14 +2,17 @@ const Telegraf = require('telegraf')
 
 const battlereports = require('../lib/data/battlereports')
 
-const playerStats = require('../lib/math/player-stats')
+const poweruser = require('../lib/data/poweruser')
+
 const {getHoursEarlier} = require('../lib/math/unix-timestamp')
+const {getAllEnemies} = require('../lib/math/battle-stats')
 
 const bot = new Telegraf.Composer()
 
 bot.command('botstats', async ctx => {
   const allBattlereports = await battlereports.getAll()
-  const {enemies, immune} = playerStats.usageStats(allBattlereports)
+  const enemies = getAllEnemies(allBattlereports)
+  const powerusers = poweruser.getPoweruserSessions(allBattlereports).length
 
   const minDate = getHoursEarlier(Date.now() / 1000, 24)
   const reportsWithin24h = allBattlereports
@@ -20,7 +23,7 @@ bot.command('botstats', async ctx => {
   text += `\nBattlereports: ${allBattlereports.length}`
   text += `\nBattlereports added within 24h: ${reportsWithin24h.length}`
   text += `\nAnalysed Players: ${enemies.length}`
-  text += `\nCurrently Immune 🛡💙: ${immune.length}`
+  text += `\n💙Powerusers: ${powerusers}`
 
   return ctx.replyWithMarkdown(text)
 })
