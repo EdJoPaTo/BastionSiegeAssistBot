@@ -41,16 +41,17 @@ bot.command('buildings', sendBuildStats)
 
 function sendBuildStats(ctx) {
   const information = ctx.session.gameInformation
+  const prefix = '*Building Upgrades*\n'
 
   if (!information.buildingTimestamp) {
-    return ctx.reply('please forward me the building screen from your game')
+    return ctx.replyWithMarkdown(prefix + 'Please forward me the building screen from your game in order to get building upgrade stats.')
   }
   if (!information.resourceTimestamp) {
-    return ctx.reply('please forward me a screen from the game showing your current resources')
+    return ctx.replyWithMarkdown(prefix + 'Please forward me a screen from the game showing your current resources in order to get building upgrade stats.')
   }
 
   const statsText = generateStatsText(information, ctx.session.buildings)
-  return ctx.reply(statsText, updateMarkup)
+  return ctx.replyWithMarkdown(prefix + statsText, updateMarkup)
 }
 
 bot.action('estimate', async ctx => {
