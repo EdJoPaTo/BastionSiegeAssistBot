@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.0.3"></a>
+## [2.0.3](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v2.0.2...v2.0.3) (2018-12-16)
+
+
+### Bug Fixes
+
+* **battlereports:** ensure time is Number ([15bb11f](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/15bb11f))
+* **errorhandling:** show errors to user so the user 'wants' to help ([b6522f5](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/b6522f5))
+* **help:** tell users about the /settings ([491f604](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/491f604))
+* **playerstats:** loot is only calculated from won attacks ([8347188](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/8347188))
+
+
+
 <a name="2.0.2"></a>
 ## [2.0.2](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v2.0.1...v2.0.2) (2018-12-16)
 
