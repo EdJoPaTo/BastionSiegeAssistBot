@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.0.2"></a>
+## [2.0.2](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v2.0.1...v2.0.2) (2018-12-16)
+
+
+### Bug Fixes
+
+* **alerts:** show /upcoming without setting alerts first ([39cf24d](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/39cf24d))
+
+
+
 <a name="2.0.1"></a>
 ## [2.0.1](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v2.0.0...v2.0.1) (2018-12-16)
 
