@@ -86,6 +86,25 @@ settingsMenu.submenu('💙 Poweruser', 'p', new TelegrafInlineMenu(poweruserText
     }
   })
 
+function searchText(ctx) {
+  const {remainingSearches} = ctx.session.search || {}
+
+  let text = '🔎 *Search*'
+
+  text += '\nRemaining searches: '
+  text += Number(remainingSearches)
+
+  text += '\n'
+  text += '\nYou can search for player stats with multiple methods:'
+  text += '\n• Using the *inline search*: Type in any chat `@BastionSiegeAssistBot <text>` to search for a player.'
+  text += '\n• Forward the *Your scouts found* message from Bastion Siege to me.'
+  text += '\n• Forward the *Your domain attacked* message to me'
+
+  return text
+}
+settingsMenu.submenu('🔎 Search', 'search', new TelegrafInlineMenu(searchText))
+  .switchToCurrentChatButton('try player search…', 'Dragon')
+
 function toggleInArray(array, key) {
   if (array.indexOf(key) >= 0) {
     array = array.filter(o => o !== key)
