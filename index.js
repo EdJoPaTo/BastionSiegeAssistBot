@@ -46,6 +46,27 @@ if (process.env.NODE_ENV !== 'production') {
   })
 }
 
+bot.use(async (ctx, next) => {
+  try {
+    await next()
+  } catch (error) {
+    console.log('try to send error to user', error)
+    let text = '🔥 Something went wrong here!'
+    text += '\n'
+    text += 'You should join the Support Group and report this error. Let us make this bot even better together. ☺️'
+
+    text += '\n'
+    text += '\nError: `'
+    text += error.message
+    text += '`'
+
+    const keyboard = Markup.inlineKeyboard([
+      Markup.urlButton('Join BastionSiegeAssist Support Group', 'https://t.me/BastionSiegeAssist')
+    ], {columns: 1})
+    return ctx.replyWithMarkdown(text, Extra.markup(keyboard))
+  }
+})
+
 bot.use(userSessions)
 
 // Fix previous bot problems
