@@ -80,6 +80,14 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
     text += '\nYou have sent me this one already 🙃'
   }
 
+  const {name: expectedName} = ctx.session.gameInformation.player || {}
+  if (expectedName) {
+    const expectedNameIsInFriends = report.friends.indexOf(expectedName) >= 0
+    if (!expectedNameIsInFriends) {
+      text += '\n❓Have you changed your ingame name? If so, please send me a new main menu screen from @BastionSiegeBot. Then I am up to date again. 😎'
+    }
+  }
+
   text += '\n\n'
   text += report.enemies
     .map(o => playerStats.generate(allBattlereports, o))
