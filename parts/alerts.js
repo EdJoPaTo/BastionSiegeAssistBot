@@ -16,28 +16,20 @@ function start(telegram) {
   alertHandler = new AlertHandler(telegram)
   userSessions.getRaw()
     .forEach(({user, data}) => {
-      const {alerts, gameInformation} = data
-      alertHandler.recreateAlerts(user, alerts, gameInformation)
+      const {alerts} = data
+      alertHandler.recreateAlerts(user, alerts, data)
     })
 }
 
 bot.use(async (ctx, next) => {
-  const before = getCompareableString(ctx)
+  const before = stringify(ctx.session)
   await next()
-  const after = getCompareableString(ctx)
+  const after = stringify(ctx.session)
 
   if (before !== after) {
-    alertHandler.recreateAlerts(ctx.from.id, ctx.session.alerts, ctx.session.gameInformation)
+    alertHandler.recreateAlerts(ctx.from.id, ctx.session.alerts, ctx.session)
   }
 })
-
-function getCompareableString(ctx) {
-  const {alerts, gameInformation} = ctx.session
-  return stringify({
-    alerts,
-    gameInformation
-  })
-}
 
 bot.command('upcoming', ctx => {
   const {text, extra} = generateUpcomingText(ctx)
@@ -55,7 +47,7 @@ bot.action('upcoming', ctx => {
 function generateUpcomingText(ctx) {
   const enabledAlerts = ctx.session.alerts
   const now = Date.now() / 1000
-  const eventList = alertHandler.generateUpcomingEventsList(ctx.session.gameInformation)
+  const eventList = alertHandler.generateUpcomingEventsList(ctx.session)
     .filter(o => o.timestamp > now)
     .sort((a, b) => a.timestamp - b.timestamp)
 
