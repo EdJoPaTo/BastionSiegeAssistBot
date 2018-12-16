@@ -50,6 +50,11 @@ bot.use(async (ctx, next) => {
   try {
     await next()
   } catch (error) {
+    if (error.message.indexOf('Too Many Requests') >= 0) {
+      console.log('Telegraf Too Many Requests error. Skip.', error)
+      return
+    }
+
     console.log('try to send error to user', error)
     let text = '🔥 Something went wrong here!'
     text += '\n'
