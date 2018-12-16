@@ -3,10 +3,11 @@ const Telegraf = require('telegraf')
 
 const userSessions = require('./lib/data/user-sessions')
 
+const partAlerts = require('./parts/alerts')
+
 const bastionsiegeforward = require('./parts/bastionsiegeforward')
 const inlineQuery = require('./parts/inline-query')
 const partHints = require('./parts/hints')
-const {AlertHandler} = require('./parts/alerts')
 
 const partBattlereport = require('./parts/battlereport')
 const partBattleStats = require('./parts/battlestats')
@@ -64,13 +65,8 @@ bot.use((ctx, next) => {
   return next()
 })
 
-const alertHandler = new AlertHandler(bot.telegram)
-userSessions.getRaw()
-  .forEach(({user, data}) => {
-    const {alerts, gameInformation} = data
-    alertHandler.recreateAlerts(user, alerts, gameInformation)
-  })
-bot.use(alertHandler)
+partAlerts.start(bot.telegram)
+bot.use(partAlerts.bot)
 
 bot.use(bastionsiegeforward.bot)
 bot.use(inlineQuery.bot)

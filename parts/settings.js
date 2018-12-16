@@ -6,8 +6,7 @@ const poweruser = require('../lib/data/poweruser')
 
 const {emoji} = require('../lib/user-interface/output-emojis')
 const {buildingNames, defaultBuildingsToShow} = require('../lib/user-interface/buildings')
-
-const {ALERT_TYPES} = require('./alerts')
+const {alertEmojis, ALERT_TYPES} = require('../lib/user-interface/alert-handler')
 
 const settingsMenu = new TelegrafInlineMenu('*Settings*')
 settingsMenu.setCommand('settings')
@@ -17,14 +16,14 @@ function alertsText() {
   text += '\nEnable the alerts you want to get from me.'
   return text
 }
-settingsMenu.submenu('🔔 Alerts', 'a', new TelegrafInlineMenu(alertsText))
+settingsMenu.submenu(alertEmojis.enabled + ' Alerts', 'a', new TelegrafInlineMenu(alertsText))
   .select('type', ALERT_TYPES, {
     multiselect: true,
     columns: 1,
     setFunc: (ctx, key) => {
       ctx.session.alerts = toggleInArray(ctx.session.alerts || [], key)
     },
-    isSetFunc: (ctx, key) => (ctx.session.alerts || []).indexOf(key) >= 0 ? '🔔' : '🔕'
+    isSetFunc: (ctx, key) => (ctx.session.alerts || []).indexOf(key) >= 0 ? alertEmojis.enabled : alertEmojis.disabled
   })
 
 function buildingsText() {
