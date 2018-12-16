@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.0.1"></a>
+## [2.0.1](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v2.0.0...v2.0.1) (2018-12-16)
+
+
+### Bug Fixes
+
+* **alerts:** enable alerts for workshop stuff ([5bd15f5](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/5bd15f5))
+* **alerts:** remove debug output ([9dd5d65](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/9dd5d65))
+* **debug:** dont show complete ctx.update on empty ([a3ecef1](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/a3ecef1))
+* **playerstats:** ≥ is Math.floor ([64c988e](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/64c988e))
+
+
+
 <a name="2.0.0"></a>
 # [2.0.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.16.1...v2.0.0) (2018-12-16)
 
