@@ -27,6 +27,25 @@ bot.telegram.getMe().then(botInfo => {
   bot.options.username = botInfo.username
 })
 
+if (process.env.NODE_ENV !== 'production') {
+  bot.use(async (ctx, next) => {
+    const identifier = `${new Date().toISOString()} ${ctx.from && ctx.from.first_name} ${ctx.updateType}`
+    console.time(identifier)
+    await next()
+    const callbackData = ctx.callbackQuery && ctx.callbackQuery.data
+    const inlineQuery = ctx.inlineQuery && ctx.inlineQuery.query
+    const messageText = ctx.message && ctx.message.text
+    const data = callbackData || inlineQuery || messageText
+    if (data) {
+      const indexOfNewLine = data.indexOf('\n')
+      const length = indexOfNewLine >= 0 ? Math.min(indexOfNewLine, 50) : 50
+      console.timeLog(identifier, data && data.length, data && data.substr(0, length))
+    } else {
+      console.timeLog(identifier, ctx.update)
+    }
+  })
+}
+
 bot.use(userSessions)
 
 // Fix previous bot problems
