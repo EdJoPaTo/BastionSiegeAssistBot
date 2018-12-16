@@ -43,10 +43,10 @@ function sendBuildStats(ctx) {
   const information = ctx.session.gameInformation
   const prefix = '*Building Upgrades*\n'
 
-  if (!information.buildingTimestamp) {
+  if (!information.buildingsTimestamp) {
     return ctx.replyWithMarkdown(prefix + 'Please forward me the building screen from your game in order to get building upgrade stats.')
   }
-  if (!information.resourceTimestamp) {
+  if (!information.resourcesTimestamp) {
     return ctx.replyWithMarkdown(prefix + 'Please forward me a screen from the game showing your current resources in order to get building upgrade stats.')
   }
 
@@ -71,8 +71,8 @@ bot.action('estimate', async ctx => {
 
 function generateStatsText(information, buildingsToShow) {
   const currentTimestamp = Math.floor(Date.now() / 1000)
-  const resourceAgeMinutes = Math.floor((currentTimestamp - information.resourceTimestamp) / 60)
-  const buildingAgeMinutes = Math.floor((currentTimestamp - information.buildingTimestamp) / 60)
+  const resourceAgeMinutes = Math.floor((currentTimestamp - information.resourcesTimestamp) / 60)
+  const buildingAgeMinutes = Math.floor((currentTimestamp - information.buildingsTimestamp) / 60)
 
   const buildings = {...information.buildings, ...information.workshop}
 

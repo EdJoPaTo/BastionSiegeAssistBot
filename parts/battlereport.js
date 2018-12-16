@@ -45,8 +45,7 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
   const allBattlereports = await battlereports.getAll()
   const {attack, reward} = report
 
-  const {resourceTimestamp} = ctx.session.gameInformation
-  if (isNew && timestamp > resourceTimestamp) {
+  if (isNew && timestamp > ctx.session.gameInformation.resourcesTimestamp) {
     ctx.session.gameInformation.resources.gold += reward
   }
   if (attack) {

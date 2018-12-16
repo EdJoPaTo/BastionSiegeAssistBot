@@ -52,6 +52,14 @@ bot.use(userSessions)
 bot.use((ctx, next) => {
   if (ctx.session.gameInformation) {
     delete ctx.session.gameInformation.battlereport
+    if (!ctx.session.gameInformation.resourcesTimestamp) {
+      ctx.session.gameInformation.resourcesTimestamp = ctx.session.gameInformation.resourceTimestamp
+    }
+    delete ctx.session.gameInformation.resourceTimestamp
+    if (!ctx.session.gameInformation.buildingsTimestamp) {
+      ctx.session.gameInformation.buildingsTimestamp = ctx.session.gameInformation.buildingTimestamp
+    }
+    delete ctx.session.gameInformation.buildingTimestamp
   }
   return next()
 })
