@@ -2,6 +2,44 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.0.0"></a>
+# [2.0.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.16.1...v2.0.0) (2018-12-16)
+
+
+### Bug Fixes
+
+* **alerts:** show alert type emoji next to description ([8317b0d](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/8317b0d))
+* **buildings:** improve user ui texts ([2594ffa](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/2594ffa))
+
+
+### Features
+
+* **alerts:** add alerts for buildings ([244674e](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/244674e))
+* **alerts:** show list of upcoming alerts with /upcoming ([8ede11b](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/8ede11b))
+* **battlereport:** hint user when report is from diffrent name ([f206a1c](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/f206a1c))
+* **battlereports:** use new way to store battlereports ([5924679](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/5924679))
+* **playerstats:** battles observed are all involving player ([51052f3](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/51052f3))
+* **playerstats:** show active timewindow ([4b85e9f](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/4b85e9f))
+* **playerstats:** show inactive timeframe ([e52c7ad](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/e52c7ad))
+* **playerstats:** use alliance attacks against single target for loot ([bd29b7e](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/bd29b7e))
+* **playerstats:** when last battle <24h ago show hours instead of 0d ([ed8053c](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/ed8053c))
+* **poweruser:** rework player immunity ([e9d16de](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/e9d16de))
+* **settings:** migrate search stuff to the settings menu ([5ab5137](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/5ab5137))
+* **user-sessions:** save sessions deterministic ([9ba77a7](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/9ba77a7))
+* show join BSA Support Group as an inline button instead ([cac6551](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/cac6551))
+* show performance information in debug mode ([34e9583](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/34e9583))
+
+
+### BREAKING CHANGES
+
+* **poweruser:** powerusers have to send their main screen in order to
+let immunity continue to work
+* **battlereports:** This version can read battlereports from earlier
+versions, but not the other way around. Older versions can not use
+battlereports from after this change.
+
+
+
 <a name="1.16.1"></a>
 ## [1.16.1](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v1.16.0...v1.16.1) (2018-12-11)
 
