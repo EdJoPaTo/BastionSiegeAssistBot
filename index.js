@@ -129,6 +129,9 @@ bot.use(ctx => {
   text += ' It gets even better: As long as you are actively providing data to me you will get immunity and no one can use me to check on you.'
 
   text += '\n'
+  text += '\nSee /settings for more in depth usages of this bot.'
+
+  text += '\n'
   text += '\nYou have an idea or found a bug? Join the BastionSiegeAssist Support Group with the button below and share it. Let us make this bot even better :)'
 
   const keyboard = Markup.inlineKeyboard([
