@@ -87,11 +87,12 @@ bot.use(ctx => {
   text += ' It gets even better: As long as you are actively providing data to me you will get immunity and no one can use me to check on you.'
 
   text += '\n'
-  text += '\nYou have an idea or found a bug? Join @BastionSiegeAssist and share it. Let us make this bot even better :)'
+  text += '\nYou have an idea or found a bug? Join the BastionSiegeAssist Support Group with the button below and share it. Let us make this bot even better :)'
 
   const keyboard = Markup.inlineKeyboard([
-    Markup.switchToCurrentChatButton('try player search…', 'Dragon')
-  ])
+    Markup.switchToCurrentChatButton('try player search…', 'Dragon'),
+    Markup.urlButton('Join BastionSiegeAssist Support Group', 'https://t.me/BastionSiegeAssist')
+  ], {columns: 1})
   return ctx.replyWithMarkdown(text, Extra.markup(keyboard))
 })
 

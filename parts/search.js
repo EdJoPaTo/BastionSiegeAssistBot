@@ -19,11 +19,12 @@ bot.command('search', ctx => {
   text += '\n• Forward the *Your domain attacked* message to me'
 
   text += '\n'
-  text += '\nDo you have feedback or questions to this system? Join @BastionSiegeAssist and share. 😊'
+  text += '\nDo you have feedback or questions to this system? Join the BastionSiegeAssist Support Group with the button below and share. 😊'
 
   const keyboard = Markup.inlineKeyboard([
-    Markup.switchToCurrentChatButton('try player search…', 'Dragon')
-  ])
+    Markup.switchToCurrentChatButton('try player search…', 'Dragon'),
+    Markup.urlButton('Join BastionSiegeAssist Support Group', 'https://t.me/BastionSiegeAssist')
+  ], {columns: 1})
   return ctx.replyWithMarkdown(text, Extra.markup(keyboard))
 })
 

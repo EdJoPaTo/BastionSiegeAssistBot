@@ -33,8 +33,13 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
     .inReplyTo(ctx.message.message_id)
 
   if (!report) {
-    text += '\nSomething seems fishy here. Please tell @BastionSiegeAssist in order to get this fixed. 😇'
-    return ctx.reply(text, baseExtra)
+    text += '\nSomething seems fishy here. 🐟'
+    text += '\nPlease tell about this in the BastionSiegeAssist Support Group in order to get this fixed. 😇'
+    const keyboard = Markup.inlineKeyboard([
+      Markup.urlButton('Join BastionSiegeAssist Support Group', 'https://t.me/BastionSiegeAssist')
+    ], {columns: 1})
+
+    return ctx.reply(text, baseExtra.markup(keyboard))
   }
 
   const allBattlereports = await battlereports.getAll()
