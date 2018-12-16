@@ -41,7 +41,7 @@ if (process.env.NODE_ENV !== 'production') {
       const length = indexOfNewLine >= 0 ? Math.min(indexOfNewLine, 50) : 50
       console.timeLog(identifier, data && data.length, data && data.substr(0, length))
     } else {
-      console.timeLog(identifier, ctx.update)
+      console.timeLog(identifier)
     }
   })
 }
