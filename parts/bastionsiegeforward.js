@@ -42,7 +42,13 @@ bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, (ctx, next) => {
   const newInformation = ctx.state.screen.information
   const {timestamp} = ctx.state.screen
 
-  const addData = ['player', 'resources', 'buildings', 'workshop']
+  const addData = [
+    'buildings',
+    'effects',
+    'player',
+    'resources',
+    'workshop'
+  ]
   addData.forEach(data => {
     if (newInformation[data]) {
       if (ctx.session.gameInformation[data + 'Timestamp'] >= timestamp) {
