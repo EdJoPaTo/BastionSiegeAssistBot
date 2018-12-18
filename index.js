@@ -68,7 +68,7 @@ bot.use(async (ctx, next) => {
 
     const target = (ctx.chat && ctx.chat.id) || ctx.from.id
     const keyboard = Markup.inlineKeyboard([
-      Markup.urlButton('Join BastionSiegeAssist Support Group', 'https://t.me/BastionSiegeAssist')
+      Markup.urlButton('Join BastionSiegeAssist Support Group', 'https://t.me/joinchat/AC0dV1dG2Y7sOFQPtZm9Dw')
     ], {columns: 1})
     return ctx.tg.sendMessage(target, text, Extra.markdown().markup(keyboard))
   }
@@ -144,7 +144,7 @@ bot.use(ctx => {
 
   const keyboard = Markup.inlineKeyboard([
     Markup.switchToCurrentChatButton('try player search…', 'Dragon'),
-    Markup.urlButton('Join BastionSiegeAssist Support Group', 'https://t.me/BastionSiegeAssist')
+    Markup.urlButton('Join BastionSiegeAssist Support Group', 'https://t.me/joinchat/AC0dV1dG2Y7sOFQPtZm9Dw')
   ], {columns: 1})
   return ctx.replyWithMarkdown(text, Extra.markup(keyboard))
 })

@@ -34,7 +34,7 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
     text += '\nSomething seems fishy here. 🐟'
     text += '\nPlease tell about this in the BastionSiegeAssist Support Group in order to get this fixed. 😇'
     const keyboard = Markup.inlineKeyboard([
-      Markup.urlButton('Join BastionSiegeAssist Support Group', 'https://t.me/BastionSiegeAssist')
+      Markup.urlButton('Join BastionSiegeAssist Support Group', 'https://t.me/joinchat/AC0dV1dG2Y7sOFQPtZm9Dw')
     ], {columns: 1})
 
     return ctx.reply(text, baseExtra.markup(keyboard))
