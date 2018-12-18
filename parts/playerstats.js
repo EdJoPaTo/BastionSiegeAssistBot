@@ -25,7 +25,8 @@ bot.on('text', Telegraf.optional(isAttackIncoming, ctx => {
     text += 'This battle is long over… Send me the report instead. 😉'
     return ctx.reply(text)
   }
-  return sendPlayerStats(ctx, attackincoming.player)
+  const {text, extra} = generatePlayerStats(attackincoming.player)
+  return ctx.reply(text, extra)
 }))
 
 function isAttackScout(ctx) {
@@ -44,11 +45,12 @@ bot.on('text', Telegraf.optional(isAttackScout, ctx => {
     text += ` I'll help you when you see ${attackscout.player} next time. 😊`
     return ctx.reply(text)
   }
-  return sendPlayerStats(ctx, attackscout.player)
+  const {text, extra} = generatePlayerStats(attackscout.player)
+  return ctx.reply(text, extra)
 }))
 
-async function sendPlayerStats(ctx, playername) {
-  const allBattlereports = await battlereports.getAll()
+function generatePlayerStats(playername) {
+  const allBattlereports = battlereports.getAll()
   const stats = playerStats.generate(allBattlereports, playername)
 
   const buttons = [
@@ -57,10 +59,10 @@ async function sendPlayerStats(ctx, playername) {
     ]
   ]
 
-  return ctx.replyWithMarkdown(
-    createPlayerStatsString(stats),
-    Extra.markup(Markup.inlineKeyboard(buttons))
-  )
+  return {
+    text: createPlayerStatsString(stats),
+    extra: Extra.markdown().markup(Markup.inlineKeyboard(buttons))
+  }
 }
 
 module.exports = {
