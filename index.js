@@ -66,10 +66,11 @@ bot.use(async (ctx, next) => {
     text += error.message
     text += '`'
 
+    const target = (ctx.chat && ctx.chat.id) || ctx.from.id
     const keyboard = Markup.inlineKeyboard([
       Markup.urlButton('Join BastionSiegeAssist Support Group', 'https://t.me/BastionSiegeAssist')
     ], {columns: 1})
-    return ctx.replyWithMarkdown(text, Extra.markup(keyboard))
+    return ctx.tg.sendMessage(target, text, Extra.markdown().markup(keyboard))
   }
 })
 
