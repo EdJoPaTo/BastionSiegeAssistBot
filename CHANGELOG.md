@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.2.0"></a>
+# [2.2.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v2.1.0...v2.2.0) (2018-12-18)
+
+
+### Bug Fixes
+
+* **alerts:** use output emojis ([694bba6](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/694bba6))
+* **battlereports:** remove empty (old) battlereport files ([ff24efb](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/ff24efb))
+* **errorhandling:** send error to user when chat is not available ([5e6d2b3](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/5e6d2b3))
+* **playerstats:** inline keyboard text is now consistent ([4e0ad2b](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/4e0ad2b))
+
+
+### Features
+
+* **alerts:** add "Open BastionSiege" button on Alert ([0a1fcf2](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/0a1fcf2))
+* **battlestats:** let the user chose the timeframe ([1c42dec](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/1c42dec))
+* **battlestats:** show more details about enemy alliances ([334771f](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/334771f))
+* **playerstats:** add "Back to BastionSiege" button ([2006a7d](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/2006a7d))
+* **playerstats:** show alliance of enemy ([21077ef](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/21077ef))
+
+
+
 <a name="2.1.0"></a>
 # [2.1.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v2.0.3...v2.1.0) (2018-12-17)
 
