@@ -5,6 +5,7 @@ const battlereports = require('../lib/data/battlereports')
 const playerStats = require('../lib/math/player-stats')
 
 const {createPlayerStatsString} = require('../lib/user-interface/player-stats')
+const {emoji} = require('../lib/user-interface/output-text')
 
 const {Extra, Markup} = Telegraf
 
@@ -55,6 +56,8 @@ function generatePlayerStats(playername) {
 
   const buttons = [
     [
+      Markup.urlButton(emoji.backTo + 'Back to BastionSiege…', 'https://t.me/BastionSiegeBot')
+    ], [
       Markup.switchToChatButton(`Share ${playername}…`, playername)
     ]
   ]
