@@ -13,10 +13,9 @@ const {Extra, Markup} = Telegraf
 const bot = new Telegraf.Composer()
 
 function isBattleReport(ctx) {
-  return ctx.state.screen && (
-    ctx.state.screen.type === 'battlereport' ||
-    ctx.state.screen.type === 'alliance-battlereport'
-  )
+  return ctx.state.screen &&
+    ctx.state.screen.information &&
+    ctx.state.screen.information.battlereport
 }
 
 // Save battlereport
@@ -43,13 +42,13 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
   }
 
   const allBattlereports = await battlereports.getAll()
-  const {attack, reward} = report
+  const {attack, reward, friends, enemies} = report
 
   if (isNew && timestamp > ctx.session.gameInformation.resourcesTimestamp) {
     ctx.session.gameInformation.resources.gold += reward
   }
   if (attack) {
-    const timestampType = ctx.state.screen.type === 'alliance-battlereport' ? 'battleAllianceTimestamp' : 'battleSoloTimestamp'
+    const timestampType = (friends.length > 1 || enemies.length > 1) ? 'battleAllianceTimestamp' : 'battleSoloTimestamp'
     ctx.session.gameInformation[timestampType] = Math.max(ctx.session.gameInformation[timestampType] || 0, timestamp)
   }
 
