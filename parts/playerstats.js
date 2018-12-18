@@ -55,7 +55,7 @@ function generatePlayerStats(playername) {
 
   const buttons = [
     [
-      Markup.switchToChatButton('Share Player Stats…', playername)
+      Markup.switchToChatButton(`Share ${playername}…`, playername)
     ]
   ]
 
