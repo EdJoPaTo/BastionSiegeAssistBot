@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.2.2"></a>
+## [2.2.2](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v2.2.1...v2.2.2) (2018-12-18)
+
+
+### Bug Fixes
+
+* **battlereport:** answer on everything the bot detected as battlereport ([d7b153d](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/d7b153d))
+* **battlereports:** dont crash on start when something couldn't be read ([80321b4](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/80321b4))
+* **effects:** work with castle effect ([d689079](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/d689079))
+
+
+
 <a name="2.2.1"></a>
 ## [2.2.1](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v2.2.0...v2.2.1) (2018-12-18)
 
