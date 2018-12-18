@@ -6,7 +6,7 @@ const playerStats = require('../lib/math/player-stats')
 const playerStatsSearch = require('../lib/math/player-stats-search')
 const {getAllEnemies} = require('../lib/math/battle-stats')
 
-const {createPlayerStatsString, createPlayerStatsShortString} = require('../lib/user-interface/player-stats')
+const {createPlayerNameString, createPlayerStatsString, createPlayerStatsShortString} = require('../lib/user-interface/player-stats')
 
 const bot = new Telegraf.Composer()
 
@@ -49,7 +49,7 @@ bot.on('inline_query', async ctx => {
       return {
         type: 'article',
         id: `player-${stats.player}`,
-        title: stats.player,
+        title: createPlayerNameString(stats),
         description: createPlayerStatsShortString(stats),
         input_message_content: {
           message_text: createPlayerStatsString(stats),
