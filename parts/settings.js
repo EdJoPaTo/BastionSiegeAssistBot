@@ -4,7 +4,7 @@ const TelegrafInlineMenu = require('telegraf-inline-menu')
 const battlereports = require('../lib/data/battlereports')
 const poweruser = require('../lib/data/poweruser')
 
-const {emoji} = require('../lib/user-interface/output-emojis')
+const {emoji} = require('../lib/user-interface/output-text')
 const {buildingNames, defaultBuildingsToShow} = require('../lib/user-interface/buildings')
 const {alertEmojis, ALERT_TYPES} = require('../lib/user-interface/alert-handler')
 
