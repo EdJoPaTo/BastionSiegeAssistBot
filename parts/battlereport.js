@@ -53,16 +53,9 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
     ctx.session.gameInformation[timestampType] = Math.max(ctx.session.gameInformation[timestampType] || 0, timestamp)
   }
 
-  const buttons = [
-    [
-      Markup.callbackButton('Your Battle Stats', 'battlestats')
-    ]
-  ]
-    .concat(
-      report.enemies.map(
-        o => Markup.switchToChatButton(`Share ${o}…`, o)
-      ).map(o => [o])
-    )
+  const buttons = report.enemies.map(
+    o => Markup.switchToChatButton(`Share ${o}…`, o)
+  ).map(o => [o])
   const markup = Markup.inlineKeyboard(buttons)
 
   text += '\n'
