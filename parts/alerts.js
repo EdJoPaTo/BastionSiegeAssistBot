@@ -16,8 +16,7 @@ function start(telegram) {
   alertHandler = new AlertHandler(telegram)
   userSessions.getRaw()
     .forEach(({user, data}) => {
-      const {alerts} = data
-      alertHandler.recreateAlerts(user, alerts, data)
+      alertHandler.recreateAlerts(user, data)
     })
 }
 
@@ -27,7 +26,7 @@ bot.use(async (ctx, next) => {
   const after = stringify(ctx.session)
 
   if (before !== after) {
-    alertHandler.recreateAlerts(ctx.from.id, ctx.session.alerts, ctx.session)
+    alertHandler.recreateAlerts(ctx.from.id, ctx.session)
   }
 })
 
