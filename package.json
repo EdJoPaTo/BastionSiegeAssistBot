@@ -1,6 +1,6 @@
 {
   "private": "true",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "main": "index.js",
   "engines": {
     "node": ">=11"
