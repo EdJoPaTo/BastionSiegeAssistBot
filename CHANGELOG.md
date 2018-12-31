@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.3.1"></a>
+## [2.3.1](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v2.3.0...v2.3.1) (2018-12-31)
+
+
+### Bug Fixes
+
+* **alerts:** dont create alerts that are way to far in the future ([7c4d9b7](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/7c4d9b7))
+* **battlereport:** tell the user, the report itself was saved ([1292c9f](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/1292c9f))
+* **battlereports:** only add when report could be read ([556a132](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/556a132))
+* **gamescreen:** all winners of 0 return home ([a7f91a1](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/a7f91a1))
+
+
+
 <a name="2.3.0"></a>
 # [2.3.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v2.2.4...v2.3.0) (2018-12-18)
 
