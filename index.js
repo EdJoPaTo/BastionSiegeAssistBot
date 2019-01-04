@@ -131,7 +131,7 @@ bot.use(ctx => {
   text += '\n'
   text += '\nWith battle reports I can show your history in battles.'
   text += ' Forwarding the "Your scouts found" message shows information about that player like possible loot and required army.'
-  text += ' See more about the search at /search.'
+  text += ' See more about the search in the /settings → Search.'
 
   text += '\n'
   text += '\nBattlereports you provide will only be used to assume the enemies strength.'
