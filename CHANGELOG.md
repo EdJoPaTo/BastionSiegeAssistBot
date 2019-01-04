@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.4.0"></a>
+# [2.4.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v2.3.1...v2.4.0) (2019-01-04)
+
+
+### Bug Fixes
+
+* **bastionsiegeforward:** only do something when something is new ([227b310](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/227b310))
+* **help:** /search does not exist anymore ([98dd0c5](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/98dd0c5))
+* **inlineQuery:** use regex when possible but fallback to indexOf ([0ee2dc6](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/0ee2dc6))
+* **playerstats:** remove back to BS button ([e9d898b](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/e9d898b))
+* **playerstats:** TG markdown can not escape * ([6e9de7b](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/6e9de7b))
+
+
+### Features
+
+* **alerts:** show next battle alert after 5 min when karma is negative ([7775378](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/7775378))
+* **playerstats:** show stats of enemies in current war ([ce6f659](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/ce6f659))
+* track karma of the user ([146f45d](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/146f45d))
+
+
+
 <a name="2.3.1"></a>
 ## [2.3.1](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v2.3.0...v2.3.1) (2018-12-31)
 
