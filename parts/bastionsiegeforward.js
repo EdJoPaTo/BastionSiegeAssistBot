@@ -44,6 +44,7 @@ bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, (ctx, next) => {
 
   const addData = [
     'buildings',
+    'domainStats',
     'effects',
     'player',
     'resources',

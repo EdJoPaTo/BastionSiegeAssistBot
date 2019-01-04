@@ -41,10 +41,17 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
     }
 
     const allBattlereports = await battlereports.getAll()
-    const {attack, reward, friends, enemies} = report
+    const {
+      attack, enemies, friends, karma, reward
+    } = report
 
-    if (isNew && timestamp > ctx.session.gameInformation.resourcesTimestamp) {
-      ctx.session.gameInformation.resources.gold += reward
+    if (isNew) {
+      if (timestamp > ctx.session.gameInformation.resourcesTimestamp) {
+        ctx.session.gameInformation.resources.gold += reward
+      }
+      if (timestamp > ctx.session.gameInformation.domainStatsTimestamp) {
+        ctx.session.gameInformation.domainStats.karma += karma
+      }
     }
     if (attack) {
       const timestampType = (friends.length > 1 || enemies.length > 1) ? 'battleAllianceTimestamp' : 'battleSoloTimestamp'
