@@ -50,19 +50,23 @@ bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, (ctx, next) => {
     'resources',
     'workshop'
   ]
-  let anythingNew = false
-  for (const data of addData) {
-    if (newInformation[data]) {
-      if (ctx.session.gameInformation[data + 'Timestamp'] >= timestamp) {
-        continue
-      }
-      anythingNew = true
+  const dataAvailable = addData
+    .filter(o => newInformation[o])
+  if (dataAvailable.length === 0) {
+    return next()
+  }
+
+  const newData = dataAvailable
+    .filter(data => ctx.session.gameInformation[data + 'Timestamp'] < timestamp)
+  if (newData.length === 0) {
+    return ctx.reply('Thats not new to me. I will just ignore it.')
+  }
+
+  for (const data of newData) {
+    if (ctx.session.gameInformation[data + 'Timestamp'] < timestamp) {
       ctx.session.gameInformation[data + 'Timestamp'] = timestamp
       ctx.session.gameInformation[data] = newInformation[data]
     }
-  }
-  if (!anythingNew) {
-    return ctx.reply('Thats not new to me. I will just ignore it.')
   }
   return next()
 }))
