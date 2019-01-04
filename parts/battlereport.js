@@ -5,7 +5,7 @@ const battlereports = require('../lib/data/battlereports')
 const playerStats = require('../lib/math/player-stats')
 const playerStatsSearch = require('../lib/math/player-stats-search')
 
-const {createPlayerStatsString} = require('../lib/user-interface/player-stats')
+const {createMultiplePlayerStatsStrings} = require('../lib/user-interface/player-stats')
 const {createSingleBattleShortStatsLine} = require('../lib/user-interface/battle-stats')
 
 const {Extra, Markup} = Telegraf
@@ -58,10 +58,11 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
       ctx.session.gameInformation[timestampType] = Math.max(ctx.session.gameInformation[timestampType] || 0, timestamp)
     }
 
-    const buttons = report.enemies.map(
-      o => Markup.switchToChatButton(`Share ${o}…`, o)
-    ).map(o => [o])
-    const markup = Markup.inlineKeyboard(buttons)
+    const allStats = report.enemies
+      .map(o => playerStats.generate(allBattlereports, o))
+    const {buttons, statsStrings} = createMultiplePlayerStatsStrings(allStats)
+
+    const markup = Markup.inlineKeyboard(buttons, {columns: 1})
 
     text += '\n'
     text += createSingleBattleShortStatsLine(report)
@@ -86,9 +87,7 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
     }
 
     text += '\n\n'
-    text += report.enemies
-      .map(o => playerStats.generate(allBattlereports, o))
-      .map(o => createPlayerStatsString(o))
+    text += statsStrings
       .join('\n\n')
 
     return {
