@@ -4,8 +4,7 @@ const battlereports = require('../lib/data/battlereports')
 
 const playerStats = require('../lib/math/player-stats')
 
-const {createPlayerStatsString} = require('../lib/user-interface/player-stats')
-const {emoji} = require('../lib/user-interface/output-text')
+const {createMultiplePlayerStatsStrings} = require('../lib/user-interface/player-stats')
 
 const {Extra, Markup} = Telegraf
 
@@ -50,20 +49,19 @@ bot.on('text', Telegraf.optional(isAttackScout, ctx => {
   return ctx.reply(text, extra)
 }))
 
-function generatePlayerStats(playername) {
+function generatePlayerStats(players) {
+  if (!Array.isArray(players)) {
+    players = [players]
+  }
+
   const allBattlereports = battlereports.getAll()
-  const stats = playerStats.generate(allBattlereports, playername)
+  const allStats = players
+    .map(o => playerStats.generate(allBattlereports, o))
+  const {buttons, statsStrings} = createMultiplePlayerStatsStrings(allStats)
 
-  const buttons = [
-    [
-      Markup.urlButton(emoji.backTo + 'Back to BastionSiege…', 'https://t.me/BastionSiegeBot')
-    ], [
-      Markup.switchToChatButton(`Share ${playername}…`, playername)
-    ]
-  ]
-
+  const text = statsStrings.join('\n\n')
   return {
-    text: createPlayerStatsString(stats),
+    text,
     extra: Extra.markdown().markup(Markup.inlineKeyboard(buttons))
   }
 }
