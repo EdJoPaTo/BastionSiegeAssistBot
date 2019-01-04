@@ -10,16 +10,8 @@ const {createPlayerNameString, createPlayerStatsString, createPlayerStatsShortSt
 
 const bot = new Telegraf.Composer()
 
-function escapeRegexSpecificChars(input) {
-  return input
-    .replace('[', '\\[')
-    .replace(']', '\\]')
-    .replace('(', '\\(')
-    .replace(')', '\\)')
-}
-
 bot.on('inline_query', async ctx => {
-  const regex = new RegExp(escapeRegexSpecificChars(ctx.inlineQuery.query), 'i')
+  const queryTestFunc = getTestFunctionForQuery(ctx.inlineQuery.query)
   const offset = ctx.inlineQuery.offset || 0
 
   const basicOptions = {
@@ -40,7 +32,7 @@ bot.on('inline_query', async ctx => {
   const allBattlereports = await battlereports.getAll()
 
   const enemies = getAllEnemies(allBattlereports)
-    .filter(o => regex.test(o))
+    .filter(o => queryTestFunc(o))
 
   const results = enemies
     .slice(offset, offset + 50)
@@ -68,6 +60,15 @@ bot.on('inline_query', async ctx => {
 
   return ctx.answerInlineQuery(results, options)
 })
+
+function getTestFunctionForQuery(query) {
+  try {
+    const regex = new RegExp(query, 'i')
+    return o => regex.test(o)
+  } catch (error) {
+    return o => o.indexOf(query) >= 0
+  }
+}
 
 module.exports = {
   bot
