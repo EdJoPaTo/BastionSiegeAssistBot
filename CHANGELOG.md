@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.4.2"></a>
+## [2.4.2](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v2.4.1...v2.4.2) (2019-01-05)
+
+
+### Bug Fixes
+
+* **bastionsiegeforward:** save previously unknown data ([548edc7](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/548edc7))
+* **gamescreen:** handle reports of battles while negative karma ([a0ab0f8](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/a0ab0f8))
+
+
+
 <a name="2.4.1"></a>
 ## [2.4.1](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v2.4.0...v2.4.1) (2019-01-04)
 
