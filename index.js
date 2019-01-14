@@ -34,6 +34,7 @@ if (process.env.NODE_ENV !== 'production') {
   bot.use(async (ctx, next) => {
     const identifier = [
       new Date().toISOString(),
+      Number(ctx.update.update_id).toString(16),
       ctx.from && ctx.from.first_name,
       ctx.updateType
     ].join(' ')
