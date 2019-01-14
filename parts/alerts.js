@@ -1,6 +1,8 @@
 const Telegraf = require('telegraf')
 const stringify = require('json-stable-stringify')
 
+const {compareStrAsSimpleOne} = require('../lib/javascript-abstraction/strings')
+
 const userSessions = require('../lib/data/user-sessions')
 
 const AlertHandler = require('../lib/user-interface/alert-handler')
@@ -37,6 +39,12 @@ bot.command('upcoming', ctx => {
 
 bot.action('upcoming', ctx => {
   const {text, extra} = generateUpcomingText(ctx)
+
+  const oldText = ctx.callbackQuery.message.text
+  if (compareStrAsSimpleOne(oldText, text) === 0) {
+    return ctx.answerCbQuery('Nothing changed besides the current time.')
+  }
+
   return Promise.all([
     ctx.answerCbQuery(),
     ctx.editMessageText(text, extra)
@@ -60,17 +68,12 @@ function generateUpcomingText(ctx) {
       text += formatTimeAmount((event.timestamp - now) / 60)
       text += '*'
       text += '\n'
-      text += new Date(event.timestamp * 1000).toISOString()
-      text += '\n'
       text += event.text
       return text
     })
 
   let text = '*Upcoming Alerts*'
   text += '\nYou can select which alerts you want to receive in the /settings.'
-
-  text += '\n'
-  text += '\nnow: ' + new Date(now * 1000).toISOString()
 
   text += '\n'
   text += '\n' + entries.join('\n')
