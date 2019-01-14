@@ -17,6 +17,7 @@ const {Markup, Extra} = Telegraf
 const DEBOUNCE_TIME = 100 // Milliseconds
 
 const bot = new Telegraf.Composer()
+const prefix = '*Building Upgrades*\n'
 
 function isBuildingsOrResources(ctx) {
   if (!ctx.state.screen) {
@@ -43,7 +44,6 @@ bot.command('buildings', sendBuildStats)
 
 function sendBuildStats(ctx) {
   const information = ctx.session.gameInformation
-  const prefix = '*Building Upgrades*\n'
 
   if (!information.buildingsTimestamp) {
     return ctx.replyWithMarkdown(prefix + 'Please forward me the building screen from your game in order to get building upgrade stats.')
@@ -58,7 +58,7 @@ function sendBuildStats(ctx) {
 
 bot.action('estimate', async ctx => {
   try {
-    const newStats = generateStatsText(ctx.session.gameInformation, ctx.session.buildings)
+    const newStats = prefix + generateStatsText(ctx.session.gameInformation, ctx.session.buildings)
     const oldStats = ctx.callbackQuery.message.text
 
     if (compareStrAsSimpleOne(newStats, oldStats) === 0) {
