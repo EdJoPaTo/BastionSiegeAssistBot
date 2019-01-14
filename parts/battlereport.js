@@ -42,15 +42,20 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
 
     const allBattlereports = await battlereports.getAll()
     const {
-      attack, enemies, friends, karma, reward
+      attack, enemies, friends, reward, soldiersTotal, karma, terra, won
     } = report
 
     if (isNew) {
       if (timestamp > ctx.session.gameInformation.resourcesTimestamp) {
         ctx.session.gameInformation.resources.gold += reward
+        if (attack) {
+          ctx.session.gameInformation.resources.food -= soldiersTotal // 1 food per send soldier required to start war
+        }
       }
       if (timestamp > ctx.session.gameInformation.domainStatsTimestamp) {
         ctx.session.gameInformation.domainStats.karma += karma
+        ctx.session.gameInformation.domainStats.terra += terra
+        ctx.session.gameInformation.domainStats.wins += won ? 1 : 0
       }
     }
     if (attack) {
