@@ -72,9 +72,10 @@ bot.action('buildings', async ctx => {
 })
 
 function generateStatsText(information, buildingsToShow) {
-  const currentTimestamp = Math.floor(Date.now() / 1000)
-  const resourceAgeMinutes = Math.floor((currentTimestamp - information.resourcesTimestamp) / 60)
-  const buildingAgeMinutes = Math.floor((currentTimestamp - information.buildingsTimestamp) / 60)
+  // Unix timestamp just without seconds (/60)
+  const currentTimestamp = Math.floor(Date.now() / 1000 / 60)
+  const resourceAgeMinutes = currentTimestamp - Math.floor(information.resourcesTimestamp / 60)
+  const buildingAgeMinutes = currentTimestamp - Math.floor(information.buildingsTimestamp / 60)
 
   const buildings = {...information.buildings, ...information.workshop}
 

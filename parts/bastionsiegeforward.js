@@ -16,9 +16,11 @@ bot.use((ctx, next) => {
 // Load game screen type and information
 bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, (ctx, next) => {
   const {text, forward_date: timestamp} = ctx.message
+  const ingameTimestamp = Math.floor(timestamp / 60) * 60
   ctx.state.screen = {
     ...detectGamescreen(text),
-    timestamp
+    timestamp,
+    ingameTimestamp
   }
 
   try {
