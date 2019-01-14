@@ -40,9 +40,7 @@ if (process.env.NODE_ENV !== 'production') {
     const messageText = ctx.message && ctx.message.text
     const data = callbackData || inlineQuery || messageText
     if (data) {
-      const indexOfNewLine = data.indexOf('\n')
-      const length = indexOfNewLine >= 0 ? Math.min(indexOfNewLine, 50) : 50
-      console.timeLog(identifier, data && data.length, data && data.substr(0, length))
+      console.timeLog(identifier, data.length, data.replace(/\n/g, '\\n').substr(0, 50))
     } else {
       console.timeLog(identifier)
     }
