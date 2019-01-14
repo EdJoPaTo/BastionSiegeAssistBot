@@ -28,7 +28,7 @@ function isBuildingsOrResources(ctx) {
 }
 
 const updateMarkup = Extra.markup(Markup.inlineKeyboard([
-  Markup.callbackButton('estimate current situation', 'estimate')
+  Markup.callbackButton('estimate current situation', 'buildings')
 ]))
 
 const debouncedBuildStats = {}
@@ -56,7 +56,7 @@ function sendBuildStats(ctx) {
   return ctx.replyWithMarkdown(prefix + statsText, updateMarkup)
 }
 
-bot.action('estimate', async ctx => {
+bot.action('buildings', async ctx => {
   try {
     const newStats = prefix + generateStatsText(ctx.session.gameInformation, ctx.session.buildings)
     const oldStats = ctx.callbackQuery.message.text
