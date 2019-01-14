@@ -53,8 +53,8 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
         }
       }
       if (timestamp > ctx.session.gameInformation.domainStatsTimestamp) {
-        ctx.session.gameInformation.domainStats.karma += karma
-        ctx.session.gameInformation.domainStats.terra += terra
+        ctx.session.gameInformation.domainStats.karma += karma ? karma : 0
+        ctx.session.gameInformation.domainStats.terra += terra ? terra : 0
         ctx.session.gameInformation.domainStats.wins += won ? 1 : 0
       }
     }
