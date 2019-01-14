@@ -32,13 +32,17 @@ bot.telegram.getMe().then(botInfo => {
 
 if (process.env.NODE_ENV !== 'production') {
   bot.use(async (ctx, next) => {
-    const identifier = `${new Date().toISOString()} ${ctx.from && ctx.from.first_name} ${ctx.updateType}`
-    console.time(identifier)
-    await next()
+    const identifier = [
+      new Date().toISOString(),
+      ctx.from && ctx.from.first_name,
+      ctx.updateType
+    ].join(' ')
     const callbackData = ctx.callbackQuery && ctx.callbackQuery.data
     const inlineQuery = ctx.inlineQuery && ctx.inlineQuery.query
     const messageText = ctx.message && ctx.message.text
     const data = callbackData || inlineQuery || messageText
+    console.time(identifier)
+    await next()
     if (data) {
       console.timeLog(identifier, data.length, data.replace(/\n/g, '\\n').substr(0, 50))
     } else {
