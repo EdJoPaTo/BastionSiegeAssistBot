@@ -27,7 +27,7 @@ function isBuildingsOrResources(ctx) {
   return buildings || resources || workshop
 }
 
-const updateMarkup = Extra.markup(Markup.inlineKeyboard([
+const updateMarkup = Extra.markdown().markup(Markup.inlineKeyboard([
   Markup.callbackButton('estimate current situation', 'buildings')
 ]))
 
@@ -53,7 +53,7 @@ function sendBuildStats(ctx) {
   }
 
   const statsText = generateStatsText(information, ctx.session.buildings)
-  return ctx.replyWithMarkdown(prefix + statsText, updateMarkup)
+  return ctx.reply(prefix + statsText, updateMarkup)
 }
 
 bot.action('buildings', async ctx => {
