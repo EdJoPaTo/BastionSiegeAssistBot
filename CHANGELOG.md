@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.5.0"></a>
+# [2.5.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v2.4.2...v2.5.0) (2019-01-15)
+
+
+### Bug Fixes
+
+* **battlereport:** dont delete assumption when report does not have karma or terra ([a6682e8](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/a6682e8))
+* **buildings:** rename action to better reflect what is done ([64cbebb](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/64cbebb))
+* **buildings:** updated screen has the header too ([6513a08](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/6513a08))
+* **buildings:** updated stats are now in parsed markdown too ([5859242](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/5859242))
+
+
+### Features
+
+* **alerts:** add alert for gold full and food empty ([a633a05](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/a633a05))
+* **alerts:** Building Alert Texts dont start with the emoji ([de25983](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/de25983))
+* **alerts:** remove absolute times from /upcoming ([d3c1dad](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/d3c1dad))
+* **assumed:** add /assumed to see what the bot thinks of you ([f2d0019](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/f2d0019))
+* **battlereport:** track terra and wins ([7793e3f](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/7793e3f))
+* **debug:** add update id to identifier ([c1787a3](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/c1787a3))
+* **debug:** improve view of multiline content ([98ea728](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/98ea728))
+* **inline:** add searchability by alliance ([d3b2541](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/d3b2541))
+* assume ingame resource timings as they are handled ingame ([5facd5c](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/5facd5c))
+
+
+
 <a name="2.4.2"></a>
 ## [2.4.2](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v2.4.1...v2.4.2) (2019-01-05)
 
