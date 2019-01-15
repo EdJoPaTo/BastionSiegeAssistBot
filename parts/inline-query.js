@@ -1,42 +1,57 @@
 const Telegraf = require('telegraf')
 
+const {sortBy} = require('../lib/javascript-abstraction/array')
+
 const battlereports = require('../lib/data/battlereports')
+
+const {mystics} = require('../lib/input/game-text')
 
 const playerStats = require('../lib/math/player-stats')
 const playerStatsSearch = require('../lib/math/player-stats-search')
-const {getAllEnemies} = require('../lib/math/battle-stats')
 
 const {createPlayerNameString, createPlayerStatsString, createPlayerStatsShortString} = require('../lib/user-interface/player-stats')
 
 const bot = new Telegraf.Composer()
 
 bot.on('inline_query', async ctx => {
-  const queryTestFunc = getTestFunctionForQuery(ctx.inlineQuery.query)
+  const {query} = ctx.inlineQuery
   const offset = ctx.inlineQuery.offset || 0
+  const canSearch = playerStatsSearch.canSearch(ctx.session.search)
 
-  const basicOptions = {
+  let players = []
+  const options = {
     is_personal: true,
     cache_time: playerStatsSearch.MAX_SECONDS_FOR_ONE_SEARCH
   }
 
-  const canSearch = playerStatsSearch.canSearch(ctx.session.search)
-  if (!canSearch) {
-    return ctx.answerInlineQuery([], {
-      ...basicOptions,
-      switch_pm_text: 'Provide some Battlereports :)',
-      switch_pm_parameter: 'more-battlereports-please'
-    })
+  if (canSearch && query && query.length >= 2) {
+    const queryTestFunc = getTestFunctionForQuery(query)
+
+    const allPlayers = battlereports.getAllPlayers()
+    players = allPlayers
+      .filter(o => queryTestFunc(createPlayerNameString(o)))
+      .map(o => o.player)
+
+    ctx.session.search = playerStatsSearch.applySearch(ctx.session.search)
+  } else {
+    players = [...mystics]
+
+    if (canSearch) {
+      // No query given
+      options.is_personal = false
+      options.cache_time = 60 * 5
+    } else {
+      // No searches left
+      options.switch_pm_text = 'Provide some Battlereports :)'
+      options.switch_pm_parameter = 'more-battlereports-please'
+    }
   }
-  ctx.session.search = playerStatsSearch.applySearch(ctx.session.search)
 
   const allBattlereports = await battlereports.getAll()
-
-  const enemies = getAllEnemies(allBattlereports)
-    .filter(o => queryTestFunc(o))
-
-  const results = enemies
-    .slice(offset, offset + 50)
+  const results = players
     .map(o => playerStats.generate(allBattlereports, o))
+    .sort(sortBy(o => o.battlesObserved, true))
+    .slice(offset, offset + 50)
     .map(stats => {
       return {
         type: 'article',
@@ -50,10 +65,7 @@ bot.on('inline_query', async ctx => {
       }
     })
 
-  const options = {
-    ...basicOptions,
-    next_offset: enemies.length > offset + 50 ? String(offset + 50) : ''
-  }
+  options.next_offset = players.length > offset + 50 ? String(offset + 50) : ''
   if (process.env.NODE_ENV !== 'production') {
     options.cache_time = 2
   }

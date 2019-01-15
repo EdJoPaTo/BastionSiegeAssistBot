@@ -5,13 +5,12 @@ const battlereports = require('../lib/data/battlereports')
 const poweruser = require('../lib/data/poweruser')
 
 const {getHoursEarlier} = require('../lib/math/unix-timestamp')
-const {getAllEnemies} = require('../lib/math/battle-stats')
 
 const bot = new Telegraf.Composer()
 
 bot.command('botstats', async ctx => {
   const allBattlereports = await battlereports.getAll()
-  const enemies = getAllEnemies(allBattlereports)
+  const enemies = await battlereports.getAllPlayers()
   const powerusers = poweruser.getPoweruserSessions(allBattlereports).length
 
   const minDate = getHoursEarlier(Date.now() / 1000, 24)
