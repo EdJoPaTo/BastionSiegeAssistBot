@@ -1,14 +1,19 @@
 const Telegraf = require('telegraf')
 
 const battlereports = require('../lib/data/battlereports')
+const poweruser = require('../lib/data/poweruser')
 
 const playerStats = require('../lib/math/player-stats')
+const {getSumAverageAmount} = require('../lib/math/number-array')
 
-const {createMultiplePlayerStatsStrings} = require('../lib/user-interface/player-stats')
+const {createAverageSumString} = require('../lib/user-interface/number-array-strings')
+const {createMultiplePlayerStatsStrings, createPlayerNameString} = require('../lib/user-interface/player-stats')
 const {emoji} = require('../lib/user-interface/output-text')
 const {formatNumberShort} = require('../lib/user-interface/format-number')
 
 const {Extra, Markup} = Telegraf
+
+const MINIMUM_AGE_OF_BUILDINGS_IN_SECONDS = 60 * 60 * 24 * 1 // 1 Days
 
 const bot = new Telegraf.Composer()
 
@@ -33,7 +38,8 @@ bot.on('text', Telegraf.optional(isWarMenu, ctx => {
     text += '\n\n'
 
     const time = ctx.message.forward_date
-    const minutesAgo = ((Date.now() / 1000) - time) / 60
+    const now = Date.now() / 1000
+    const minutesAgo = (now - time) / 60
     if (minutesAgo > 8) {
       text += 'This battle is long over… Send me the report instead. 😉'
       return ctx.replyWithMarkdown(text)
@@ -48,10 +54,85 @@ bot.on('text', Telegraf.optional(isWarMenu, ctx => {
       return ctx.replyWithMarkdown(text)
     }
 
-    const playersToShow = getRelevantPlayersFromBattle(battle, name)
-    const allStats = playersToShow
+    const enemies = getRelevantPlayersFromBattle(battle, name)
+    const friends = allPlayersInvolved.length === 0 ?
+      [name] :
+      allPlayersInvolved.filter(o => enemies.indexOf(o) < 0)
+
+    const enemyStats = enemies
       .map(o => playerStats.generate(allBattlereports, o))
-    const {buttons, statsStrings} = createMultiplePlayerStatsStrings(allStats)
+
+    if (friends.length > 1 || enemies.length > 1) {
+      text += ctx.session.gameInformation.player.alliance
+      text += ` ${friends.length} | ${enemies.length} `
+      text += enemyStats[0].alliance
+      text += '\n\n'
+    }
+
+    const requesterIsPoweruser = poweruser.isPoweruser(allBattlereports, ctx.from.id)
+    const minimumBuildingTimestamp = now - MINIMUM_AGE_OF_BUILDINGS_IN_SECONDS
+    const buildingsAreUpToDate = ctx.session.gameInformation.buildingsTimestamp > minimumBuildingTimestamp
+    if (requesterIsPoweruser && buildingsAreUpToDate) {
+      const poweruserFriends = poweruser.getPoweruserSessions(allBattlereports)
+        .map(o => o.data.gameInformation)
+        .filter(o => o.player && friends.indexOf(o.player.name) >= 0)
+        .filter(o => o.buildingsTimestamp > minimumBuildingTimestamp)
+        .map(o => ({
+          alliance: o.player.alliance,
+          player: o.player.name,
+          barracks: o.buildings.barracks
+        }))
+      const poweruserFriendNames = poweruserFriends.map(o => o.player)
+      const friendlyKnownArmyArr = poweruserFriends.map(o => o.barracks * 40)
+      const friendlyKnownArmy = getSumAverageAmount(friendlyKnownArmyArr)
+      text += createAverageSumString(
+        friendlyKnownArmy,
+        ctx.session.gameInformation.player.alliance + ' *Friendly army*',
+        emoji.army,
+        true
+      )
+
+      const notPowerusers = friends
+        .filter(o => poweruserFriendNames.indexOf(o) < 0)
+      if (notPowerusers.length > 0) {
+        const notPoweruserString = notPowerusers
+          .map(o => createPlayerNameString({player: o}, true))
+          .join(', ')
+
+        text += '\n'
+        text += 'Not powerusers or buildings not up to date:\n'
+        text += notPoweruserString
+      }
+
+      text += '\n\n'
+      const enemyArmyArr = enemyStats
+        .filter(o => !o.immune)
+        .map(o => {
+          let avg = 0
+          if (isFinite(o.army.min)) {
+            avg += o.army.min
+          }
+          if (isFinite(o.army.max)) {
+            avg += o.army.max
+            if (avg > o.army.max) {
+              avg /= 2
+            }
+          }
+          return avg
+        })
+      const enemyArmy = getSumAverageAmount(enemyArmyArr)
+      text += createAverageSumString(
+        enemyArmy,
+        enemyStats[0].alliance + ' *Enemy Assumption*',
+        emoji.army,
+        true
+      )
+    } else {
+      text += '💙😎 When you are poweruser and your buildings are up to date you will get additional information.'
+    }
+    text += '\n\n'
+
+    const {buttons, statsStrings} = createMultiplePlayerStatsStrings(enemyStats)
 
     text += statsStrings.join('\n\n')
     extra = extra.markup(
