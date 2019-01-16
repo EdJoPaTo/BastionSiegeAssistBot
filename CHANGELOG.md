@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.6.0"></a>
+# [2.6.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v2.5.1...v2.6.0) (2019-01-16)
+
+
+### Bug Fixes
+
+* **alerts:** log errors from alert sending properly ([62367bb](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/62367bb))
+* **playerstats:** dont show more info in short than in normal text ([d056e10](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/d056e10))
+
+
+### Features
+
+* **playerstats:** generalize army assumption ([253195e](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/253195e))
+* **playerstats:** show summary of friends / enemies from war ([0cfc52c](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/0cfc52c))
+
+
+### Performance Improvements
+
+* **playerstats:** remove max army lost percentage ([c6fa62d](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/c6fa62d))
+
+
+
 <a name="2.5.1"></a>
 ## [2.5.1](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v2.5.0...v2.5.1) (2019-01-15)
 
