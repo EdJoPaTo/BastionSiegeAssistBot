@@ -102,9 +102,10 @@ bot.on('text', Telegraf.optional(isWarMenu, ctx => {
         text += '\n'
         text += 'Not powerusers or buildings not up to date:\n'
         text += notPoweruserString
+        text += '\n'
       }
 
-      text += '\n\n'
+      text += '\n'
       const enemyArmyArr = enemyStats
         .filter(o => !o.immune)
         .map(o => {
