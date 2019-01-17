@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.6.1"></a>
+## [2.6.1](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v2.6.0...v2.6.1) (2019-01-17)
+
+
+### Bug Fixes
+
+* **alerts:** fix bug for new users ([387dbe9](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/387dbe9))
+* **playerstats:** improve war response layout ([f3468da](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/f3468da))
+* **playerstats:** skip enemies without known army ([f503a96](https://github.com/EdJoPaTo/BastionSiegeAssistBot/commit/f503a96))
+
+
+
 <a name="2.6.0"></a>
 # [2.6.0](https://github.com/EdJoPaTo/BastionSiegeAssistBot/compare/v2.5.1...v2.6.0) (2019-01-16)
 
