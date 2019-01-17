@@ -119,7 +119,7 @@ bot.on('text', Telegraf.optional(isWarMenu, ctx => {
               avg /= 2
             }
           }
-          return avg
+          return avg || NaN
         })
       const enemyArmy = getSumAverageAmount(enemyArmyArr)
       text += createAverageSumString(
