@@ -4,7 +4,7 @@ const battlereports = require('../lib/data/battlereports')
 
 const playerStats = require('../lib/math/player-stats')
 
-const {createMultiplePlayerStatsStrings} = require('../lib/user-interface/player-stats')
+const {createPlayerShareButton, createPlayerStatsString} = require('../lib/user-interface/player-stats')
 
 const {Extra, Markup} = Telegraf
 
@@ -57,7 +57,8 @@ function generatePlayerStats(players) {
   const allBattlereports = battlereports.getAll()
   const allStats = players
     .map(o => playerStats.generate(allBattlereports, o))
-  const {buttons, statsStrings} = createMultiplePlayerStatsStrings(allStats)
+  const buttons = allStats.map(o => createPlayerShareButton(o))
+  const statsStrings = allStats.map(o => createPlayerStatsString(o))
 
   const text = statsStrings.join('\n\n')
   return {

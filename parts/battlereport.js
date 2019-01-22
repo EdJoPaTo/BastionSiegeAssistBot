@@ -6,7 +6,7 @@ const playerStats = require('../lib/math/player-stats')
 const playerStatsSearch = require('../lib/math/player-stats-search')
 const {calcMissingPeople} = require('../lib/math/siegemath')
 
-const {createMultiplePlayerStatsStrings} = require('../lib/user-interface/player-stats')
+const {createPlayerShareButton, createPlayerStatsString} = require('../lib/user-interface/player-stats')
 const {createSingleBattleShortStatsLine} = require('../lib/user-interface/battle-stats')
 const {formatNumberShort} = require('../lib/user-interface/format-number')
 const {emoji} = require('../lib/user-interface/output-text')
@@ -77,7 +77,8 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
     const allBattlereports = await battlereports.getAll()
     const allStats = report.enemies
       .map(o => playerStats.generate(allBattlereports, o))
-    const {buttons, statsStrings} = createMultiplePlayerStatsStrings(allStats)
+    const buttons = allStats.map(o => createPlayerShareButton(o))
+    const statsStrings = allStats.map(o => createPlayerStatsString(o))
 
     const markup = Markup.inlineKeyboard(buttons, {columns: 1})
 
