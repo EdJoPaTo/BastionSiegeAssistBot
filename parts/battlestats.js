@@ -50,11 +50,13 @@ function getFirstTimeRelevantForTimeframe(timeframe, now = Date.now() / 1000) {
   if (timeframe === 'all') {
     return 0
   }
+
   const scale = regexHelper.get(timeframe, /(d|h)/)
   const amount = regexHelper.getNumber(timeframe, /(\d+)/)
   if (scale === 'd') {
     return getMidnightXDaysEarlier(now, amount)
   }
+
   return getHoursEarlier(now, amount)
 }
 
@@ -75,6 +77,7 @@ function getBattlestatsText(ctx) {
     text += 'the last '
     text += timeframe
   }
+
   text += ` (${reportsFiltered.length})`
   text += '\n\n'
   text += createBattleStatsString(stats)

@@ -10,6 +10,7 @@ bot.use((ctx, next) => {
   if (!ctx.session.gameInformation) {
     ctx.session.gameInformation = {}
   }
+
   return next()
 })
 
@@ -68,6 +69,7 @@ bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, (ctx, next) => {
     ctx.session.gameInformation[data + 'Timestamp'] = timestamp
     ctx.session.gameInformation[data] = newInformation[data]
   }
+
   return next()
 }))
 

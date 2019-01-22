@@ -96,6 +96,7 @@ bot.use((ctx, next) => {
     }
     delete ctx.session.gameInformation.buildingTimestamp
   }
+
   return next()
 })
 
@@ -124,6 +125,7 @@ bot.on('text', (ctx, next) => {
     // Thats an inline query. Ignore :)
     return
   }
+
   return next()
 })
 

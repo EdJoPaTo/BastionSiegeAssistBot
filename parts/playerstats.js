@@ -25,6 +25,7 @@ bot.on('text', Telegraf.optional(isAttackIncoming, ctx => {
     text += 'This battle is long over… Send me the report instead. 😉'
     return ctx.reply(text)
   }
+
   const {text, extra} = generatePlayerStats(attackincoming.player)
   return ctx.reply(text, extra)
 }))
@@ -45,6 +46,7 @@ bot.on('text', Telegraf.optional(isAttackScout, ctx => {
     text += ` I'll help you when you see ${attackscout.player} next time. 😊`
     return ctx.reply(text)
   }
+
   const {text, extra} = generatePlayerStats(attackscout.player)
   return ctx.reply(text, extra)
 }))

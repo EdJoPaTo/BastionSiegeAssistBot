@@ -16,6 +16,7 @@ function alertsText() {
   text += '\nEnable the alerts you want to get from me.'
   return text
 }
+
 settingsMenu.submenu(alertEmojis.enabled + ' Alerts', 'alerts', new TelegrafInlineMenu(alertsText))
   .select('type', ALERT_TYPES, {
     multiselect: true,
@@ -31,6 +32,7 @@ function buildingsText() {
   text += '\nYou can set which buildings are of interest for you in the /buildings view.'
   return text
 }
+
 settingsMenu.submenu(emoji.houses + 'Buildings', 'buildings', new TelegrafInlineMenu(buildingsText))
   .select('b', buildingNames, {
     multiselect: true,
@@ -63,6 +65,7 @@ function poweruserText(ctx) {
 
   return text
 }
+
 settingsMenu.submenu('💙 Poweruser', 'poweruser', new TelegrafInlineMenu(poweruserText), {
   hide: ctx => !poweruser.isPoweruser(battlereports.getAll(), ctx.from.id)
 })
@@ -78,10 +81,12 @@ settingsMenu.submenu('💙 Poweruser', 'poweruser', new TelegrafInlineMenu(power
       if (ctx.session.disableImmunity) {
         return false
       }
+
       const {name} = ctx.session.gameInformation.player || {}
       if (!name) {
         return '⚠️'
       }
+
       return true
     }
   })
@@ -102,6 +107,7 @@ function searchText(ctx) {
 
   return text
 }
+
 settingsMenu.submenu('🔎 Search', 'search', new TelegrafInlineMenu(searchText))
   .switchToCurrentChatButton('try player search…', 'Dragon')
 
@@ -112,6 +118,7 @@ function toggleInArray(array, key) {
     array.push(key)
     array.sort()
   }
+
   return array
 }
 

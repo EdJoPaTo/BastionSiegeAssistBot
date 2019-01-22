@@ -38,6 +38,7 @@ bot.action('assumed', async ctx => {
     if (compareStrAsSimpleOne(newStats, oldStats) === 0) {
       return ctx.answerCbQuery('thats already as good as I can estimate!')
     }
+
     await ctx.editMessageText(newStats, updateMarkup)
     return ctx.answerCbQuery('updated!')
   } catch (error) {

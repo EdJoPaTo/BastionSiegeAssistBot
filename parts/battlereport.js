@@ -42,19 +42,23 @@ function applyReportToGameInformation(ctx, report, timestamp, isNew) {
   if (isNew) {
     if (timestamp > ctx.session.gameInformation.resourcesTimestamp) {
       ctx.session.gameInformation.resources.gold += reward
+
       if (isFinite(soldiersLostResult.gold)) {
         ctx.session.gameInformation.resources.gold += soldiersLostResult.gold
       }
+
       if (attack) {
         ctx.session.gameInformation.resources.food -= soldiersTotal // 1 food per send soldier required to start war
       }
     }
+
     if (timestamp > ctx.session.gameInformation.domainStatsTimestamp) {
       ctx.session.gameInformation.domainStats.karma += karma ? karma : 0
       ctx.session.gameInformation.domainStats.terra += terra ? terra : 0
       ctx.session.gameInformation.domainStats.wins += won ? 1 : 0
     }
   }
+
   if (attack) {
     const timestampType = (friends.length > 1 || enemies.length > 1) ? 'battleAllianceTimestamp' : 'battleSoloTimestamp'
     ctx.session.gameInformation[timestampType] = Math.max(ctx.session.gameInformation[timestampType] || 0, timestamp)
@@ -109,6 +113,7 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
       if (!ctx.session.search) {
         ctx.session.search = {}
       }
+
       ctx.session.search.remainingSearches = playerStatsSearch.newSearchLimitAfterReward(ctx.session.search.remainingSearches, 1)
     } else {
       text += '\nYou have sent me this one already 🙃'

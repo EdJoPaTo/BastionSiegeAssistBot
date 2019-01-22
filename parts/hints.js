@@ -14,6 +14,7 @@ bot.on('text', async (ctx, next) => {
     text += '\n⚠️ I do not know your ingame name in order to make you immune. You can send your main screen or disable this in the /settings.'
     await ctx.replyWithMarkdown(text)
   }
+
   return next()
 })
 

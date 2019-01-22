@@ -96,6 +96,7 @@ bot.on('text', Telegraf.optional(isWarMenu, ctx => {
       } else {
         text += '💙😎 When you are poweruser and your buildings are up to date you will get improved information about alliance mates.'
       }
+
       text += '\n\n'
 
       const attackStats = battle.attack

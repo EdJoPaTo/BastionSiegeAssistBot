@@ -23,6 +23,7 @@ function isBuildingsOrResources(ctx) {
   if (!ctx.state.screen) {
     return false
   }
+
   const {buildings, resources, workshop} = ctx.state.screen.information || {}
   return buildings || resources || workshop
 }
@@ -37,6 +38,7 @@ bot.on('text', Telegraf.optional(isBuildingsOrResources, ctx => {
   if (!debouncedBuildStats[id]) {
     debouncedBuildStats[id] = debounce(sendBuildStats, DEBOUNCE_TIME)
   }
+
   debouncedBuildStats[id](ctx)
 }))
 
@@ -48,6 +50,7 @@ function sendBuildStats(ctx) {
   if (!information.buildingsTimestamp) {
     return ctx.replyWithMarkdown(prefix + 'Please forward me the building screen from your game in order to get building upgrade stats.')
   }
+
   if (!information.resourcesTimestamp) {
     return ctx.replyWithMarkdown(prefix + 'Please forward me a screen from the game showing your current resources in order to get building upgrade stats.')
   }
@@ -64,6 +67,7 @@ bot.action('buildings', async ctx => {
     if (compareStrAsSimpleOne(newStats, oldStats) === 0) {
       return ctx.answerCbQuery('thats already as good as I can estimate!')
     }
+
     await ctx.editMessageText(newStats, updateMarkup)
     return ctx.answerCbQuery('updated!')
   } catch (error) {
@@ -91,14 +95,16 @@ function generateStatsText(information, buildingsToShow) {
   text += '\n\n'
 
   text += createFillTimeStatsString(buildings, estimatedResources)
-
   text += '\n'
+
   if (resourceAgeMinutes > 30) {
     text += '⚠️ My knowledge of your ressources is a bit old. This leads to inaccuracy. Consider updating me with a new forwarded resource screen.\n'
   }
+
   if (buildingAgeMinutes > 60 * 5) {
     text += '⚠️ My knowledge of your buildings is a bit old. This leads to inaccuracy. Consider updating me with a new forwarded building screen.\n'
   }
+
   return text
 }
 
