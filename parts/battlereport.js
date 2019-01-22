@@ -4,9 +4,12 @@ const battlereports = require('../lib/data/battlereports')
 
 const playerStats = require('../lib/math/player-stats')
 const playerStatsSearch = require('../lib/math/player-stats-search')
+const {calcMissingPeople} = require('../lib/math/siegemath')
 
 const {createMultiplePlayerStatsStrings} = require('../lib/user-interface/player-stats')
 const {createSingleBattleShortStatsLine} = require('../lib/user-interface/battle-stats')
+const {formatNumberShort} = require('../lib/user-interface/format-number')
+const {emoji} = require('../lib/user-interface/output-text')
 
 const {Extra, Markup} = Telegraf
 
@@ -31,12 +34,17 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
 
 function applyReportToGameInformation(ctx, report, timestamp, isNew) {
   const {
-    attack, enemies, friends, reward, soldiersTotal, karma, terra, won
+    attack, enemies, friends, reward, soldiersAlive, soldiersTotal, karma, terra, won
   } = report
+  const soldiersLost = soldiersTotal - soldiersAlive
+  const soldiersLostResult = calcMissingPeople(ctx.session.gameInformation.buildings, soldiersLost)
 
   if (isNew) {
     if (timestamp > ctx.session.gameInformation.resourcesTimestamp) {
       ctx.session.gameInformation.resources.gold += reward
+      if (isFinite(soldiersLostResult.gold)) {
+        ctx.session.gameInformation.resources.gold += soldiersLostResult.gold
+      }
       if (attack) {
         ctx.session.gameInformation.resources.food -= soldiersTotal // 1 food per send soldier required to start war
       }
@@ -76,8 +84,20 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
     text += '\n'
     text += createSingleBattleShortStatsLine(report)
 
+    const {soldiersAlive, soldiersTotal} = report
+    const soldiersLost = soldiersTotal - soldiersAlive
+    if (soldiersLost > 0 && (Date.now() / 1000) - (24 * 60 * 60) < ctx.session.gameInformation.buildingsTimestamp) {
+      const soldiersLostResult = calcMissingPeople(ctx.session.gameInformation.buildings, soldiersLost)
+      text += '\n'
+      text += emoji.houses + ' refill houses will take '
+      text += soldiersLostResult.minutesNeeded + ' min'
+      text += ': '
+      text += formatNumberShort(soldiersLostResult.gold, true) + emoji.gold
+      text += '\n'
+    }
+
     if (isNew) {
-      text += '\nThanks for that. I added it 👌'
+      text += '\nThanks for the report. I added it 👌'
 
       if (!ctx.session.search) {
         ctx.session.search = {}
