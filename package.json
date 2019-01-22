@@ -1,7 +1,7 @@
 {
   "name": "bastion-siege-assist-bot",
   "private": "true",
-  "version": "2.6.1",
+  "version": "2.7.0",
   "main": "index.js",
   "engines": {
     "node": ">=11"
