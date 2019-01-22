@@ -2,6 +2,15 @@
   "name": "bastion-siege-assist-bot",
   "private": "true",
   "version": "2.7.1",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EdJoPaTo/BastionSiegeAssistBot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/EdJoPaTo/BastionSiegeAssistBot/issues"
+  },
+  "homepage": "https://github.com/EdJoPaTo/BastionSiegeAssistBot#readme",
   "main": "index.js",
   "engines": {
     "node": ">=11"
