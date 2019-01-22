@@ -6,7 +6,7 @@ const playerStats = require('../lib/math/player-stats')
 const playerStatsSearch = require('../lib/math/player-stats-search')
 const {calcMissingPeople} = require('../lib/math/siegemath')
 
-const {createPlayerShareButton, createPlayerStatsString} = require('../lib/user-interface/player-stats')
+const {createPlayerShareButton, createPlayerStatsString, createTwoSidesStatsString} = require('../lib/user-interface/player-stats')
 const {createSingleBattleShortStatsLine} = require('../lib/user-interface/battle-stats')
 const {formatNumberShort} = require('../lib/user-interface/format-number')
 const {emoji} = require('../lib/user-interface/output-text')
@@ -75,11 +75,17 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
     applyReportToGameInformation(ctx, report, timestamp, isNew)
 
     const allBattlereports = await battlereports.getAll()
-    const allStats = report.enemies
+    const friendsStats = report.friends
       .map(o => playerStats.generate(allBattlereports, o))
-    const buttons = allStats.map(o => createPlayerShareButton(o))
-    const statsStrings = allStats.map(o => createPlayerStatsString(o))
+    const enemyStats = report.enemies
+      .map(o => playerStats.generate(allBattlereports, o))
+    const allianceBattle = friendsStats.length > 1 || enemyStats.length > 1
 
+    const statsString = allianceBattle ? createTwoSidesStatsString(friendsStats, enemyStats) : createPlayerStatsString(enemyStats[0])
+
+    const buttons = [...friendsStats, ...enemyStats]
+      .filter(o => !o.immune)
+      .map(o => createPlayerShareButton(o))
     const markup = Markup.inlineKeyboard(buttons, {columns: 1})
 
     text += '\n'
@@ -117,8 +123,7 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
     }
 
     text += '\n\n'
-    text += statsStrings
-      .join('\n\n')
+    text += statsString
 
     return {
       extra: baseExtra.markup(markup),
