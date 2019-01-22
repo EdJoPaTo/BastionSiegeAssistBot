@@ -71,7 +71,7 @@ bot.use(async (ctx, next) => {
     text += error.message
     text += '`'
 
-    const target = (ctx.chat && ctx.chat.id) || ctx.from.id
+    const target = (ctx.chat || ctx.from).id
     const keyboard = Markup.inlineKeyboard([
       Markup.urlButton('Join BastionSiegeAssist Support Group', 'https://t.me/joinchat/AC0dV1dG2Y7sOFQPtZm9Dw')
     ], {columns: 1})
