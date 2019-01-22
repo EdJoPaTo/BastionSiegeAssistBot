@@ -81,6 +81,22 @@ bot.use(async (ctx, next) => {
 
 bot.use(userSessions)
 
+// Fix previous bot problems
+bot.use((ctx, next) => {
+  if (ctx.session.gameInformation) {
+    const allKeys = Object.keys(ctx.session.gameInformation)
+    const keysWithValueNull = allKeys
+      .filter(o => ctx.session.gameInformation[o] === null)
+
+    keysWithValueNull
+      .forEach(o => {
+        delete ctx.session.gameInformation[o]
+      })
+  }
+
+  return next()
+})
+
 partAlerts.start(bot.telegram)
 bot.use(partAlerts.bot)
 
