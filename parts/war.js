@@ -108,19 +108,7 @@ bot.on('text', Telegraf.optional(isWarMenu, ctx => {
       text += '\n'
       const enemyArmyArr = enemyStats
         .filter(o => !o.immune)
-        .map(o => {
-          let avg = 0
-          if (isFinite(o.army.min)) {
-            avg += o.army.min
-          }
-          if (isFinite(o.army.max)) {
-            avg += o.army.max
-            if (avg > o.army.max) {
-              avg /= 2
-            }
-          }
-          return avg || NaN
-        })
+        .map(o => o.army.estimate)
       const enemyArmy = getSumAverageAmount(enemyArmyArr)
       text += createAverageSumString(
         enemyArmy,
