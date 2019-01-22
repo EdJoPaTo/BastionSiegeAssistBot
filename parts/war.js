@@ -7,7 +7,7 @@ const playerStats = require('../lib/math/player-stats')
 const {getSumAverageAmount} = require('../lib/math/number-array')
 
 const {createAverageSumString} = require('../lib/user-interface/number-array-strings')
-const {createPlayerShareButton, createPlayerNameString, createPlayerStatsString} = require('../lib/user-interface/player-stats')
+const {createPlayerShareButton, createPlayerNameString, createPlayerStatsTwoLineString} = require('../lib/user-interface/player-stats')
 const {emoji} = require('../lib/user-interface/output-text')
 const {formatNumberShort} = require('../lib/user-interface/format-number')
 
@@ -133,10 +133,10 @@ bot.on('text', Telegraf.optional(isWarMenu, ctx => {
     }
     text += '\n\n'
 
-    const buttons = enemyStats.map(o => createPlayerShareButton(o))
-    const statsStrings = enemyStats.map(o => createPlayerStatsString(o))
+    const statsStrings = enemyStats.map(o => createPlayerStatsTwoLineString(o, true))
+    text += statsStrings.join('\n')
 
-    text += statsStrings.join('\n\n')
+    const buttons = enemyStats.map(o => createPlayerShareButton(o))
     extra = extra.markup(
       Markup.inlineKeyboard(buttons, {columns: 1})
     )
