@@ -85,9 +85,12 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
       .map(o => playerStats.generate(allBattlereports, o))
     const allianceBattle = friendsStats.length > 1 || enemyStats.length > 1
 
-    const statsString = allianceBattle ? createTwoSidesStatsString(friendsStats, enemyStats) : createPlayerStatsString(enemyStats[0])
+    const attackerStats = report.attack ? friendsStats : enemyStats
+    const defenderStats = report.attack ? enemyStats : friendsStats
 
-    const buttons = [...friendsStats, ...enemyStats]
+    const statsString = allianceBattle ? createTwoSidesStatsString(attackerStats, defenderStats) : createPlayerStatsString(enemyStats[0])
+
+    const buttons = [...attackerStats, ...defenderStats]
       .filter(o => !o.immune)
       .map(o => createPlayerShareButton(o))
     const markup = Markup.inlineKeyboard(buttons, {columns: 1})
