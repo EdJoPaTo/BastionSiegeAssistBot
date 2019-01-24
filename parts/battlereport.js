@@ -100,7 +100,7 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
     if (soldiersLost > 0 && (Date.now() / 1000) - (24 * 60 * 60) < ctx.session.gameInformation.buildingsTimestamp) {
       const soldiersLostResult = calcMissingPeople(ctx.session.gameInformation.buildings, soldiersLost)
       text += '\n'
-      text += emoji.houses + ' refill houses will take '
+      text += emoji.people + '→' + emoji.houses + '→' + emoji.barracks
       text += soldiersLostResult.minutesNeeded + ' min'
       text += ': '
       text += formatNumberShort(soldiersLostResult.gold, true) + emoji.gold
