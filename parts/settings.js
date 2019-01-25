@@ -1,7 +1,6 @@
 const Telegraf = require('telegraf')
 const TelegrafInlineMenu = require('telegraf-inline-menu')
 
-const battlereports = require('../lib/data/battlereports')
 const poweruser = require('../lib/data/poweruser')
 
 const {emoji} = require('../lib/user-interface/output-text')
@@ -67,7 +66,7 @@ function poweruserText(ctx) {
 }
 
 settingsMenu.submenu('💙 Poweruser', 'poweruser', new TelegrafInlineMenu(poweruserText), {
-  hide: ctx => !poweruser.isPoweruser(battlereports.getAll(), ctx.from.id)
+  hide: ctx => !poweruser.isPoweruser(ctx.from.id)
 })
   .toggle('🛡 Immunity', 'immunity', {
     setFunc: (ctx, newState) => {

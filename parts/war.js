@@ -63,12 +63,12 @@ bot.on('text', Telegraf.optional(isWarMenu, ctx => {
         return ctx.replyWithMarkdown(text)
       }
 
-      const requesterIsPoweruser = poweruser.isPoweruser(allBattlereports, ctx.from.id)
+      const requesterIsPoweruser = poweruser.isPoweruser(ctx.from.id)
       const minimumBuildingTimestamp = now - MINIMUM_AGE_OF_BUILDINGS_IN_SECONDS
       const buildingsAreUpToDate = ctx.session.gameInformation.buildingsTimestamp > minimumBuildingTimestamp
       if (requesterIsPoweruser && buildingsAreUpToDate) {
         const friends = battle.attack.indexOf(name) >= 0 ? battle.attack : battle.defence
-        const poweruserFriends = poweruser.getPoweruserSessions(allBattlereports)
+        const poweruserFriends = poweruser.getPoweruserSessions()
           .map(o => o.data.gameInformation)
           .filter(o => o.player && friends.indexOf(o.player.name) >= 0)
           .filter(o => o.buildingsTimestamp > minimumBuildingTimestamp)

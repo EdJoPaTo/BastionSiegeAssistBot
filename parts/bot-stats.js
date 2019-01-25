@@ -11,7 +11,7 @@ const bot = new Telegraf.Composer()
 bot.command('botstats', async ctx => {
   const allBattlereports = await battlereports.getAll()
   const enemies = await battlereports.getAllPlayers()
-  const powerusers = poweruser.getPoweruserSessions(allBattlereports).length
+  const powerusers = poweruser.getPoweruserSessions().length
 
   const minDate = getHoursEarlier(Date.now() / 1000, 24)
   const reportsWithin24h = allBattlereports
