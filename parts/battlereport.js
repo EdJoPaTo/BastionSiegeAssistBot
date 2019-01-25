@@ -50,6 +50,9 @@ function applyReportToGameInformation(ctx, report, timestamp, isNew) {
       if (attack) {
         ctx.session.gameInformation.resources.food -= soldiersTotal // 1 food per send soldier required to start war
       }
+
+      ctx.session.gameInformation.resources.gold = Math.max(ctx.session.gameInformation.resources.gold, 0)
+      ctx.session.gameInformation.resources.food = Math.max(ctx.session.gameInformation.resources.food, 0)
     }
 
     if (timestamp > ctx.session.gameInformation.domainStatsTimestamp) {
