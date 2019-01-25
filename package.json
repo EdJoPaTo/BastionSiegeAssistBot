@@ -19,8 +19,6 @@
     "ava": "ava",
     "ava:watch": "ava -w",
     "nyc": "nyc",
-    "prerelease": "npm test",
-    "release": "standard-version",
     "start": "node index.js",
     "pretest": "xo",
     "test": "nyc ava",
@@ -42,7 +40,6 @@
   "devDependencies": {
     "ava": "^1.0.1",
     "nyc": "^13.1.0",
-    "standard-version": "^4.4.0",
     "xo": "^0.24.0"
   },
   "ava": {
