@@ -1,8 +1,8 @@
 const Telegraf = require('telegraf')
 
 const battlereports = require('../lib/data/battlereports')
+const playerStatsDb = require('../lib/data/playerstats-db')
 
-const playerStats = require('../lib/math/player-stats')
 const playerStatsSearch = require('../lib/math/player-stats-search')
 const {calcMissingPeople} = require('../lib/math/siegemath')
 
@@ -78,11 +78,10 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
 
     applyReportToGameInformation(ctx, report, timestamp, isNew)
 
-    const allBattlereports = await battlereports.getAll()
     const friendsStats = report.friends
-      .map(o => playerStats.generate(allBattlereports, o))
+      .map(o => playerStatsDb.get(o))
     const enemyStats = report.enemies
-      .map(o => playerStats.generate(allBattlereports, o))
+      .map(o => playerStatsDb.get(o))
     const allianceBattle = friendsStats.length > 1 || enemyStats.length > 1
 
     const attackerStats = report.attack ? friendsStats : enemyStats

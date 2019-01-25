@@ -1,9 +1,7 @@
 const Telegraf = require('telegraf')
 
-const battlereports = require('../lib/data/battlereports')
+const playerStatsDb = require('../lib/data/playerstats-db')
 const poweruser = require('../lib/data/poweruser')
-
-const playerStats = require('../lib/math/player-stats')
 
 const {createPlayerShareButton, createPlayerNameString, createPlayerStatsString, createTwoSidesStatsString} = require('../lib/user-interface/player-stats')
 const {emoji} = require('../lib/user-interface/output-text')
@@ -32,7 +30,6 @@ bot.on('text', Telegraf.optional(isWarMenu, ctx => {
   text += '\n' + statsStrings.join(' ')
 
   if (battle) {
-    const allBattlereports = battlereports.getAll()
     text += '\n\n'
 
     const time = ctx.message.forward_date
@@ -44,7 +41,7 @@ bot.on('text', Telegraf.optional(isWarMenu, ctx => {
     }
 
     if (battle.enemy) {
-      const stats = playerStats.generate(allBattlereports, battle.enemy)
+      const stats = playerStatsDb.get(battle.enemy)
       text += createPlayerStatsString(stats)
       extra = extra.markup(
         Markup.inlineKeyboard([
@@ -100,9 +97,9 @@ bot.on('text', Telegraf.optional(isWarMenu, ctx => {
       text += '\n\n'
 
       const attackStats = battle.attack
-        .map(o => playerStats.generate(allBattlereports, o))
+        .map(o => playerStatsDb.get(o))
       const defenceStats = battle.defence
-        .map(o => playerStats.generate(allBattlereports, o))
+        .map(o => playerStatsDb.get(o))
       text += createTwoSidesStatsString(attackStats, defenceStats, additionalArmyInformation)
 
       const buttons = [...attackStats, ...defenceStats]

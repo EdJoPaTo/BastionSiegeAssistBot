@@ -1,8 +1,6 @@
 const Telegraf = require('telegraf')
 
-const battlereports = require('../lib/data/battlereports')
-
-const playerStats = require('../lib/math/player-stats')
+const playerStatsDb = require('../lib/data/playerstats-db')
 
 const {createPlayerShareButton, createPlayerStatsString} = require('../lib/user-interface/player-stats')
 
@@ -56,9 +54,8 @@ function generatePlayerStats(players) {
     players = [players]
   }
 
-  const allBattlereports = battlereports.getAll()
   const allStats = players
-    .map(o => playerStats.generate(allBattlereports, o))
+    .map(o => playerStatsDb.get(o))
   const buttons = allStats.map(o => createPlayerShareButton(o))
   const statsStrings = allStats.map(o => createPlayerStatsString(o))
 

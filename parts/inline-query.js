@@ -2,11 +2,10 @@ const Telegraf = require('telegraf')
 
 const {sortBy} = require('../lib/javascript-abstraction/array')
 
-const battlereports = require('../lib/data/battlereports')
+const playerStatsDb = require('../lib/data/playerstats-db')
 
 const {mystics} = require('../lib/input/game-text')
 
-const playerStats = require('../lib/math/player-stats')
 const playerStatsSearch = require('../lib/math/player-stats-search')
 
 const {createPlayerNameString, createPlayerStatsString, createPlayerStatsShortString} = require('../lib/user-interface/player-stats')
@@ -27,7 +26,7 @@ bot.on('inline_query', async ctx => {
   if (canSearch && query && query.length >= 2) {
     const queryTestFunc = getTestFunctionForQuery(query)
 
-    const allPlayers = battlereports.getAllPlayers()
+    const allPlayers = playerStatsDb.list()
     players = allPlayers
       .filter(o => queryTestFunc(createPlayerNameString(o)))
       .map(o => o.player)
@@ -47,9 +46,8 @@ bot.on('inline_query', async ctx => {
     }
   }
 
-  const allBattlereports = await battlereports.getAll()
   const results = players
-    .map(o => playerStats.generate(allBattlereports, o))
+    .map(o => playerStatsDb.get(o))
     .sort(sortBy(o => o.battlesObserved, true))
     .slice(offset, offset + 50)
     .map(stats => {
