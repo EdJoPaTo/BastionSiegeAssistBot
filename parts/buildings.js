@@ -9,6 +9,7 @@ const {
   buildingNames,
   defaultBuildingsToShow,
   createBuildingTimeStatsString,
+  createBuildingMaxLevelStatsString,
   createFillTimeStatsString
 } = require('../lib/user-interface/buildings')
 
@@ -92,6 +93,13 @@ function generateStatsText(information, buildingsToShow) {
   text += '*Building Upgrades*\n'
   text += buildingsToShow
     .map(o => createBuildingTimeStatsString(o, buildings, estimatedResources))
+    .join('\n')
+  text += '\n\n'
+
+  text += '*Max possible upgrades*\n'
+  text += buildingsToShow
+    .filter(o => o !== 'storage')
+    .map(o => createBuildingMaxLevelStatsString(o, buildings, estimatedResources))
     .join('\n')
   text += '\n\n'
 
