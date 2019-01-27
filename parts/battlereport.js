@@ -2,6 +2,7 @@ const Telegraf = require('telegraf')
 
 const battlereports = require('../lib/data/battlereports')
 const playerStatsDb = require('../lib/data/playerstats-db')
+const {isImmune} = require('../lib/data/poweruser')
 
 const playerStatsSearch = require('../lib/math/player-stats-search')
 const {calcMissingPeople} = require('../lib/math/siegemath')
@@ -93,7 +94,7 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
     const statsString = allianceBattle ? createTwoSidesStatsString(attackerStats, defenderStats) : createPlayerStatsString(enemyStats[0])
 
     const buttons = [...attackerStats, ...defenderStats]
-      .filter(o => !o.immune)
+      .filter(o => !isImmune(o.player))
       .map(o => createPlayerShareButton(o))
     const markup = Markup.inlineKeyboard(buttons, {columns: 1})
 

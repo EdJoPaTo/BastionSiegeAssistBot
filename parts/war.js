@@ -103,7 +103,7 @@ bot.on('text', Telegraf.optional(isWarMenu, ctx => {
       text += createTwoSidesStatsString(attackStats, defenceStats, additionalArmyInformation)
 
       const buttons = [...attackStats, ...defenceStats]
-        .filter(o => !o.immune)
+        .filter(o => !poweruser.isImmune(o.player))
         .map(o => createPlayerShareButton(o))
       extra = extra.markup(
         Markup.inlineKeyboard(buttons, {columns: 1})
