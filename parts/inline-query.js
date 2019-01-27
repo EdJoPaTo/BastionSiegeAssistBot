@@ -63,7 +63,10 @@ bot.on('inline_query', async ctx => {
       }
     })
 
-  options.next_offset = players.length > offset + 50 ? String(offset + 50) : ''
+  if (players.length > offset + 50) {
+    options.next_offset = offset + 50
+  }
+
   if (process.env.NODE_ENV !== 'production') {
     options.cache_time = 2
   }
