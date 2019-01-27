@@ -69,6 +69,7 @@ bot.use(async (ctx, next) => {
     text += '\n'
     text += '\nError: `'
     text += error.message
+      .replace(token, '')
     text += '`'
 
     const target = (ctx.chat || ctx.from).id
