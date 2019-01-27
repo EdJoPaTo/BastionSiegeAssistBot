@@ -87,9 +87,10 @@ function generateStatsText(information, buildingsToShow) {
 
   let text = ''
 
-  buildingsToShow = buildingsToShow || defaultBuildingsToShow
-  text += Object.keys(buildingNames)
-    .filter(o => buildingsToShow.indexOf(o) >= 0)
+  buildingsToShow = Object.keys(buildingNames)
+    .filter(o => (buildingsToShow || defaultBuildingsToShow).indexOf(o) >= 0)
+
+  text += buildingsToShow
     .map(o => createBuildingTimeStatsString(o, buildings, estimatedResources))
     .join('\n')
   text += '\n\n'
