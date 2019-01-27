@@ -17,7 +17,6 @@ const {Markup, Extra} = Telegraf
 const DEBOUNCE_TIME = 100 // Milliseconds
 
 const bot = new Telegraf.Composer()
-const prefix = '*Building Upgrades*\n'
 
 function isBuildingsOrResources(ctx) {
   if (!ctx.state.screen) {
@@ -48,20 +47,20 @@ function sendBuildStats(ctx) {
   const information = ctx.session.gameInformation
 
   if (!information.buildingsTimestamp) {
-    return ctx.replyWithMarkdown(prefix + 'Please forward me the building screen from your game in order to get building upgrade stats.')
+    return ctx.replyWithMarkdown('Please forward me the building screen from your game in order to get building upgrade stats.')
   }
 
   if (!information.resourcesTimestamp) {
-    return ctx.replyWithMarkdown(prefix + 'Please forward me a screen from the game showing your current resources in order to get building upgrade stats.')
+    return ctx.replyWithMarkdown('Please forward me a screen from the game showing your current resources in order to get building upgrade stats.')
   }
 
   const statsText = generateStatsText(information, ctx.session.buildings)
-  return ctx.reply(prefix + statsText, updateMarkup)
+  return ctx.reply(statsText, updateMarkup)
 }
 
 bot.action('buildings', async ctx => {
   try {
-    const newStats = prefix + generateStatsText(ctx.session.gameInformation, ctx.session.buildings)
+    const newStats = generateStatsText(ctx.session.gameInformation, ctx.session.buildings)
     const oldStats = ctx.callbackQuery.message.text
 
     if (compareStrAsSimpleOne(newStats, oldStats) === 0) {
@@ -90,11 +89,13 @@ function generateStatsText(information, buildingsToShow) {
   buildingsToShow = Object.keys(buildingNames)
     .filter(o => (buildingsToShow || defaultBuildingsToShow).indexOf(o) >= 0)
 
+  text += '*Building Upgrades*\n'
   text += buildingsToShow
     .map(o => createBuildingTimeStatsString(o, buildings, estimatedResources))
     .join('\n')
   text += '\n\n'
 
+  text += '*Fill storage*\n'
   text += createFillTimeStatsString(buildings, estimatedResources)
   text += '\n'
 
