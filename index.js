@@ -118,7 +118,7 @@ bot.use(partWar.bot)
 bot.on('text', (ctx, next) => {
   if (!ctx.message.forward_from && ctx.chat.id === ctx.from.id &&
     (ctx.message.text.indexOf('Battles observed') >= 0 ||
-    ctx.message.text.indexOf('🛡💙 This player is an active user of this bot.') >= 0)
+    ctx.message.text.indexOf('This player is an active user of this bot.') >= 0)
   ) {
     // Thats an inline query. Ignore :)
     return
