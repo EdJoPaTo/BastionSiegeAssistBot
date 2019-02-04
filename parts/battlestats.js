@@ -9,11 +9,20 @@ const {getMidnightXDaysEarlier, getHoursEarlier} = require('../lib/math/unix-tim
 const battleStats = require('../lib/math/battle-stats')
 
 const {createBattleStatsString} = require('../lib/user-interface/battle-stats')
+const {emoji} = require('../lib/user-interface/output-text')
 
 const DEFAULT_TIMEFRAME = '24h'
+const DEFAULT_TYPE = 'gold'
 
 const menu = new TelegrafInlineMenu(getBattlestatsText)
 menu.setCommand('battlestats')
+
+menu.select('rewardType', {gold: emoji.gold, terra: emoji.terra, karma: emoji.karma, gems: emoji.gem}, {
+  isSetFunc: (ctx, key) => (ctx.session.battlestatsType || DEFAULT_TYPE) === key,
+  setFunc: (ctx, key) => {
+    ctx.session.battlestatsType = key
+  }
+})
 
 menu.select('hours', ['6h', '12h', '24h', '48h'], {
   setFunc: setCurrentTimeframe,
@@ -68,7 +77,7 @@ function getBattlestatsText(ctx) {
   const reportsFiltered = allReportsOfMyself
     .filter(report => report.time > firstTimeRelevant)
 
-  const stats = battleStats.generate(reportsFiltered)
+  const stats = battleStats.generate(reportsFiltered, ctx.session.battlestatsType || DEFAULT_TYPE)
 
   let text = '*Battle Stats* of '
   if (timeframe === 'all') {
@@ -80,7 +89,7 @@ function getBattlestatsText(ctx) {
 
   text += ` (${reportsFiltered.length})`
   text += '\n\n'
-  text += createBattleStatsString(stats)
+  text += createBattleStatsString(stats, ctx.session.battlestatsType || DEFAULT_TYPE)
 
   return text
 }
