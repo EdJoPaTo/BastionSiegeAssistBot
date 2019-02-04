@@ -35,14 +35,14 @@ bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
 
 function applyReportToGameInformation(ctx, report, timestamp, isNew) {
   const {
-    attack, enemies, friends, reward, soldiersAlive, soldiersTotal, karma, terra, won
+    attack, enemies, friends, gold, soldiersAlive, soldiersTotal, karma, terra, won
   } = report
   const soldiersLost = soldiersTotal - soldiersAlive
   const soldiersLostResult = calcMissingPeople(ctx.session.gameInformation.buildings, soldiersLost)
 
   if (isNew) {
     if (timestamp > ctx.session.gameInformation.resourcesTimestamp) {
-      ctx.session.gameInformation.resources.gold += reward
+      ctx.session.gameInformation.resources.gold += gold
 
       if (isFinite(soldiersLostResult.gold)) {
         ctx.session.gameInformation.resources.gold += soldiersLostResult.gold
