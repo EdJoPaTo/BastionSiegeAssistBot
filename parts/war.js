@@ -1,5 +1,7 @@
 const Telegraf = require('telegraf')
 
+const {calcBarracksCapacity} = require('../lib/math/siegemath')
+
 const playerStatsDb = require('../lib/data/playerstats-db')
 const poweruser = require('../lib/data/poweruser')
 
@@ -73,7 +75,7 @@ bot.on('text', Telegraf.optional(isWarMenu, ctx => {
             alliance: o.player.alliance,
             player: o.player.name,
             barracks: o.buildings.barracks,
-            army: o.buildings.barracks * 40
+            army: calcBarracksCapacity(o.buildings.barracks)
           }))
 
         for (const o of poweruserFriends) {
