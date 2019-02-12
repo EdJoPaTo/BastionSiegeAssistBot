@@ -127,7 +127,7 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
 
     const {name: expectedName} = ctx.session.gameInformation.player || {}
     if (expectedName) {
-      const expectedNameIsInFriends = report.friends.indexOf(expectedName) >= 0
+      const expectedNameIsInFriends = report.friends.includes(expectedName)
       if (!expectedNameIsInFriends) {
         text += '\n❓Have you changed your ingame name? If so, please send me a new main menu screen from @BastionSiegeBot. Then I am up to date again. 😎'
       }

@@ -88,7 +88,7 @@ function generateStatsText(information, buildingsToShow) {
   let text = ''
 
   buildingsToShow = Object.keys(buildingNames)
-    .filter(o => (buildingsToShow || defaultBuildingsToShow).indexOf(o) >= 0)
+    .filter(o => (buildingsToShow || defaultBuildingsToShow).includes(o))
 
   text += '*Building Upgrades*\n'
   text += buildingsToShow

@@ -56,7 +56,7 @@ bot.use(async (ctx, next) => {
   try {
     await next()
   } catch (error) {
-    if (error.message.indexOf('Too Many Requests') >= 0) {
+    if (error.message.includes('Too Many Requests')) {
       console.log('Telegraf Too Many Requests error. Skip.', error)
       return
     }
@@ -117,8 +117,8 @@ bot.use(partWar.bot)
 
 bot.on('text', (ctx, next) => {
   if (!ctx.message.forward_from && ctx.chat.id === ctx.from.id &&
-    (ctx.message.text.indexOf('Battles observed') >= 0 ||
-    ctx.message.text.indexOf('This player is an active user of this bot.') >= 0)
+    (ctx.message.text.includes('Battles observed') ||
+    ctx.message.text.includes('This player is an active user of this bot.'))
   ) {
     // Thats an inline query. Ignore :)
     return

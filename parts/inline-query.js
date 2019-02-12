@@ -79,7 +79,7 @@ function getTestFunctionForQuery(query) {
     const regex = new RegExp(query, 'i')
     return o => regex.test(o)
   } catch (error) {
-    return o => o.indexOf(query) >= 0
+    return o => o.includes(query)
   }
 }
 

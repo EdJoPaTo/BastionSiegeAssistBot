@@ -57,7 +57,7 @@ bot.on('text', Telegraf.optional(isWarMenu, ctx => {
         .concat(battle.attack || [])
         .concat(battle.defence || [])
       const {name} = ctx.session.gameInformation.player || {}
-      if (allPlayersInvolved.length > 0 && (!name || allPlayersInvolved.indexOf(name) < 0)) {
+      if (allPlayersInvolved.length > 0 && (!name || !allPlayersInvolved.includes(name))) {
         text += 'I need your name for that. Send me your main screen first. 😅'
         return ctx.replyWithMarkdown(text)
       }
@@ -66,10 +66,10 @@ bot.on('text', Telegraf.optional(isWarMenu, ctx => {
       const minimumBuildingTimestamp = now - MINIMUM_AGE_OF_BUILDINGS_IN_SECONDS
       const buildingsAreUpToDate = ctx.session.gameInformation.buildingsTimestamp > minimumBuildingTimestamp
       if (requesterIsPoweruser && buildingsAreUpToDate) {
-        const friends = battle.attack.indexOf(name) >= 0 ? battle.attack : battle.defence
+        const friends = battle.attack.includes(name) ? battle.attack : battle.defence
         const poweruserFriends = poweruser.getPoweruserSessions()
           .map(o => o.data.gameInformation)
-          .filter(o => o.player && friends.indexOf(o.player.name) >= 0)
+          .filter(o => o.player && friends.includes(o.player.name))
           .filter(o => o.buildingsTimestamp > minimumBuildingTimestamp)
           .map(o => ({
             alliance: o.player.alliance,
@@ -83,7 +83,7 @@ bot.on('text', Telegraf.optional(isWarMenu, ctx => {
         }
 
         const notPowerusers = friends
-          .filter(o => poweruserFriends.map(o => o.player).indexOf(o) < 0)
+          .filter(o => !poweruserFriends.map(o => o.player).includes(o))
         if (notPowerusers.length > 0) {
           const notPoweruserString = notPowerusers
             .map(o => createPlayerNameString({player: o}, true))

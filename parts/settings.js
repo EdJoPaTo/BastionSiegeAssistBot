@@ -23,7 +23,7 @@ settingsMenu.submenu(alertEmojis.enabled + ' Alerts', 'alerts', new TelegrafInli
     setFunc: (ctx, key) => {
       ctx.session.alerts = toggleInArray(ctx.session.alerts || [], key)
     },
-    isSetFunc: (ctx, key) => (ctx.session.alerts || []).indexOf(key) >= 0 ? alertEmojis.enabled : alertEmojis.disabled
+    isSetFunc: (ctx, key) => (ctx.session.alerts || []).includes(key) ? alertEmojis.enabled : alertEmojis.disabled
   })
 
 function buildingsText() {
@@ -39,7 +39,7 @@ settingsMenu.submenu(emoji.houses + 'Buildings', 'buildings', new TelegrafInline
     setFunc: (ctx, key) => {
       ctx.session.buildings = toggleInArray(ctx.session.buildings || [...defaultBuildingsToShow], key)
     },
-    isSetFunc: (ctx, key) => (ctx.session.buildings || [...defaultBuildingsToShow]).indexOf(key) >= 0
+    isSetFunc: (ctx, key) => (ctx.session.buildings || [...defaultBuildingsToShow]).includes(key)
   })
 
 function poweruserText(ctx) {
@@ -111,7 +111,7 @@ settingsMenu.submenu('🔎 Search', 'search', new TelegrafInlineMenu(searchText)
   .switchToCurrentChatButton('try player search…', 'Dragon')
 
 function toggleInArray(array, key) {
-  if (array.indexOf(key) >= 0) {
+  if (array.includes(key)) {
     array = array.filter(o => o !== key)
   } else {
     array.push(key)

@@ -62,7 +62,7 @@ function generateUpcomingText(ctx) {
     .map(event => {
       let text = ''
       text += '*'
-      text += enabledAlerts.indexOf(event.type) >= 0 ? alertEmojis.enabled : alertEmojis.disabled
+      text += enabledAlerts.includes(event.type) ? alertEmojis.enabled : alertEmojis.disabled
       text += alertEmojis[event.type]
       text += ' '
       text += formatTimeAmount((event.timestamp - now) / 60)
