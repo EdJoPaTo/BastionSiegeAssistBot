@@ -63,7 +63,7 @@ buildings:
     resources: Please forward me a screen from the game showing your current resources in order to get building upgrade stats.
   old:
     buildings: My knowledge of your buildings is a bit old. This leads to inaccuracy. Consider updating me with a new forwarded building screen.
-    resources: My knowledge of your ressources is a bit old. This leads to inaccuracy. Consider updating me with a new forwarded resource screen.
+    resources: My knowledge of your resources is a bit old. This leads to inaccuracy. Consider updating me with a new forwarded resource screen.
 effects:
   updated: Updated your effects. 👌\nSee /upcoming or enable alerts in the /settings.
 forward:
