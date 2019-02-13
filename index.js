@@ -119,7 +119,7 @@ bot.use(partWar.bot)
 
 bot.on('text', (ctx, next) => {
   if (!ctx.message.forward_from && ctx.chat.id === ctx.from.id &&
-    (ctx.message.text.includes('Battles observed') ||
+    (ctx.message.text.includes(outputEmojis.battlereport) ||
     ctx.message.text.includes(outputEmojis.poweruser))
   ) {
     // Thats an inline query. Ignore :)
