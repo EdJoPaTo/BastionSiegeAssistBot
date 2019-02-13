@@ -24,8 +24,8 @@ bot.command('botstats', async ctx => {
 
   let text = '*Statistics of the Bot*\n'
 
-  text += `\nBattlereports: ${allBattlereports.length}`
-  text += `\nBattlereports added within 24h: ${reportsWithin24h.length}`
+  text += `\nBattlereports: ${allBattlereports.length}${emoji.battlereport}`
+  text += `\nBattlereports added within 24h: ${reportsWithin24h.length}${emoji.battlereport}`
   text += `\nAnalysed Players: ${enemies.length}`
   text += `\nUsers: ${users} (${powerusers} Powerusers${emoji.poweruser})`
 
