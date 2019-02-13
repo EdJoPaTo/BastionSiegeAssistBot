@@ -22,10 +22,12 @@ settingsMenu.submenu(alertEmojis.enabled + ' Alerts', 'alerts', new TelegrafInli
   .select('type', ALERT_TYPES, {
     multiselect: true,
     columns: 1,
+    prefixTrue: alertEmojis.enabled,
+    prefixFalse: alertEmojis.disabled,
     setFunc: (ctx, key) => {
       ctx.session.alerts = toggleInArray(ctx.session.alerts || [], key)
     },
-    isSetFunc: (ctx, key) => (ctx.session.alerts || []).includes(key) ? alertEmojis.enabled : alertEmojis.disabled
+    isSetFunc: (ctx, key) => (ctx.session.alerts || []).includes(key)
   })
 
 function buildingsText() {
