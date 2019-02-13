@@ -90,18 +90,7 @@ settingsMenu.submenu(ctx => emoji.poweruser + ' ' + ctx.i18n.t('poweruser.poweru
         ctx.session.disableImmunity = true
       }
     },
-    isSetFunc: ctx => {
-      if (ctx.session.disableImmunity) {
-        return false
-      }
-
-      const {name} = ctx.session.gameInformation.player || {}
-      if (!name) {
-        return '⚠️'
-      }
-
-      return true
-    }
+    isSetFunc: ctx => !ctx.session.disableImmunity
   })
 
 function toggleInArray(array, key) {
