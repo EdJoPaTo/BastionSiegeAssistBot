@@ -85,6 +85,7 @@ bot.use(async (ctx, next) => {
 
 bot.use(userSessions)
 
+// See https://yaml-multiline.info/ for multiline yaml stuff
 const i18n = new I18n({
   directory: 'locales',
   defaultLanguage: 'en',
