@@ -50,6 +50,15 @@ settingsMenu.submenu(ctx => emoji.houses + ' ' + ctx.i18n.t('bs.buildings'), 'bu
     isSetFunc: (ctx, key) => (ctx.session.buildings || [...defaultBuildingsToShow]).includes(key)
   })
 
+function languageText(ctx) {
+  let text = emoji.language + ` *${ctx.i18n.t('language.title')}*`
+  text += '\n' + ctx.i18n.t('language.info', {language: ctx.i18n.locale()})
+  return text
+}
+
+settingsMenu.submenu(ctx => emoji.language + ' ' + ctx.i18n.t('language.title'), 'language', new TelegrafInlineMenu(languageText))
+  .urlButton('Join BastionSiegeAssist Support Group', 'https://t.me/joinchat/AC0dV1dG2Y7sOFQPtZm9Dw')
+
 function poweruserText(ctx) {
   let text = emoji.poweruser + ` *${ctx.i18n.t('poweruser.poweruser')}*`
 

@@ -68,6 +68,20 @@ effects:
   updated: Updated your effects. 👌\nSee /upcoming or enable alerts in the /settings.
 forward:
   notnew: That's not new to me. I will just ignore it.
+language:
+  title: Language
+  info: >
+    This bot has support for multiple languages.
+
+    Your language is determined by the Telegram Client you are using.
+    Set your language there to get a different language within this bot.
+    Your Telegram Client is telling your language is `${from.language_code}`.
+    This bot uses `${language}` as your language.
+
+
+    Your language is missing in the bot?
+    Or the current translation is (kinda) wrong?
+    Join the Support Group and we will improve this bot together. 😎
 name:
   need: I need your name for that. Send me your main screen first. 😅
   update: Send your main menu screen from @BastionSiegeBot to update your current ingame name.
