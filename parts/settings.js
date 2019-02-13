@@ -5,41 +5,45 @@ const playerStatsDb = require('../lib/data/playerstats-db')
 const poweruser = require('../lib/data/poweruser')
 
 const {emoji} = require('../lib/user-interface/output-text')
-const {buildingNames, defaultBuildingsToShow} = require('../lib/user-interface/buildings')
-const {alertEmojis, ALERT_TYPES} = require('../lib/user-interface/alert-handler')
+const {BUILDINGS, getBuildingText, defaultBuildingsToShow} = require('../lib/user-interface/buildings')
+const {alertEmojis, ALERT_TYPES, getAlertText} = require('../lib/user-interface/alert-handler')
 const {createPlayerStatsString} = require('../lib/user-interface/player-stats')
 
-const settingsMenu = new TelegrafInlineMenu('*Settings*')
+const settingsMenu = new TelegrafInlineMenu(ctx => `*${ctx.i18n.t('settings')}*`)
 settingsMenu.setCommand('settings')
 
-function alertsText() {
-  let text = '*Alerts*'
-  text += '\nEnable the alerts you want to get from me.'
+function alertsText(ctx) {
+  let text = `*${ctx.i18n.t('alerts')}*`
+  text += '\n' + ctx.i18n.t('setting.alert.infotext')
   return text
 }
 
-settingsMenu.submenu(alertEmojis.enabled + ' Alerts', 'alerts', new TelegrafInlineMenu(alertsText))
+settingsMenu.submenu(ctx => alertEmojis.enabled + ' ' + ctx.i18n.t('alerts'), 'alerts', new TelegrafInlineMenu(alertsText))
   .select('type', ALERT_TYPES, {
     multiselect: true,
     columns: 1,
     prefixTrue: alertEmojis.enabled,
     prefixFalse: alertEmojis.disabled,
+    textFunc: getAlertText,
     setFunc: (ctx, key) => {
       ctx.session.alerts = toggleInArray(ctx.session.alerts || [], key)
     },
-    isSetFunc: (ctx, key) => (ctx.session.alerts || []).includes(key)
+    isSetFunc: (ctx, key) => {
+      return (ctx.session.alerts || []).includes(key)
+    }
   })
 
-function buildingsText() {
-  let text = '*Buildings*'
-  text += '\nYou can set which buildings are of interest for you in the /buildings view.'
+function buildingsText(ctx) {
+  let text = `*${ctx.i18n.t('bs.buildings')}*`
+  text += '\n' + ctx.i18n.t('setting.buildings.infotext')
   return text
 }
 
-settingsMenu.submenu(emoji.houses + ' Buildings', 'buildings', new TelegrafInlineMenu(buildingsText))
-  .select('b', buildingNames, {
+settingsMenu.submenu(ctx => emoji.houses + ' ' + ctx.i18n.t('bs.buildings'), 'buildings', new TelegrafInlineMenu(buildingsText))
+  .select('b', BUILDINGS, {
     multiselect: true,
     columns: 2,
+    textFunc: getBuildingText,
     setFunc: (ctx, key) => {
       ctx.session.buildings = toggleInArray(ctx.session.buildings || [...defaultBuildingsToShow], key)
     },
@@ -47,23 +51,24 @@ settingsMenu.submenu(emoji.houses + ' Buildings', 'buildings', new TelegrafInlin
   })
 
 function poweruserText(ctx) {
-  let text = emoji.poweruser + ' *Poweruser*'
+  let text = emoji.poweruser + ` *${ctx.i18n.t('poweruser.poweruser')}*`
+
+  text += '\n\n'
+  text += ctx.i18n.t('poweruser.youare') + ' 😍'
 
   text += '\n'
-  text += '\nYou are a poweruser! 😍'
-
-  text += '\n'
-  text += '\nIf you wish you can disable your immunity.'
   const {name} = ctx.session.gameInformation.player || {}
   const {disableImmunity} = ctx.session
   if (disableImmunity) {
-    text += '\nCurrently *no one* will get immunity.'
-  } else if (name) {
-    text += '\nCurrently your immunity will be granted to:'
-    text += '\n`' + name + '`'
-    text += '\nSend your main menu screen from @BastionSiegeBot to update your current ingame name.'
+    text += '\n' + ctx.i18n.t('poweruser.immunityDisabled')
   } else {
-    text += '\nI do not have your name. *No one* will get immunity. Send me your main screen and I will grant you immunity.'
+    if (name) {
+      text += '\n' + ctx.i18n.t('poweruser.immunityTo', {name: '`' + name + '`'})
+    } else {
+      text += '\n' + ctx.i18n.t('poweruser.noname')
+    }
+
+    text += '\n' + ctx.i18n.t('name.update')
   }
 
   if (name) {
@@ -74,10 +79,10 @@ function poweruserText(ctx) {
   return text
 }
 
-settingsMenu.submenu(emoji.poweruser + ' Poweruser', 'poweruser', new TelegrafInlineMenu(poweruserText), {
+settingsMenu.submenu(ctx => emoji.poweruser + ' ' + ctx.i18n.t('poweruser.poweruser'), 'poweruser', new TelegrafInlineMenu(poweruserText), {
   hide: ctx => !poweruser.isPoweruser(ctx.from.id)
 })
-  .toggle('🛡 Immunity', 'immunity', {
+  .toggle(ctx => emoji.immunity + ' ' + ctx.i18n.t('poweruser.immunity'), 'immunity', {
     setFunc: (ctx, newState) => {
       if (newState) {
         delete ctx.session.disableImmunity
@@ -112,7 +117,7 @@ function toggleInArray(array, key) {
 
 const bot = new Telegraf.Composer()
 bot.use(settingsMenu.init({
-  backButtonText: '🔙 back…',
+  backButtonText: ctx => `🔙 ${ctx.i18n.t('menu.back')}…`,
   actionCode: 'settings'
 }))
 

@@ -10,8 +10,8 @@ bot.on('text', async (ctx, next) => {
   if (!ctx.session.disableImmunity &&
     poweruser.isPoweruser(ctx.from.id) &&
     !ctx.session.gameInformation.player) {
-    let text = 'You are a poweruser! ' + emoji.poweruser
-    text += '\n⚠️ I do not know your ingame name in order to make you immune. You can send your main screen or disable this in the /settings.'
+    let text = ctx.i18n.t('poweruser.youare') + ' ' + emoji.poweruser
+    text += '\n⚠️ ' + ctx.i18n.t('poweruser.getImmunity')
     await ctx.replyWithMarkdown(text)
   }
 

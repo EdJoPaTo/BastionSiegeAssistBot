@@ -7,7 +7,7 @@ function isEffects(ctx) {
 }
 
 bot.on('text', Telegraf.optional(isEffects, ctx => {
-  return ctx.reply('Updated your effects. 👌\nSee /upcoming or enable alerts in the /settings.')
+  return ctx.reply(ctx.i18n.t('effects.updated'))
 }))
 
 module.exports = {

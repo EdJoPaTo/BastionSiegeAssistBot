@@ -20,7 +20,7 @@ bot.on('text', Telegraf.optional(isAttackIncoming, ctx => {
   const minutesAgo = ((Date.now() / 1000) - time) / 60
   if (minutesAgo > 8) {
     let text = ''
-    text += 'This battle is long over… Send me the report instead. 😉'
+    text += ctx.i18n.t('battle.over')
     return ctx.reply(text)
   }
 
@@ -40,8 +40,7 @@ bot.on('text', Telegraf.optional(isAttackScout, ctx => {
   const minutesAgo = ((Date.now() / 1000) - time) / 60
   if (minutesAgo > 2) {
     let text = ''
-    text += 'Your scouts havn\'t been there for a long time.'
-    text += ` I'll help you when you see ${attackscout.player} next time. 😊`
+    text += ctx.i18n.t('battle.scoutsGone', {name: attackscout.player})
     return ctx.reply(text)
   }
 

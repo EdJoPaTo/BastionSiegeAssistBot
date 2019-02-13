@@ -6,7 +6,7 @@ const {compareStrAsSimpleOne} = require('../lib/javascript-abstraction/strings')
 const {estimateResourcesAfterTimespan} = require('../lib/math/siegemath')
 
 const {
-  buildingNames,
+  BUILDINGS,
   defaultBuildingsToShow,
   createBuildingTimeStatsString,
   createBuildingMaxLevelStatsString,
@@ -48,34 +48,37 @@ function sendBuildStats(ctx) {
   const information = ctx.session.gameInformation
 
   if (!information.buildingsTimestamp) {
-    return ctx.replyWithMarkdown('Please forward me the building screen from your game in order to get building upgrade stats.')
+    return ctx.replyWithMarkdown(ctx.i18n.t('buildings.need.buildings'))
   }
 
   if (!information.resourcesTimestamp) {
-    return ctx.replyWithMarkdown('Please forward me a screen from the game showing your current resources in order to get building upgrade stats.')
+    return ctx.replyWithMarkdown(ctx.i18n.t('buildings.need.resources'))
   }
 
-  const statsText = generateStatsText(information, ctx.session.buildings)
+  const statsText = generateStatsText(ctx)
   return ctx.reply(statsText, updateMarkup)
 }
 
 bot.action('buildings', async ctx => {
   try {
-    const newStats = generateStatsText(ctx.session.gameInformation, ctx.session.buildings)
+    const newStats = generateStatsText(ctx)
     const oldStats = ctx.callbackQuery.message.text
 
     if (compareStrAsSimpleOne(newStats, oldStats) === 0) {
-      return ctx.answerCbQuery('thats already as good as I can estimate!')
+      return ctx.answerCbQuery(ctx.i18n.t('menu.nothingchanged'))
     }
 
     await ctx.editMessageText(newStats, updateMarkup)
-    return ctx.answerCbQuery('updated!')
+    return ctx.answerCbQuery()
   } catch (error) {
     return ctx.answerCbQuery('please provide new game screens')
   }
 })
 
-function generateStatsText(information, buildingsToShow) {
+function generateStatsText(ctx) {
+  const information = ctx.session.gameInformation
+  let buildingsToShow = ctx.session.buildings
+
   // Unix timestamp just without seconds (/60)
   const currentTimestamp = Math.floor(Date.now() / 1000 / 60)
   const resourceAgeMinutes = currentTimestamp - Math.floor(information.resourcesTimestamp / 60)
@@ -87,32 +90,32 @@ function generateStatsText(information, buildingsToShow) {
 
   let text = ''
 
-  buildingsToShow = Object.keys(buildingNames)
+  buildingsToShow = BUILDINGS
     .filter(o => (buildingsToShow || defaultBuildingsToShow).includes(o))
 
-  text += '*Building Upgrades*\n'
+  text += `*${ctx.i18n.t('buildings.title')}*\n`
   text += buildingsToShow
     .map(o => createBuildingTimeStatsString(o, buildings, estimatedResources))
     .join('\n')
   text += '\n\n'
 
-  text += '*Max possible upgrades*\n'
+  text += `*${ctx.i18n.t('buildings.maxPossible')}*\n`
   text += buildingsToShow
     .filter(o => o !== 'storage')
     .map(o => createBuildingMaxLevelStatsString(o, buildings, estimatedResources))
     .join('\n')
   text += '\n\n'
 
-  text += '*Fill storage*\n'
+  text += `*${ctx.i18n.t('buildings.fillStorage')}*\n`
   text += createFillTimeStatsString(buildings, estimatedResources)
   text += '\n'
 
   if (resourceAgeMinutes > 30) {
-    text += '⚠️ My knowledge of your ressources is a bit old. This leads to inaccuracy. Consider updating me with a new forwarded resource screen.\n'
+    text += `⚠️ ${ctx.i18n.t('buildings.old.resources')}\n`
   }
 
   if (buildingAgeMinutes > 60 * 5) {
-    text += '⚠️ My knowledge of your buildings is a bit old. This leads to inaccuracy. Consider updating me with a new forwarded building screen.\n'
+    text += `⚠️ ${ctx.i18n.t('buildings.old.buildings')}\n`
   }
 
   return text

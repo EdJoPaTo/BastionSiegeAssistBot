@@ -22,7 +22,7 @@ function isWarMenu(ctx) {
 
 bot.on('text', Telegraf.optional(isWarMenu, ctx => {
   const {domainStats, battle} = ctx.state.screen.information
-  let text = '*War*'
+  let text = `*${ctx.i18n.t('bs.war')}*`
   let extra = Extra.markdown()
 
   const statsStrings = []
@@ -38,7 +38,7 @@ bot.on('text', Telegraf.optional(isWarMenu, ctx => {
     const now = Date.now() / 1000
     const minutesAgo = (now - time) / 60
     if (minutesAgo > 8) {
-      text += 'This battle is long over… Send me the report instead. 😉'
+      text += ctx.i18n.t('battle.over')
       return ctx.replyWithMarkdown(text)
     }
 
@@ -58,7 +58,7 @@ bot.on('text', Telegraf.optional(isWarMenu, ctx => {
         .concat(battle.defence || [])
       const {name} = ctx.session.gameInformation.player || {}
       if (allPlayersInvolved.length > 0 && (!name || !allPlayersInvolved.includes(name))) {
-        text += 'I need your name for that. Send me your main screen first. 😅'
+        text += ctx.i18n.t('name.need')
         return ctx.replyWithMarkdown(text)
       }
 
@@ -89,12 +89,12 @@ bot.on('text', Telegraf.optional(isWarMenu, ctx => {
             .map(o => createPlayerNameString({player: o}, true))
             .join(', ')
 
-          text += 'Not powerusers or buildings not up to date:\n'
+          text += ctx.i18n.t('battle.playersNotPowerusersOrBuildingsOld') + ':\n'
           text += notPoweruserString
           text += '\n\n'
         }
       } else {
-        text += emoji.poweruser + '😎 When you are poweruser and your buildings are up to date you will get improved information about alliance mates.'
+        text += emoji.poweruser + '😎 ' + ctx.i18n.t('battle.improvedArmyAsPoweruser')
         text += '\n\n'
       }
 

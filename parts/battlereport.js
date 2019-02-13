@@ -114,7 +114,7 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
     }
 
     if (isNew) {
-      text += '\nThanks for the report. I added it 👌'
+      text += '\n' + ctx.i18n.t('battlereport.added')
 
       if (!ctx.session.search) {
         ctx.session.search = {}
@@ -122,14 +122,14 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
 
       ctx.session.search.remainingSearches = playerStatsSearch.newSearchLimitAfterReward(ctx.session.search.remainingSearches, 1)
     } else {
-      text += '\nYou have sent me this one already 🙃'
+      text += '\n' + ctx.i18n.t('battlereport.known')
     }
 
     const {name: expectedName} = ctx.session.gameInformation.player || {}
     if (expectedName) {
       const expectedNameIsInFriends = report.friends.includes(expectedName)
       if (!expectedNameIsInFriends) {
-        text += '\n❓Have you changed your ingame name? If so, please send me a new main menu screen from @BastionSiegeBot. Then I am up to date again. 😎'
+        text += '\n' + ctx.i18n.t('battlereport.changedIngameName')
       }
     }
 

@@ -1,0 +1,93 @@
+menu:
+  back: back
+  nothingchanged: Nothing changed besides the current time.
+bs:
+  buildings: Buildings
+  building:
+    townhall: Townhall
+    storage: Storage
+    houses: Houses
+    farm: Farm
+    sawmill: Sawmill
+    mine: Mine
+    barracks: Barracks
+    wall: Wall
+    trebuchet: Trebuchet
+    ballista: Ballista
+  war: War
+alerts: Alerts
+alert:
+  buildingUpgrade:
+    name: Building Upgrade available
+    upcoming: Building ${name} can be upgraded
+  effect:
+    name: Effect ended
+    upcoming: Effect ${name} ends
+  nextBattle:
+    name: Next Battle available
+    alliance:
+      alert: Your next alliance attack is available in 1 min. Get ready and spread the hype! 🥳😎
+      upcoming: Your next alliance attack is available
+    solo:
+      alert: You can attack again. I wish you luck. ☺️
+      upcoming: You can attack again
+  resourceWarning:
+    name: Critical Resource Levels reached
+    goldFull:
+      upcoming: Gold full
+      alert: Gold full in 15 min
+    foodEmpty:
+      upcoming: Food empty
+      alert: Food empty in 12h
+battle:
+  improvedArmyAsPoweruser: When you are poweruser and your buildings are up to date you will get improved information about alliance mates.
+  over: This battle is long over… Send me the report instead. 😉
+  playersNotPowerusersOrBuildingsOld: Not powerusers or buildings not up to date
+  scoutsGone: Your scouts havn't been there for a long time. I'll help you when you see ${name} next time. 😊
+battlereport:
+  added: Thanks for the report. I added it 👌
+  known: You have sent me this one already 🙃
+  changedIngameName: ❓Have you changed your ingame name? If so, please send me a new main menu screen from @BastionSiegeBot. Then I am up to date again. 😎
+botstats:
+  title: Statistics of the Bot
+  analysedPlayers: Analysed Players
+  battlereports: Battlereports
+  battlereportsWithin24h: Battlereports added within 24h
+  users: Users
+buildings:
+  title: Building Upgrades
+  maxPossible: Max possible upgrades
+  fillStorage: Fill Storage
+  need:
+    buildings: Please forward me the building screen from your game in order to get building upgrade stats.
+    resources: Please forward me a screen from the game showing your current resources in order to get building upgrade stats.
+  old:
+    buildings: My knowledge of your buildings is a bit old. This leads to inaccuracy. Consider updating me with a new forwarded building screen.
+    resources: My knowledge of your ressources is a bit old. This leads to inaccuracy. Consider updating me with a new forwarded resource screen.
+effects:
+  updated: Updated your effects. 👌\nSee /upcoming or enable alerts in the /settings.
+forward:
+  notnew: That's not new to me. I will just ignore it.
+name:
+  need: I need your name for that. Send me your main screen first. 😅
+  update: Send your main menu screen from @BastionSiegeBot to update your current ingame name.
+poweruser:
+  poweruser: Poweruser
+  immunity: Immunity
+  youare: You are a poweruser!
+  getImmunity: I do not know your ingame name in order to make you immune. You can send your main screen or disable this in the /settings.
+  immunityTo: Currently your immunity is granted to ${name}.
+  noname: I do not have your name. *No one* will get immunity.
+  immunityDisabled: Currently *no one* will get immunity.
+  sendname:
+settings: Settings
+setting:
+  alert:
+    infotext: Enable the alerts you want to get from me.
+  buildings:
+    infotext: You can set which buildings are of interest for you in /buildings and the Alerts.
+upcoming:
+  title: Upcoming Alerts
+  info: You can select which alerts you want to receive in the /settings.
+  noevents: There are no upcoming events…
+  update: Update

@@ -42,7 +42,7 @@ bot.action('upcoming', ctx => {
 
   const oldText = ctx.callbackQuery.message.text
   if (compareStrAsSimpleOne(oldText, text) === 0) {
-    return ctx.answerCbQuery('Nothing changed besides the current time.')
+    return ctx.answerCbQuery(ctx.i18n.t('menu.nothingchanged'))
   }
 
   return Promise.all([
@@ -72,20 +72,20 @@ function generateUpcomingText(ctx) {
       return text
     })
 
-  let text = '*Upcoming Alerts*'
-  text += '\nYou can select which alerts you want to receive in the /settings.'
+  let text = `*${ctx.i18n.t('upcoming.title')}*`
+  text += '\n' + ctx.i18n.t('upcoming.info')
 
   text += '\n'
   text += '\n' + entries.join('\n')
   if (entries.length === 0) {
-    text += 'There are no upcoming events…'
+    text += ctx.i18n.t('upcoming.noevents')
   }
 
   const extra = Extra
     .markdown()
     .markup(
       Markup.inlineKeyboard([
-        Markup.callbackButton('update', 'upcoming')
+        Markup.callbackButton(ctx.i18n.t('upcoming.update'), 'upcoming')
       ])
     )
   return {text, extra}

@@ -1,5 +1,6 @@
 const fs = require('fs')
 const Telegraf = require('telegraf')
+const I18n = require('telegraf-i18n')
 
 const userSessions = require('./lib/data/user-sessions')
 
@@ -83,6 +84,21 @@ bot.use(async (ctx, next) => {
 })
 
 bot.use(userSessions)
+
+const i18n = new I18n({
+  directory: 'locales',
+  defaultLanguage: 'en',
+  useSession: false
+})
+
+bot.use(i18n)
+bot.use((ctx, next) => {
+  if (ctx.from) {
+    ctx.session.language = ctx.from.language_code
+  }
+
+  return next()
+})
 
 // Fix previous bot problems
 bot.use((ctx, next) => {
