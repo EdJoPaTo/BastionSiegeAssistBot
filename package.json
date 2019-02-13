@@ -35,13 +35,13 @@
     "emoji-tree": "^1.1.2",
     "json-stable-stringify": "^1.0.1",
     "moonmoji": "^1.1.10",
-    "telegraf": "^3.27.0",
-    "telegraf-inline-menu": "^3.3.0",
+    "telegraf": "^3.27.1",
+    "telegraf-inline-menu": "^3.4.2",
     "telegraf-session-local": "0.0.6"
   },
   "devDependencies": {
-    "ava": "^1.2.0",
-    "nyc": "^13.1.0",
+    "ava": "^1.2.1",
+    "nyc": "^13.2.0",
     "xo": "^0.24.0"
   },
   "ava": {
