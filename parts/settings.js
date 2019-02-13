@@ -34,7 +34,7 @@ function buildingsText() {
   return text
 }
 
-settingsMenu.submenu(emoji.houses + 'Buildings', 'buildings', new TelegrafInlineMenu(buildingsText))
+settingsMenu.submenu(emoji.houses + ' Buildings', 'buildings', new TelegrafInlineMenu(buildingsText))
   .select('b', buildingNames, {
     multiselect: true,
     columns: 2,
