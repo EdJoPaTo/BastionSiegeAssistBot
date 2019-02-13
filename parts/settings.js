@@ -1,11 +1,13 @@
 const Telegraf = require('telegraf')
 const TelegrafInlineMenu = require('telegraf-inline-menu')
 
+const playerStatsDb = require('../lib/data/playerstats-db')
 const poweruser = require('../lib/data/poweruser')
 
 const {emoji} = require('../lib/user-interface/output-text')
 const {buildingNames, defaultBuildingsToShow} = require('../lib/user-interface/buildings')
 const {alertEmojis, ALERT_TYPES} = require('../lib/user-interface/alert-handler')
+const {createPlayerStatsString} = require('../lib/user-interface/player-stats')
 
 const settingsMenu = new TelegrafInlineMenu('*Settings*')
 settingsMenu.setCommand('settings')
@@ -60,6 +62,11 @@ function poweruserText(ctx) {
     text += '\nSend your main menu screen from @BastionSiegeBot to update your current ingame name.'
   } else {
     text += '\nI do not have your name. *No one* will get immunity. Send me your main screen and I will grant you immunity.'
+  }
+
+  if (name) {
+    const stats = playerStatsDb.get(name)
+    text += '\n\n' + createPlayerStatsString(stats)
   }
 
   return text
