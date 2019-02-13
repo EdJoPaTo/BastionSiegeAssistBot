@@ -96,7 +96,7 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
     const buttons = [...attackerStats, ...defenderStats]
       .filter(o => !isImmune(o.player))
       .map(o => createPlayerShareButton(o))
-    const markup = Markup.inlineKeyboard(buttons, {columns: 1})
+    const markup = Markup.inlineKeyboard(buttons, {columns: 2})
 
     text += '\n'
     text += createSingleBattleShortStatsLine(report)

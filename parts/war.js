@@ -108,7 +108,7 @@ bot.on('text', Telegraf.optional(isWarMenu, ctx => {
         .filter(o => !poweruser.isImmune(o.player))
         .map(o => createPlayerShareButton(o))
       extra = extra.markup(
-        Markup.inlineKeyboard(buttons, {columns: 1})
+        Markup.inlineKeyboard(buttons, {columns: 2})
       )
     }
   }
