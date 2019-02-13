@@ -1,0 +1,141 @@
+menu:
+  back: zurück
+  nothingchanged: Außer die Zeit hat sich nichts verändert…
+bs:
+  buildings: Gebäude
+  building:
+    townhall: Haupthalle
+    storage: Lager
+    houses: Häuser
+    farm: Farm
+    sawmill: Sägemühle
+    mine: Mine
+    barracks: Kaserne
+    wall: Wall
+    trebuchet: Katapult
+    ballista: Ballista
+  war: Krieg
+alerts: Erinnerungen
+alert:
+  buildingUpgrade:
+    name: Gebäudeausbau verfügbar
+    upcoming: Das Gebäude ${name} kann ausgebaut werden
+  effect:
+    name: Effekte
+    upcoming: Effekt ${name} läuft aus
+  nextBattle:
+    name: Nächster Kampf verfügbar
+    alliance:
+      alert: Dein nächster Allianzangriff kann in einer Minute beginnen. Bereitet euch vor und sorgt für Stimmung! 🥳😎
+      upcoming: Dein nächster Allianzangriff ist verfügbar
+    solo:
+      alert: Du kannst wieder angreifen. Viel Glück! ☺️
+      upcoming: Dein nächster Angriff ist verfügbar
+  resourceWarning:
+    name: Bedenkliche Ressourcenzustände
+    goldFull:
+      upcoming: Gold voll
+      alert: Gold in 15 min voll
+    foodEmpty:
+      upcoming: Nahrung leer
+      alert: Nahrung ist in 12h leer
+battle:
+  improvedArmyAsPoweruser: Wenn du Poweruser bist und deine Gebäude aktuell sind, kannst du erweiterte Informationen über deine Allianz-Freunde erhalten.
+  over: Der Kampf ist lange vorrüber… Schick mir stattdessen den Bericht. 😉
+  playersNotPowerusersOrBuildingsOld: Kein Poweruser oder Gebäude nicht aktuell
+  scoutsGone: Deine Scouts sind schon lange weg. Wenn du ${name} das nächste mal wieder siehst, helfe ich dir gern. 😊
+battlereport:
+  added: Danke für den Bericht. Ich habe ihn hinzugefügt 👌
+  known: Das hast du mir bereits geschickt 🙃
+  changedIngameName: ❓Hast du deinen Ingame Namen geändert? Wenn ja, sende mir dein Hauptmenü aus @BastionSiegeBot. Dann bin ich wieder auf Stand. 😎
+botstats:
+  title: Statistiken über den Bot
+  analysedPlayers: Analysierte Spieler
+  battlereports: Kampfberichte
+  battlereportsWithin24h: In den letzten 24h hinzugefügte Kampfberichte
+  users: Nutzer
+buildings:
+  title: Gebäudeausbau
+  maxPossible: Maximal möglicher Ausbau
+  fillStorage: Lagerfüllzustand
+  need:
+    buildings: Leite mir deine Gebäude aus dem Spiel weiter, damit ich dir die Ausbau Statistiken berechnen kann.
+    resources: Leite mir etwas aus dem Spiel weiter, dass deine Ressourcen enthält, damit ich dir die Ausbau Statistiken berechnen kann.
+  old:
+    buildings: Mein Wissen über deine Gebäude ist etwas veraltet. Dadurch können diese Daten ungenau werden. Schick mir bei Gelegenheit etwas neues.
+    resources: Mein Wissen über deine Ressourcen ist etwas veraltet. Dadurch können diese Daten ungenau werden. Schick mir bei Gelegenheit etwas neues.
+effects:
+  updated: Effekte aktualisiert! 👌\nSchau dir /upcoming an oder aktiviere Benachrichtungen in den /settings.
+forward:
+  notnew: Das kenne ich schon. Ich ignoriere es einfach.
+language:
+  title: Sprache
+  info: >
+    Dieser Bot unterstützt mehrere Sprachen.
+
+
+    Die Sprache wird dabei von deinem Telegram Client bestimmt, welchen du gerade benutzt.
+    Stelle deine Sprache dort ein um sie auch hier im Bot zu ändern.
+    Aktuell sagt dein Telegram Client, deine Sprache sei `${from.language_code}`.
+    Dieser Bot benutzt `${language}` als deine Sprache.
+
+
+    Deine Sprache fehlt im Bot?
+    Oder die aktuelle Übersetzung ist (etwas) falsch?
+    Betrete die Support Gruppe und dann verbessern wir das gemeinsam! 😎
+name:
+  need: Dafür brauche ich deinen Namen. Leite mir dafür dein Hauptmenü zuerst weiter. 😅
+  update: Leite mir dein Hauptmenü vom @BastionSiegeBot weiter, damit ich deinen aktuellen Ingame Namen aktualisieren kann.
+poweruser:
+  poweruser: Poweruser
+  immunity: Immunität
+  youare: Du bist ein Poweruser!
+  getImmunity: Ich kenne deinen Ingame Namen nicht um dich immun zu machen. Du kannst mir dein Hauptmenü weiterleiten oder die Immunität in den /settings abstellen.
+  immunityTo: Deine Immunität wird aktuell ${name} verliehen.
+  noname: Mir fehlt dein Name. *Niemand* erhält aktuell deine Immunität.
+  immunityDisabled: Aktuell bekommt *niemand* deine Immunität.
+  sendname:
+settings: Einstellungen
+setting:
+  alert:
+    infotext: Schalte die jeweiligen Erinnerungen ein, die du von mir erhalten willst.
+  buildings:
+    infotext: Du kannst einstellen, welche Gebäude für dich in den /buildings und den Erinnerungen von Interesse sind.
+upcoming:
+  title: Die nächsten Ereignisse
+  info: Welche Erinnerungen du erhalten willst, kannst du in den /settings einstellen.
+  noevents: Da sind keine Ereignisse…
+  update: Aktualisieren
+help:
+  short: >
+    Hey ${from.first_name}!
+
+    Du solltest Dinge aus @BastionSiegeBot an mich weiterleiten.
+
+
+    Schau dir /help für weitere Hilfe an oder betrete die Support Gruppe.
+  full: >
+    Hey ${from.first_name}!
+
+
+    Du solltest Dinge aus @BastionSiegeBot an mich weiterleiten.
+
+
+    Wenn du mir deine Ressourcen und Gebäude schickst, kann ich dir berechnen, wann die Ausbauten verfügbar sind.
+
+
+    Mit Kampfberichten kann ich deine Siegestaten zeigen.
+    Wenn du die "Your scouts found" Nachrichten an mich weiterleitest, werde ich dir mögliche Beute und benötigte Army zeigen.
+
+
+    Alle Kampfberichte die du mir schickst, werden dazu genutzt um die Stärke von Feinden einzuschätzen.
+    Deine eigenen Daten werden nicht dafür genutzt um anderen deine Stärke zu zeigen.
+    Im Gegenteil: Solange du mir aktiv Kampfberichte zur Verfügung stellst, werde ich dir eine Immunität geben sodass niemand anderes Informationen über dich erhält.
+
+
+    Schau dir auch die /settings an für Tiefergehendes.
+
+
+    Du hast eine Idee oder einen Fehler gefunden?
+    Trete der Support Gruppe mit dem untenstehenden Button bei und berichte.
+    Lass uns den Bot zusammen besser machen! :)
