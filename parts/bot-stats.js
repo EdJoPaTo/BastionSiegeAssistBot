@@ -8,6 +8,8 @@ const poweruser = require('../lib/data/poweruser')
 
 const {getHoursEarlier} = require('../lib/math/unix-timestamp')
 
+const {emoji} = require('../lib/user-interface/output-text')
+
 const bot = new Telegraf.Composer()
 
 bot.command('botstats', async ctx => {
@@ -25,7 +27,7 @@ bot.command('botstats', async ctx => {
   text += `\nBattlereports: ${allBattlereports.length}`
   text += `\nBattlereports added within 24h: ${reportsWithin24h.length}`
   text += `\nAnalysed Players: ${enemies.length}`
-  text += `\nUsers: ${users} (${powerusers} Powerusers💙)`
+  text += `\nUsers: ${users} (${powerusers} Powerusers${emoji.poweruser})`
 
   return ctx.replyWithMarkdown(text)
 })

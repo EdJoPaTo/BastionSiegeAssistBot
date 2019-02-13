@@ -45,7 +45,7 @@ settingsMenu.submenu(emoji.houses + 'Buildings', 'buildings', new TelegrafInline
   })
 
 function poweruserText(ctx) {
-  let text = '*💙 Poweruser*'
+  let text = emoji.poweruser + ' *Poweruser*'
 
   text += '\n'
   text += '\nYou are a poweruser! 😍'
@@ -72,7 +72,7 @@ function poweruserText(ctx) {
   return text
 }
 
-settingsMenu.submenu('💙 Poweruser', 'poweruser', new TelegrafInlineMenu(poweruserText), {
+settingsMenu.submenu(emoji.poweruser + ' Poweruser', 'poweruser', new TelegrafInlineMenu(poweruserText), {
   hide: ctx => !poweruser.isPoweruser(ctx.from.id)
 })
   .toggle('🛡 Immunity', 'immunity', {

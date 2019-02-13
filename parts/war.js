@@ -93,7 +93,7 @@ bot.on('text', Telegraf.optional(isWarMenu, ctx => {
           text += notPoweruserString
         }
       } else {
-        text += '💙😎 When you are poweruser and your buildings are up to date you will get improved information about alliance mates.'
+        text += emoji.poweruser + '😎 When you are poweruser and your buildings are up to date you will get improved information about alliance mates.'
       }
 
       text += '\n\n'

@@ -3,6 +3,8 @@ const Telegraf = require('telegraf')
 
 const userSessions = require('./lib/data/user-sessions')
 
+const {emoji: outputEmojis} = require('./lib/user-interface/output-text')
+
 const partAlerts = require('./parts/alerts')
 
 const bastionsiegeforward = require('./parts/bastionsiegeforward')
@@ -118,7 +120,7 @@ bot.use(partWar.bot)
 bot.on('text', (ctx, next) => {
   if (!ctx.message.forward_from && ctx.chat.id === ctx.from.id &&
     (ctx.message.text.includes('Battles observed') ||
-    ctx.message.text.includes('This player is an active user of this bot.'))
+    ctx.message.text.includes(outputEmojis.poweruser))
   ) {
     // Thats an inline query. Ignore :)
     return
