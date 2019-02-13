@@ -91,12 +91,12 @@ bot.on('text', Telegraf.optional(isWarMenu, ctx => {
 
           text += 'Not powerusers or buildings not up to date:\n'
           text += notPoweruserString
+          text += '\n\n'
         }
       } else {
         text += emoji.poweruser + '😎 When you are poweruser and your buildings are up to date you will get improved information about alliance mates.'
+        text += '\n\n'
       }
-
-      text += '\n\n'
 
       const attackStats = battle.attack
         .map(o => playerStatsDb.get(o))
