@@ -1,1 +1,1 @@
-This bot can calculate times you need to get the resources for a bulding upgrade in Bastion Siege.
+This bot can help with many things in Bastion Siege. Like buildings, battles, player strength estimation, alerts, …
