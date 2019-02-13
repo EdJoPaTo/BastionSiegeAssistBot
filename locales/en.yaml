@@ -91,3 +91,36 @@ upcoming:
   info: You can select which alerts you want to receive in the /settings.
   noevents: There are no upcoming events…
   update: Update
+help:
+  short: >
+    Hey ${from.first_name}!
+
+    You should forward ingame screens from @BastionSiegeBot to me.
+
+
+    See /help for additional help or join the Support Group.
+  full: >
+    Hey ${from.first_name}!
+
+
+    You should forward ingame screens from @BastionSiegeBot to me.
+
+
+    With forwarded screens that contain your current buildings or resources I can predict when upgrades are ready.
+
+
+    With battle reports I can show your history in battles.
+    Forwarding the "Your scouts found" message shows information about that player like possible loot and required army.
+
+
+    Battlereports you provide will only be used to assume the enemies strength.
+    Your own data known to me will not be considered to tell others your strength.
+    It gets even better: As long as you are actively providing data to me you will get immunity and no one can use me to check on you.
+
+
+    See /settings for more in depth usages of this bot.
+
+
+    You have an idea or found a bug?
+    Join the BastionSiegeAssist Support Group with the button below and share it.
+    Let us make this bot even better :)

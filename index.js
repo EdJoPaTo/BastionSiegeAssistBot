@@ -145,33 +145,24 @@ bot.on('text', (ctx, next) => {
   return next()
 })
 
-bot.use(ctx => {
-  let text = `Hey ${ctx.from.first_name}!\n`
+const BSASupportGroupButton = Markup.urlButton('Join BastionSiegeAssist Support Group', 'https://t.me/joinchat/AC0dV1dG2Y7sOFQPtZm9Dw')
 
-  text += '\nYou should forward ingame screens from @BastionSiegeBot to me.'
-
-  text += '\n'
-  text += '\nWith forwarded screens that contain your current buildings or resources I can predict when upgrades are ready.'
-
-  text += '\n'
-  text += '\nWith battle reports I can show your history in battles.'
-  text += ' Forwarding the "Your scouts found" message shows information about that player like possible loot and required army.'
-
-  text += '\n'
-  text += '\nBattlereports you provide will only be used to assume the enemies strength.'
-  text += ' Your own data known to me will not be considered to tell others your strength.'
-  text += ' It gets even better: As long as you are actively providing data to me you will get immunity and no one can use me to check on you.'
-
-  text += '\n'
-  text += '\nSee /settings for more in depth usages of this bot.'
-
-  text += '\n'
-  text += '\nYou have an idea or found a bug? Join the BastionSiegeAssist Support Group with the button below and share it. Let us make this bot even better :)'
+bot.command(['start', 'help'], ctx => {
+  const text = ctx.i18n.t('help.full')
 
   const keyboard = Markup.inlineKeyboard([
     Markup.switchToCurrentChatButton('try player search…', 'Dragon'),
-    Markup.urlButton('Join BastionSiegeAssist Support Group', 'https://t.me/joinchat/AC0dV1dG2Y7sOFQPtZm9Dw')
+    BSASupportGroupButton
   ], {columns: 1})
+  return ctx.replyWithMarkdown(text, Extra.markup(keyboard))
+})
+
+bot.use(ctx => {
+  const text = ctx.i18n.t('help.short')
+
+  const keyboard = Markup.inlineKeyboard([
+    BSASupportGroupButton
+  ])
   return ctx.replyWithMarkdown(text, Extra.markup(keyboard))
 })
 
