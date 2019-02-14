@@ -1,5 +1,6 @@
 const Telegraf = require('telegraf')
 const TelegrafInlineMenu = require('telegraf-inline-menu')
+const countryEmoji = require('country-emoji')
 
 const playerStatsDb = require('../lib/data/playerstats-db')
 const poweruser = require('../lib/data/poweruser')
@@ -8,6 +9,11 @@ const {emoji} = require('../lib/user-interface/output-text')
 const {BUILDINGS, getBuildingText, defaultBuildingsToShow} = require('../lib/user-interface/buildings')
 const {alertEmojis, ALERT_TYPES, getAlertText} = require('../lib/user-interface/alert-handler')
 const {createPlayerStatsString} = require('../lib/user-interface/player-stats')
+
+const AVAILABLE_LANGUAGES = [
+  'de',
+  'en-GB'
+]
 
 const settingsMenu = new TelegrafInlineMenu(ctx => `*${ctx.i18n.t('settings')}*`)
 settingsMenu.setCommand('settings')
@@ -52,11 +58,20 @@ settingsMenu.submenu(ctx => emoji.houses + ' ' + ctx.i18n.t('bs.buildings'), 'bu
 
 function languageText(ctx) {
   let text = emoji.language + ` *${ctx.i18n.t('language.title')}*`
-  text += '\n' + ctx.i18n.t('language.info', {language: ctx.i18n.locale()})
+  text += '\n' + ctx.i18n.t('language.info')
   return text
 }
 
 settingsMenu.submenu(ctx => emoji.language + ' ' + ctx.i18n.t('language.title'), 'language', new TelegrafInlineMenu(languageText))
+  .select('lang', AVAILABLE_LANGUAGES, {
+    isSetFunc: (ctx, key) => key.toLowerCase().startsWith(ctx.i18n.locale().toLowerCase()),
+    setFunc: (ctx, key) => ctx.i18n.locale(key),
+    textFunc: (_ctx, key) => {
+      const countryCode = key.split('-').slice(-1)[0]
+      const lang = key.split('-')[0]
+      return countryEmoji.flag(countryCode) + ' ' + lang
+    }
+  })
   .urlButton('Join BastionSiegeAssist Support Group', 'https://t.me/joinchat/AC0dV1dG2Y7sOFQPtZm9Dw')
 
 function poweruserText(ctx) {

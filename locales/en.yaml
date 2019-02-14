@@ -73,11 +73,6 @@ language:
   info: >
     This bot has support for multiple languages.
 
-    Your language is determined by the Telegram Client you are using.
-    Set your language there to get a different language within this bot.
-    Your Telegram Client is telling your language is `${from.language_code}`.
-    This bot uses `${language}` as your language.
-
 
     Your language is missing in the bot?
     Or the current translation is (kinda) wrong?

@@ -74,12 +74,6 @@ language:
     Dieser Bot unterstützt mehrere Sprachen.
 
 
-    Die Sprache wird dabei von deinem Telegram Client bestimmt, welchen du gerade benutzt.
-    Stelle deine Sprache dort ein um sie auch hier im Bot zu ändern.
-    Aktuell sagt dein Telegram Client, deine Sprache sei `${from.language_code}`.
-    Dieser Bot benutzt `${language}` als deine Sprache.
-
-
     Deine Sprache fehlt im Bot?
     Oder die aktuelle Übersetzung ist (etwas) falsch?
     Betrete die Support Gruppe und dann verbessern wir das gemeinsam! 😎
