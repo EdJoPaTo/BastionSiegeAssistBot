@@ -91,8 +91,6 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
     const attackerStats = report.attack ? friendsStats : enemyStats
     const defenderStats = report.attack ? enemyStats : friendsStats
 
-    const statsString = allianceBattle ? createTwoSidesStatsString(attackerStats, defenderStats) : createPlayerStatsString(enemyStats[0])
-
     const buttons = [...attackerStats, ...defenderStats]
       .filter(o => !isImmune(o.player))
       .map(o => createPlayerShareButton(o))
@@ -133,8 +131,9 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
       }
     }
 
-    text += '\n\n'
-    text += statsString
+    // TODO: consider not sending playerstats when older than 2d? you get currently available data from old stuff.
+    const statsString = allianceBattle ? createTwoSidesStatsString(attackerStats, defenderStats) : createPlayerStatsString(enemyStats[0])
+    text += '\n\n' + statsString
 
     return {
       extra: baseExtra.markup(markup),
