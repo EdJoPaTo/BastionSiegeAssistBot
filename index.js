@@ -4,12 +4,11 @@ const I18n = require('telegraf-i18n')
 
 const userSessions = require('./lib/data/user-sessions')
 
-const {emoji: outputEmojis} = require('./lib/user-interface/output-text')
-
 const partAlerts = require('./parts/alerts')
 
 const bastionsiegeforward = require('./parts/bastionsiegeforward')
 const inlineQuery = require('./parts/inline-query')
+const partHelp = require('./parts/help')
 const partHints = require('./parts/hints')
 
 const partAssumed = require('./parts/assumed')
@@ -134,38 +133,7 @@ bot.use(partPlayerStats.bot)
 bot.use(partSettings.bot)
 bot.use(partWar.bot)
 
-bot.on('text', (ctx, next) => {
-  if (!ctx.message.forward_from && ctx.chat.id === ctx.from.id &&
-    (ctx.message.text.includes(outputEmojis.battlereport) ||
-    ctx.message.text.includes(outputEmojis.poweruser))
-  ) {
-    // Thats an inline query. Ignore :)
-    return
-  }
-
-  return next()
-})
-
-const BSASupportGroupButton = Markup.urlButton('Join BastionSiegeAssist Support Group', 'https://t.me/joinchat/AC0dV1dG2Y7sOFQPtZm9Dw')
-
-bot.command(['start', 'help'], ctx => {
-  const text = ctx.i18n.t('help.full')
-
-  const keyboard = Markup.inlineKeyboard([
-    Markup.switchToCurrentChatButton('try player search…', 'Dragon'),
-    BSASupportGroupButton
-  ], {columns: 1})
-  return ctx.replyWithMarkdown(text, Extra.markup(keyboard))
-})
-
-bot.use(ctx => {
-  const text = ctx.i18n.t('help.short')
-
-  const keyboard = Markup.inlineKeyboard([
-    BSASupportGroupButton
-  ])
-  return ctx.replyWithMarkdown(text, Extra.markup(keyboard))
-})
+bot.use(partHelp.bot)
 
 bot.catch(error => {
   console.error('Telegraf Error', error.response || error)

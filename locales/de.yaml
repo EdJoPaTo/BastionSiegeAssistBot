@@ -107,6 +107,7 @@ upcoming:
   noevents: Da sind keine Ereignisse…
   update: Aktualisieren
 help:
+  joinBSAGroupButton: BastionSiegeAssist Support Gruppe
   short: >
     Hey ${from.first_name}!
 
@@ -114,6 +115,12 @@ help:
 
 
     Schau dir /help für weitere Hilfe an oder betrete die Support Gruppe.
+  trySearchButton: teste die Spielersuche…
+  search: >
+    Wenn du nach einem Spieler suchen willst, gebe `@BastionSiegeAssistBot ${name}` in irgendeines Chat ein.
+    Stelle sicher, dass du mit @ startest.
+    Oder nutze den untenstehenden Button zum Ausprobieren.
+    Wenn du die Inline Suche einmal benutzt hast, wird dein Telegram Client sich daran erinnern und dir diesen Bot vorschlagen, sobald du @ eingibst.
   full: >
     Hey ${from.first_name}!
 

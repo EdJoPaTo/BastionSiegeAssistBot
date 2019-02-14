@@ -106,6 +106,7 @@ upcoming:
   noevents: There are no upcoming events…
   update: Update
 help:
+  joinBSAGroupButton: Join BastionSiegeAssist Support Group
   short: >
     Hey ${from.first_name}!
 
@@ -113,6 +114,11 @@ help:
 
 
     See /help for additional help or join the Support Group.
+  trySearchButton: try the player search…
+  search: >
+    In order to search for a player type `@BastionSiegeAssistBot ${name}` into any chat.
+    Just start with the @ in any chat or use the button below to get started.
+    Once you used the inline search your Telegram Client will remember and suggest it on typing the @.
   full: >
     Hey ${from.first_name}!
 
