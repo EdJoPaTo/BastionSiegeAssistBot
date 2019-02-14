@@ -51,7 +51,12 @@ bot.on('text', Telegraf.optional(isWarMenu, ctx => {
         ])
       )
     } else {
-      const additionalArmyInformation = {}
+      const minimumBuildingTimestamp = now - MINIMUM_AGE_OF_BUILDINGS_IN_SECONDS
+      const buildingsAreUpToDate = ctx.session.gameInformation.buildingsTimestamp > minimumBuildingTimestamp
+      if (!buildingsAreUpToDate || !poweruser.isPoweruser(ctx.from.id)) {
+        text += ctx.i18n.t('battle.improvedArmyAsPoweruser')
+        return ctx.replyWithMarkdown(text)
+      }
 
       const allPlayersInvolved = []
         .concat(battle.attack || [])
@@ -62,39 +67,32 @@ bot.on('text', Telegraf.optional(isWarMenu, ctx => {
         return ctx.replyWithMarkdown(text)
       }
 
-      const requesterIsPoweruser = poweruser.isPoweruser(ctx.from.id)
-      const minimumBuildingTimestamp = now - MINIMUM_AGE_OF_BUILDINGS_IN_SECONDS
-      const buildingsAreUpToDate = ctx.session.gameInformation.buildingsTimestamp > minimumBuildingTimestamp
-      if (requesterIsPoweruser && buildingsAreUpToDate) {
-        const friends = battle.attack.includes(name) ? battle.attack : battle.defence
-        const poweruserFriends = poweruser.getPoweruserSessions()
-          .map(o => o.data.gameInformation)
-          .filter(o => o.player && friends.includes(o.player.name))
-          .filter(o => o.buildingsTimestamp > minimumBuildingTimestamp)
-          .map(o => ({
-            alliance: o.player.alliance,
-            player: o.player.name,
-            barracks: o.buildings.barracks,
-            army: calcBarracksCapacity(o.buildings.barracks)
-          }))
+      const friends = battle.attack.includes(name) ? battle.attack : battle.defence
+      const poweruserFriends = poweruser.getPoweruserSessions()
+        .map(o => o.data.gameInformation)
+        .filter(o => o.player && friends.includes(o.player.name))
+        .filter(o => o.buildingsTimestamp > minimumBuildingTimestamp)
+        .map(o => ({
+          alliance: o.player.alliance,
+          player: o.player.name,
+          barracks: o.buildings.barracks,
+          army: calcBarracksCapacity(o.buildings.barracks)
+        }))
 
-        for (const o of poweruserFriends) {
-          additionalArmyInformation[o.player] = o.army
-        }
+      const additionalArmyInformation = {}
+      for (const o of poweruserFriends) {
+        additionalArmyInformation[o.player] = o.army
+      }
 
-        const notPowerusers = friends
-          .filter(o => !poweruserFriends.map(o => o.player).includes(o))
-        if (notPowerusers.length > 0) {
-          const notPoweruserString = notPowerusers
-            .map(o => createPlayerNameString({player: o}, true))
-            .join(', ')
+      const notPowerusers = friends
+        .filter(o => !poweruserFriends.map(o => o.player).includes(o))
+      if (notPowerusers.length > 0) {
+        const notPoweruserString = notPowerusers
+          .map(o => createPlayerNameString({player: o}, true))
+          .join(', ')
 
-          text += ctx.i18n.t('battle.playersNotPowerusersOrBuildingsOld') + ':\n'
-          text += notPoweruserString
-          text += '\n\n'
-        }
-      } else {
-        text += emoji.poweruser + '😎 ' + ctx.i18n.t('battle.improvedArmyAsPoweruser')
+        text += ctx.i18n.t('battle.playersNotPowerusersOrBuildingsOld') + ':\n'
+        text += notPoweruserString
         text += '\n\n'
       }
 

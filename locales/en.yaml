@@ -40,7 +40,7 @@ alert:
       upcoming: Food empty
       alert: Food empty in 12h
 battle:
-  improvedArmyAsPoweruser: When you are poweruser and your buildings are up to date you will get improved information about alliance mates.
+  improvedArmyAsPoweruser: When you are poweruser and your buildings are up to date you will get some useful information about the battle here.
   over: This battle is long over… Send me the report instead. 😉
   playersNotPowerusersOrBuildingsOld: Not powerusers or buildings not up to date
   scoutsGone: Your scouts havn't been there for a long time. I'll help you when you see ${name} next time. 😊

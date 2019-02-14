@@ -40,7 +40,7 @@ alert:
       upcoming: Nahrung leer
       alert: Nahrung ist in 12h leer
 battle:
-  improvedArmyAsPoweruser: Wenn du Poweruser bist und deine Gebäude aktuell sind, kannst du erweiterte Informationen über deine Allianz-Freunde erhalten.
+  improvedArmyAsPoweruser: Wenn du Poweruser bist und deine Gebäude aktuell sind, bekommst du wertvolle Informationen über diesen Kampf.
   over: Der Kampf ist lange vorrüber… Schick mir stattdessen den Bericht. 😉
   playersNotPowerusersOrBuildingsOld: Kein Poweruser oder Gebäude nicht aktuell
   scoutsGone: Deine Scouts sind schon lange weg. Wenn du ${name} das nächste mal wieder siehst, helfe ich dir gern. 😊
