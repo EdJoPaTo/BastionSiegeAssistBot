@@ -48,6 +48,26 @@ bot.on('text', Telegraf.optional(isAttackScout, ctx => {
   return ctx.reply(text, extra)
 }))
 
+function isAllianceJoinRequest(ctx) {
+  return ctx.state.screen &&
+         ctx.state.screen.information &&
+         ctx.state.screen.information.alliancejoinrequest
+}
+
+bot.on('text', Telegraf.optional(isAllianceJoinRequest, ctx => {
+  const {alliancejoinrequest} = ctx.state.screen.information
+  const time = ctx.message.forward_date
+  const minutesAgo = ((Date.now() / 1000) - time) / 60
+  if (minutesAgo > 10) {
+    let text = ''
+    text += ctx.i18n.t('forward.notnew')
+    return ctx.reply(text)
+  }
+
+  const {text, extra} = generatePlayerStats(alliancejoinrequest.player)
+  return ctx.reply(text, extra)
+}))
+
 function generatePlayerStats(players) {
   if (!Array.isArray(players)) {
     players = [players]
