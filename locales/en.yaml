@@ -84,7 +84,7 @@ poweruser:
   poweruser: Poweruser
   immunity: Immunity
   youare: You are a poweruser!
-  getImmunity: I do not know your ingame name in order to make you immune. You can send your main screen or disable this in the /settings.
+  nameRequired: You are nearly a poweruser! Just send me your ingame name by providing the main menu from @BastionSiegeBot. Then you get all the cool stuff like immunity or improved war stats.
   immunityTo: Currently your immunity is granted to ${name}.
   noname: I do not have your name. *No one* will get immunity.
   immunityDisabled: Currently *no one* will get immunity.

@@ -84,7 +84,7 @@ poweruser:
   poweruser: Poweruser
   immunity: Immunität
   youare: Du bist ein Poweruser!
-  getImmunity: Ich kenne deinen Ingame Namen nicht um dich immun zu machen. Du kannst mir dein Hauptmenü weiterleiten oder die Immunität in den /settings abstellen.
+  nameRequired: Du bist nahezu ein Poweruser! Gebe mir nur noch deinen ingame Namen indem du mir das Hauptmenü vom @BastionSiegeBot weiterleitest. Dann kannst du all die coolen Dinge wie Immunität oder verbesserte Kriegsstatistiken sehen!
   immunityTo: Deine Immunität wird aktuell ${name} verliehen.
   noname: Mir fehlt dein Name. *Niemand* erhält aktuell deine Immunität.
   immunityDisabled: Aktuell bekommt *niemand* deine Immunität.
