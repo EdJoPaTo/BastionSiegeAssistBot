@@ -2,7 +2,7 @@ const Telegraf = require('telegraf')
 
 const playerStatsDb = require('../lib/data/playerstats-db')
 
-const {createPlayerShareButton, createPlayerStatsString} = require('../lib/user-interface/player-stats')
+const {createPlayerShareButton, createPlayerStatsString, createPlayerStatsTwoLineString} = require('../lib/user-interface/player-stats')
 
 const {Extra, Markup} = Telegraf
 
@@ -52,12 +52,17 @@ function generatePlayerStats(players) {
   const allStats = players
     .map(o => playerStatsDb.get(o))
   const buttons = allStats.map(o => createPlayerShareButton(o))
-  const statsStrings = allStats.map(o => createPlayerStatsString(o))
 
-  const text = statsStrings.join('\n\n')
+  let text = ''
+  if (allStats.length > 1) {
+    text += allStats.map(o => createPlayerStatsTwoLineString(o, true)).join('\n')
+  } else {
+    text += allStats.map(o => createPlayerStatsString(o)).join('\n\n')
+  }
+
   return {
     text,
-    extra: Extra.markdown().markup(Markup.inlineKeyboard(buttons))
+    extra: Extra.markdown().markup(Markup.inlineKeyboard(buttons, {columns: 2}))
   }
 }
 
