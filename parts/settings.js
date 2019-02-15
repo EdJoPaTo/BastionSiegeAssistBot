@@ -2,6 +2,8 @@ const Telegraf = require('telegraf')
 const TelegrafInlineMenu = require('telegraf-inline-menu')
 const countryEmoji = require('country-emoji')
 
+const {toggleInArray} = require('../lib/javascript-abstraction/array')
+
 const playerStatsDb = require('../lib/data/playerstats-db')
 const poweruser = require('../lib/data/poweruser')
 
@@ -116,17 +118,6 @@ settingsMenu.submenu(ctx => emoji.poweruser + ' ' + ctx.i18n.t('poweruser.poweru
     },
     isSetFunc: ctx => !ctx.session.disableImmunity
   })
-
-function toggleInArray(array, key) {
-  if (array.includes(key)) {
-    array = array.filter(o => o !== key)
-  } else {
-    array.push(key)
-    array.sort()
-  }
-
-  return array
-}
 
 const bot = new Telegraf.Composer()
 bot.use(settingsMenu.init({
