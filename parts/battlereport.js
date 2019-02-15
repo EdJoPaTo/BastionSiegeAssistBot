@@ -101,10 +101,10 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
 
     text += '\n'
     text += createSingleBattleShortStatsLine(report)
+    text += '\n'
 
     if ((Date.now() / 1000) - MAX_AGE_BUILDINGS < ctx.session.gameInformation.buildingsTimestamp) {
       const {buildings} = ctx.session.gameInformation
-      text += '\n'
 
       const {soldiersAlive, soldiersTotal} = report
       const soldiersLost = soldiersTotal - soldiersAlive
@@ -123,12 +123,13 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
         const archerLostResult = calcMissingPeople(buildings, calcWallArcherCapacity(buildings.wall))
 
         text += emoji.people + '→' + emoji.houses + '→' + emoji.wall
-        text += archerLostResult.minutesNeeded + ' min'
+        text += '≤' + archerLostResult.minutesNeeded + ' min'
         text += ': '
-        text += formatNumberShort(archerLostResult.gold, true) + emoji.gold
-        text += '  '
-        text += emoji.repair
-        text += formatNumberShort(-wallRepairCost, true) + emoji.gold
+        text += '≤' + formatNumberShort(archerLostResult.gold, true) + emoji.gold
+        text += '\n'
+
+        text += emoji.wall + emoji.repair
+        text += '≤' + formatNumberShort(-wallRepairCost, true) + emoji.gold
         text += '\n'
       }
     }
