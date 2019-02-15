@@ -8,62 +8,38 @@ const {Extra, Markup} = Telegraf
 
 const bot = new Telegraf.Composer()
 
-function isAttackIncoming(ctx) {
-  return ctx.state.screen &&
-         ctx.state.screen.information &&
-         ctx.state.screen.information.attackincoming
+function screenContainsInformation(name) {
+  return ctx => ctx.state.screen &&
+    ctx.state.screen.information &&
+    ctx.state.screen.information[name]
 }
 
-bot.on('text', Telegraf.optional(isAttackIncoming, ctx => {
-  const {attackincoming} = ctx.state.screen.information
-  const time = ctx.message.forward_date
-  const minutesAgo = ((Date.now() / 1000) - time) / 60
-  if (minutesAgo > 8) {
-    let text = ''
-    text += ctx.i18n.t('battle.over')
-    return ctx.reply(text)
-  }
+function notNewMiddleware(i18nMessage = 'forward.notnew', maxAgeInMinutes = 8) {
+  return (ctx, next) => {
+    const time = ctx.message.forward_date
+    const minutesAgo = ((Date.now() / 1000) - time) / 60
+    if (minutesAgo > maxAgeInMinutes) {
+      return ctx.reply(ctx.i18n.t(i18nMessage))
+    }
 
+    return next()
+  }
+}
+
+bot.on('text', Telegraf.optional(screenContainsInformation('attackincoming'), notNewMiddleware('battle.over'), ctx => {
+  const {attackincoming} = ctx.state.screen.information
   const {text, extra} = generatePlayerStats(attackincoming.player)
   return ctx.reply(text, extra)
 }))
 
-function isAttackScout(ctx) {
-  return ctx.state.screen &&
-         ctx.state.screen.information &&
-         ctx.state.screen.information.attackscout
-}
-
-bot.on('text', Telegraf.optional(isAttackScout, ctx => {
+bot.on('text', Telegraf.optional(screenContainsInformation('attackscout'), notNewMiddleware('scouts.gone', 2), ctx => {
   const {attackscout} = ctx.state.screen.information
-  const time = ctx.message.forward_date
-  const minutesAgo = ((Date.now() / 1000) - time) / 60
-  if (minutesAgo > 2) {
-    let text = ''
-    text += ctx.i18n.t('battle.scoutsGone', {name: attackscout.player})
-    return ctx.reply(text)
-  }
-
   const {text, extra} = generatePlayerStats(attackscout.player)
   return ctx.reply(text, extra)
 }))
 
-function isAllianceJoinRequest(ctx) {
-  return ctx.state.screen &&
-         ctx.state.screen.information &&
-         ctx.state.screen.information.alliancejoinrequest
-}
-
-bot.on('text', Telegraf.optional(isAllianceJoinRequest, ctx => {
+bot.on('text', Telegraf.optional(screenContainsInformation('alliancejoinrequest'), notNewMiddleware(), ctx => {
   const {alliancejoinrequest} = ctx.state.screen.information
-  const time = ctx.message.forward_date
-  const minutesAgo = ((Date.now() / 1000) - time) / 60
-  if (minutesAgo > 10) {
-    let text = ''
-    text += ctx.i18n.t('forward.notnew')
-    return ctx.reply(text)
-  }
-
   const {text, extra} = generatePlayerStats(alliancejoinrequest.player)
   return ctx.reply(text, extra)
 }))
