@@ -92,7 +92,7 @@ language:
     Dieser Bot unterstützt mehrere Sprachen.
 
 
-    Deine Sprache fehlt im Bot?
+    Deine Sprache (`${from.language_code}`?) fehlt im Bot?
     Oder die aktuelle Übersetzung ist (etwas) falsch?
     Betrete die Support Gruppe und dann verbessern wir das gemeinsam! 😎
 name:
