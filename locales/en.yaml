@@ -55,7 +55,7 @@ botstats:
   battlereportsWithin24h: Battlereports added within 24h
   users: Users
 buildings:
-  title: Building Upgrades
+  upgrades: Upgrades
   maxPossible: Max possible upgrades
   fillStorage: Fill Storage
   need:

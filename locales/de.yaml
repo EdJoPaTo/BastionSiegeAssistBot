@@ -55,7 +55,7 @@ botstats:
   battlereportsWithin24h: In den letzten 24h hinzugefügte Kampfberichte
   users: Nutzer
 buildings:
-  title: Gebäudeausbau
+  upgrades: Ausbau
   maxPossible: Maximal möglicher Ausbau
   fillStorage: Lagerfüllzustand
   need:
