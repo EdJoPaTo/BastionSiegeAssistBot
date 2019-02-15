@@ -1,8 +1,6 @@
 const Telegraf = require('telegraf')
 const debounce = require('debounce-promise')
 
-const {compareStrAsSimpleOne} = require('../lib/javascript-abstraction/strings')
-
 const {estimateResourcesAfterTimespan} = require('../lib/math/siegemath')
 
 const {
@@ -12,8 +10,6 @@ const {
   createBuildingMaxLevelStatsString,
   createFillTimeStatsString
 } = require('../lib/user-interface/buildings')
-
-const {Markup, Extra} = Telegraf
 
 const DEBOUNCE_TIME = 100 // Milliseconds
 
@@ -28,10 +24,6 @@ function isBuildingsOrResources(ctx) {
   return buildings || resources || workshop
 }
 
-const updateMarkup = Extra.markdown().markup(Markup.inlineKeyboard([
-  Markup.callbackButton('estimate current situation', 'buildings')
-]))
-
 const debouncedBuildStats = {}
 bot.on('text', Telegraf.optional(isBuildingsOrResources, ctx => {
   const {id} = ctx.from
@@ -44,48 +36,58 @@ bot.on('text', Telegraf.optional(isBuildingsOrResources, ctx => {
 
 bot.command('buildings', sendBuildStats)
 
-function sendBuildStats(ctx) {
+function creationNotPossibleReason(ctx) {
   const information = ctx.session.gameInformation
 
   if (!information.buildingsTimestamp) {
-    return ctx.replyWithMarkdown(ctx.i18n.t('buildings.need.buildings'))
+    return ctx.i18n.t('buildings.need.buildings')
   }
 
   if (!information.resourcesTimestamp) {
-    return ctx.replyWithMarkdown(ctx.i18n.t('buildings.need.resources'))
+    return ctx.i18n.t('buildings.need.resources')
   }
 
-  const statsText = generateStatsText(ctx)
-  return ctx.reply(statsText, updateMarkup)
+  return false
 }
 
-bot.action('buildings', async ctx => {
-  try {
-    const newStats = generateStatsText(ctx)
-    const oldStats = ctx.callbackQuery.message.text
-
-    if (compareStrAsSimpleOne(newStats, oldStats) === 0) {
-      return ctx.answerCbQuery(ctx.i18n.t('menu.nothingchanged'))
-    }
-
-    await ctx.editMessageText(newStats, updateMarkup)
-    return ctx.answerCbQuery()
-  } catch (error) {
-    return ctx.answerCbQuery('please provide new game screens')
-  }
-})
-
-function generateStatsText(ctx) {
+function creationWarnings(ctx) {
   const information = ctx.session.gameInformation
-  let buildingsToShow = ctx.session.buildings
+  const warnings = []
 
   // Unix timestamp just without seconds (/60)
   const currentTimestamp = Math.floor(Date.now() / 1000 / 60)
   const resourceAgeMinutes = currentTimestamp - Math.floor(information.resourcesTimestamp / 60)
   const buildingAgeMinutes = currentTimestamp - Math.floor(information.buildingsTimestamp / 60)
 
+  if (resourceAgeMinutes > 30) {
+    warnings.push(ctx.i18n.t('buildings.old.resources'))
+  }
+
+  if (buildingAgeMinutes > 60 * 5) {
+    warnings.push(ctx.i18n.t('buildings.old.buildings'))
+  }
+
+  return warnings
+}
+
+function sendBuildStats(ctx) {
+  const statsText = generateStatsText(ctx)
+  return ctx.reply(statsText)
+}
+
+function generateStatsText(ctx) {
+  const notPossibleReason = creationNotPossibleReason(ctx)
+  if (notPossibleReason) {
+    return ctx.replyWithMarkdown(notPossibleReason)
+  }
+
+  const information = ctx.session.gameInformation
+  let buildingsToShow = ctx.session.buildings
+
   const buildings = {...information.buildings, ...information.workshop}
 
+  const currentTimestamp = Math.floor(Date.now() / 1000 / 60)
+  const resourceAgeMinutes = currentTimestamp - Math.floor(information.resourcesTimestamp / 60)
   const estimatedResources = estimateResourcesAfterTimespan(information.resources, buildings, resourceAgeMinutes)
 
   let text = ''
@@ -110,13 +112,10 @@ function generateStatsText(ctx) {
   text += createFillTimeStatsString(buildings, estimatedResources)
   text += '\n'
 
-  if (resourceAgeMinutes > 30) {
-    text += `⚠️ ${ctx.i18n.t('buildings.old.resources')}\n`
-  }
-
-  if (buildingAgeMinutes > 60 * 5) {
-    text += `⚠️ ${ctx.i18n.t('buildings.old.buildings')}\n`
-  }
+  const warnings = creationWarnings(ctx)
+  text += warnings
+    .map(o => '⚠️ ' + o)
+    .join('\n')
 
   return text
 }
