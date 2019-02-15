@@ -4,7 +4,7 @@ const TelegrafInlineMenu = require('telegraf-inline-menu')
 
 const {toggleInArray} = require('../lib/javascript-abstraction/array')
 
-const {estimateResourcesAfterTimespan} = require('../lib/math/siegemath')
+const {calcMaxBuildingLevel, estimateResourcesAfterTimespan} = require('../lib/math/siegemath')
 
 const {emoji} = require('../lib/user-interface/output-text')
 const {
@@ -132,13 +132,18 @@ function generateStatsText(ctx) {
     text += buildingsToShow
       .map(o => createBuildingTimeStatsString(o, buildings, estimatedResources))
       .join('\n')
-    text += '\n\n'
 
-    text += `*${ctx.i18n.t('buildings.maxPossible')}*\n`
-    text += buildingsToShow
+    const upgradeable = buildingsToShow
       .filter(o => o !== 'storage')
-      .map(o => createBuildingMaxLevelStatsString(o, buildings, estimatedResources))
-      .join('\n')
+      .filter(o => calcMaxBuildingLevel(o, buildings) > buildings[o])
+
+    if (upgradeable.length > 0) {
+      text += '\n\n'
+      text += `*${ctx.i18n.t('buildings.maxPossible')}*\n`
+      text += upgradeable
+        .map(o => createBuildingMaxLevelStatsString(o, buildings, estimatedResources))
+        .join('\n')
+    }
   } else if (selectedView === 'fillStorage') {
     text += `*${ctx.i18n.t('buildings.fillStorage')}*\n`
     text += createFillTimeStatsString(buildings, estimatedResources)
