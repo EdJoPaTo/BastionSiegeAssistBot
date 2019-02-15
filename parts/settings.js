@@ -74,7 +74,7 @@ settingsMenu.submenu(ctx => emoji.language + ' ' + ctx.i18n.t('language.title'),
       return countryEmoji.flag(countryCode) + ' ' + lang
     }
   })
-  .urlButton('Join BastionSiegeAssist Support Group', 'https://t.me/joinchat/AC0dV1dG2Y7sOFQPtZm9Dw')
+  .urlButton(ctx => ctx.i18n.t('help.joinBSAGroupButton'), 'https://t.me/joinchat/AC0dV1dG2Y7sOFQPtZm9Dw')
 
 function poweruserText(ctx) {
   let text = emoji.poweruser + ` *${ctx.i18n.t('poweruser.poweruser')}*`
