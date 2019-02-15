@@ -5,7 +5,7 @@ const playerStatsDb = require('../lib/data/playerstats-db')
 const {isImmune} = require('../lib/data/poweruser')
 
 const playerStatsSearch = require('../lib/math/player-stats-search')
-const {calcMissingPeople} = require('../lib/math/siegemath')
+const {calcSemitotalGold, calcMissingPeople, calcWallRepairCost, calcWallArcherCapacity} = require('../lib/math/siegemath')
 
 const {createPlayerShareButton, createPlayerStatsString, createTwoSidesStatsString} = require('../lib/user-interface/player-stats')
 const {createSingleBattleShortStatsLine} = require('../lib/user-interface/battle-stats')
@@ -13,6 +13,8 @@ const {formatNumberShort} = require('../lib/user-interface/format-number')
 const {emoji} = require('../lib/user-interface/output-text')
 
 const {Extra, Markup} = Telegraf
+
+const MAX_AGE_BUILDINGS = 60 * 60 * 24 // 24h
 
 const bot = new Telegraf.Composer()
 
@@ -99,16 +101,35 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
     text += '\n'
     text += createSingleBattleShortStatsLine(report)
 
-    const {soldiersAlive, soldiersTotal} = report
-    const soldiersLost = soldiersTotal - soldiersAlive
-    if (soldiersLost > 0 && (Date.now() / 1000) - (24 * 60 * 60) < ctx.session.gameInformation.buildingsTimestamp) {
-      const soldiersLostResult = calcMissingPeople(ctx.session.gameInformation.buildings, soldiersLost)
+    if ((Date.now() / 1000) - MAX_AGE_BUILDINGS < ctx.session.gameInformation.buildingsTimestamp) {
+      const {buildings} = ctx.session.gameInformation
       text += '\n'
-      text += emoji.people + '→' + emoji.houses + '→' + emoji.barracks
-      text += soldiersLostResult.minutesNeeded + ' min'
-      text += ': '
-      text += formatNumberShort(soldiersLostResult.gold, true) + emoji.gold
-      text += '\n'
+
+      const {soldiersAlive, soldiersTotal} = report
+      const soldiersLost = soldiersTotal - soldiersAlive
+      if (soldiersLost > 0) {
+        const soldiersLostResult = calcMissingPeople(buildings, soldiersLost)
+
+        text += emoji.people + '→' + emoji.houses + '→' + emoji.barracks
+        text += soldiersLostResult.minutesNeeded + ' min'
+        text += ': '
+        text += formatNumberShort(soldiersLostResult.gold, true) + emoji.gold
+        text += '\n'
+      }
+
+      if (!report.attack) {
+        const wallRepairCost = calcSemitotalGold(calcWallRepairCost(buildings.wall))
+        const archerLostResult = calcMissingPeople(buildings, calcWallArcherCapacity(buildings.wall))
+
+        text += emoji.people + '→' + emoji.houses + '→' + emoji.wall
+        text += archerLostResult.minutesNeeded + ' min'
+        text += ': '
+        text += formatNumberShort(archerLostResult.gold, true) + emoji.gold
+        text += '  '
+        text += emoji.repair
+        text += formatNumberShort(-wallRepairCost, true) + emoji.gold
+        text += '\n'
+      }
     }
 
     if (isNew) {
