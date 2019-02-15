@@ -84,7 +84,8 @@ buildings:
 effects:
   updated: Updated your effects. 👌\nSee /upcoming or enable alerts in the /settings.
 forward:
-  notnew: That's not new to me. I will just ignore it.
+  known: I already know that. I will just ignore it.
+  old: That's old. I will just ignore it.
 language:
   title: Language
   info: >

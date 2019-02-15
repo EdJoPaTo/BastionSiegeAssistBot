@@ -84,7 +84,8 @@ buildings:
 effects:
   updated: Effekte aktualisiert! 👌\nSchau dir /upcoming an oder aktiviere Benachrichtungen in den /settings.
 forward:
-  notnew: Das kenne ich schon. Ich ignoriere es einfach.
+  known: Das kenne ich schon. Ich ignoriere es einfach.
+  old: Das ist alt. Ich ignoriere es einfach.
 language:
   title: Sprache
   info: >

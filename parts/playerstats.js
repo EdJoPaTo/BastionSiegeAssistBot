@@ -14,7 +14,7 @@ function screenContainsInformation(name) {
     ctx.state.screen.information[name]
 }
 
-function notNewMiddleware(i18nMessage = 'forward.notnew', maxAgeInMinutes = 8) {
+function notNewMiddleware(i18nMessage = 'forward.old', maxAgeInMinutes = 8) {
   return (ctx, next) => {
     const time = ctx.message.forward_date
     const minutesAgo = ((Date.now() / 1000) - time) / 60

@@ -62,7 +62,7 @@ bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, (ctx, next) => {
   const newData = dataAvailable
     .filter(data => (ctx.session.gameInformation[data + 'Timestamp'] || 0) < timestamp)
   if (newData.length === 0) {
-    return ctx.reply(ctx.i18n.t('forward.notnew'))
+    return ctx.reply(ctx.i18n.t('forward.known'))
   }
 
   for (const data of newData) {
