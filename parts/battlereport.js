@@ -15,6 +15,7 @@ const {emoji} = require('../lib/user-interface/output-text')
 const {Extra, Markup} = Telegraf
 
 const MAX_AGE_BUILDINGS = 60 * 60 * 24 // 24h
+const MAX_AGE_REPORT_FOR_STATS = 60 * 60 * 24 * 2 // 2 days
 
 const bot = new Telegraf.Composer()
 
@@ -152,9 +153,10 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
       }
     }
 
-    // TODO: consider not sending playerstats when older than 2d? you get currently available data from old stuff.
-    const statsString = allianceBattle ? createTwoSidesStatsString(attackerStats, defenderStats) : createPlayerStatsString(enemyStats[0])
-    text += '\n\n' + statsString
+    if ((Date.now() / 1000) - MAX_AGE_REPORT_FOR_STATS < timestamp) {
+      const statsString = allianceBattle ? createTwoSidesStatsString(attackerStats, defenderStats) : createPlayerStatsString(enemyStats[0])
+      text += '\n\n' + statsString
+    }
 
     return {
       extra: baseExtra.markup(markup),
