@@ -64,6 +64,23 @@ buildings:
   old:
     buildings: Mein Wissen über deine Gebäude ist etwas veraltet. Dadurch können diese Daten ungenau werden. Schick mir bei Gelegenheit etwas neues.
     resources: Mein Wissen über deine Ressourcen ist etwas veraltet. Dadurch können diese Daten ungenau werden. Schick mir bei Gelegenheit etwas neues.
+  winChances: Kampf Gewinnchance
+  winChance:
+    solo: Alleinkampf
+    alliance: Allianz Kampf
+    info: >
+      In einem Kampf bestimmen Armee, Katapult und Wall den Ausgang des Kampfes.
+      Jeder Soldat hat eine Wahrscheinlichkeit einen feindlichen Soldaten zu töten.
+
+      Diese Wahrscheinlichkeit eines Soldatens wird durch dein Katapult oder Wall verstärkt.
+      Außerdem bekommt die übermächtige Armee zusätzlich mehr Siegeswahrscheinlichkeit.
+
+      Die Ausbaukosten deiner Gebäude werden hier bezogen auf die Siegeswahrscheinlichkeit berechnet.
+      Da die Armee deutlich weniger Auswirkung in einem Allianz Kampf hat, ist die Kaserne daher deutlich teurer im Verhältnis.
+
+
+      Denk dran, dass in Allianz Kämpfen nur vom jeweils Ersten der beiden Streitmächte der Wall oder das Katapult wirkt.
+      Wenn du einem Kampf beitrittst zählt nur noch deine Armee.
 effects:
   updated: Effekte aktualisiert! 👌\nSchau dir /upcoming an oder aktiviere Benachrichtungen in den /settings.
 forward:

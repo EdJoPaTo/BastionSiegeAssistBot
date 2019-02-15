@@ -64,6 +64,23 @@ buildings:
   old:
     buildings: My knowledge of your buildings is a bit old. This leads to inaccuracy. Consider updating me with a new forwarded building screen.
     resources: My knowledge of your resources is a bit old. This leads to inaccuracy. Consider updating me with a new forwarded resource screen.
+  winChances: Battle Winchances
+  winChance:
+    solo: Solo Battles
+    alliance: Alliance Battles
+    info: >
+      When you battle others your army, trebuchet and wall will determine the outcome of your battle.
+      Each soldier has a chance to kill an enemy soldier.
+
+      The chance of each soldier is increased by trebuchet or wall.
+      Additionally when one army is superior to the other one it also gets a bonus.
+
+      The upgrade costs of your relevant buildings are shown per win chance.
+      The army for example grants way less win chance in an alliance battle which results in a way higher costs per win chance.
+
+
+      Keep in mind that only the trebuchet and wall of the first ones of each battling side are considered.
+      When you are just joining in on a battle your wall and trebuchet are ignored.
 effects:
   updated: Updated your effects. 👌\nSee /upcoming or enable alerts in the /settings.
 forward:

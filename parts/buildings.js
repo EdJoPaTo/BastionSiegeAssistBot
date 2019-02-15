@@ -4,13 +4,19 @@ const TelegrafInlineMenu = require('telegraf-inline-menu')
 
 const {toggleInArray} = require('../lib/javascript-abstraction/array')
 
-const {calcMaxBuildingLevel, estimateResourcesAfterTimespan} = require('../lib/math/siegemath')
+const {
+  calcMaxBuildingLevel,
+  calcBuildingCostPerWinchanceSolo,
+  calcBuildingCostPerWinchanceAlliance,
+  estimateResourcesAfterTimespan
+} = require('../lib/math/siegemath')
 
 const {emoji} = require('../lib/user-interface/output-text')
 const {
   BUILDINGS,
   getBuildingText,
   defaultBuildingsToShow,
+  createBuildingSemitotalLine,
   createBuildingTimeStatsString,
   createBuildingMaxLevelStatsString,
   createFillTimeStatsString
@@ -18,8 +24,14 @@ const {
 
 const DEBOUNCE_TIME = 100 // Milliseconds
 
-const VIEWS = ['upgrades', 'fillStorage']
+const VIEWS = [
+  'upgrades',
+  'fillStorage',
+  'winChances'
+]
 const DEFAULT_VIEW = VIEWS[0]
+
+const WIN_CHANCE_INFLUENCERS = ['barracks', 'trebuchet', 'wall']
 
 const bot = new Telegraf.Composer()
 
@@ -61,6 +73,7 @@ menu.submenu(ctx => emoji.houses + ' ' + ctx.i18n.t('bs.buildings'), 'buildings'
   })
 
 menu.select('view', VIEWS, {
+  columns: 2,
   hide: ctx => creationNotPossibleReason(ctx) !== false,
   textFunc: (ctx, key) => ctx.i18n.t('buildings.' + key),
   isSetFunc: (ctx, key) => (ctx.session.buildingsView || DEFAULT_VIEW) === key,
@@ -147,6 +160,25 @@ function generateStatsText(ctx) {
   } else if (selectedView === 'fillStorage') {
     text += `*${ctx.i18n.t('buildings.fillStorage')}*\n`
     text += createFillTimeStatsString(buildings, estimatedResources)
+  } else if (selectedView === 'winChances') {
+    text += `*${ctx.i18n.t('buildings.winChances')}*\n`
+    text += ctx.i18n.t('buildings.winChance.info')
+
+    text += '\n'
+    text += `*${ctx.i18n.t('buildings.winChance.solo')}*\n`
+    text += WIN_CHANCE_INFLUENCERS
+      .map(building =>
+        createBuildingSemitotalLine(building, calcBuildingCostPerWinchanceSolo(building, buildings[building]))
+      )
+      .join('\n')
+
+    text += '\n\n'
+    text += `*${ctx.i18n.t('buildings.winChance.alliance')}*\n`
+    text += WIN_CHANCE_INFLUENCERS
+      .map(building =>
+        createBuildingSemitotalLine(building, calcBuildingCostPerWinchanceAlliance(building, buildings[building]))
+      )
+      .join('\n')
   }
 
   text += '\n\n'
