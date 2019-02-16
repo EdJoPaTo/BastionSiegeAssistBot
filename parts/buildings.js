@@ -122,7 +122,7 @@ function creationWarnings(ctx) {
 function generateStatsText(ctx) {
   const notPossibleReason = creationNotPossibleReason(ctx)
   if (notPossibleReason) {
-    return ctx.replyWithMarkdown(notPossibleReason)
+    return notPossibleReason
   }
 
   const information = ctx.session.gameInformation
