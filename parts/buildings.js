@@ -6,8 +6,6 @@ const {toggleInArray} = require('../lib/javascript-abstraction/array')
 
 const {
   calcMaxBuildingLevel,
-  calcBuildingCostPerWinchanceSolo,
-  calcBuildingCostPerWinchanceAlliance,
   estimateResourcesAfterTimespan
 } = require('../lib/math/siegemath')
 
@@ -16,7 +14,7 @@ const {
   BUILDINGS,
   getBuildingText,
   defaultBuildingsToShow,
-  createBuildingSemitotalLine,
+  createBuildingCostPerWinChanceLine,
   createBuildingTimeStatsString,
   createBuildingMaxLevelStatsString,
   createFillTimeStatsString
@@ -168,7 +166,7 @@ function generateStatsText(ctx) {
     text += `*${ctx.i18n.t('buildings.winChance.solo')}*\n`
     text += WIN_CHANCE_INFLUENCERS
       .map(building =>
-        createBuildingSemitotalLine(building, calcBuildingCostPerWinchanceSolo(building, buildings[building]))
+        createBuildingCostPerWinChanceLine('solo', building, buildings[building])
       )
       .join('\n')
 
@@ -176,7 +174,7 @@ function generateStatsText(ctx) {
     text += `*${ctx.i18n.t('buildings.winChance.alliance')}*\n`
     text += WIN_CHANCE_INFLUENCERS
       .map(building =>
-        createBuildingSemitotalLine(building, calcBuildingCostPerWinchanceAlliance(building, buildings[building]))
+        createBuildingCostPerWinChanceLine('alliance', building, buildings[building])
       )
       .join('\n')
   }
