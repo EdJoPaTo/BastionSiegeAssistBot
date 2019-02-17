@@ -32,7 +32,7 @@ bot.on('text', Telegraf.optional(screenContainsInformation('attackincoming'), no
   return ctx.reply(text, extra)
 }))
 
-bot.on('text', Telegraf.optional(screenContainsInformation('attackscout'), notNewMiddleware('scouts.gone', 2), ctx => {
+bot.on('text', Telegraf.optional(screenContainsInformation('attackscout'), notNewMiddleware('battle.scoutsGone', 2), ctx => {
   const {attackscout} = ctx.state.screen.information
   const {text, extra} = generatePlayerStats(attackscout.player)
   return ctx.reply(text, extra)
