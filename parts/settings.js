@@ -12,6 +12,8 @@ const {BUILDINGS, getBuildingText, defaultBuildingsToShow} = require('../lib/use
 const {alertEmojis, ALERT_TYPES, getAlertText} = require('../lib/user-interface/alert-handler')
 const {createPlayerStatsString} = require('../lib/user-interface/player-stats')
 
+const {Extra, Markup} = Telegraf
+
 const AVAILABLE_LANGUAGES = [
   'de',
   'en-GB'
@@ -73,6 +75,17 @@ settingsMenu.submenu(ctx => emoji.language + ' ' + ctx.i18n.t('language.title'),
       const lang = key.split('-')[0]
       return countryEmoji.flag(countryCode) + ' ' + lang
     }
+  })
+  .simpleButton(ctx => ctx.i18n.t('language.translateButton'), 'translate', {
+    doFunc: ctx => ctx.replyWithDocument({
+      source: `locales/${ctx.i18n.locale().split('-')[0]}.yaml`
+    }, new Extra({
+      caption: ctx.i18n.t('language.helpTranslate')
+    }).markdown().markup(
+      Markup.inlineKeyboard([
+        Markup.urlButton(ctx.i18n.t('help.joinBSAGroupButton'), 'https://t.me/joinchat/AC0dV1dG2Y7sOFQPtZm9Dw')
+      ])
+    ))
   })
   .urlButton(ctx => ctx.i18n.t('help.joinBSAGroupButton'), 'https://t.me/joinchat/AC0dV1dG2Y7sOFQPtZm9Dw')
 

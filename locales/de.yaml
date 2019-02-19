@@ -95,6 +95,23 @@ language:
     Deine Sprache (`${from.language_code}`?) fehlt im Bot?
     Oder die aktuelle Übersetzung ist (etwas) falsch?
     Betrete die Support Gruppe und dann verbessern wir das gemeinsam! 😎
+  translateButton: Übersetzung verbessern
+  helpTranslate: >
+    Dies ist die Sprachdatei deiner aktuell gewählten Sprache.
+
+
+    Verbessere was dir auffiel oder übersetze diese in deine eigene Sprache.
+    Wenn du deine eigene Sprache hinzufügen willst, nehme vielleicht lieber Englisch als Basis.
+    Melde dich auch in der BSA Support Gruppe, was du tust und wenn du fertig bist.
+
+
+    Du solltest die Daten nur mit einem Plain Text Editor öffnen oder bearbeiten.
+    Dafür eignen sich Notepad++ (Windows), Gedit (Linux) oder TextEdit (macOS).
+
+    Auf der linken Seite vom ':' steht die eindeutige Bezeichnung der Übersetzung.
+    Der Bot braucht genau diese um die Übersetzung zu finden.
+    Auf der rechten Seite vom ':' steht der übersetzte Text.
+    Nur diesen willst du ändern.
 name:
   need: Dafür brauche ich deinen Namen. Leite mir dafür dein Hauptmenü zuerst weiter. 😅
   update: Leite mir dein Hauptmenü vom @BastionSiegeBot weiter, damit ich deinen aktuellen Ingame Namen aktualisieren kann.

@@ -95,6 +95,21 @@ language:
     Your language (`${from.language_code}`?) is missing in the bot?
     Or the current translation is (kinda) wrong?
     Join the Support Group and we will improve this bot together. 😎
+  translateButton: Add or improve language
+  helpTranslate: >
+    This is the language file of your currently selected language.
+
+
+    Improve what you like or translate it into you own language.
+    Then report about it in the BSA Support Group.
+
+
+    You should only open and edit it with a plain text editor like Notepad++ (Windows), Gedit (Linux) or TextEdit (macOS).
+
+    On the left side of the ':' the identifier is placed.
+    This needs to stay the same for the bot to get the correct translation.
+    On the right side of the ':' is the translated text.
+    You need to change or adapt that one.
 name:
   need: I need your name for that. Send me your main screen first. 😅
   update: Send your main menu screen from @BastionSiegeBot to update your current ingame name.
