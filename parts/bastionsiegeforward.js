@@ -1,5 +1,7 @@
 const Telegraf = require('telegraf')
 
+const playerHistory = require('../lib/data/player-history')
+
 const {isForwardedFromBastionSiege} = require('../lib/input/bastion-siege-bot')
 const {detectGamescreen, getScreenInformation} = require('../lib/input/gamescreen')
 
@@ -68,6 +70,7 @@ bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, (ctx, next) => {
   for (const data of newData) {
     ctx.session.gameInformation[data + 'Timestamp'] = timestamp
     ctx.session.gameInformation[data] = newInformation[data]
+    playerHistory.add(ctx.from.id, data, timestamp, newInformation[data])
   }
 
   return next()
