@@ -14,6 +14,8 @@ const {createPlayerStatsString} = require('../lib/user-interface/player-stats')
 
 const {Extra, Markup} = Telegraf
 
+// First language code: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+// Second country code: https://en.wikipedia.org/wiki/ISO_3166-1
 const AVAILABLE_LANGUAGES = [
   'de',
   'en-GB'
