@@ -38,6 +38,18 @@ bot.on('text', Telegraf.optional(screenContainsInformation('attackscout'), notNe
   return ctx.reply(text, extra)
 }))
 
+bot.on('text', Telegraf.optional(screenContainsInformation('allianceBattleStart'), notNewMiddleware('battle.over'), ctx => {
+  const {allianceBattleStart} = ctx.state.screen.information
+  const {text, extra} = generatePlayerStats(allianceBattleStart.enemy)
+  return ctx.reply(text, extra)
+}))
+
+bot.on('text', Telegraf.optional(screenContainsInformation('allianceBattleSupport'), notNewMiddleware('battle.over'), ctx => {
+  const {allianceBattleSupport} = ctx.state.screen.information
+  const {text, extra} = generatePlayerStats(allianceBattleSupport.player)
+  return ctx.reply(text, extra)
+}))
+
 bot.on('text', Telegraf.optional(screenContainsInformation('alliancejoinrequest'), notNewMiddleware(), ctx => {
   const {alliancejoinrequest} = ctx.state.screen.information
   const {text, extra} = generatePlayerStats(alliancejoinrequest.player)
