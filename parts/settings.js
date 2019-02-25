@@ -18,7 +18,8 @@ const {Extra, Markup} = Telegraf
 // Second country code: https://en.wikipedia.org/wiki/ISO_3166-1
 const AVAILABLE_LANGUAGES = [
   'de',
-  'en-GB'
+  'en-GB',
+  'ru'
 ]
 
 const settingsMenu = new TelegrafInlineMenu(ctx => `*${ctx.i18n.t('settings')}*`)
