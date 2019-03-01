@@ -22,18 +22,18 @@ function isWarMenu(ctx) {
 
 bot.on('text', Telegraf.optional(isWarMenu, ctx => {
   const {domainStats, battle} = ctx.state.screen.information
-  let text = `*${ctx.i18n.t('bs.war')}*`
+  let text = `*${ctx.i18n.t('bs.war')}*\n`
   let extra = Extra.markdown()
 
   const statsStrings = []
   statsStrings.push(formatNumberShort(domainStats.wins, true) + emoji.wins)
   statsStrings.push(formatNumberShort(domainStats.karma, true) + emoji.karma)
   statsStrings.push(formatNumberShort(domainStats.terra, true) + emoji.terra)
-  text += '\n' + statsStrings.join(' ')
+  if (!battle) {
+    text += statsStrings.join(' ')
+  }
 
   if (battle) {
-    text += '\n\n'
-
     const time = ctx.message.forward_date
     const now = Date.now() / 1000
     const minutesAgo = (now - time) / 60
@@ -44,6 +44,7 @@ bot.on('text', Telegraf.optional(isWarMenu, ctx => {
 
     if (battle.enemy) {
       const stats = playerStatsDb.get(battle.enemy)
+      text += '\n'
       text += createPlayerStatsString(stats)
       extra = extra.markup(
         Markup.inlineKeyboard([
