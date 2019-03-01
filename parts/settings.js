@@ -19,6 +19,7 @@ const {Extra, Markup} = Telegraf
 const AVAILABLE_LANGUAGES = [
   'de',
   'en-GB',
+  'id',
   'ru'
 ]
 

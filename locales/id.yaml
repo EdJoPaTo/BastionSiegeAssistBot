@@ -1,0 +1,174 @@
+menu:
+  back: kembali
+  nothingchanged: Tidak ada yang berubah kecuali waktu saat ini.
+bs:
+  buildings: Bangunan
+  building:
+    townhall: Balai Kota
+    storage: Gudang
+    houses: Rumah
+    farm: Kebun
+    sawmill: Kilang Gergaji
+    mine: Tambang
+    barracks: Barak
+    wall: Tembok
+    trebuchet: Trebuset
+    ballista: Ballista
+  war: Perang
+alerts: Peringatan
+alert:
+  buildingUpgrade:
+    name: Pemutakhiran bangunan tersedia
+    upcoming: Bangungan ${name} bisa dimutakhirkan
+  effect:
+    name: Efek berhenti
+    upcoming: Efek ${name} berhenti
+  nextBattle:
+    name: Pertarungan selanjutnya tersedia
+    alliance:
+      alert: Serangan aliansimu akan tersedia dalam 1 menit. Bersiaplah dan sebarkan gairahnya! 🥳😎
+      upcoming: Serangan aliansimu tersedia
+    solo:
+      alert: Kamu dapat menyerang lagi. Semoga kamu beruntung. ☺️
+      upcoming: Kamu dapat menyerang lagi
+  resourceWarning:
+    name: Tingkat Gawat Sumber Daya tercapai
+    goldFull:
+      upcoming: Emas penuh
+      alert: Emas penuh dalam 15 menit
+    foodEmpty:
+      upcoming: Makanan kosong
+      alert: Makanan kosong dalam 12 jam
+battle:
+  improvedArmyAsPoweruser: Ketika kamu seorang pengguna daya dan bagunanmu terkini, kamu akan mendapatkan beberapa keterangan yang berguna tentang pertarungan di sini.
+  over: Pertarungan ini sudah lama selesai… Kirimkan aku laporan baru sebagai gantinya. 😉
+  playersNotPowerusersOrBuildingsOld: Bukan pengguna daya atau bangunan tidak terkini
+  scoutsGone: Pengintaimu sudah lama tidak ada di sana. Aku akan membantumu ketika kamu berkeliaran di sana lain kali. 😊
+battlereport:
+  added: Terima kasih atas laporannya. Aku menambahkannya. 👌
+  known: Kamu telah mengirimkan ini kepadaku 🙃
+  changedIngameName: ❓Sudahkah kamu mengubah nama pemainmu? Jika demikian, tolong kirimkan aku layar menu utama dari @BastionSiegeBot. Kemudian dataku terkini lagi. 😎
+botstats:
+  title: Statistik Bot
+  analysedPlayers: Pemain yang dianalisa
+  battlereports: Laporan pertarungan
+  battlereportsWithin24h: Laporan pertarungan ditambahkan dalam 24 jam
+  users: Pengguna
+buildings:
+  upgrades: Pemutakhiran
+  maxPossible: Maksimal kemungkinan pemutakhiran
+  fillStorage: Isi Gudang
+  need:
+    buildings: Tolong kirimkan aku layar bangunan dari permainanmu untuk mendapatkan statistik pemutakhiran bangunan.
+    resources: Tolong kirimkan aku layar dari permainan yang menunjukkan sumber daya saat ini untuk mendapatkan statistik pemutakhiran bangunan.
+  old:
+    buildings: Pengetahuanku tentang bangunanmu agak usang. Ini mengarah pada ketidakakuratan. Pertimbangkan memperbaruiku dengan mengirimkan layar bangunan baru.
+    resources: Pengetahuanku tentang bangunanmu agak usang. Ini mengarah pada ketidakakuratan. Pertimbangkan memperbaruiku dengan mengirimkan layar sumber daya baru.
+  winChances: Peluang menang pertarungan
+  winChance:
+    solo: Pertarungan tunggal
+    alliance: Pertarungan aliansi
+    info: >
+      Saat kamu bertempur dengan orang lain, pasukan, trebuset, dan tembokmu akan menentukan hasil pertempuranmmu.
+      Setiap prajurit memiliki kesempatan untuk membunuh prajurit musuh.
+
+      Peluang setiap prajurit ditingkatkan oleh trebuset atau tembok.
+      Selain itu ketika satu pasukan lebih unggul dari pasuka yang lain, pasukan tersebut juga mendapat bonus.
+
+      Biaya pemutakhiran bangunan terkait ditampilkan untuk setiap peluang menang.
+      Tentara misalnya memberikan kesempatan menang yang jauh lebih sedikit dalam pertempuran aliansi yang menghasilkan biaya per peluang menang yang jauh lebih tinggi.
+
+
+      Perlu diingat bahwa hanya trebuset dan tembok yang pertama dari masing-masing pihak yang bertarung yang dipertimbangkan.
+      Saat kamu baru saja bergabung dalam pertempuran, tembok dan trebusetmu diabaikan.
+effects:
+  updated: Perbarui efekmu. 👌\nLihat /upcoming atau aktifkan peringatan di /settings.
+forward:
+  known: Aku sudah tahu itu. Aku hanya akan mengabaikannya.
+  old: Itu usang. Aku akan mengabaikannya.
+language:
+  title: Bahasa
+  info: >
+    Bot ini mendukung berbagai bahasa.
+
+
+    Bahasamu (`${from.language_code}`?) tidak ada di bot?
+    Atau terjemahan saat ini (agak) salah?
+    Bergabunglah dengan Kelompok Dukungan dan kita akan meningkatkan bot ini bersama-sama. 😎
+  translateButton: Tambah atau perbaiki bahasa
+  helpTranslate: >
+    Ini adalah berkas bahasa dari bahasa yang kamu pilih saat ini.
+
+
+    Tingkatkan apa yang kamu sukai atau terjemahkan ke dalam bahasamu sendiri.
+    Kemudian laporkan tentang hal itu di Kelompok Dukungan BSA.
+
+
+    Kamu seharusnya hanya membuka dan menyuntingnya dengan penyunting teks polos seperti Notepad ++ (Windows), Gedit (Linux) atau TextEdit (macOS).
+
+    Di sisi kiri ':' pengenal ditempatkan.
+    Ini harus tetap tinggal agar bot mendapatkan terjemahan yang benar.
+    Di sisi kanan ':' adalah teks yang diterjemahkan.
+    Kamu perlu mengubah atau menyesuaikan yang itu.
+name:
+  need: Aku butuh namamu untuk itu. Kirimkan aku layar utamamu terlebih dahulu. 😅
+  update: Kirim layar menu utamamu dari @BastionSiegeBot untuk memperbarui nama pemainmu saat ini.
+poweruser:
+  poweruser: Pengguna daya
+  immunity: Kekebalan
+  youare: Kamu pengguna daya!
+  nameRequired: Kamu hampir menjadi pengguna daya! Kirimkan saja nama pemainmu dengan menyediakan menu utama dari @BastionSiegeBot. Kemudian kamu akan mendapatkan semua hal keren seperti kekebalan atau peningkatan statistik perang.
+  immunityTo: Saat ini kekebalanmu diberikan kepada ${name}.
+  noname: Aku tidak punya namamu. *Tidak seorangpun* akan mendapatkan kekebalan.
+  immunityDisabled: Saat ini *tidak seorangpun* akan mendapatkan kekebalan.
+  sendname:
+settings: Pengaturan
+setting:
+  alert:
+    infotext: Aktifkan peringatan yang ingin kamu dapatkan dariku.
+  buildings:
+    infotext: Kamu dapat mengatur bangunan mana yang menarik bagimu di /buildings dan Peringatan.
+upcoming:
+  title: Peringatan Mendatang
+  info: Kamu dapat memilih peringatan mana yang ingin kamu terima di /settings.
+  noevents: Tidak ada acara mendatang…
+  update: Memperbarui
+help:
+  joinBSAGroupButton: Bergabunglah dengan Kelompok Dukungan BastionSiegeAssist
+  short: >
+    Hai ${from.first_name}!
+
+    Kamu harus meneruskan layar game dari @BastionSiegeBot kepadaku.
+
+
+    Lihat /help untuk bantuan tambahan atau bergabung dengan Kelompok Dukungan
+  trySearchButton: coba pencarian pemain…
+  search: >
+    Untuk mencari pemain ketik `@BastionSiegeAssistBot ${name}` di dalam obrolan apapun.
+    Mulai saja dengan @ dalam obrolan apa pun atau gunakan tombol di bawah ini untuk memulai.
+    Setelah kamu menggunakan pencarian inline, Klien Telegrammu akan mengingat dan menyarankannya untuk mengetikkan @.
+  full: >
+    Hai ${from.first_name}!
+
+
+    Kamu harus meneruskan layar game dari @BastionSiegeBot kepadaku.
+
+
+    Dengan layar yang diteruskan yang berisi bangunan atau sumber dayamu saat ini, aku dapat memperkirakan kapan pemutakhiran siap.
+
+
+    Dengan laporan pertempuran, aku dapat menunjukkan sejarahmu dalam pertempuran.
+    Meneruskan pesan "Your scouts found" menunjukkan informasi tentang pemain itu seperti kemungkinan hasil jarahan dan pasukan yang diperlukan.
+
+
+    Laporan Pertempuran yang kamu berikan hanya akan digunakan untuk mengasumsikan kekuatan musuh.
+    Datamu sendiri yang aku ketahui tidak akan digunakan untuk memberi tahu orang lain kekuatanmu.
+    Semuanya menjadi lebih baik: Selama kamu secara aktif memberikan data kepadaku, kamu akan mendapatkan kekebalan dan tidak ada yang bisa menggunakan aku untuk memeriksamu.
+
+
+    Lihat /settings untuk penggunaan lebih dalam bot ini.
+
+
+    Kamu punya gagasan atau menemukan kesalahan?
+    Bergabunglah dengan Kelompok Dukungan BastionSiegeAssist dengan tombol di bawah ini dan bagikan.
+    Mari kita buat bot ini lebih baik lagi :)
