@@ -157,7 +157,7 @@ function generateStatsText(ctx) {
     }
   } else if (selectedView === 'fillStorage') {
     text += `*${ctx.i18n.t('buildings.fillStorage')}*\n`
-    text += createFillTimeStatsString(buildings, estimatedResources)
+    text += createFillTimeStatsString(buildings, estimatedResources).trim()
   } else if (selectedView === 'winChances') {
     text += `*${ctx.i18n.t('buildings.winChances')}*\n`
     text += ctx.i18n.t('buildings.winChance.info')
