@@ -42,20 +42,21 @@ bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, (ctx, next) => {
   return next()
 }))
 
+const WANTED_DATA = [
+  'buildings',
+  'domainStats',
+  'effects',
+  'player',
+  'resources',
+  'workshop'
+]
+
 // Save some gameInformation to session or ignore when already known
 bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, (ctx, next) => {
   const newInformation = ctx.state.screen.information
   const {timestamp} = ctx.state.screen
 
-  const addData = [
-    'buildings',
-    'domainStats',
-    'effects',
-    'player',
-    'resources',
-    'workshop'
-  ]
-  const dataAvailable = addData
+  const dataAvailable = WANTED_DATA
     .filter(o => newInformation[o])
   if (dataAvailable.length === 0) {
     return next()
