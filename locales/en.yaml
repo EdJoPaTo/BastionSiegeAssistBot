@@ -120,6 +120,9 @@ poweruser:
   immunity: Immunity
   youare: You are a poweruser!
   nameRequired: You are nearly a poweruser! Just send me your ingame name by providing the main menu from @BastionSiegeBot. Then you get all the cool stuff like immunity or improved war stats.
+  nameOld: To be a power user I need your current ingame name. Your name must be updated at least every 7 days.
+  buildingsOld: To be a power user I need your current buildings. You must update these at least every 7 days.
+  nearlyOld: As this time is nearly reached you should update them when you have time to spare. 😎
   immunityTo: Currently your immunity is granted to ${name}.
   noname: I do not have your name. *No one* will get immunity.
   immunityDisabled: Currently *no one* will get immunity.
