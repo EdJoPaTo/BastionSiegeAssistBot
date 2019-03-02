@@ -55,9 +55,11 @@ botstats:
   battlereportsWithin24h: Laporan pertarungan ditambahkan dalam 24 jam
   users: Pengguna
 buildings:
-  upgrades: Pemutakhiran
-  maxPossible: Maksimal kemungkinan pemutakhiran
+  capacity: Muatan
   fillStorage: Isi Gudang
+  income: Pendapatan
+  maxPossible: Maksimal kemungkinan pemutakhiran
+  upgrades: Pemutakhiran
   need:
     buildings: Tolong kirimkan aku layar bangunan dari permainanmu untuk mendapatkan statistik pemutakhiran bangunan.
     resources: Tolong kirimkan aku layar dari permainan yang menunjukkan sumber daya saat ini untuk mendapatkan statistik pemutakhiran bangunan.

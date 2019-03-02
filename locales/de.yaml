@@ -55,9 +55,11 @@ botstats:
   battlereportsWithin24h: In den letzten 24h hinzugefügte Kampfberichte
   users: Nutzer
 buildings:
-  upgrades: Ausbau
-  maxPossible: Maximal möglicher Ausbau
+  capacity: Kapazität
   fillStorage: Lagerfüllzustand
+  income: Einkommen
+  maxPossible: Maximal möglicher Ausbau
+  upgrades: Ausbau
   need:
     buildings: Leite mir deine Gebäude aus dem Spiel weiter, damit ich dir die Ausbau Statistiken berechnen kann.
     resources: Leite mir etwas aus dem Spiel weiter, dass deine Ressourcen enthält, damit ich dir die Ausbau Statistiken berechnen kann.

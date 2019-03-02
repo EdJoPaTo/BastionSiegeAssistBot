@@ -55,9 +55,11 @@ botstats:
   battlereportsWithin24h: Battlereports added within 24h
   users: Users
 buildings:
-  upgrades: Upgrades
-  maxPossible: Max possible upgrades
+  capacity: Capacity
   fillStorage: Fill Storage
+  income: Income
+  maxPossible: Max possible upgrades
+  upgrades: Upgrades
   need:
     buildings: Please forward me the building screen from your game in order to get building upgrade stats.
     resources: Please forward me a screen from the game showing your current resources in order to get building upgrade stats.

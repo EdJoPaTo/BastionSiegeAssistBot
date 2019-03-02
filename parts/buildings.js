@@ -12,12 +12,14 @@ const {
 const {emoji} = require('../lib/user-interface/output-text')
 const {
   BUILDINGS,
-  getBuildingText,
-  defaultBuildingsToShow,
   createBuildingCostPerWinChanceLine,
-  createBuildingTimeStatsString,
   createBuildingMaxLevelStatsString,
-  createFillTimeStatsString
+  createBuildingTimeStatsString,
+  createCapacityStatsString,
+  createFillTimeStatsString,
+  createIncomeStatsString,
+  defaultBuildingsToShow,
+  getBuildingText
 } = require('../lib/user-interface/buildings')
 
 const DEBOUNCE_TIME = 100 // Milliseconds
@@ -25,6 +27,7 @@ const DEBOUNCE_TIME = 100 // Milliseconds
 const VIEWS = [
   'upgrades',
   'fillStorage',
+  'income',
   'winChances'
 ]
 const DEFAULT_VIEW = VIEWS[0]
@@ -69,6 +72,15 @@ menu.submenu(ctx => emoji.houses + ' ' + ctx.i18n.t('bs.buildings'), 'buildings'
     },
     isSetFunc: (ctx, key) => (ctx.session.buildings || [...defaultBuildingsToShow]).includes(key)
   })
+
+menu.select('t', ['1 min', '15 min', '30 min', '1h', '6h', '12h', '1d', '2d', '7d', '30d'], {
+  columns: 5,
+  setFunc: (ctx, key) => {
+    ctx.session.buildingsTimeframe = key
+  },
+  isSetFunc: (ctx, key) => key === (ctx.session.buildingsTimeframe || '1 min'),
+  hide: ctx => (ctx.session.buildingsView || DEFAULT_VIEW) !== 'income'
+})
 
 menu.select('view', VIEWS, {
   columns: 2,
@@ -158,6 +170,29 @@ function generateStatsText(ctx) {
   } else if (selectedView === 'fillStorage') {
     text += `*${ctx.i18n.t('buildings.fillStorage')}*\n`
     text += createFillTimeStatsString(buildings, estimatedResources).trim()
+  } else if (selectedView === 'income') {
+    text += `*${ctx.i18n.t('buildings.resourceCapacity')}*\n`
+    text += createCapacityStatsString(buildings).trim()
+    text += '\n\n'
+
+    const timeframe = ctx.session.buildingsTimeframe
+    const timeframeParts = /(\d+) ?(\w+)/.exec(timeframe || '1 min')
+    let minutes = Number(timeframeParts[1])
+    switch (timeframeParts[2]) {
+      case 'd':
+        minutes *= 60 * 24
+        break
+      case 'h':
+        minutes *= 60
+        break
+      case 'min':
+      default:
+        minutes *= 1
+        break
+    }
+
+    text += `*${ctx.i18n.t('buildings.income')}* (${timeframe})\n`
+    text += createIncomeStatsString(buildings, minutes).trim()
   } else if (selectedView === 'winChances') {
     text += `*${ctx.i18n.t('buildings.winChances')}*\n`
     text += ctx.i18n.t('buildings.winChance.info')
