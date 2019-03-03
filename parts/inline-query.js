@@ -49,7 +49,7 @@ bot.on('inline_query', async ctx => {
   const results = players
     .map(o => playerStatsDb.get(o))
     .sort(sortBy(o => o.battlesObserved, true))
-    .slice(offset, offset + 50)
+    .slice(offset, offset + 20)
     .map(stats => {
       return {
         type: 'article',
@@ -63,8 +63,8 @@ bot.on('inline_query', async ctx => {
       }
     })
 
-  if (players.length > offset + 50) {
-    options.next_offset = offset + 50
+  if (players.length > offset + 20) {
+    options.next_offset = offset + 20
   }
 
   if (process.env.NODE_ENV !== 'production') {
