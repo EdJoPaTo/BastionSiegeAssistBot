@@ -51,8 +51,6 @@ bot.on('text', Telegraf.optional(isWarMenu, ctx => {
         ])
       )
     } else {
-      const user = ctx.session.gameInformation.player || {}
-
       const minimumBuildingTimestamp = now - MINIMUM_AGE_OF_BUILDINGS_IN_SECONDS
       const buildingsAreUpToDate = ctx.session.gameInformation.buildingsTimestamp > minimumBuildingTimestamp
       if (!buildingsAreUpToDate || !poweruser.isPoweruser(ctx.from.id)) {
@@ -60,11 +58,12 @@ bot.on('text', Telegraf.optional(isWarMenu, ctx => {
         return ctx.replyWithMarkdown(text)
       }
 
-      const allPlayersInvolved = []
-        .concat(battle.attack || [])
-        .concat(battle.defence || [])
-      const {name} = ctx.session.gameInformation.player || {}
-      if (allPlayersInvolved.length > 0 && (!name || !allPlayersInvolved.includes(name))) {
+      const allPlayersInvolved = [
+        ...battle.attack,
+        ...battle.defence
+      ]
+      const user = ctx.session.gameInformation.player || {}
+      if (!user.name || !allPlayersInvolved.includes(user.name)) {
         text += ctx.i18n.t('name.need')
         return ctx.replyWithMarkdown(text)
       }
