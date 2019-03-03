@@ -171,7 +171,7 @@ function generateStatsText(ctx) {
     text += `*${ctx.i18n.t('buildings.fillStorage')}*\n`
     text += createFillTimeStatsString(buildings, estimatedResources).trim()
   } else if (selectedView === 'income') {
-    text += `*${ctx.i18n.t('buildings.resourceCapacity')}*\n`
+    text += `*${ctx.i18n.t('buildings.capacity')}*\n`
     text += createCapacityStatsString(buildings).trim()
     text += '\n\n'
 
