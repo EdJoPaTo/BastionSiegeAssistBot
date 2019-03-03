@@ -3,6 +3,7 @@ const Telegraf = require('telegraf')
 const I18n = require('telegraf-i18n')
 
 const userSessions = require('./lib/data/user-sessions')
+const wars = require('./lib/data/wars')
 
 const partAlerts = require('./parts/alerts')
 
@@ -83,6 +84,7 @@ bot.use(async (ctx, next) => {
 })
 
 bot.use(userSessions)
+wars.init(bot.telegram)
 
 // See https://yaml-multiline.info/ for multiline yaml stuff
 const i18n = new I18n({

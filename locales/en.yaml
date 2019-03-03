@@ -43,6 +43,15 @@ battle:
   improvedArmyAsPoweruser: When you are poweruser and your buildings are up to date you will get some useful information about the battle here.
   over: This battle is long over… Send me the report instead. 😉
   scoutsGone: Your scouts havn't been there for a long time. I'll help you when you wander around there next time. 😊
+  inlineWar:
+    updateButton: Start Updating 🤓
+    info: >
+      💙 Once you start the updating mechanism of this message it will automatically update with the current status of your alliance battle.
+      This is especially useful in group chats with your alliance mates. 😎
+
+
+      In order to supply the current status of the battle send your war screen to the bot directly.
+      Everyone participating in the battle can update the status.
 battlereport:
   added: Thanks for the report. I added it 👌
   known: You have sent me this one already 🙃

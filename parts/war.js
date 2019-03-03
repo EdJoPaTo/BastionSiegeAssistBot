@@ -2,6 +2,7 @@ const Telegraf = require('telegraf')
 
 const playerStatsDb = require('../lib/data/playerstats-db')
 const poweruser = require('../lib/data/poweruser')
+const wars = require('../lib/data/wars')
 
 const {createPlayerShareButton, createPlayerStatsString} = require('../lib/user-interface/player-stats')
 const {createWarStats} = require('../lib/user-interface/war-stats')
@@ -19,7 +20,7 @@ function isWarMenu(ctx) {
     ctx.state.screen.type === 'war'
 }
 
-bot.on('text', Telegraf.optional(isWarMenu, ctx => {
+bot.on('text', Telegraf.optional(isWarMenu, async ctx => {
   const {domainStats, battle} = ctx.state.screen.information
   let text = `*${ctx.i18n.t('bs.war')}*\n`
   let extra = Extra.markdown()
@@ -51,6 +52,8 @@ bot.on('text', Telegraf.optional(isWarMenu, ctx => {
         ])
       )
     } else {
+      await wars.add(time, battle)
+
       const minimumBuildingTimestamp = now - MINIMUM_AGE_OF_BUILDINGS_IN_SECONDS
       const buildingsAreUpToDate = ctx.session.gameInformation.buildingsTimestamp > minimumBuildingTimestamp
       if (!buildingsAreUpToDate || !poweruser.isPoweruser(ctx.from.id)) {
@@ -70,16 +73,10 @@ bot.on('text', Telegraf.optional(isWarMenu, ctx => {
 
       text += createWarStats(time, battle, user)
 
-      const attackStats = battle.attack
-        .map(o => playerStatsDb.get(o))
-      const defenceStats = battle.defence
-        .map(o => playerStatsDb.get(o))
-
-      const buttons = [...attackStats, ...defenceStats]
-        .filter(o => !poweruser.isImmune(o.player))
-        .map(o => createPlayerShareButton(o))
       extra = extra.markup(
-        Markup.inlineKeyboard(buttons, {columns: 2})
+        Markup.inlineKeyboard([
+          Markup.switchToChatButton('Share War…', '')
+        ])
       )
     }
   }

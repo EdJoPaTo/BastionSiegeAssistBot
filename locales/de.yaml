@@ -43,6 +43,15 @@ battle:
   improvedArmyAsPoweruser: Wenn du Poweruser bist und deine Gebäude aktuell sind, bekommst du wertvolle Informationen über diesen Kampf.
   over: Der Kampf ist lange vorrüber… Schick mir stattdessen den Bericht. 😉
   scoutsGone: Deine Scouts sind schon lange weg. Wenn du das nächste Mal wieder dort umher wanderst, helfe ich dir gern. 😊
+  inlineWar:
+    updateButton: Starte Aktualisierungen 🤓
+    info: >
+      💙 Sobald du den Aktualisierungsmechanismus dieser Nachricht startest, wird diese automatisch den aktuellen Stand des Allianz Kampfes enthalten.
+      Das ist besonders im Gruppenchat mit deiner Allianz nützlich. 😎
+
+
+      Um den aktuellen Status bereitzustellen kannst du deinen War Screen an den Bot weiterleiten.
+      Jeder, der am Kampf beteiligt ist, kann dies bereitstellen.
 battlereport:
   added: Danke für den Bericht. Ich habe ihn hinzugefügt 👌
   known: Das hast du mir bereits geschickt 🙃

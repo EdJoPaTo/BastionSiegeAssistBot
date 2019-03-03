@@ -3,12 +3,16 @@ const Telegraf = require('telegraf')
 const {sortBy} = require('../lib/javascript-abstraction/array')
 
 const playerStatsDb = require('../lib/data/playerstats-db')
+const wars = require('../lib/data/wars')
 
 const {mystics} = require('../lib/input/game-text')
 
 const playerStatsSearch = require('../lib/math/player-stats-search')
 
 const {createPlayerNameString, createPlayerStatsString, createPlayerStatsShortString} = require('../lib/user-interface/player-stats')
+const {createWarStats} = require('../lib/user-interface/war-stats')
+
+const {Extra, Markup} = Telegraf
 
 const bot = new Telegraf.Composer()
 
@@ -16,6 +20,28 @@ bot.on('inline_query', async ctx => {
   const {query} = ctx.inlineQuery
   const offset = ctx.inlineQuery.offset || 0
   const canSearch = playerStatsSearch.canSearch(ctx.session.search)
+
+  const statics = []
+  const user = ctx.session.gameInformation.player
+  if (user && user.alliance) {
+    const now = Date.now() / 1000
+    const {timestamp, battle} = wars.getCurrent(now, user.name) || {}
+    if (timestamp && battle) {
+      statics.push({
+        type: 'article',
+        id: 'war',
+        title: ctx.i18n.t('bs.war'),
+        description: user.alliance,
+        input_message_content: {
+          message_text: ctx.i18n.t('battle.inlineWar.info'),
+          parse_mode: 'markdown'
+        },
+        reply_markup: Markup.inlineKeyboard([
+          Markup.callbackButton(ctx.i18n.t('battle.inlineWar.updateButton'), `inlineWar:${user.alliance}:${user.name}`)
+        ])
+      })
+    }
+  }
 
   let players = []
   const options = {
@@ -37,8 +63,6 @@ bot.on('inline_query', async ctx => {
 
     if (canSearch) {
       // No query given
-      options.is_personal = false
-      options.cache_time = 60 * 5
     } else {
       // No searches left
       options.switch_pm_text = 'Provide some Battlereports :)'
@@ -46,7 +70,7 @@ bot.on('inline_query', async ctx => {
     }
   }
 
-  const results = players
+  const playerResults = players
     .map(o => playerStatsDb.get(o))
     .sort(sortBy(o => o.battlesObserved, true))
     .slice(offset, offset + 20)
@@ -71,7 +95,10 @@ bot.on('inline_query', async ctx => {
     options.cache_time = 2
   }
 
-  return ctx.answerInlineQuery(results, options)
+  return ctx.answerInlineQuery([
+    ...statics,
+    ...playerResults
+  ], options)
 })
 
 function getTestFunctionForQuery(query) {
@@ -82,6 +109,22 @@ function getTestFunctionForQuery(query) {
     return o => o.includes(query)
   }
 }
+
+bot.action(/inlineWar:(.*):(.+)/, ctx => {
+  const now = Date.now() / 1000
+  const player = {
+    alliance: ctx.match[1],
+    name: ctx.match[2]
+  }
+  wars.addInlineMessageToUpdate(now, player.name, ctx.callbackQuery.inline_message_id)
+  const {timestamp, battle} = wars.getCurrent(now, player.name) || {}
+  if (!timestamp) {
+    return ctx.editMessageText('This war seems over…')
+  }
+
+  const warText = createWarStats(timestamp, battle, player)
+  return ctx.editMessageText(warText, Extra.markdown())
+})
 
 module.exports = {
   bot
