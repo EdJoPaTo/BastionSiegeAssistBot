@@ -134,6 +134,9 @@ poweruser:
   immunityTo: Currently your immunity is granted to ${name}.
   noname: I do not have your name. *No one* will get immunity.
   immunityDisabled: Currently *no one* will get immunity.
+  list:
+    title: List
+    description: Create List
 settings: Settings
 setting:
   alert:

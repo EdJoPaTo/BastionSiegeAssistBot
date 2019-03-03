@@ -2,6 +2,7 @@ const Telegraf = require('telegraf')
 
 const {sortBy} = require('../lib/javascript-abstraction/array')
 
+const inlineList = require('../lib/data/inline-list')
 const playerStatsDb = require('../lib/data/playerstats-db')
 const poweruser = require('../lib/data/poweruser')
 const wars = require('../lib/data/wars')
@@ -9,10 +10,12 @@ const wars = require('../lib/data/wars')
 const {mystics} = require('../lib/input/game-text')
 
 const playerStatsSearch = require('../lib/math/player-stats-search')
+const {getMidnightXDaysEarlier} = require('../lib/math/unix-timestamp')
 
 const {createPlayerNameString, createPlayerStatsString, createPlayerStatsShortString} = require('../lib/user-interface/player-stats')
 const {createWarStats} = require('../lib/user-interface/war-stats')
 const {emoji} = require('../lib/user-interface/output-text')
+const {createList} = require('../lib/user-interface/inline-list')
 
 const {Extra, Markup} = Telegraf
 
@@ -44,6 +47,18 @@ bot.on('inline_query', async ctx => {
         ])
       })
     }
+
+    statics.push({
+      type: 'article',
+      id: 'list',
+      title: emoji.poweruser + ' ' + ctx.i18n.t('poweruser.list.title'),
+      description: ctx.i18n.t('poweruser.list.description'),
+      input_message_content: {
+        message_text: `${createList([], now).text} ${emoji.poweruser}`,
+        parse_mode: 'markdown'
+      },
+      reply_markup: createList([], now).keyboard
+    })
   }
 
   let players = []
@@ -113,6 +128,10 @@ function getTestFunctionForQuery(query) {
   }
 }
 
+function answerInDirectChat(ctx, text, extra) {
+  return ctx.tg.sendMessage(ctx.from.id, text, extra)
+}
+
 bot.action(/inlineWar:(.*):(.+)/, ctx => {
   const now = Date.now() / 1000
   const player = {
@@ -127,6 +146,52 @@ bot.action(/inlineWar:(.*):(.+)/, ctx => {
 
   const warText = createWarStats(timestamp, battle, player)
   return ctx.editMessageText(warText, Extra.markdown())
+})
+
+bot.action(/inlineList:join/, ctx => {
+  const now = Date.now() / 1000
+  const minTimestamp = getMidnightXDaysEarlier(now, 7)
+
+  const {buildingsTimestamp, playerTimestamp} = ctx.session.gameInformation
+
+  if (!playerTimestamp || playerTimestamp < minTimestamp) {
+    const text = ctx.i18n.t('name.need')
+    return Promise.all([
+      answerInDirectChat(ctx, text),
+      ctx.answerCbQuery(text)
+    ])
+  }
+
+  if (!buildingsTimestamp) {
+    const text = ctx.i18n.t('buildings.need.buildings')
+    return Promise.all([
+      answerInDirectChat(ctx, text),
+      ctx.answerCbQuery(text)
+    ])
+  }
+
+  let hint
+
+  if (buildingsTimestamp < minTimestamp) {
+    hint = ctx.i18n.t('buildings.old.buildings')
+  }
+
+  const userIds = inlineList.add(ctx.callbackQuery.inline_message_id, now, ctx.from.id)
+  const {text, keyboard} = createList(userIds, now)
+  return Promise.all([
+    ctx.editMessageText(text, Extra.markdown().markup(keyboard)).catch(() => {}),
+    ctx.answerCbQuery(hint)
+  ])
+})
+
+bot.action(/inlineList:leave/, ctx => {
+  const now = Date.now() / 1000
+  const userIds = inlineList.remove(ctx.callbackQuery.inline_message_id, now, ctx.from.id)
+  const {text, keyboard} = createList(userIds, now)
+  return Promise.all([
+    ctx.editMessageText(text, Extra.markdown().markup(keyboard)).catch(() => {}),
+    ctx.answerCbQuery()
+  ])
 })
 
 module.exports = {

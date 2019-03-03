@@ -125,6 +125,9 @@ poweruser:
   immunityTo: В настоящее время иммунитет предоставляется ${name}.
   noname: У меня нет твоего имени. *No one* не получит иммунитет.
   immunityDisabled: В настоящее время *no one* не получил иммунитет.
+  list:
+    title: список
+    description: создать список
 settings: Настройки
 setting:
   alert:

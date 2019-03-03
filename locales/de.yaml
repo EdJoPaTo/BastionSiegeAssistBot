@@ -136,6 +136,9 @@ poweruser:
   immunityTo: Deine Immunität wird aktuell ${name} verliehen.
   noname: Mir fehlt dein Name. *Niemand* erhält aktuell deine Immunität.
   immunityDisabled: Aktuell bekommt *niemand* deine Immunität.
+  list:
+    title: Liste
+    description: Erstelle Liste
 settings: Einstellungen
 setting:
   alert:
