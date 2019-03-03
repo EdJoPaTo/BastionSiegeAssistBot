@@ -51,6 +51,8 @@ bot.on('text', Telegraf.optional(isWarMenu, ctx => {
         ])
       )
     } else {
+      const user = ctx.session.gameInformation.player || {}
+
       const minimumBuildingTimestamp = now - MINIMUM_AGE_OF_BUILDINGS_IN_SECONDS
       const buildingsAreUpToDate = ctx.session.gameInformation.buildingsTimestamp > minimumBuildingTimestamp
       if (!buildingsAreUpToDate || !poweruser.isPoweruser(ctx.from.id)) {
@@ -67,7 +69,7 @@ bot.on('text', Telegraf.optional(isWarMenu, ctx => {
         return ctx.replyWithMarkdown(text)
       }
 
-      text += createWarStats(time, battle, name)
+      text += createWarStats(time, battle, user)
 
       const attackStats = battle.attack
         .map(o => playerStatsDb.get(o))
