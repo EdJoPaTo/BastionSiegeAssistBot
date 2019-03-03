@@ -3,6 +3,7 @@ const Telegraf = require('telegraf')
 const {sortBy} = require('../lib/javascript-abstraction/array')
 
 const playerStatsDb = require('../lib/data/playerstats-db')
+const poweruser = require('../lib/data/poweruser')
 const wars = require('../lib/data/wars')
 
 const {mystics} = require('../lib/input/game-text')
@@ -11,6 +12,7 @@ const playerStatsSearch = require('../lib/math/player-stats-search')
 
 const {createPlayerNameString, createPlayerStatsString, createPlayerStatsShortString} = require('../lib/user-interface/player-stats')
 const {createWarStats} = require('../lib/user-interface/war-stats')
+const {emoji} = require('../lib/user-interface/output-text')
 
 const {Extra, Markup} = Telegraf
 
@@ -20,17 +22,18 @@ bot.on('inline_query', async ctx => {
   const {query} = ctx.inlineQuery
   const offset = ctx.inlineQuery.offset || 0
   const canSearch = playerStatsSearch.canSearch(ctx.session.search)
+  const now = Date.now() / 1000
+  const isPoweruser = poweruser.isPoweruser(ctx.from.id)
 
   const statics = []
   const user = ctx.session.gameInformation.player
-  if (user && user.alliance) {
-    const now = Date.now() / 1000
+  if (isPoweruser) {
     const {timestamp, battle} = wars.getCurrent(now, user.name) || {}
     if (timestamp && battle) {
       statics.push({
         type: 'article',
         id: 'war',
-        title: ctx.i18n.t('bs.war'),
+        title: emoji.poweruser + ' ' + ctx.i18n.t('bs.war'),
         description: user.alliance,
         input_message_content: {
           message_text: ctx.i18n.t('battle.inlineWar.info'),
