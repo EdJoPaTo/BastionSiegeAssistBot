@@ -43,6 +43,16 @@ battle:
   improvedArmyAsPoweruser: Ketika kamu seorang pengguna daya dan bagunanmu terkini, kamu akan mendapatkan beberapa keterangan yang berguna tentang pertarungan di sini.
   over: Pertarungan ini sudah lama selesai… Kirimkan aku laporan baru sebagai gantinya. 😉
   scoutsGone: Pengintaimu sudah lama tidak ada di sana. Aku akan membantumu ketika kamu berkeliaran di sana lain kali. 😊
+  inlineWar:
+    updateButton: Mulai Memperbarui 🤓
+    info: >
+      💙 Setelah kamu memulai mekanisme pembaruan dari pesan ini, pesan itu akan secara otomatis diperbarui dengan status pertempuran aliansimu saat ini.
+       Ini sangat berguna, terlebih dalam obrolan grup dengan teman aliansimu. 😎
+
+
+      Untuk memasok status pertempuran saat ini, kirim layar perangmu ke bot secara langsung.
+      Setiap orang yang sedang berpartisipasi dalam pertempuran dapat memperbarui status pertempuran.
+
 battlereport:
   added: Terima kasih atas laporannya. Aku menambahkannya. 👌
   known: Kamu telah mengirimkan ini kepadaku 🙃
