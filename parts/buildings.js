@@ -175,8 +175,8 @@ function generateStatsText(ctx) {
     text += createCapacityStatsString(buildings).trim()
     text += '\n\n'
 
-    const timeframe = ctx.session.buildingsTimeframe
-    const timeframeParts = /(\d+) ?(\w+)/.exec(timeframe || '1 min')
+    const timeframe = ctx.session.buildingsTimeframe || '1 min'
+    const timeframeParts = /(\d+) ?(\w+)/.exec(timeframe)
     let minutes = Number(timeframeParts[1])
     switch (timeframeParts[2]) {
       case 'd':
