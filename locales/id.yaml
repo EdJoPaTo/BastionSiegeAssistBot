@@ -132,7 +132,6 @@ poweruser:
   immunityTo: Saat ini kekebalanmu diberikan kepada ${name}.
   noname: Aku tidak punya namamu. *Tidak seorangpun* akan mendapatkan kekebalan.
   immunityDisabled: Saat ini *tidak seorangpun* akan mendapatkan kekebalan.
-  sendname:
 settings: Pengaturan
 setting:
   alert:
