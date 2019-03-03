@@ -6,6 +6,7 @@ const {isImmune} = require('../lib/data/poweruser')
 
 const playerStatsSearch = require('../lib/math/player-stats-search')
 const {calcSemitotalGold, calcMissingPeople, calcWallRepairCost, calcWallArcherCapacity} = require('../lib/math/siegemath')
+const {ONE_DAY_IN_SECONDS} = require('../lib/math/unix-timestamp')
 
 const {createPlayerShareButton, createPlayerStatsString, createTwoSidesStatsString} = require('../lib/user-interface/player-stats')
 const {createSingleBattleShortStatsLine} = require('../lib/user-interface/battle-stats')
@@ -14,8 +15,8 @@ const {emoji} = require('../lib/user-interface/output-text')
 
 const {Extra, Markup} = Telegraf
 
-const MAX_AGE_BUILDINGS = 60 * 60 * 24 // 24h
-const MAX_AGE_REPORT_FOR_STATS = 60 * 60 * 24 * 2 // 2 days
+const MAX_AGE_BUILDINGS = ONE_DAY_IN_SECONDS // 24h
+const MAX_AGE_REPORT_FOR_STATS = ONE_DAY_IN_SECONDS * 2 // 2 days
 
 const bot = new Telegraf.Composer()
 
