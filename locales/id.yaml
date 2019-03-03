@@ -42,7 +42,6 @@ alert:
 battle:
   improvedArmyAsPoweruser: Ketika kamu seorang pengguna daya dan bagunanmu terkini, kamu akan mendapatkan beberapa keterangan yang berguna tentang pertarungan di sini.
   over: Pertarungan ini sudah lama selesai… Kirimkan aku laporan baru sebagai gantinya. 😉
-  playersNotPowerusersOrBuildingsOld: Bukan pengguna daya atau bangunan tidak terkini
   scoutsGone: Pengintaimu sudah lama tidak ada di sana. Aku akan membantumu ketika kamu berkeliaran di sana lain kali. 😊
 battlereport:
   added: Terima kasih atas laporannya. Aku menambahkannya. 👌

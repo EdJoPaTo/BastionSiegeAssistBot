@@ -42,7 +42,6 @@ alert:
 battle:
   improvedArmyAsPoweruser: Wenn du Poweruser bist und deine Gebäude aktuell sind, bekommst du wertvolle Informationen über diesen Kampf.
   over: Der Kampf ist lange vorrüber… Schick mir stattdessen den Bericht. 😉
-  playersNotPowerusersOrBuildingsOld: Kein Poweruser oder Gebäude nicht aktuell
   scoutsGone: Deine Scouts sind schon lange weg. Wenn du das nächste Mal wieder dort umher wanderst, helfe ich dir gern. 😊
 battlereport:
   added: Danke für den Bericht. Ich habe ihn hinzugefügt 👌
