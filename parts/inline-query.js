@@ -13,7 +13,7 @@ const playerStatsSearch = require('../lib/math/player-stats-search')
 const {getMidnightXDaysEarlier} = require('../lib/math/unix-timestamp')
 
 const {createPlayerNameString, createPlayerStatsString, createPlayerStatsShortString} = require('../lib/user-interface/player-stats')
-const {createWarStats} = require('../lib/user-interface/war-stats')
+const {createWarOneLineString, createWarStats} = require('../lib/user-interface/war-stats')
 const {emoji} = require('../lib/user-interface/output-text')
 const {createList} = require('../lib/user-interface/inline-list')
 
@@ -37,9 +37,9 @@ bot.on('inline_query', async ctx => {
         type: 'article',
         id: 'war',
         title: emoji.poweruser + ' ' + ctx.i18n.t('bs.war'),
-        description: user.alliance,
+        description: createWarOneLineString(battle),
         input_message_content: {
-          message_text: ctx.i18n.t('battle.inlineWar.info'),
+          message_text: createWarStats(now, battle, user) + '\n\n' + ctx.i18n.t('battle.inlineWar.info'),
           parse_mode: 'markdown'
         },
         reply_markup: Markup.inlineKeyboard([
