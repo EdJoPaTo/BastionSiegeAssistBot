@@ -11,6 +11,7 @@ const {emoji} = require('../lib/user-interface/output-text')
 const {BUILDINGS, getBuildingText, defaultBuildingsToShow} = require('../lib/user-interface/buildings')
 const {alertEmojis, ALERT_TYPES, getAlertText} = require('../lib/user-interface/alert-handler')
 const {createPlayerStatsString} = require('../lib/user-interface/player-stats')
+const {getHintStrings, conditionEmoji, conditionTypeTranslation} = require('../lib/user-interface/poweruser')
 
 const {Extra, Markup} = Telegraf
 
@@ -94,38 +95,53 @@ settingsMenu.submenu(ctx => emoji.language + ' ' + ctx.i18n.t('language.title'),
   .urlButton(ctx => ctx.i18n.t('help.joinBSAGroupButton'), 'https://t.me/joinchat/AC0dV1dG2Y7sOFQPtZm9Dw')
 
 function poweruserText(ctx) {
-  let text = emoji.poweruser + ` *${ctx.i18n.t('poweruser.poweruser')}*`
+  let text = emoji.poweruser + ` *${ctx.i18n.t('poweruser.poweruser')}*\n`
 
-  text += '\n\n'
-  text += ctx.i18n.t('poweruser.youare') + ' 😍'
-
-  text += '\n'
-  const {name} = ctx.session.gameInformation.player || {}
-  const {disableImmunity} = ctx.session
-  if (disableImmunity) {
-    text += '\n' + ctx.i18n.t('poweruser.immunityDisabled')
-  } else {
-    if (name) {
-      text += '\n' + ctx.i18n.t('poweruser.immunityTo', {name: '`' + name + '`'})
-    } else {
-      text += '\n' + ctx.i18n.t('poweruser.noname')
-    }
-
-    text += '\n' + ctx.i18n.t('name.update')
+  const isPoweruser = poweruser.isPoweruser(ctx.from.id)
+  if (isPoweruser) {
+    text += ctx.i18n.t('poweruser.youare') + ' 😍\n'
   }
 
-  if (name) {
-    const stats = playerStatsDb.get(name)
-    text += '\n\n' + createPlayerStatsString(stats)
+  const conditions = poweruser.getConditions(ctx.from.id)
+  text += conditions
+    .map(o => `${conditionEmoji(o)} ${conditionTypeTranslation(ctx, o.type)}`)
+    .join('\n')
+
+  if (isPoweruser) {
+    text += '\n'
+    const {name} = ctx.session.gameInformation.player || {}
+    const {disableImmunity} = ctx.session
+    if (disableImmunity) {
+      text += '\n' + ctx.i18n.t('poweruser.immunityDisabled')
+    } else {
+      if (name) {
+        text += '\n' + ctx.i18n.t('poweruser.immunityTo', {name: '`' + name + '`'})
+      } else {
+        text += '\n' + ctx.i18n.t('poweruser.noname')
+      }
+
+      text += '\n' + ctx.i18n.t('name.update')
+    }
+
+    if (name) {
+      const stats = playerStatsDb.get(name)
+      text += '\n\n' + createPlayerStatsString(stats)
+    }
+  }
+
+  const hints = getHintStrings(ctx, conditions)
+  if (hints.length > 0) {
+    text += '\n\n' + hints
+      .join('\n\n')
   }
 
   return text
 }
 
-settingsMenu.submenu(ctx => emoji.poweruser + ' ' + ctx.i18n.t('poweruser.poweruser'), 'poweruser', new TelegrafInlineMenu(poweruserText), {
-  hide: ctx => !poweruser.isPoweruser(ctx.from.id)
-})
+settingsMenu.submenu(ctx => emoji.poweruser + ' ' + ctx.i18n.t('poweruser.poweruser'), 'poweruser', new TelegrafInlineMenu(poweruserText))
+  .setCommand('poweruser')
   .toggle(ctx => emoji.immunity + ' ' + ctx.i18n.t('poweruser.immunity'), 'immunity', {
+    hide: ctx => !poweruser.isPoweruser(ctx.from.id),
     setFunc: (ctx, newState) => {
       if (newState) {
         delete ctx.session.disableImmunity
