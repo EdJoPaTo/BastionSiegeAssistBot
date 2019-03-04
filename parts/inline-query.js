@@ -157,8 +157,8 @@ bot.action(/inlineList:join/, ctx => {
   if (!playerTimestamp || playerTimestamp < minTimestamp) {
     const text = ctx.i18n.t('name.need')
     return Promise.all([
-      answerInDirectChat(ctx, text),
-      ctx.answerCbQuery(text)
+      answerInDirectChat(ctx, text).catch(() => {}),
+      ctx.answerCbQuery(text, true)
     ])
   }
 
@@ -166,7 +166,7 @@ bot.action(/inlineList:join/, ctx => {
     const text = ctx.i18n.t('buildings.need.buildings')
     return Promise.all([
       answerInDirectChat(ctx, text),
-      ctx.answerCbQuery(text)
+      ctx.answerCbQuery(text, true)
     ])
   }
 
