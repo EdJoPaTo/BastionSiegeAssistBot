@@ -129,9 +129,15 @@ poweruser:
   immunity: Kekebalan
   youare: Kamu pengguna daya!
   nameRequired: Kamu hampir menjadi pengguna daya! Kirimkan saja nama pemainmu dengan menyediakan menu utama dari @BastionSiegeBot. Kemudian kamu akan mendapatkan semua hal keren seperti kekebalan atau peningkatan statistik perang.
+  nameOld: Untuk menjadi pengguna daya, aku perlu nama pemainmu saat ini. Namamu harus diperbarui setidaknya setiap 7 hari.
+  buildingsOld: Untuk menjadi pengguna daya, aku membutuhkan bangunanmu saat ini. Kamu harus memperbarui ini setidaknya setiap 7 hari.
+  nearlyOld: Karena sisa waktu hampir tercapai, kamu harus memperbaruinya ketika kamu punya waktu luang. 😎
   immunityTo: Saat ini kekebalanmu diberikan kepada ${name}.
   noname: Aku tidak punya namamu. *Tidak seorangpun* akan mendapatkan kekebalan.
   immunityDisabled: Saat ini *tidak seorangpun* akan mendapatkan kekebalan.
+  list:
+    title: Daftar
+    description: Buat Daftar
 settings: Pengaturan
 setting:
   alert:
