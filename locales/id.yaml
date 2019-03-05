@@ -3,6 +3,7 @@ menu:
   nothingchanged: Tidak ada yang berubah kecuali waktu saat ini.
 bs:
   buildings: Bangunan
+  workshop: Bengkel
   building:
     townhall: Balai Kota
     storage: Gudang
@@ -131,6 +132,7 @@ poweruser:
   nameRequired: Kamu hampir menjadi pengguna daya! Kirimkan saja nama pemainmu dengan menyediakan menu utama dari @BastionSiegeBot. Kemudian kamu akan mendapatkan semua hal keren seperti kekebalan atau peningkatan statistik perang.
   nameOld: Untuk menjadi pengguna daya, aku perlu nama pemainmu saat ini. Namamu harus diperbarui setidaknya setiap 7 hari.
   buildingsOld: Untuk menjadi pengguna daya, aku membutuhkan bangunanmu saat ini. Kamu harus memperbarui ini setidaknya setiap 7 hari.
+  workshopOld: Untuk menjadi pengguna daya, aku membutuhkan bengkelmu saat ini. Kamu harus memperbarui ini setidaknya setiap 14 hari.
   nearlyOld: Karena sisa waktu hampir tercapai, kamu harus memperbaruinya ketika kamu punya waktu luang. 😎
   immunityTo: Saat ini kekebalanmu diberikan kepada ${name}.
   noname: Aku tidak punya namamu. *Tidak seorangpun* akan mendapatkan kekebalan.

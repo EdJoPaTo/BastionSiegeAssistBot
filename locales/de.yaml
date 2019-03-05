@@ -3,6 +3,7 @@ menu:
   nothingchanged: Außer die Zeit hat sich nichts verändert…
 bs:
   buildings: Gebäude
+  workshop: Werkstatt
   building:
     townhall: Haupthalle
     storage: Lager
@@ -132,6 +133,7 @@ poweruser:
   nameRequired: Du bist nahezu ein Poweruser! Gebe mir nur noch deinen ingame Namen indem du mir das Hauptmenü vom @BastionSiegeBot weiterleitest. Dann kannst du all die coolen Dinge wie Immunität oder verbesserte Kriegsstatistiken sehen!
   nameOld: Um ein Poweruser zu sein brauche ich deinen aktuellen Namen. Diesen musst du mir mindestens alle 7 Tage bereitstellen, damit ich immer auf aktuellem Stand bin.
   buildingsOld: Um ein Poweruser zu sein brauche ich deine aktuellen Gebäude. Diese musst du mir mindestens alle 7 Tage bereitstellen, damit ich immer auf aktuellem Stand bin.
+  workshopOld: Um ein Poweruser zu sein brauche ich deine aktuelle Werkstatt. Diese musst du mir mindestens alle 14 Tage bereitstellen, damit ich immer auf aktuellem Stand bin.
   nearlyOld: Da dies fast erreicht ist, schick mir bei Gelegenheit etwas neues.
   immunityTo: Deine Immunität wird aktuell ${name} verliehen.
   noname: Mir fehlt dein Name. *Niemand* erhält aktuell deine Immunität.
