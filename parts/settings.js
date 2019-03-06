@@ -82,15 +82,25 @@ settingsMenu.submenu(ctx => emoji.language + ' ' + ctx.i18n.t('language.title'),
     }
   })
   .simpleButton(ctx => ctx.i18n.t('language.translateButton'), 'translate', {
-    doFunc: ctx => ctx.replyWithDocument({
-      source: `locales/${ctx.i18n.locale().split('-')[0]}.yaml`
-    }, new Extra({
-      caption: ctx.i18n.t('language.helpTranslate')
-    }).markdown().markup(
-      Markup.inlineKeyboard([
-        Markup.urlButton(ctx.i18n.t('help.joinBSAGroupButton'), 'https://t.me/joinchat/AC0dV1dG2Y7sOFQPtZm9Dw')
-      ])
-    ))
+    doFunc: async ctx => {
+      await ctx.replyWithDocument({
+        source: `locales/${ctx.i18n.locale().split('-')[0]}.yaml`
+      }, new Extra({
+        caption: ctx.i18n.t('language.helpTranslate')
+      }).markdown().markup(
+        Markup.inlineKeyboard([
+          Markup.urlButton(ctx.i18n.t('help.joinBSAGroupButton'), 'https://t.me/joinchat/AC0dV1dG2Y7sOFQPtZm9Dw')
+        ])
+      ))
+
+      if (ctx.i18n.locale().split('-')[0] !== 'en') {
+        await ctx.replyWithDocument({
+          source: 'locales/en.yaml'
+        }, new Extra({
+          caption: 'Reference Translation'
+        }))
+      }
+    }
   })
   .urlButton(ctx => ctx.i18n.t('help.joinBSAGroupButton'), 'https://t.me/joinchat/AC0dV1dG2Y7sOFQPtZm9Dw')
 
