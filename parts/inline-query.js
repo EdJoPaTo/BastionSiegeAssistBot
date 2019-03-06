@@ -77,7 +77,10 @@ bot.on('inline_query', async ctx => {
       .filter(o => queryTestFunc(createPlayerNameString(o)))
       .map(o => o.player)
   } else {
-    players = [...mystics]
+    const freeOptions = [...mystics]
+
+    players = freeOptions
+      .filter(o => queryTestFunc(o))
   }
 
   const playerResults = players
