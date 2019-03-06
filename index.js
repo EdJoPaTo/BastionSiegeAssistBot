@@ -90,6 +90,7 @@ wars.init(bot.telegram)
 const i18n = new I18n({
   directory: 'locales',
   defaultLanguage: 'en',
+  defaultLanguageOnMissing: true,
   useSession: true
 })
 
