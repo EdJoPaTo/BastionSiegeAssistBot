@@ -100,6 +100,8 @@ function poweruserText(ctx) {
   const isPoweruser = poweruser.isPoweruser(ctx.from.id)
   if (isPoweruser) {
     text += ctx.i18n.t('poweruser.youare') + ' 😍\n'
+  } else {
+    text += ctx.i18n.t('poweruser.notyet') + ' 😔\n'
   }
 
   const conditions = poweruser.getConditions(ctx.from.id)

@@ -130,6 +130,7 @@ poweruser:
   poweruser: Poweruser
   immunity: Immunität
   youare: Du bist ein Poweruser!
+  notyet: Du bist (noch) kein Poweruser.
   usefulWhen: Dies wird deutlich nützlicher sobald du ein Poweruser bist.
   nameRequired: Du bist nahezu ein Poweruser! Gebe mir nur noch deinen ingame Namen indem du mir das Hauptmenü vom @BastionSiegeBot weiterleitest. Dann kannst du all die coolen Dinge wie Immunität oder verbesserte Kriegsstatistiken sehen!
   nameOld: Um ein Poweruser zu sein brauche ich deinen aktuellen Namen. Diesen musst du mir mindestens alle 7 Tage bereitstellen, damit ich immer auf aktuellem Stand bin.
