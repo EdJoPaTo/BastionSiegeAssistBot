@@ -47,7 +47,11 @@
     "xo": "^0.24.0"
   },
   "ava": {
-    "modules": false
+    "modules": false,
+    "sources": [
+      "locales/*.yaml",
+      "**/*.js"
+    ]
   },
   "xo": {
     "space": true,

@@ -1,6 +1,7 @@
+const countryEmoji = require('country-emoji')
+const I18n = require('telegraf-i18n')
 const Telegraf = require('telegraf')
 const TelegrafInlineMenu = require('telegraf-inline-menu')
-const countryEmoji = require('country-emoji')
 
 const {toggleInArray} = require('../lib/javascript-abstraction/array')
 
@@ -23,6 +24,10 @@ const AVAILABLE_LANGUAGES = [
   'id',
   'ru'
 ]
+
+const i18n = new I18n({
+  directory: 'locales'
+})
 
 const settingsMenu = new TelegrafInlineMenu(ctx => `*${ctx.i18n.t('settings')}*`)
 settingsMenu.setCommand('settings')
@@ -73,12 +78,21 @@ function languageText(ctx) {
 
 settingsMenu.submenu(ctx => emoji.language + ' ' + ctx.i18n.t('language.title'), 'language', new TelegrafInlineMenu(languageText))
   .select('lang', AVAILABLE_LANGUAGES, {
+    columns: 2,
     isSetFunc: (ctx, key) => key.toLowerCase().startsWith(ctx.i18n.locale().toLowerCase()),
     setFunc: (ctx, key) => ctx.i18n.locale(key),
     textFunc: (_ctx, key) => {
       const countryCode = key.split('-').slice(-1)[0]
       const lang = key.split('-')[0]
-      return countryEmoji.flag(countryCode) + ' ' + lang
+
+      let result = countryEmoji.flag(countryCode) + ' ' + lang
+
+      const progress = i18n.translationProgress(lang)
+      if (progress !== 1) {
+        result += ` (${(progress * 100).toFixed(1)}%)`
+      }
+
+      return result
     }
   })
   .simpleButton(ctx => ctx.i18n.t('language.translateButton'), 'translate', {
