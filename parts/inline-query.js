@@ -79,6 +79,10 @@ bot.on('inline_query', async ctx => {
   } else {
     const freeOptions = [...mystics]
 
+    if (user && ctx.session.gameInformation.playerTimestamp > getMidnightXDaysEarlier(now, poweruser.MAX_PLAYER_AGE_DAYS)) {
+      freeOptions.push(user.name)
+    }
+
     players = freeOptions
       .filter(o => queryTestFunc(o))
   }
