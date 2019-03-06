@@ -5,7 +5,7 @@ const poweruser = require('../lib/data/poweruser')
 const wars = require('../lib/data/wars')
 
 const {createPlayerShareButton, createPlayerStatsString} = require('../lib/user-interface/player-stats')
-const {createWarStats} = require('../lib/user-interface/war-stats')
+const {createWarOneLineString} = require('../lib/user-interface/war-stats')
 const {emoji} = require('../lib/user-interface/output-text')
 const {formatNumberShort} = require('../lib/user-interface/format-number')
 
@@ -52,12 +52,16 @@ bot.on('text', Telegraf.optional(isWarMenu, async ctx => {
         ])
       )
     } else {
+      text += createWarOneLineString(battle)
+      text += '\n\n'
+
       await wars.add(time, battle)
+      text += ctx.i18n.t('battle.inlineWar.updated') + '\n'
 
       const minimumBuildingTimestamp = now - MINIMUM_AGE_OF_BUILDINGS_IN_SECONDS
       const buildingsAreUpToDate = ctx.session.gameInformation.buildingsTimestamp > minimumBuildingTimestamp
       if (!buildingsAreUpToDate || !poweruser.isPoweruser(ctx.from.id)) {
-        text += ctx.i18n.t('battle.improvedArmyAsPoweruser')
+        text += emoji.poweruser + ' ' + ctx.i18n.t('poweruser.usefulWhen')
         return ctx.replyWithMarkdown(text)
       }
 
@@ -71,7 +75,7 @@ bot.on('text', Telegraf.optional(isWarMenu, async ctx => {
         return ctx.replyWithMarkdown(text)
       }
 
-      text += createWarStats(time, battle, user)
+      text += emoji.poweruser + ' ' + ctx.i18n.t('battle.inlineWar.share')
 
       extra = extra.markup(
         Markup.inlineKeyboard([
