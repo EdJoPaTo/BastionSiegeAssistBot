@@ -7,6 +7,7 @@ const playerStatsDb = require('../lib/data/playerstats-db')
 const poweruser = require('../lib/data/poweruser')
 const wars = require('../lib/data/wars')
 
+const {inputTextCleanup} = require('../lib/input/text-cleanup')
 const {mystics} = require('../lib/input/game-text')
 
 const {getMidnightXDaysEarlier} = require('../lib/math/unix-timestamp')
@@ -71,7 +72,7 @@ bot.on('inline_query', async ctx => {
     options.switch_pm_parameter = 'be-a-poweruser'
   }
 
-  if (isPoweruser && query && query.length >= 2) {
+  if (isPoweruser && query && query.length >= 1) {
     const allPlayers = playerStatsDb.list()
     players = allPlayers
       .filter(o => queryTestFunc(createPlayerNameString(o)))
@@ -118,7 +119,8 @@ bot.on('inline_query', async ctx => {
   ], options)
 })
 
-function getTestFunctionForQuery(query) {
+function getTestFunctionForQuery(input) {
+  const query = inputTextCleanup(input)
   try {
     const regex = new RegExp(query, 'i')
     return o => regex.test(o)
