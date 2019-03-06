@@ -9,7 +9,6 @@ const wars = require('../lib/data/wars')
 
 const {mystics} = require('../lib/input/game-text')
 
-const playerStatsSearch = require('../lib/math/player-stats-search')
 const {getMidnightXDaysEarlier} = require('../lib/math/unix-timestamp')
 
 const {createPlayerNameString, createPlayerStatsString, createPlayerStatsShortString} = require('../lib/user-interface/player-stats')
@@ -23,8 +22,8 @@ const bot = new Telegraf.Composer()
 
 bot.on('inline_query', async ctx => {
   const {query} = ctx.inlineQuery
+  const queryTestFunc = getTestFunctionForQuery(query)
   const offset = ctx.inlineQuery.offset || 0
-  const canSearch = playerStatsSearch.canSearch(ctx.session.search)
   const now = Date.now() / 1000
   const isPoweruser = poweruser.isPoweruser(ctx.from.id)
 
@@ -64,28 +63,21 @@ bot.on('inline_query', async ctx => {
   let players = []
   const options = {
     is_personal: true,
-    cache_time: playerStatsSearch.MAX_SECONDS_FOR_ONE_SEARCH
+    cache_time: 20
   }
 
-  if (canSearch && query && query.length >= 2) {
-    const queryTestFunc = getTestFunctionForQuery(query)
+  if (!isPoweruser) {
+    options.switch_pm_text = ctx.i18n.t('poweruser.usefulWhen') + ' ' + emoji.poweruser
+    options.switch_pm_parameter = 'be-a-poweruser'
+  }
 
+  if (isPoweruser && query && query.length >= 2) {
     const allPlayers = playerStatsDb.list()
     players = allPlayers
       .filter(o => queryTestFunc(createPlayerNameString(o)))
       .map(o => o.player)
-
-    ctx.session.search = playerStatsSearch.applySearch(ctx.session.search)
   } else {
     players = [...mystics]
-
-    if (canSearch) {
-      // No query given
-    } else {
-      // No searches left
-      options.switch_pm_text = 'Provide some Battlereports :)'
-      options.switch_pm_parameter = 'more-battlereports-please'
-    }
   }
 
   const playerResults = players

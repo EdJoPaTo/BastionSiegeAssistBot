@@ -109,6 +109,7 @@ bot.use((ctx, next) => {
   }
 
   delete ctx.session.language
+  delete ctx.session.search
 
   return next()
 })

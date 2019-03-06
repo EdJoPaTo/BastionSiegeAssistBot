@@ -4,7 +4,6 @@ const battlereports = require('../lib/data/battlereports')
 const playerStatsDb = require('../lib/data/playerstats-db')
 const {isImmune} = require('../lib/data/poweruser')
 
-const playerStatsSearch = require('../lib/math/player-stats-search')
 const {calcSemitotalGold, calcMissingPeople, calcWallRepairCost, calcWallArcherCapacity} = require('../lib/math/siegemath')
 const {ONE_DAY_IN_SECONDS} = require('../lib/math/unix-timestamp')
 
@@ -141,8 +140,6 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
       if (!ctx.session.search) {
         ctx.session.search = {}
       }
-
-      ctx.session.search.remainingSearches = playerStatsSearch.newSearchLimitAfterReward(ctx.session.search.remainingSearches, 1)
     } else {
       text += '\n' + ctx.i18n.t('battlereport.known')
     }
