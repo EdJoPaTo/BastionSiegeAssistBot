@@ -114,6 +114,14 @@ settingsMenu.submenu(ctx => emoji.language + ' ' + ctx.i18n.t('language.title'),
           caption: 'Reference Translation'
         }))
       }
+
+      const missingTranslations = i18n.missingKeys(ctx.i18n.locale().split('-')[0])
+      if (missingTranslations.length > 0) {
+        const missingTranslationsText = missingTranslations
+          .map(o => '`' + o + '`')
+          .join('\n')
+        await ctx.replyWithMarkdown(`Missing \`${ctx.i18n.locale().split('-')[0]}\` translations:\n${missingTranslationsText}`,)
+      }
     }
   })
   .urlButton(ctx => ctx.i18n.t('help.joinBSAGroupButton'), 'https://t.me/joinchat/AC0dV1dG2Y7sOFQPtZm9Dw')
