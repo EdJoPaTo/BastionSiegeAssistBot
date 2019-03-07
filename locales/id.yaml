@@ -45,6 +45,8 @@ battle:
   scoutsGone: Pengintaimu sudah lama tidak ada di sana. Aku akan membantumu ketika kamu berkeliaran di sana lain kali. 😊
   inlineWar:
     updateButton: Mulai Memperbarui 🤓
+    updated: Informasi perang diperbarui!
+    share: Kamu dapat berbagi informasi perang dengan tombol di bawah ini.
     info: >
       💙 Setelah kamu memulai mekanisme pembaruan dari pesan ini, pesan itu akan secara otomatis diperbarui dengan status pertempuran aliansimu saat ini.
        Ini sangat berguna, terlebih dalam obrolan grup dengan teman aliansimu. 😎
@@ -128,6 +130,8 @@ poweruser:
   poweruser: Pengguna daya
   immunity: Kekebalan
   youare: Kamu pengguna daya!
+  notyet: Kamu bukan (belum) pengguna daya.
+  usefulWhen: Hal ini akan menjadi lebih berguna segera setelah kamu menjadi pengguna daya!
   nameRequired: Kamu hampir menjadi pengguna daya! Kirimkan saja nama pemainmu dengan menyediakan menu utama dari @BastionSiegeBot. Kemudian kamu akan mendapatkan semua hal keren seperti kekebalan atau peningkatan statistik perang.
   nameOld: Untuk menjadi pengguna daya, aku perlu nama pemainmu saat ini. Namamu harus diperbarui setidaknya setiap 7 hari.
   buildingsOld: Untuk menjadi pengguna daya, aku membutuhkan bangunanmu saat ini. Kamu harus memperbarui ini setidaknya setiap 7 hari.
