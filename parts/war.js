@@ -11,8 +11,6 @@ const {formatNumberShort} = require('../lib/user-interface/format-number')
 
 const {Extra, Markup} = Telegraf
 
-const MINIMUM_AGE_OF_BUILDINGS_IN_SECONDS = 60 * 60 * 24 * 1 // 1 Days
-
 const bot = new Telegraf.Composer()
 
 function isWarMenu(ctx) {
@@ -58,9 +56,7 @@ bot.on('text', Telegraf.optional(isWarMenu, async ctx => {
       await wars.add(time, battle)
       text += ctx.i18n.t('battle.inlineWar.updated') + '\n'
 
-      const minimumBuildingTimestamp = now - MINIMUM_AGE_OF_BUILDINGS_IN_SECONDS
-      const buildingsAreUpToDate = ctx.session.gameInformation.buildingsTimestamp > minimumBuildingTimestamp
-      if (!buildingsAreUpToDate || !poweruser.isPoweruser(ctx.from.id)) {
+      if (!poweruser.isPoweruser(ctx.from.id)) {
         text += emoji.poweruser + ' ' + ctx.i18n.t('poweruser.usefulWhen')
         return ctx.replyWithMarkdown(text)
       }
