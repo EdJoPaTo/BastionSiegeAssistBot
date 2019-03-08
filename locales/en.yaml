@@ -3,6 +3,8 @@ menu:
   nothingchanged: Nothing changed besides the current time.
 bs:
   buildings: Buildings
+  siege: Siege
+  war: War
   workshop: Workshop
   building:
     townhall: Townhall
@@ -15,7 +17,6 @@ bs:
     wall: Wall
     trebuchet: Trebuchet
     ballista: Ballista
-  war: War
 alerts: Alerts
 alert:
   buildingUpgrade:

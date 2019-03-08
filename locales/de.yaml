@@ -3,6 +3,8 @@ menu:
   nothingchanged: Außer die Zeit hat sich nichts verändert…
 bs:
   buildings: Gebäude
+  siege: Belagerung
+  war: Krieg
   workshop: Werkstatt
   building:
     townhall: Haupthalle
@@ -15,7 +17,6 @@ bs:
     wall: Wall
     trebuchet: Katapult
     ballista: Ballista
-  war: Krieg
 alerts: Erinnerungen
 alert:
   buildingUpgrade:

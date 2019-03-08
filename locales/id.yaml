@@ -3,6 +3,8 @@ menu:
   nothingchanged: Tidak ada yang berubah kecuali waktu saat ini.
 bs:
   buildings: Bangunan
+  siege: Pengepungan
+  war: Perang
   workshop: Bengkel
   building:
     townhall: Balai Kota
@@ -15,7 +17,6 @@ bs:
     wall: Tembok
     trebuchet: Trebuset
     ballista: Ballista
-  war: Perang
 alerts: Peringatan
 alert:
   buildingUpgrade:

@@ -1,8 +1,9 @@
 const Telegraf = require('telegraf')
 
 const playerStatsDb = require('../lib/data/playerstats-db')
+const poweruser = require('../lib/data/poweruser')
 
-const {createPlayerShareButton, createPlayerStatsString, createPlayerStatsTwoLineString} = require('../lib/user-interface/player-stats')
+const {createPlayerShareButton, createPlayerStatsString, createPlayerStatsTwoLineString, createMultipleStatsConclusion} = require('../lib/user-interface/player-stats')
 
 const {Extra, Markup} = Telegraf
 
@@ -54,6 +55,23 @@ bot.on('text', Telegraf.optional(screenContainsInformation('alliancejoinrequest'
   const {alliancejoinrequest} = ctx.state.screen.information
   const {text, extra} = generatePlayerStats(alliancejoinrequest.player)
   return ctx.reply(text, extra)
+}))
+
+bot.on('text', Telegraf.optional(screenContainsInformation('castleSiegeParticipants'), notNewMiddleware('forward.old', 60), ctx => {
+  let text = `*${ctx.i18n.t('bs.siege')}*\n`
+  if (!poweruser.isPoweruser(ctx.from.id)) {
+    text += ctx.i18n.t('poweruser.usefulWhen')
+    return ctx.replyWithMarkdown(text)
+  }
+
+  const {castleSiegeParticipants} = ctx.state.screen.information
+  text += castleSiegeParticipants
+    .filter(o => o.players.length >= 5)
+    .map(o => o.players.map(player => playerStatsDb.get(player)))
+    .map(o => createMultipleStatsConclusion(o).armyString)
+    .join('\n')
+
+  return ctx.replyWithMarkdown(text)
 }))
 
 function generatePlayerStats(players) {

@@ -3,6 +3,8 @@
   nothingchanged: Никаких изменений за текущее время.
 bs:
   buildings: Здания
+  siege: Осада
+  war: Война
   workshop: Мастерская
   building:
     townhall: Ратуша
@@ -15,7 +17,6 @@ bs:
     wall: Стена
     trebuchet: Требушет
     ballista: Баллиста
-  war: Война
 alerts: Оповещения
 alert:
   buildingUpgrade:
