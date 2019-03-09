@@ -103,6 +103,8 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
     text += createSingleBattleShortStatsLine(report)
     text += '\n'
 
+    const {name: expectedName} = ctx.session.gameInformation.player || {}
+
     if ((Date.now() / 1000) - MAX_AGE_BUILDINGS < ctx.session.gameInformation.buildingsTimestamp) {
       const {buildings} = ctx.session.gameInformation
 
@@ -118,7 +120,7 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
         text += '\n'
       }
 
-      if (!report.attack) {
+      if (!report.attack && report.friends[0] === expectedName) {
         const wallRepairCost = calcSemitotalGold(calcWallRepairCost(buildings.wall))
         const archerLostResult = calcMissingPeople(buildings, calcWallArcherCapacity(buildings.wall))
 
@@ -144,7 +146,6 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
       text += '\n' + ctx.i18n.t('battlereport.known')
     }
 
-    const {name: expectedName} = ctx.session.gameInformation.player || {}
     if (expectedName) {
       const expectedNameIsInFriends = report.friends.includes(expectedName)
       if (!expectedNameIsInFriends) {
