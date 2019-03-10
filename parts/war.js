@@ -51,10 +51,11 @@ bot.on('text', Telegraf.optional(isWarMenu, async ctx => {
       )
     } else {
       text += createWarOneLineString(battle)
-      text += '\n\n'
+      text += '\n'
 
       await wars.add(time, battle)
-      text += ctx.i18n.t('battle.inlineWar.updated') + '\n'
+      text += ctx.i18n.t('battle.inlineWar.updated')
+      text += '\n\n'
 
       if (!poweruser.isPoweruser(ctx.from.id)) {
         text += emoji.poweruser + ' ' + ctx.i18n.t('poweruser.usefulWhen')
