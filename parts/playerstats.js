@@ -2,6 +2,7 @@ const Telegraf = require('telegraf')
 
 const playerStatsDb = require('../lib/data/playerstats-db')
 const poweruser = require('../lib/data/poweruser')
+const wars = require('../lib/data/wars')
 
 const {createPlayerShareButton, createPlayerStatsString, createPlayerStatsTwoLineString, createMultipleStatsConclusion} = require('../lib/user-interface/player-stats')
 
@@ -39,9 +40,22 @@ bot.on('text', Telegraf.optional(screenContainsInformation('attackscout'), notNe
   return ctx.reply(text, extra)
 }))
 
-bot.on('text', Telegraf.optional(screenContainsInformation('allianceBattleStart'), notNewMiddleware('battle.over'), ctx => {
+bot.on('text', Telegraf.optional(screenContainsInformation('allianceBattleStart'), notNewMiddleware('battle.over'), async ctx => {
   const {allianceBattleStart} = ctx.state.screen.information
-  const {text, extra} = generatePlayerStats(allianceBattleStart.enemy)
+  const battle = allianceBattleStart.attack ?
+    {attack: [allianceBattleStart.ally], defence: [allianceBattleStart.enemy]} :
+    {attack: [allianceBattleStart.enemy], defence: [allianceBattleStart.ally]}
+
+  const time = ctx.message.forward_date
+  await wars.add(time, battle)
+
+  let text = ''
+  text += ctx.i18n.t('battle.inlineWar.updated')
+  text += '\n\n'
+
+  const {text: statsText, extra} = generatePlayerStats(allianceBattleStart.enemy)
+  text += statsText
+
   return ctx.reply(text, extra)
 }))
 
