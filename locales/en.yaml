@@ -76,7 +76,12 @@ battlereports: Battlereports
 battlestats:
   alltime: All Time
   attendance: Battle Attendance
+  lostAttacks: Lost Attacks
+  lostDefences: Lost Defences
   title: Battle Stats
+  wonAttacks: Successful Attacks
+  wonDefences: Successful Defences
+  total: All
 botstats:
   title: Statistics of the Bot
   analysedPlayers: Analysed Players
@@ -138,6 +143,7 @@ language:
     This needs to stay the same for the bot to get the correct translation.
     On the right side of the ':' is the translated text.
     You need to change or adapt that one.
+mystics: Mystic Creatures
 name:
   need: I need your name for that. Send me your main screen first. 😅
   noAlliance: You are not in an alliance right now.

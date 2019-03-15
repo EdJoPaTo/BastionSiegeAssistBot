@@ -41,6 +41,7 @@ function viewOptions(ctx) {
 }
 
 menu.select('view', viewOptions, {
+  columns: 2,
   hide: ctx => viewOptions(ctx).length === 1,
   isSetFunc: (ctx, key) => getCurrentView(ctx) === key,
   setFunc: (ctx, key) => {
@@ -184,7 +185,7 @@ function createSolo(ctx) {
 
   const {type} = ctx.session.battlestats || BATTLESTATS_DEFAULTS
   const stats = battleStats.generate(reports, o => o[type])
-  text += createBattleStatsString(stats, type)
+  text += createBattleStatsString(stats, type, ctx.i18n.locale())
 
   return text
 }
@@ -227,7 +228,7 @@ function createAllianceAttacks(ctx) {
 
   const {type} = ctx.session.battlestats || BATTLESTATS_DEFAULTS
   const stats = battleStats.generate(reports, o => o[type] * o.friends.length)
-  text += createBattleStatsString(stats, type)
+  text += createBattleStatsString(stats, type, ctx.i18n.locale())
 
   return text
 }

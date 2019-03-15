@@ -76,7 +76,12 @@ battlereports: Kampfberichte
 battlestats:
   alltime: Gesamte Zeit
   attendance: Kampf Teilnehmer
+  lostAttacks: Verlorene Angriffe
+  lostDefences: Verlorene Verteidigungen
   title: Kampf Statistiken
+  wonAttacks: Gewonnene Angriffe
+  wonDefences: Gewonnene Verteidigungen
+  total: Alle
 botstats:
   title: Statistiken über den Bot
   analysedPlayers: Analysierte Spieler
@@ -140,6 +145,7 @@ language:
     Der Bot braucht genau diese um die Übersetzung zu finden.
     Auf der rechten Seite vom ':' steht der übersetzte Text.
     Nur diesen willst du ändern.
+mystics: Mystische Kreaturen
 name:
   need: Dafür brauche ich deinen Namen. Leite mir dafür dein Hauptmenü zuerst weiter. 😅
   noAlliance: Aktuell bist du in keiner Allianz.
