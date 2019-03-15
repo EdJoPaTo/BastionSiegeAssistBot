@@ -22,7 +22,7 @@ const {
   getBuildingText
 } = require('../lib/user-interface/buildings')
 
-const DEBOUNCE_TIME = 100 // Milliseconds
+const DEBOUNCE_TIME = 200 // Milliseconds
 
 const VIEWS = [
   'upgrades',
