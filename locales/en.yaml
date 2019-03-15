@@ -133,7 +133,7 @@ poweruser:
   notyet: You are not (yet) a poweruser.
   usefulWhen: This gets way more useful as soon as you are a poweruser!
   nameRequired: You are nearly a poweruser! Just send me your ingame name by providing the main menu from @BastionSiegeBot. Then you get all the cool stuff like immunity or improved war stats.
-  nameOld: To be a power user I need your current ingame name. Your name must be updated at least every 7 days.
+  nameOld: To be a power user I need your current ingame name. Your name must be updated at least every 3 days.
   buildingsOld: To be a power user I need your current buildings. You must update these at least every 7 days.
   workshopOld: To be a power user I need your current workshop. You must update these at least every 14 days.
   nearlyOld: As this time is nearly reached you should update them when you have time to spare. 😎
