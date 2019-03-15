@@ -42,6 +42,8 @@ alert:
       upcoming: Nahrung leer
       alert: Nahrung ist in 12h leer
 battle:
+  solo: Alleinkampf
+  alliance: Allianz Kampf
   over: Der Kampf ist lange vorrüber… Schick mir stattdessen den Bericht. 😉
   scoutsGone: Deine Scouts sind schon lange weg. Wenn du das nächste Mal wieder dort umher wanderst, helfe ich dir gern. 😊
   inlineWar:
@@ -59,10 +61,10 @@ battlereport:
   added: Danke für den Bericht. Ich habe ihn hinzugefügt 👌
   known: Das hast du mir bereits geschickt 🙃
   changedIngameName: ❓Hast du deinen Ingame Namen geändert? Wenn ja, sende mir dein Hauptmenü aus @BastionSiegeBot. Dann bin ich wieder auf Stand. 😎
+battlereports: Kampfberichte
 botstats:
   title: Statistiken über den Bot
   analysedPlayers: Analysierte Spieler
-  battlereports: Kampfberichte
   battlereportsWithin24h: In den letzten 24h hinzugefügte Kampfberichte
   users: Nutzer
 buildings:
@@ -79,8 +81,6 @@ buildings:
     resources: Mein Wissen über deine Ressourcen ist etwas veraltet. Dadurch können diese Daten ungenau werden. Schick mir bei Gelegenheit etwas neues.
   winChances: Kampf Gewinnchance
   winChance:
-    solo: Alleinkampf
-    alliance: Allianz Kampf
     info: >
       In einem Kampf bestimmen Armee, Katapult und Wall den Ausgang des Kampfes.
       Jeder Soldat hat eine Wahrscheinlichkeit einen feindlichen Soldaten zu töten.

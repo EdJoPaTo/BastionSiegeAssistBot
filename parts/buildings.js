@@ -198,7 +198,7 @@ function generateStatsText(ctx) {
     text += ctx.i18n.t('buildings.winChance.info')
 
     text += '\n'
-    text += `*${ctx.i18n.t('buildings.winChance.solo')}*\n`
+    text += `*${ctx.i18n.t('battle.solo')}*\n`
     text += WIN_CHANCE_INFLUENCERS
       .map(building =>
         createBuildingCostPerWinChanceLine('solo', building, buildings[building])
@@ -206,7 +206,7 @@ function generateStatsText(ctx) {
       .join('\n')
 
     text += '\n\n'
-    text += `*${ctx.i18n.t('buildings.winChance.alliance')}*\n`
+    text += `*${ctx.i18n.t('battle.alliance')}*\n`
     text += WIN_CHANCE_INFLUENCERS
       .map(building =>
         createBuildingCostPerWinChanceLine('alliance', building, buildings[building])

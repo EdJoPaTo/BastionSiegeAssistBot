@@ -42,6 +42,8 @@ alert:
       upcoming: Makanan kosong
       alert: Makanan kosong dalam 12 jam
 battle:
+  solo: Pertarungan tunggal
+  alliance: Pertarungan aliansi
   over: Pertarungan ini sudah lama selesai… Kirimkan aku laporan baru sebagai gantinya. 😉
   scoutsGone: Pengintaimu sudah lama tidak ada di sana. Aku akan membantumu ketika kamu berkeliaran di sana lain kali. 😊
   inlineWar:
@@ -60,10 +62,10 @@ battlereport:
   added: Terima kasih atas laporannya. Aku menambahkannya. 👌
   known: Kamu telah mengirimkan ini kepadaku 🙃
   changedIngameName: ❓Sudahkah kamu mengubah nama pemainmu? Jika demikian, tolong kirimkan aku layar menu utama dari @BastionSiegeBot. Kemudian dataku terkini lagi. 😎
+battlereports: Laporan pertarungan
 botstats:
   title: Statistik Bot
   analysedPlayers: Pemain yang dianalisa
-  battlereports: Laporan pertarungan
   battlereportsWithin24h: Laporan pertarungan ditambahkan dalam 24 jam
   users: Pengguna
 buildings:
@@ -80,8 +82,6 @@ buildings:
     resources: Pengetahuanku tentang bangunanmu agak usang. Ini mengarah pada ketidakakuratan. Pertimbangkan memperbaruiku dengan mengirimkan layar sumber daya baru.
   winChances: Peluang menang pertarungan
   winChance:
-    solo: Pertarungan tunggal
-    alliance: Pertarungan aliansi
     info: >
       Saat kamu bertempur dengan orang lain, pasukan, trebuset, dan tembokmu akan menentukan hasil pertempuranmmu.
       Setiap prajurit memiliki kesempatan untuk membunuh prajurit musuh.

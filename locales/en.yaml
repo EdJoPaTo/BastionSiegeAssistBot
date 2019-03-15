@@ -42,6 +42,8 @@ alert:
       upcoming: Food empty
       alert: Food empty in 12h
 battle:
+  solo: Solo Battles
+  alliance: Alliance Battles
   over: This battle is long over… Send me the report instead. 😉
   scoutsGone: Your scouts havn't been there for a long time. I'll help you when you wander around there next time. 😊
   inlineWar:
@@ -59,10 +61,10 @@ battlereport:
   added: Thanks for the report. I added it 👌
   known: You have sent me this one already 🙃
   changedIngameName: ❓Have you changed your ingame name? If so, please send me a new main menu screen from @BastionSiegeBot. Then I am up to date again. 😎
+battlereports: Battlereports
 botstats:
   title: Statistics of the Bot
   analysedPlayers: Analysed Players
-  battlereports: Battlereports
   battlereportsWithin24h: Battlereports added within 24h
   users: Users
 buildings:
@@ -79,8 +81,6 @@ buildings:
     resources: My knowledge of your resources is a bit old. This leads to inaccuracy. Consider updating me with a new forwarded resource screen.
   winChances: Battle Winchances
   winChance:
-    solo: Solo Battles
-    alliance: Alliance Battles
     info: >
       When you battle others your army, trebuchet and wall will determine the outcome of your battle.
       Each soldier has a chance to kill an enemy soldier.

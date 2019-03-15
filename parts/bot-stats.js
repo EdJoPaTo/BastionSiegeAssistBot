@@ -24,7 +24,7 @@ bot.command('botstats', async ctx => {
 
   let text = `*${ctx.i18n.t('botstats.title')}*\n`
 
-  text += `\n${ctx.i18n.t('botstats.battlereports')}: ${allBattlereports.length}${emoji.battlereport}`
+  text += `\n${ctx.i18n.t('battlereports')}: ${allBattlereports.length}${emoji.battlereport}`
   text += `\n${ctx.i18n.t('botstats.battlereportsWithin24h')}: ${reportsWithin24h.length}${emoji.battlereport}`
   text += `\n${ctx.i18n.t('botstats.analysedPlayers')}: ${enemies.length}`
   text += `\n${ctx.i18n.t('botstats.users')}: ${users} (${powerusers}${emoji.poweruser})`
