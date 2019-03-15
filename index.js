@@ -109,6 +109,8 @@ bot.use((ctx, next) => {
       })
   }
 
+  delete ctx.session.battlestatsTimeframe
+  delete ctx.session.battlestatsType
   delete ctx.session.language
   delete ctx.session.search
 

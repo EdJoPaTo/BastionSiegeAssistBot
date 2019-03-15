@@ -11,16 +11,22 @@ const battleStats = require('../lib/math/battle-stats')
 const {createBattleStatsString} = require('../lib/user-interface/battle-stats')
 const {emoji} = require('../lib/user-interface/output-text')
 
-const DEFAULT_TIMEFRAME = '24h'
-const DEFAULT_TYPE = 'gold'
+const BATTLESTATS_DEFAULTS = {
+  timeframe: '24h',
+  type: 'gold'
+}
 
 const menu = new TelegrafInlineMenu(getBattlestatsText)
 menu.setCommand('battlestats')
 
 menu.select('rewardType', {gold: emoji.gold, terra: emoji.terra, karma: emoji.karma, gems: emoji.gem}, {
-  isSetFunc: (ctx, key) => (ctx.session.battlestatsType || DEFAULT_TYPE) === key,
+  isSetFunc: (ctx, key) => (ctx.session.battlestats || BATTLESTATS_DEFAULTS).type === key,
   setFunc: (ctx, key) => {
-    ctx.session.battlestatsType = key
+    if (!ctx.session.battlestats) {
+      ctx.session.battlestats = BATTLESTATS_DEFAULTS
+    }
+
+    ctx.session.battlestats.type = key
   }
 })
 
@@ -44,15 +50,15 @@ function isCurrentTimeframe(ctx, selected) {
 }
 
 function getCurrentTimeframe(ctx) {
-  return ctx.session.battlestatsTimeframe || DEFAULT_TIMEFRAME
+  return (ctx.session.battlestats || BATTLESTATS_DEFAULTS).timeframe
 }
 
 function setCurrentTimeframe(ctx, newValue) {
-  if (newValue === DEFAULT_TIMEFRAME) {
-    delete ctx.session.battlestatsTimeframe
-  } else {
-    ctx.session.battlestatsTimeframe = newValue
+  if (!ctx.session.battlestats) {
+    ctx.session.battlestats = BATTLESTATS_DEFAULTS
   }
+
+  ctx.session.battlestats.timeframe = newValue
 }
 
 function getFirstTimeRelevantForTimeframe(timeframe, now = Date.now() / 1000) {
@@ -77,7 +83,7 @@ function getBattlestatsText(ctx) {
   const reportsFiltered = allReportsOfMyself
     .filter(report => report.time > firstTimeRelevant)
 
-  const stats = battleStats.generate(reportsFiltered, ctx.session.battlestatsType || DEFAULT_TYPE)
+  const stats = battleStats.generate(reportsFiltered, (ctx.session.battlestats || BATTLESTATS_DEFAULTS).type)
 
   let text = '*Battle Stats* of '
   if (timeframe === 'all') {
@@ -89,7 +95,7 @@ function getBattlestatsText(ctx) {
 
   text += ` (${reportsFiltered.length})`
   text += '\n\n'
-  text += createBattleStatsString(stats, ctx.session.battlestatsType || DEFAULT_TYPE)
+  text += createBattleStatsString(stats, (ctx.session.battlestats || BATTLESTATS_DEFAULTS).type)
 
   return text
 }
