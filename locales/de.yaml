@@ -2,6 +2,8 @@ menu:
   back: zurück
   nothingchanged: Außer die Zeit hat sich nichts verändert…
 bs:
+  alliance: Allianz
+  allianceMembers: Mitglieder
   buildings: Gebäude
   siege: Belagerung
   war: Krieg
@@ -17,6 +19,15 @@ bs:
     wall: Wall
     trebuchet: Katapult
     ballista: Ballista
+  resources:
+    resources: Ressourcen
+    gold: Gold
+    wood: Holz
+    stone: Stein
+    food: Nahrung
+    terra: Territorium
+    karma: Karma
+    gems: Edelsteine
 alerts: Erinnerungen
 alert:
   buildingUpgrade:
@@ -62,6 +73,10 @@ battlereport:
   known: Das hast du mir bereits geschickt 🙃
   changedIngameName: ❓Hast du deinen Ingame Namen geändert? Wenn ja, sende mir dein Hauptmenü aus @BastionSiegeBot. Dann bin ich wieder auf Stand. 😎
 battlereports: Kampfberichte
+battlestats:
+  alltime: Gesamte Zeit
+  attendance: Kampf Teilnehmer
+  title: Kampf Statistiken
 botstats:
   title: Statistiken über den Bot
   analysedPlayers: Analysierte Spieler
@@ -127,6 +142,7 @@ language:
     Nur diesen willst du ändern.
 name:
   need: Dafür brauche ich deinen Namen. Leite mir dafür dein Hauptmenü zuerst weiter. 😅
+  noAlliance: Aktuell bist du in keiner Allianz.
   update: Leite mir dein Hauptmenü vom @BastionSiegeBot weiter, damit ich deinen aktuellen Ingame Namen aktualisieren kann.
 poweruser:
   poweruser: Poweruser

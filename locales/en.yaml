@@ -2,6 +2,8 @@ menu:
   back: back
   nothingchanged: Nothing changed besides the current time.
 bs:
+  alliance: Alliance
+  allianceMembers: Members
   buildings: Buildings
   siege: Siege
   war: War
@@ -17,6 +19,15 @@ bs:
     wall: Wall
     trebuchet: Trebuchet
     ballista: Ballista
+  resources:
+    resources: Resources
+    gold: Gold
+    wood: Wood
+    stone: Stone
+    food: Food
+    terra: Territory
+    karma: Karma
+    gems: Gems
 alerts: Alerts
 alert:
   buildingUpgrade:
@@ -62,6 +73,10 @@ battlereport:
   known: You have sent me this one already 🙃
   changedIngameName: ❓Have you changed your ingame name? If so, please send me a new main menu screen from @BastionSiegeBot. Then I am up to date again. 😎
 battlereports: Battlereports
+battlestats:
+  alltime: All Time
+  attendance: Battle Attendance
+  title: Battle Stats
 botstats:
   title: Statistics of the Bot
   analysedPlayers: Analysed Players
@@ -125,6 +140,7 @@ language:
     You need to change or adapt that one.
 name:
   need: I need your name for that. Send me your main screen first. 😅
+  noAlliance: You are not in an alliance right now.
   update: Send your main menu screen from @BastionSiegeBot to update your current ingame name.
 poweruser:
   poweruser: Poweruser
