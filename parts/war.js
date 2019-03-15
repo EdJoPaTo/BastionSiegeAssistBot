@@ -27,9 +27,8 @@ bot.on('text', Telegraf.optional(isWarMenu, async ctx => {
   statsStrings.push(formatNumberShort(domainStats.wins, true) + emoji.wins)
   statsStrings.push(formatNumberShort(domainStats.karma, true) + emoji.karma)
   statsStrings.push(formatNumberShort(domainStats.terra, true) + emoji.terra)
-  if (!battle) {
-    text += statsStrings.join(' ')
-  }
+  text += statsStrings.join(' ')
+  text += '\n\n'
 
   if (battle) {
     const time = ctx.message.forward_date
@@ -42,7 +41,6 @@ bot.on('text', Telegraf.optional(isWarMenu, async ctx => {
 
     if (battle.enemy) {
       const stats = playerStatsDb.get(battle.enemy)
-      text += '\n'
       text += createPlayerStatsString(stats)
       extra = extra.markup(
         Markup.inlineKeyboard([
