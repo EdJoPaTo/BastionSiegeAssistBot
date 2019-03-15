@@ -138,10 +138,6 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
 
     if (isNew) {
       text += '\n' + ctx.i18n.t('battlereport.added')
-
-      if (!ctx.session.search) {
-        ctx.session.search = {}
-      }
     } else {
       text += '\n' + ctx.i18n.t('battlereport.known')
     }
