@@ -137,8 +137,6 @@ function getFirstTimeRelevantForTimeframe(timeframe, now = Date.now() / 1000) {
 
 function getBattlestatsText(ctx) {
   const view = getCurrentView(ctx)
-  console.log('getBattlestatsText', view)
-
   switch (view) {
     case 'allianceAttacks':
       return createAllianceAttacks(ctx)
