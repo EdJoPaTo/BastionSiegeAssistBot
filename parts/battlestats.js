@@ -208,13 +208,12 @@ function createAllianceAttacks(ctx) {
     return ctx.replyWithMarkdown(text)
   }
 
-  const allianceMates = poweruser.getPoweruserSessions()
+  const allianceMateNames = poweruser.getPoweruserSessions()
     .filter(o => o.data.gameInformation.player.alliance === alliance)
-  const allianceMateNames = allianceMates
     .map(o => o.data.gameInformation.player.name)
 
   text += ctx.i18n.t('bs.allianceMembers')
-  text += `: ${allianceMates.length}${emoji.poweruser}\n`
+  text += `: ${allianceMateNames.length}${emoji.poweruser}\n`
 
   const reports = battlereports.getAll()
     .filter(o => o.friends.length > 1 || o.enemies.length > 1)
