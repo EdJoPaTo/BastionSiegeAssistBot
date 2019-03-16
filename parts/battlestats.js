@@ -253,15 +253,12 @@ function createAllianceMates(ctx) {
 
   const allianceMates = poweruser.getPoweruserSessions()
     .filter(o => o.data.gameInformation.player.alliance === alliance)
-  const allianceMateNames = allianceMates
-    .map(o => o.data.gameInformation.player.name)
 
   text += ctx.i18n.t('bs.allianceMembers')
   text += `: ${allianceMates.length}${emoji.poweruser}\n`
 
   const relevantReports = battlereports.getAll()
     .filter(o => o.time > firstTimeRelevant)
-    .filter(o => o.friends.some(friend => allianceMateNames.includes(friend)))
 
   const mateInfo = allianceMates
     .map(o => ({user: o.user, playername: o.data.gameInformation.player.name}))
