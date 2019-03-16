@@ -11,6 +11,7 @@ const poweruser = require('../lib/data/poweruser')
 
 const {getMidnightXDaysEarlier, getHoursEarlier} = require('../lib/math/unix-timestamp')
 const {getSumAverageAmount} = require('../lib/math/number-array')
+const {uniqueBattlereportIdentifier} = require('../lib/math/battlereport')
 const battleStats = require('../lib/math/battle-stats')
 
 const {createAverageMaxString} = require('../lib/user-interface/number-array-strings')
@@ -213,18 +214,18 @@ function createAllianceAttacks(ctx) {
   text += ctx.i18n.t('bs.allianceMembers')
   text += `: ${allianceMateNames.length}${emoji.poweruser}\n`
 
-  const reports = battlereports.getAll()
+  const uniqueBattles = battlereports.getAll()
     .filter(o => o.friends.length > 1 || o.enemies.length > 1)
     .filter(o => o.time > firstTimeRelevant)
     .filter(o => o.friends.some(friend => allianceMateNames.includes(friend)))
-    .filter(arrayFilterUnique(o => o.time))
+    .filter(arrayFilterUnique(uniqueBattlereportIdentifier))
 
-  const battleParticipants = getSumAverageAmount(reports.map(o => o.friends.length))
+  const battleParticipants = getSumAverageAmount(uniqueBattles.map(o => o.friends.length))
   text += createAverageMaxString(battleParticipants, ctx.i18n.t('battlestats.attendance'), '', true)
   text += '\n\n'
 
   const {type} = ctx.session.battlestats || BATTLESTATS_DEFAULTS
-  const stats = battleStats.generate(reports, o => o[type] * o.friends.length)
+  const stats = battleStats.generate(uniqueBattles, o => o[type] * o.friends.length)
   text += createBattleStatsString(stats, type, ctx.i18n.locale())
 
   return text
