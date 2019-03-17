@@ -43,6 +43,7 @@ bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, (ctx, next) => {
 }))
 
 const WANTED_DATA = [
+  'attackscout',
   'buildings',
   'domainStats',
   'effects',
