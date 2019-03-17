@@ -1,5 +1,7 @@
 const Telegraf = require('telegraf')
 
+const {whenScreenContainsInformation} = require('../lib/input/gamescreen')
+
 const playerStatsDb = require('../lib/data/playerstats-db')
 const poweruser = require('../lib/data/poweruser')
 const wars = require('../lib/data/wars')
@@ -9,12 +11,6 @@ const {createPlayerShareButton, createPlayerStatsString, createPlayerStatsTwoLin
 const {Extra, Markup} = Telegraf
 
 const bot = new Telegraf.Composer()
-
-function screenContainsInformation(name) {
-  return ctx => ctx.state.screen &&
-    ctx.state.screen.information &&
-    ctx.state.screen.information[name]
-}
 
 function notNewMiddleware(i18nMessage = 'forward.old', maxAgeInMinutes = 8) {
   return (ctx, next) => {
@@ -28,19 +24,19 @@ function notNewMiddleware(i18nMessage = 'forward.old', maxAgeInMinutes = 8) {
   }
 }
 
-bot.on('text', Telegraf.optional(screenContainsInformation('attackincoming'), notNewMiddleware('battle.over'), ctx => {
+bot.on('text', whenScreenContainsInformation('attackincoming', notNewMiddleware('battle.over'), ctx => {
   const {attackincoming} = ctx.state.screen.information
   const {text, extra} = generatePlayerStats(attackincoming.player)
   return ctx.reply(text, extra)
 }))
 
-bot.on('text', Telegraf.optional(screenContainsInformation('attackscout'), notNewMiddleware('battle.scoutsGone', 2), ctx => {
+bot.on('text', whenScreenContainsInformation('attackscout', notNewMiddleware('battle.scoutsGone', 2), ctx => {
   const {attackscout} = ctx.state.screen.information
   const {text, extra} = generatePlayerStats(attackscout.player)
   return ctx.reply(text, extra)
 }))
 
-bot.on('text', Telegraf.optional(screenContainsInformation('allianceBattleStart'), notNewMiddleware('battle.over'), async ctx => {
+bot.on('text', whenScreenContainsInformation('allianceBattleStart', notNewMiddleware('battle.over'), async ctx => {
   const {allianceBattleStart} = ctx.state.screen.information
   const battle = allianceBattleStart.attack ?
     {attack: [allianceBattleStart.ally], defence: [allianceBattleStart.enemy]} :
@@ -59,19 +55,19 @@ bot.on('text', Telegraf.optional(screenContainsInformation('allianceBattleStart'
   return ctx.reply(text, extra)
 }))
 
-bot.on('text', Telegraf.optional(screenContainsInformation('allianceBattleSupport'), notNewMiddleware('battle.over'), ctx => {
+bot.on('text', whenScreenContainsInformation('allianceBattleSupport', notNewMiddleware('battle.over'), ctx => {
   const {allianceBattleSupport} = ctx.state.screen.information
   const {text, extra} = generatePlayerStats(allianceBattleSupport.player)
   return ctx.reply(text, extra)
 }))
 
-bot.on('text', Telegraf.optional(screenContainsInformation('alliancejoinrequest'), notNewMiddleware(), ctx => {
+bot.on('text', whenScreenContainsInformation('alliancejoinrequest', notNewMiddleware(), ctx => {
   const {alliancejoinrequest} = ctx.state.screen.information
   const {text, extra} = generatePlayerStats(alliancejoinrequest.player)
   return ctx.reply(text, extra)
 }))
 
-bot.on('text', Telegraf.optional(screenContainsInformation('castleSiegeParticipants'), notNewMiddleware('forward.old', 60), ctx => {
+bot.on('text', whenScreenContainsInformation('castleSiegeParticipants', notNewMiddleware('forward.old', 60), ctx => {
   let text = `*${ctx.i18n.t('bs.siege')}*\n`
   if (!poweruser.isPoweruser(ctx.from.id)) {
     text += ctx.i18n.t('poweruser.usefulWhen')

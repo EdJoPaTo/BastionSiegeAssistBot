@@ -7,6 +7,8 @@ const {isImmune} = require('../lib/data/poweruser')
 const {calcSemitotalGold, calcMissingPeople, calcWallRepairCost, calcWallArcherCapacity} = require('../lib/math/siegemath')
 const {ONE_DAY_IN_SECONDS} = require('../lib/math/unix-timestamp')
 
+const {whenScreenContainsInformation} = require('../lib/input/gamescreen')
+
 const {createPlayerShareButton, createPlayerStatsString, createTwoSidesStatsString} = require('../lib/user-interface/player-stats')
 const {createSingleBattleShortStatsLine} = require('../lib/user-interface/battle-stats')
 const {formatNumberShort} = require('../lib/user-interface/format-number')
@@ -19,14 +21,8 @@ const MAX_AGE_REPORT_FOR_STATS = ONE_DAY_IN_SECONDS * 2 // 2 days
 
 const bot = new Telegraf.Composer()
 
-function isBattleReport(ctx) {
-  return ctx.state.screen &&
-    ctx.state.screen.information &&
-    ctx.state.screen.information.battlereport
-}
-
 // Save battlereport
-bot.on('text', Telegraf.optional(isBattleReport, async ctx => {
+bot.on('text', whenScreenContainsInformation('battlereport', async ctx => {
   const report = ctx.state.screen.information.battlereport
   const {timestamp} = ctx.state.screen
 

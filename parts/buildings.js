@@ -4,6 +4,8 @@ const TelegrafInlineMenu = require('telegraf-inline-menu')
 
 const {toggleInArray} = require('../lib/javascript-abstraction/array')
 
+const {whenScreenContainsInformation} = require('../lib/input/gamescreen')
+
 const {
   calcMaxBuildingLevel,
   estimateResourcesAfterTimespan
@@ -36,22 +38,13 @@ const WIN_CHANCE_INFLUENCERS = ['barracks', 'trebuchet', 'wall']
 
 const bot = new Telegraf.Composer()
 
-function isBuildingsOrResources(ctx) {
-  if (!ctx.state.screen) {
-    return false
-  }
-
-  const {buildings, resources, workshop} = ctx.state.screen.information || {}
-  return buildings || resources || workshop
-}
-
 const menu = new TelegrafInlineMenu(generateStatsText)
   .setCommand('buildings')
 
 const replyMenuMiddleware = menu.replyMenuMiddleware().middleware()
 
 const debouncedBuildStats = {}
-bot.on('text', Telegraf.optional(isBuildingsOrResources, ctx => {
+bot.on('text', whenScreenContainsInformation(['buildings', 'resources', 'workshop'], ctx => {
   const {id} = ctx.from
   if (!debouncedBuildStats[id]) {
     debouncedBuildStats[id] = debounce(replyMenuMiddleware, DEBOUNCE_TIME)
