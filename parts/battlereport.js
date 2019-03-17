@@ -21,7 +21,8 @@ const bot = new Telegraf.Composer()
 
 function isBattleReport(ctx) {
   return ctx.state.screen &&
-    ctx.state.screen.type === 'battlereport'
+    ctx.state.screen.information &&
+    ctx.state.screen.information.battlereport
 }
 
 // Save battlereport
