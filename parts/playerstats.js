@@ -8,21 +8,11 @@ const wars = require('../lib/data/wars')
 
 const {createPlayerShareButton, createPlayerStatsString, createPlayerStatsTwoLineString, createMultipleStatsConclusion} = require('../lib/user-interface/player-stats')
 
+const {notNewMiddleware} = require('../lib/telegraf-middlewares')
+
 const {Extra, Markup} = Telegraf
 
 const bot = new Telegraf.Composer()
-
-function notNewMiddleware(i18nMessage = 'forward.old', maxAgeInMinutes = 8) {
-  return (ctx, next) => {
-    const time = ctx.message.forward_date
-    const minutesAgo = ((Date.now() / 1000) - time) / 60
-    if (minutesAgo > maxAgeInMinutes) {
-      return ctx.reply(ctx.i18n.t(i18nMessage))
-    }
-
-    return next()
-  }
-}
 
 bot.on('text', whenScreenContainsInformation('attackincoming', notNewMiddleware('battle.over'), ctx => {
   const {attackincoming} = ctx.state.screen.information
