@@ -97,6 +97,17 @@ const i18n = new I18n({
 
 bot.use(i18n)
 
+bot.use((ctx, next) => {
+  const {username} = ctx.from || {}
+  if (username) {
+    ctx.session.__username = username
+  } else {
+    delete ctx.session.__username
+  }
+
+  return next()
+})
+
 // Fix previous bot problems
 bot.use((ctx, next) => {
   if (ctx.session.gameInformation) {
