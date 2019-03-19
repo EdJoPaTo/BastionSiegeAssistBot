@@ -60,6 +60,10 @@ bot.on('text', whenScreenContainsInformation('castleSiegeAllianceJoined', notNew
   return ctx.reply(`Thats fancy ${castleSiegeAllianceJoined.alliance} joined but I dont know what to do with that information. 😇`)
 }))
 
+bot.on('text', whenScreenContainsInformation('castleSiegeYouJoined', notNewMiddleware('forward.old', castleSiege.MAXIMUM_JOIN_MINUTES), ctx => {
+  return ctx.reply('Thats fancy you joined but I currently only work with messages of others joining in. 😇')
+}))
+
 module.exports = {
   bot
 }
