@@ -1,15 +1,11 @@
 const debounce = require('debounce-promise')
 const Telegraf = require('telegraf')
 const TelegrafInlineMenu = require('telegraf-inline-menu')
+const {calcMaxBuildingLevel, estimateResourcesAfter} = require('bastion-siege-logic')
 
 const {toggleInArray} = require('../lib/javascript-abstraction/array')
 
 const {whenScreenContainsInformation} = require('../lib/input/gamescreen')
-
-const {
-  calcMaxBuildingLevel,
-  estimateResourcesAfterTimespan
-} = require('../lib/math/siegemath')
 
 const {emoji} = require('../lib/user-interface/output-text')
 const {
@@ -135,7 +131,7 @@ function generateStatsText(ctx) {
 
   const currentTimestamp = Math.floor(Date.now() / 1000 / 60)
   const resourceAgeMinutes = currentTimestamp - Math.floor(information.resourcesTimestamp / 60)
-  const estimatedResources = estimateResourcesAfterTimespan(information.resources, buildings, resourceAgeMinutes)
+  const estimatedResources = estimateResourcesAfter(information.resources, buildings, resourceAgeMinutes)
 
   let text = ''
 

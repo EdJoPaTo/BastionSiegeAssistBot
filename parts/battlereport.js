@@ -1,10 +1,10 @@
 const Telegraf = require('telegraf')
+const {calcSemitotalGold, calcRecoveryMissingPeople, calcWallRepairCost, calcWallArcherCapacity} = require('bastion-siege-logic')
 
 const battlereports = require('../lib/data/battlereports')
 const playerStatsDb = require('../lib/data/playerstats-db')
 const {isImmune} = require('../lib/data/poweruser')
 
-const {calcSemitotalGold, calcMissingPeople, calcWallRepairCost, calcWallArcherCapacity} = require('../lib/math/siegemath')
 const {ONE_DAY_IN_SECONDS} = require('../lib/math/unix-timestamp')
 
 const {whenScreenContainsInformation} = require('../lib/input/gamescreen')
@@ -38,7 +38,7 @@ function applyReportToGameInformation(ctx, report, timestamp, isNew) {
     attack, enemies, friends, gold, soldiersAlive, soldiersTotal, karma, terra, won
   } = report
   const soldiersLost = soldiersTotal - soldiersAlive
-  const soldiersLostResult = calcMissingPeople(ctx.session.gameInformation.buildings, soldiersLost)
+  const soldiersLostResult = calcRecoveryMissingPeople(ctx.session.gameInformation.buildings || {}, soldiersLost)
 
   if (isNew) {
     if (timestamp > ctx.session.gameInformation.resourcesTimestamp) {
@@ -108,7 +108,7 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
       const {soldiersAlive, soldiersTotal} = report
       const soldiersLost = soldiersTotal - soldiersAlive
       if (soldiersLost > 0) {
-        const soldiersLostResult = calcMissingPeople(buildings, soldiersLost)
+        const soldiersLostResult = calcRecoveryMissingPeople(buildings, soldiersLost)
 
         text += emoji.people + '→' + emoji.houses + '→' + emoji.barracks
         text += soldiersLostResult.minutesNeeded + ' min'
@@ -119,7 +119,7 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
 
       if (!report.attack && report.friends[0] === expectedName) {
         const wallRepairCost = calcSemitotalGold(calcWallRepairCost(buildings.wall))
-        const archerLostResult = calcMissingPeople(buildings, calcWallArcherCapacity(buildings.wall))
+        const archerLostResult = calcRecoveryMissingPeople(buildings, calcWallArcherCapacity(buildings.wall))
 
         text += emoji.people + '→' + emoji.houses + '→' + emoji.wall
         text += '≤' + archerLostResult.minutesNeeded + ' min'

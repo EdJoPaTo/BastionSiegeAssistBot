@@ -1,6 +1,7 @@
 const arrayFilterUnique = require('array-filter-unique')
 const Telegraf = require('telegraf')
 const TelegrafInlineMenu = require('telegraf-inline-menu')
+const {sameBattleResourceAssumption, uniqueBattlereportIdentifier} = require('bastion-siege-logic')
 
 const regexHelper = require('../lib/javascript-abstraction/regex-helper')
 
@@ -11,7 +12,6 @@ const poweruser = require('../lib/data/poweruser')
 
 const {getMidnightXDaysEarlier, getHoursEarlier} = require('../lib/math/unix-timestamp')
 const {getSumAverageAmount} = require('../lib/math/number-array')
-const {sameBattleResourceAssumption, uniqueBattlereportIdentifier} = require('../lib/math/battlereport')
 const battleStats = require('../lib/math/battle-stats')
 
 const {createAverageMaxString} = require('../lib/user-interface/number-array-strings')

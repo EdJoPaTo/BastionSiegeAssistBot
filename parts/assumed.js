@@ -1,8 +1,7 @@
 const Telegraf = require('telegraf')
+const {estimateResourcesAfter} = require('bastion-siege-logic')
 
 const {compareStrAsSimpleOne} = require('../lib/javascript-abstraction/strings')
-
-const {estimateResourcesAfterTimespan} = require('../lib/math/siegemath')
 
 const {emoji} = require('../lib/user-interface/output-text')
 const {formatNumberShort, formatTimeAmount} = require('../lib/user-interface/format-number')
@@ -53,7 +52,7 @@ function generateText(information) {
 
   const buildings = {...information.buildings, ...information.workshop}
 
-  const estimatedResources = estimateResourcesAfterTimespan(information.resources, buildings, resourceAgeMinutes)
+  const estimatedResources = estimateResourcesAfter(information.resources, buildings, resourceAgeMinutes)
 
   let text = ''
 
