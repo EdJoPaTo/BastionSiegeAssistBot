@@ -164,7 +164,9 @@ poweruser:
   immunityDisabled: Currently *no one* will get immunity.
   list:
     title: List
-    description: Create List
+    clearParticipants: Clear Participants
+    description: Your List
+    share: Share your List
 settings: Settings
 setting:
   alert:

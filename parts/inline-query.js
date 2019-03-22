@@ -2,7 +2,6 @@ const Telegraf = require('telegraf')
 
 const {sortBy} = require('../lib/javascript-abstraction/array')
 
-const inlineList = require('../lib/data/inline-list')
 const playerStatsDb = require('../lib/data/playerstats-db')
 const poweruser = require('../lib/data/poweruser')
 const wars = require('../lib/data/wars')
@@ -48,16 +47,17 @@ bot.on('inline_query', async ctx => {
       })
     }
 
+    const {text, keyboard} = createList(ctx.from.id, now)
     statics.push({
       type: 'article',
       id: 'list',
-      title: emoji.poweruser + ' ' + ctx.i18n.t('poweruser.list.title'),
+      title: emoji.list + emoji.poweruser + ' ' + ctx.i18n.t('poweruser.list.title'),
       description: ctx.i18n.t('poweruser.list.description'),
       input_message_content: {
-        message_text: `${createList([], now).text} ${emoji.poweruser}`,
+        message_text: text,
         parse_mode: 'markdown'
       },
-      reply_markup: createList([], now).keyboard
+      reply_markup: keyboard
     })
   }
 
@@ -129,10 +129,6 @@ function getTestFunctionForQuery(input) {
   }
 }
 
-function answerInDirectChat(ctx, text, extra) {
-  return ctx.tg.sendMessage(ctx.from.id, text, extra)
-}
-
 bot.action(/inlineWar:(.*):(.+)/, ctx => {
   const now = Date.now() / 1000
   const player = {
@@ -147,52 +143,6 @@ bot.action(/inlineWar:(.*):(.+)/, ctx => {
 
   const warText = createWarStats(timestamp, battle, player)
   return ctx.editMessageText(warText, Extra.markdown())
-})
-
-bot.action(/inlineList:join/, ctx => {
-  const now = Date.now() / 1000
-  const minTimestamp = getMidnightXDaysEarlier(now, 7)
-
-  const {buildingsTimestamp, playerTimestamp} = ctx.session.gameInformation
-
-  if (!playerTimestamp || playerTimestamp < minTimestamp) {
-    const text = ctx.i18n.t('name.need')
-    return Promise.all([
-      answerInDirectChat(ctx, text).catch(() => {}),
-      ctx.answerCbQuery(text, true)
-    ])
-  }
-
-  if (!buildingsTimestamp) {
-    const text = ctx.i18n.t('buildings.need.buildings')
-    return Promise.all([
-      answerInDirectChat(ctx, text),
-      ctx.answerCbQuery(text, true)
-    ])
-  }
-
-  let hint
-
-  if (buildingsTimestamp < minTimestamp) {
-    hint = ctx.i18n.t('buildings.old.buildings')
-  }
-
-  const userIds = inlineList.add(ctx.callbackQuery.inline_message_id, now, ctx.from.id)
-  const {text, keyboard} = createList(userIds, now)
-  return Promise.all([
-    ctx.editMessageText(text, Extra.markdown().markup(keyboard)).catch(() => {}),
-    ctx.answerCbQuery(hint)
-  ])
-})
-
-bot.action(/inlineList:leave/, ctx => {
-  const now = Date.now() / 1000
-  const userIds = inlineList.remove(ctx.callbackQuery.inline_message_id, now, ctx.from.id)
-  const {text, keyboard} = createList(userIds, now)
-  return Promise.all([
-    ctx.editMessageText(text, Extra.markdown().markup(keyboard)).catch(() => {}),
-    ctx.answerCbQuery()
-  ])
 })
 
 module.exports = {

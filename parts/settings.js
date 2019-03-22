@@ -7,6 +7,7 @@ const {alertEmojis} = require('../lib/user-interface/alert-handler')
 const alertsMenu = require('./settings-submenus/alerts')
 const buildingsMenu = require('./settings-submenus/buildings')
 const languageMenu = require('./settings-submenus/language')
+const listMenu = require('./settings-submenus/list')
 const poweruserMenu = require('./settings-submenus/poweruser')
 
 const settingsMenu = new TelegrafInlineMenu(ctx => `*${ctx.i18n.t('settings')}*`)
@@ -17,6 +18,8 @@ settingsMenu.submenu(ctx => alertEmojis.enabled + ' ' + ctx.i18n.t('alerts'), 'a
 settingsMenu.submenu(ctx => emoji.houses + ' ' + ctx.i18n.t('bs.buildings'), 'buildings', buildingsMenu.menu)
 
 settingsMenu.submenu(ctx => emoji.language + ' ' + ctx.i18n.t('language.title'), 'language', languageMenu.menu)
+
+settingsMenu.submenu(ctx => emoji.list + ' ' + ctx.i18n.t('poweruser.list.title'), 'list', listMenu.menu)
 
 settingsMenu.submenu(ctx => emoji.poweruser + ' ' + ctx.i18n.t('poweruser.poweruser'), 'poweruser', poweruserMenu.menu)
 

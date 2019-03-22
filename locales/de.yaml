@@ -166,7 +166,9 @@ poweruser:
   immunityDisabled: Aktuell bekommt *niemand* deine Immunität.
   list:
     title: Liste
-    description: Erstelle Liste
+    clearParticipants: Teilnehmer löschen
+    description: Deine Liste
+    share: Teile deine Liste
 settings: Einstellungen
 setting:
   alert:
