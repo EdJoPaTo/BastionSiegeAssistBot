@@ -145,6 +145,11 @@ language:
     Der Bot braucht genau diese um die Übersetzung zu finden.
     Auf der rechten Seite vom ':' steht der übersetzte Text.
     Nur diesen willst du ändern.
+list:
+  title: Liste
+  clearParticipants: Teilnehmer löschen
+  description: Deine Liste
+  share: Teile deine Liste
 mystics: Mystische Kreaturen
 name:
   need: Dafür brauche ich deinen Namen. Leite mir dafür dein Hauptmenü zuerst weiter. 😅
@@ -164,11 +169,6 @@ poweruser:
   immunityTo: Deine Immunität wird aktuell ${name} verliehen.
   noname: Mir fehlt dein Name. *Niemand* erhält aktuell deine Immunität.
   immunityDisabled: Aktuell bekommt *niemand* deine Immunität.
-  list:
-    title: Liste
-    clearParticipants: Teilnehmer löschen
-    description: Deine Liste
-    share: Teile deine Liste
 settings: Einstellungen
 setting:
   alert:

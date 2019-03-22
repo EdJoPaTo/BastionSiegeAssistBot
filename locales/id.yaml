@@ -124,6 +124,9 @@ language:
     Ini harus tetap tinggal agar bot mendapatkan terjemahan yang benar.
     Di sisi kanan ':' adalah teks yang diterjemahkan.
     Kamu perlu mengubah atau menyesuaikan yang itu.
+list:
+  title: Daftar
+  description: Buat Daftar
 name:
   need: Aku butuh namamu untuk itu. Kirimkan aku layar utamamu terlebih dahulu. 😅
   update: Kirim layar menu utamamu dari @BastionSiegeBot untuk memperbarui nama pemainmu saat ini.
@@ -141,9 +144,6 @@ poweruser:
   immunityTo: Saat ini kekebalanmu diberikan kepada ${name}.
   noname: Aku tidak punya namamu. *Tidak seorangpun* akan mendapatkan kekebalan.
   immunityDisabled: Saat ini *tidak seorangpun* akan mendapatkan kekebalan.
-  list:
-    title: Daftar
-    description: Buat Daftar
 settings: Pengaturan
 setting:
   alert:

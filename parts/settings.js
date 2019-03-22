@@ -19,7 +19,7 @@ settingsMenu.submenu(ctx => emoji.houses + ' ' + ctx.i18n.t('bs.buildings'), 'bu
 
 settingsMenu.submenu(ctx => emoji.language + ' ' + ctx.i18n.t('language.title'), 'language', languageMenu.menu)
 
-settingsMenu.submenu(ctx => emoji.list + ' ' + ctx.i18n.t('poweruser.list.title'), 'list', listMenu.menu)
+settingsMenu.submenu(ctx => emoji.list + ' ' + ctx.i18n.t('list.title'), 'list', listMenu.menu)
 
 settingsMenu.submenu(ctx => emoji.poweruser + ' ' + ctx.i18n.t('poweruser.poweruser'), 'poweruser', poweruserMenu.menu)
 

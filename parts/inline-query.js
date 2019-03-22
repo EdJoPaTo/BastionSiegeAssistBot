@@ -51,8 +51,8 @@ bot.on('inline_query', async ctx => {
     statics.push({
       type: 'article',
       id: 'list',
-      title: emoji.list + emoji.poweruser + ' ' + ctx.i18n.t('poweruser.list.title'),
-      description: ctx.i18n.t('poweruser.list.description'),
+      title: emoji.list + emoji.poweruser + ' ' + ctx.i18n.t('list.title'),
+      description: ctx.i18n.t('list.description'),
       input_message_content: {
         message_text: text,
         parse_mode: 'markdown'

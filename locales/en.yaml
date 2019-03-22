@@ -143,6 +143,11 @@ language:
     This needs to stay the same for the bot to get the correct translation.
     On the right side of the ':' is the translated text.
     You need to change or adapt that one.
+list:
+  title: List
+  clearParticipants: Clear Participants
+  description: Your List
+  share: Share your List
 mystics: Mystic Creatures
 name:
   need: I need your name for that. Send me your main screen first. 😅
@@ -162,11 +167,6 @@ poweruser:
   immunityTo: Currently your immunity is granted to ${name}.
   noname: I do not have your name. *No one* will get immunity.
   immunityDisabled: Currently *no one* will get immunity.
-  list:
-    title: List
-    clearParticipants: Clear Participants
-    description: Your List
-    share: Share your List
 settings: Settings
 setting:
   alert:

@@ -24,11 +24,11 @@ function menuText(ctx) {
 
 const menu = new TelegrafInlineMenu(menuText)
 
-menu.switchToChatButton(ctx => ctx.i18n.t('poweruser.list.share'), 'list', {
+menu.switchToChatButton(ctx => ctx.i18n.t('list.share'), 'list', {
   hide: ctx => !poweruser.isPoweruser(ctx.from.id)
 })
 
-menu.button(ctx => ctx.i18n.t('poweruser.list.clearParticipants'), 'clear-participants', {
+menu.button(ctx => ctx.i18n.t('list.clearParticipants'), 'clear-participants', {
   hide: ctx => !poweruser.isPoweruser(ctx.from.id) || Object.keys(lists.getList(ctx.from.id, Date.now() / 1000).participants).length === 0,
   doFunc: ctx => {
     const now = Date.now() / 1000
