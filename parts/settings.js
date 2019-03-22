@@ -8,35 +8,17 @@ const poweruser = require('../lib/data/poweruser')
 
 const {emoji} = require('../lib/user-interface/output-text')
 const {BUILDINGS, getBuildingText, defaultBuildingsToShow} = require('../lib/user-interface/buildings')
-const {alertEmojis, ALERT_TYPES, getAlertText} = require('../lib/user-interface/alert-handler')
+const {alertEmojis} = require('../lib/user-interface/alert-handler')
 const {createPlayerStatsString} = require('../lib/user-interface/player-stats')
 const {getHintStrings, conditionEmoji, conditionTypeTranslation} = require('../lib/user-interface/poweruser')
 
+const alertsMenu = require('./settings-submenus/alerts')
 const languageMenu = require('./settings-submenus/language')
 
 const settingsMenu = new TelegrafInlineMenu(ctx => `*${ctx.i18n.t('settings')}*`)
 settingsMenu.setCommand('settings')
 
-function alertsText(ctx) {
-  let text = `*${ctx.i18n.t('alerts')}*`
-  text += '\n' + ctx.i18n.t('setting.alert.infotext')
-  return text
-}
-
-settingsMenu.submenu(ctx => alertEmojis.enabled + ' ' + ctx.i18n.t('alerts'), 'alerts', new TelegrafInlineMenu(alertsText))
-  .select('type', ALERT_TYPES, {
-    multiselect: true,
-    columns: 1,
-    prefixTrue: alertEmojis.enabled,
-    prefixFalse: alertEmojis.disabled,
-    textFunc: getAlertText,
-    setFunc: (ctx, key) => {
-      ctx.session.alerts = toggleInArray(ctx.session.alerts || [], key)
-    },
-    isSetFunc: (ctx, key) => {
-      return (ctx.session.alerts || []).includes(key)
-    }
-  })
+settingsMenu.submenu(ctx => alertEmojis.enabled + ' ' + ctx.i18n.t('alerts'), 'alerts', alertsMenu.menu)
 
 function buildingsText(ctx) {
   let text = `*${ctx.i18n.t('bs.buildings')}*`
