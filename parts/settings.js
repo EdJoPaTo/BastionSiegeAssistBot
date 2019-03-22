@@ -1,18 +1,16 @@
 const Telegraf = require('telegraf')
 const TelegrafInlineMenu = require('telegraf-inline-menu')
 
-const {toggleInArray} = require('../lib/javascript-abstraction/array')
-
 const playerStatsDb = require('../lib/data/playerstats-db')
 const poweruser = require('../lib/data/poweruser')
 
 const {emoji} = require('../lib/user-interface/output-text')
-const {BUILDINGS, getBuildingText, defaultBuildingsToShow} = require('../lib/user-interface/buildings')
 const {alertEmojis} = require('../lib/user-interface/alert-handler')
 const {createPlayerStatsString} = require('../lib/user-interface/player-stats')
 const {getHintStrings, conditionEmoji, conditionTypeTranslation} = require('../lib/user-interface/poweruser')
 
 const alertsMenu = require('./settings-submenus/alerts')
+const buildingsMenu = require('./settings-submenus/buildings')
 const languageMenu = require('./settings-submenus/language')
 
 const settingsMenu = new TelegrafInlineMenu(ctx => `*${ctx.i18n.t('settings')}*`)
@@ -20,22 +18,7 @@ settingsMenu.setCommand('settings')
 
 settingsMenu.submenu(ctx => alertEmojis.enabled + ' ' + ctx.i18n.t('alerts'), 'alerts', alertsMenu.menu)
 
-function buildingsText(ctx) {
-  let text = `*${ctx.i18n.t('bs.buildings')}*`
-  text += '\n' + ctx.i18n.t('setting.buildings.infotext')
-  return text
-}
-
-settingsMenu.submenu(ctx => emoji.houses + ' ' + ctx.i18n.t('bs.buildings'), 'buildings', new TelegrafInlineMenu(buildingsText))
-  .select('b', BUILDINGS, {
-    multiselect: true,
-    columns: 2,
-    textFunc: getBuildingText,
-    setFunc: (ctx, key) => {
-      ctx.session.buildings = toggleInArray(ctx.session.buildings || [...defaultBuildingsToShow], key)
-    },
-    isSetFunc: (ctx, key) => (ctx.session.buildings || [...defaultBuildingsToShow]).includes(key)
-  })
+settingsMenu.submenu(ctx => emoji.houses + ' ' + ctx.i18n.t('bs.buildings'), 'buildings', buildingsMenu.menu)
 
 settingsMenu.submenu(ctx => emoji.language + ' ' + ctx.i18n.t('language.title'), 'language', languageMenu.menu)
 
