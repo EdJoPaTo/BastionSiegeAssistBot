@@ -61,6 +61,9 @@ bot.on('inline_query', async ctx => {
     })
   }
 
+  const filteredStatics = statics
+    .filter(o => queryTestFunc(JSON.stringify(o)))
+
   let players = []
   const options = {
     is_personal: true,
@@ -114,7 +117,7 @@ bot.on('inline_query', async ctx => {
   }
 
   return ctx.answerInlineQuery([
-    ...statics,
+    ...filteredStatics,
     ...playerResults
   ], options)
 })

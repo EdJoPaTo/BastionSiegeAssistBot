@@ -74,7 +74,7 @@ bot.on('text', Telegraf.optional(isWarMenu, async ctx => {
 
       extra = extra.markup(
         Markup.inlineKeyboard([
-          Markup.switchToChatButton('Share War…', '')
+          Markup.switchToChatButton('Share War…', 'war')
         ])
       )
     }
