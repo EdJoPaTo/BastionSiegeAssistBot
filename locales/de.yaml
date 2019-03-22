@@ -150,6 +150,7 @@ list:
   clearParticipants: Teilnehmer löschen
   description: Deine Liste
   share: Teile deine Liste
+  shareAttack: Plane gemeinsamen Angriff
 mystics: Mystische Kreaturen
 name:
   need: Dafür brauche ich deinen Namen. Leite mir dafür dein Hauptmenü zuerst weiter. 😅

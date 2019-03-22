@@ -148,6 +148,7 @@ list:
   clearParticipants: Clear Participants
   description: Your List
   share: Share your List
+  shareAttack: Plan collective attack
 mystics: Mystic Creatures
 name:
   need: I need your name for that. Send me your main screen first. 😅

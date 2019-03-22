@@ -22,8 +22,13 @@ bot.on('text', whenScreenContainsInformation('attackincoming', notNewMiddleware(
 
 bot.on('text', whenScreenContainsInformation('attackscout', notNewMiddleware('battle.scoutsGone', 2), ctx => {
   const {attackscout} = ctx.state.screen.information
-  const {text, extra} = generatePlayerStats(attackscout.player)
-  return ctx.reply(text, extra)
+  const {text} = generatePlayerStats(attackscout.player)
+
+  const keyboard = Markup.inlineKeyboard([
+    Markup.switchToChatButton(ctx.i18n.t('list.shareAttack'), 'list')
+  ])
+
+  return ctx.reply(text, Extra.markdown().markup(keyboard))
 }))
 
 bot.on('text', whenScreenContainsInformation('allianceBattleStart', notNewMiddleware('battle.over'), async ctx => {
