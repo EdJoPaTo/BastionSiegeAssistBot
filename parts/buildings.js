@@ -3,8 +3,6 @@ const Telegraf = require('telegraf')
 const TelegrafInlineMenu = require('telegraf-inline-menu')
 const {calcMaxBuildingLevel, estimateResourcesAfter} = require('bastion-siege-logic')
 
-const {toggleInArray} = require('../lib/javascript-abstraction/array')
-
 const {whenScreenContainsInformation} = require('../lib/input/gamescreen')
 
 const {emoji} = require('../lib/user-interface/output-text')
@@ -16,9 +14,10 @@ const {
   createCapacityStatsString,
   createFillTimeStatsString,
   createIncomeStatsString,
-  defaultBuildingsToShow,
-  getBuildingText
+  defaultBuildingsToShow
 } = require('../lib/user-interface/buildings')
+
+const buildingsMenu = require('./settings-submenus/buildings')
 
 const DEBOUNCE_TIME = 200 // Milliseconds
 
@@ -49,18 +48,9 @@ bot.on('text', whenScreenContainsInformation(['buildings', 'resources', 'worksho
   debouncedBuildStats[id](ctx)
 }))
 
-menu.submenu(ctx => emoji.houses + ' ' + ctx.i18n.t('bs.buildings'), 'buildings', new TelegrafInlineMenu(ctx => ctx.i18n.t('setting.buildings.infotext')), {
+menu.submenu(ctx => emoji.houses + ' ' + ctx.i18n.t('bs.buildings'), 'buildings', buildingsMenu.menu, {
   hide: ctx => (ctx.session.buildingsView || DEFAULT_VIEW) !== 'upgrades'
 })
-  .select('b', BUILDINGS, {
-    multiselect: true,
-    columns: 2,
-    textFunc: getBuildingText,
-    setFunc: (ctx, key) => {
-      ctx.session.buildings = toggleInArray(ctx.session.buildings || [...defaultBuildingsToShow], key)
-    },
-    isSetFunc: (ctx, key) => (ctx.session.buildings || [...defaultBuildingsToShow]).includes(key)
-  })
 
 menu.select('t', ['1 min', '15 min', '30 min', '1h', '6h', '12h', '1d', '2d', '7d', '30d'], {
   columns: 5,
