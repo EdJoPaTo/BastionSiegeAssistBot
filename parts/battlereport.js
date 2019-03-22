@@ -156,7 +156,7 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
       text
     }
   } catch (error) {
-    console.log('Error while showing added report to user', ctx.update, error)
+    console.error('Error while showing added report to user', ctx.update, error)
 
     text += '\nSomething seems fishy here but your report has been saved successfully. 🐟'
     text += '\nPlease tell about this in the BastionSiegeAssist Support Group in order to get this fixed. 😇'

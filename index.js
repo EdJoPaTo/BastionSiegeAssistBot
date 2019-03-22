@@ -62,11 +62,11 @@ bot.use(async (ctx, next) => {
     await next()
   } catch (error) {
     if (error.message.includes('Too Many Requests')) {
-      console.log('Telegraf Too Many Requests error. Skip.', error)
+      console.warn('Telegraf Too Many Requests error. Skip.', error)
       return
     }
 
-    console.log('try to send error to user', ctx.update, error)
+    console.error('try to send error to user', ctx.update, error)
     let text = '🔥 Something went wrong here!'
     text += '\n'
     text += 'You should join the Support Group and report this error. Let us make this bot even better together. ☺️'

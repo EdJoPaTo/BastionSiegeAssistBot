@@ -29,7 +29,7 @@ bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, (ctx, next) => {
   try {
     ctx.state.screen.information = getScreenInformation(text)
   } catch (error) {
-    console.log('could not get screen information', ctx.state.screen, text, error)
+    console.error('could not get screen information', ctx.state.screen, text, error)
     ctx.state.screen.information = {}
   }
 
