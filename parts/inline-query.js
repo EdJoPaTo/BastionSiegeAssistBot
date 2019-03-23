@@ -47,10 +47,10 @@ bot.on('inline_query', async ctx => {
       })
     }
 
-    const {text, keyboard} = createList(ctx.from.id, now)
+    const {text, keyboard} = createList(ctx.from.id, 'default', now)
     statics.push({
       type: 'article',
-      id: 'list',
+      id: 'list-default',
       title: emoji.list + emoji.poweruser + ' ' + ctx.i18n.t('list.title'),
       description: ctx.i18n.t('list.description'),
       input_message_content: {
