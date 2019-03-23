@@ -3,6 +3,8 @@ const Telegraf = require('telegraf')
 const TelegrafInlineMenu = require('telegraf-inline-menu')
 const {calcMaxBuildingLevel, estimateResourcesAfter} = require('bastion-siege-logic')
 
+const {calculateSecondsFromTimeframeString} = require('../lib/math/timeframe')
+
 const {whenScreenContainsInformation} = require('../lib/input/gamescreen')
 
 const {emoji} = require('../lib/user-interface/output-text')
@@ -155,20 +157,8 @@ function generateStatsText(ctx) {
     text += '\n\n'
 
     const timeframe = ctx.session.buildingsTimeframe || '1 min'
-    const timeframeParts = /(\d+) ?(\w+)/.exec(timeframe)
-    let minutes = Number(timeframeParts[1])
-    switch (timeframeParts[2]) {
-      case 'd':
-        minutes *= 60 * 24
-        break
-      case 'h':
-        minutes *= 60
-        break
-      case 'min':
-      default:
-        minutes *= 1
-        break
-    }
+    const seconds = calculateSecondsFromTimeframeString(timeframe)
+    const minutes = seconds / 60
 
     text += `*${ctx.i18n.t('buildings.income')}* (${timeframe})\n`
     text += createIncomeStatsString(buildings, minutes).trim()
