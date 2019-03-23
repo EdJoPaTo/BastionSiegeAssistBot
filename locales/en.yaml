@@ -90,6 +90,7 @@ botstats:
 buildings:
   capacity: Capacity
   fillStorage: Fill Storage
+  history: History
   income: Income
   maxPossible: Max possible upgrades
   upgrades: Upgrades

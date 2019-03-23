@@ -18,6 +18,7 @@ const {
   createIncomeStatsString,
   defaultBuildingsToShow
 } = require('../lib/user-interface/buildings')
+const {DEFAULT_HISTORY_TIMEFRAME, buildingsHistoryGraphFromContext} = require('../lib/user-interface/buildings-history')
 
 const buildingsMenu = require('./settings-submenus/buildings')
 
@@ -25,6 +26,7 @@ const DEBOUNCE_TIME = 200 // Milliseconds
 
 const VIEWS = [
   'upgrades',
+  'history',
   'fillStorage',
   'income',
   'winChances'
@@ -35,7 +37,9 @@ const WIN_CHANCE_INFLUENCERS = ['barracks', 'trebuchet', 'wall']
 
 const bot = new Telegraf.Composer()
 
-const menu = new TelegrafInlineMenu(generateStatsText)
+const menu = new TelegrafInlineMenu(generateStatsText, {
+  photo: generateStatsPhoto
+})
   .setCommand('buildings')
 
 const replyMenuMiddleware = menu.replyMenuMiddleware().middleware()
@@ -61,6 +65,14 @@ menu.select('t', ['1 min', '15 min', '30 min', '1h', '6h', '12h', '1d', '2d', '7
   },
   isSetFunc: (ctx, key) => key === (ctx.session.buildingsTimeframe || '1 min'),
   hide: ctx => (ctx.session.buildingsView || DEFAULT_VIEW) !== 'income'
+})
+
+menu.select('historyT', ['7d', '14d', '28d', '90d'], {
+  hide: ctx => (ctx.session.buildingsView || DEFAULT_VIEW) !== 'history',
+  isSetFunc: (ctx, key) => key === (ctx.session.buildingsHistoryTimeframe || DEFAULT_HISTORY_TIMEFRAME),
+  setFunc: (ctx, key) => {
+    ctx.session.buildingsHistoryTimeframe = key
+  }
 })
 
 menu.select('view', VIEWS, {
@@ -110,6 +122,18 @@ function creationWarnings(ctx) {
   }
 
   return warnings
+}
+
+async function generateStatsPhoto(ctx) {
+  if (creationNotPossibleReason(ctx)) {
+    return
+  }
+
+  const selectedView = ctx.session.buildingsView || DEFAULT_VIEW
+  if (selectedView === 'history') {
+    const buffer = await buildingsHistoryGraphFromContext(ctx)
+    return {source: buffer}
+  }
 }
 
 function generateStatsText(ctx) {
