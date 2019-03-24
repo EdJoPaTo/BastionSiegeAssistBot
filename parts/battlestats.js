@@ -47,7 +47,7 @@ menu.select('view', viewOptions, {
   isSetFunc: (ctx, key) => getCurrentView(ctx) === key,
   setFunc: (ctx, key) => {
     if (!ctx.session.battlestats) {
-      ctx.session.battlestats = BATTLESTATS_DEFAULTS
+      ctx.session.battlestats = {...BATTLESTATS_DEFAULTS}
     }
 
     ctx.session.battlestats.view = key
@@ -75,7 +75,7 @@ menu.select('rewardType', {gold: emoji.gold, terra: emoji.terra, karma: emoji.ka
   isSetFunc: (ctx, key) => (ctx.session.battlestats || BATTLESTATS_DEFAULTS).type === key,
   setFunc: (ctx, key) => {
     if (!ctx.session.battlestats) {
-      ctx.session.battlestats = BATTLESTATS_DEFAULTS
+      ctx.session.battlestats = {...BATTLESTATS_DEFAULTS}
     }
 
     ctx.session.battlestats.type = key
@@ -116,7 +116,7 @@ function getCurrentTimeframe(ctx) {
 
 function setCurrentTimeframe(ctx, newValue) {
   if (!ctx.session.battlestats) {
-    ctx.session.battlestats = BATTLESTATS_DEFAULTS
+    ctx.session.battlestats = {...BATTLESTATS_DEFAULTS}
   }
 
   ctx.session.battlestats.timeframe = newValue
