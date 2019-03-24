@@ -152,6 +152,14 @@ list:
   description: Deine Liste
   share: Teile deine Liste
   shareAttack: Plane gemeinsamen Angriff
+  help: >
+    Mit der Liste kannst du ganz einfach mit anderen Spielern zusammen arbeiten.
+    Wenn Mitspieler der Liste beitreten, kann die gemeinsame Stärke ermittelt und mit deinem zuletzt gesuchten Ziel verglichen werden.
+
+
+    Mitspieler die der Liste beitreten, werden nach einigen Minuten mit einer ⏳ markiert.
+    Nach einigen weiteren Minuten wandelt es sich in ein ⌛️ bis der Spieler wegen Inaktivität entfernt wird.
+    Du kannst aber auch den ‘Join’ Button nochmal benutzen um in der Liste zu bleiben.
 mystics: Mystische Kreaturen
 name:
   need: Dafür brauche ich deinen Namen. Leite mir dafür dein Hauptmenü zuerst weiter. 😅
