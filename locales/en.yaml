@@ -150,6 +150,18 @@ list:
   description: Your List
   share: Share your List
   shareAttack: Plan collective attack
+  help: >
+    The list is a tool to collaborate with others.
+    Other users of this bot can join in on your list.
+    That way you can predict your total army strength.
+
+
+    Others can see your last attack scout target so they know what they join in for.
+
+
+    Players that joined will be marked with a ⏳ after some minutes.
+    This changes to ⌛️ after some more minutes and finally they get removed as inactive.
+    Just hit 'Join' again to avoid being dropped before the time runs out. :)
 mystics: Mystic Creatures
 name:
   need: I need your name for that. Send me your main screen first. 😅

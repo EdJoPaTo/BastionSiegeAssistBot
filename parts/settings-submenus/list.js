@@ -8,16 +8,23 @@ const {createList} = require('../../lib/user-interface/inline-list')
 
 function menuText(ctx) {
   const now = Date.now() / 1000
+  const isPoweruser = poweruser.isPoweruser(ctx.from.id)
   let text = ''
+  text += emoji.list + ' '
+  text += `*${'List'}*\n`
 
-  if (!poweruser.isPoweruser(ctx.from.id)) {
-    text += `*${'List'}*\n`
+  if (!isPoweruser) {
     text += emoji.poweruser + ' '
     text += ctx.i18n.t('poweruser.usefulWhen')
-    return text
+    text += '\n\n'
   }
 
-  text += createList(ctx.from.id, 'default', now).text
+  text += ctx.i18n.t('list.help')
+
+  if (isPoweruser) {
+    text += '\n\n'
+    text += createList(ctx.from.id, 'default', now).text
+  }
 
   return text
 }
