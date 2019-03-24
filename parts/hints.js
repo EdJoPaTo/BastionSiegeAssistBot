@@ -16,8 +16,6 @@ bot.on('text', async (ctx, next) => {
     return next()
   }
 
-  ctx.session.lastHintTimestamp = now
-
   let poweruserHints = []
   if (poweruser.hasSendEnoughReports(ctx.from.id)) {
     const conditions = poweruser.getConditions(ctx.from.id)
@@ -28,6 +26,7 @@ bot.on('text', async (ctx, next) => {
     ...poweruserHints.map(o => POWERUSER_HINT_PREFIX + o)
   ]
   if (hints.length > 0) {
+    ctx.session.lastHintTimestamp = now
     await ctx.replyWithMarkdown(hints.join('\n\n'))
   }
 
