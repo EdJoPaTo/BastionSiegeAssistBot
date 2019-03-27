@@ -32,7 +32,7 @@ function viewOptions(ctx) {
   const options = ['solo']
 
   const isPoweruser = poweruser.isPoweruser(ctx.from.id)
-  const {alliance} = ctx.session.gameInformation.player
+  const {alliance} = ctx.session.gameInformation.player || {}
   if (isPoweruser && alliance) {
     options.push('allianceAttacks')
     options.push('allianceMates')
