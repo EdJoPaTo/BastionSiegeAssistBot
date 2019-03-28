@@ -1,6 +1,9 @@
-FROM node:11
+FROM node:11-alpine
 WORKDIR /app
 VOLUME /app/persist
+
+RUN apk --no-cache add fontconfig font-noto && \
+  fc-cache -f
 
 ENV NODE_ENV=production
 ADD package.json package-lock.json ./
