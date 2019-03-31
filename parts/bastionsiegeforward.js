@@ -16,6 +16,14 @@ bot.use((ctx, next) => {
   return next()
 })
 
+function forwardedFromClone(ctx) {
+  return ctx && ctx.message && ctx.message.forward_from && ctx.message.forward_from.id === 741981483
+}
+
+bot.on('text', Telegraf.optional(forwardedFromClone, ctx => {
+  return ctx.reply('🙃')
+}))
+
 // Load game screen type and information
 bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, (ctx, next) => {
   const {text, forward_date: timestamp} = ctx.message
