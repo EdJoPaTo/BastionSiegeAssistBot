@@ -31,7 +31,7 @@
   "dependencies": {
     "angle-distance": "^1.0.0",
     "array-filter-unique": "^2.0.0",
-    "bastion-siege-logic": "^1.0.0",
+    "bastion-siege-logic": "^1.2.0",
     "country-emoji": "^1.3.0",
     "d3": "^5.9.2",
     "d3-node": "^2.1.0",

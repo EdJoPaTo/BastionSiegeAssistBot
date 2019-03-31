@@ -1,3 +1,4 @@
+const {inputTextCleanup} = require('bastion-siege-logic')
 const Telegraf = require('telegraf')
 
 const {sortBy} = require('../lib/javascript-abstraction/array')
@@ -6,7 +7,6 @@ const playerStatsDb = require('../lib/data/playerstats-db')
 const poweruser = require('../lib/data/poweruser')
 const wars = require('../lib/data/wars')
 
-const {inputTextCleanup} = require('../lib/input/text-cleanup')
 const {mystics} = require('../lib/input/game-text')
 
 const {getMidnightXDaysEarlier} = require('../lib/math/unix-timestamp')
