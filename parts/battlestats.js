@@ -1,7 +1,10 @@
 const arrayFilterUnique = require('array-filter-unique')
 const Telegraf = require('telegraf')
 const TelegrafInlineMenu = require('telegraf-inline-menu')
-const {sameBattleResourceAssumption, uniqueBattlereportIdentifier} = require('bastion-siege-logic')
+const {
+  sameBattleResourceAssumption,
+  uniqueBattlereportIdentifier
+} = require('bastion-siege-logic')
 
 const regexHelper = require('../lib/javascript-abstraction/regex-helper')
 
