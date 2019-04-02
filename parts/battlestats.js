@@ -5,8 +5,6 @@ const {sameBattleResourceAssumption, uniqueBattlereportIdentifier} = require('ba
 
 const regexHelper = require('../lib/javascript-abstraction/regex-helper')
 
-const {isMystic} = require('../lib/input/gamescreen-name')
-
 const battlereports = require('../lib/data/battlereports')
 const poweruser = require('../lib/data/poweruser')
 
@@ -283,10 +281,10 @@ function createAllianceMates(ctx) {
       const solo = reports
         .filter(o => o.won)
         .filter(o => o.friends.length === 1)
-        .filter(o => !isMystic(o.enemies[0]))
+        .filter(o => !o.enemyMystic)
 
       const mystics = reports
-        .filter(o => isMystic(o.enemies[0]))
+        .filter(o => o.enemyMystic)
 
       return {
         playername,
