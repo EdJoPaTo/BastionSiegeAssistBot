@@ -28,9 +28,9 @@ bot.on('text', whenScreenIsOfType('war', async ctx => {
   text += '\n\n'
 
   if (battle) {
-    const time = ctx.message.forward_date
+    const {timestamp} = ctx.state.screen
     const now = Date.now() / 1000
-    const minutesAgo = (now - time) / 60
+    const minutesAgo = (now - timestamp) / 60
     if (minutesAgo > 8) {
       text += ctx.i18n.t('battle.over')
       return ctx.replyWithMarkdown(text)
@@ -48,7 +48,7 @@ bot.on('text', whenScreenIsOfType('war', async ctx => {
       text += createWarOneLineString(battle)
       text += '\n'
 
-      await wars.add(time, battle)
+      await wars.add(timestamp, battle)
       text += ctx.i18n.t('battle.inlineWar.updated')
       text += '\n\n'
 

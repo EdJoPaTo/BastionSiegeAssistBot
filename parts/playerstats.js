@@ -32,13 +32,13 @@ bot.on('text', whenScreenContainsInformation('attackscout', notNewMiddleware('ba
 }))
 
 bot.on('text', whenScreenContainsInformation('allianceBattleStart', notNewMiddleware('battle.over'), async ctx => {
+  const {timestamp} = ctx.state.screen
   const {allianceBattleStart} = ctx.state.screen.information
   const battle = allianceBattleStart.attack ?
     {attack: [allianceBattleStart.ally], defence: [allianceBattleStart.enemy]} :
     {attack: [allianceBattleStart.enemy], defence: [allianceBattleStart.ally]}
 
-  const time = ctx.message.forward_date
-  await wars.add(time, battle)
+  await wars.add(timestamp, battle)
 
   let text = ''
   text += ctx.i18n.t('battle.inlineWar.updated')

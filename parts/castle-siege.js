@@ -17,16 +17,16 @@ const MAXIMUM_PLAYER_AGE = ONE_DAY_IN_SECONDS * MAX_PLAYER_AGE_DAYS
 const bot = new Telegraf.Composer()
 
 bot.on('text', whenScreenContainsInformation('castleSiegePlayerJoined', notNewMiddleware('forward.old', castleSiege.MAXIMUM_JOIN_MINUTES), ctx => {
-  const time = ctx.message.forward_date
+  const {timestamp} = ctx.state.screen
   const {castleSiegePlayerJoined} = ctx.state.screen.information
   const {alliance, player} = castleSiegePlayerJoined
-  castleSiege.add(time, alliance, player)
+  castleSiege.add(timestamp, alliance, player)
 
-  const participants = castleSiege.getParticipants(time, alliance)
+  const participants = castleSiege.getParticipants(timestamp, alliance)
     .map(o => o.player)
 
   const missingMates = userSessions.getRaw()
-    .filter(o => o.data.gameInformation.playerTimestamp + MAXIMUM_PLAYER_AGE > time)
+    .filter(o => o.data.gameInformation.playerTimestamp + MAXIMUM_PLAYER_AGE > timestamp)
     .filter(o => o.data.gameInformation.player.alliance === alliance)
     .filter(o => !participants.includes(o.data.gameInformation.player.name))
     .map(({user, data}) => ({user, player: data.gameInformation.player.name}))
