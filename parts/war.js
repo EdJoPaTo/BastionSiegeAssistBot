@@ -4,6 +4,8 @@ const playerStatsDb = require('../lib/data/playerstats-db')
 const poweruser = require('../lib/data/poweruser')
 const wars = require('../lib/data/wars')
 
+const {whenScreenIsOfType} = require('../lib/input/gamescreen')
+
 const {createPlayerShareButton, createPlayerStatsString} = require('../lib/user-interface/player-stats')
 const {createWarOneLineString} = require('../lib/user-interface/war-stats')
 const {emoji} = require('../lib/user-interface/output-text')
@@ -13,12 +15,7 @@ const {Extra, Markup} = Telegraf
 
 const bot = new Telegraf.Composer()
 
-function isWarMenu(ctx) {
-  return ctx.state.screen &&
-    ctx.state.screen.type === 'war'
-}
-
-bot.on('text', Telegraf.optional(isWarMenu, async ctx => {
+bot.on('text', whenScreenIsOfType('war', async ctx => {
   const {domainStats, battle} = ctx.state.screen.information
   let text = `*${ctx.i18n.t('bs.war')}*\n`
   let extra = Extra.markdown()
