@@ -2,6 +2,7 @@ const Telegraf = require('telegraf')
 const {parseGamescreen} = require('bastion-siege-logic')
 
 const playerHistory = require('../lib/data/player-history')
+const failedBsMessages = require('../lib/data/failed-bs-messages')
 
 const {isForwardedFromBastionSiege} = require('../lib/input/bastion-siege-bot')
 
@@ -30,8 +31,13 @@ bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, (ctx, next) => {
 
   try {
     ctx.state.screen = parseGamescreen(text, timestamp)
+
+    if (failedBsMessages.isEmptyContent(ctx.state.screen)) {
+      failedBsMessages.add(ctx.message)
+    }
   } catch (error) {
     console.error('could not get screen information', text, error)
+    failedBsMessages.add(ctx.message)
     throw new Error('could not read Bastion Siege screen')
   }
 

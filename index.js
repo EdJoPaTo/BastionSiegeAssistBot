@@ -4,6 +4,7 @@ const I18n = require('telegraf-i18n')
 
 const userSessions = require('./lib/data/user-sessions')
 const wars = require('./lib/data/wars')
+const failedBsMessages = require('./lib/data/failed-bs-messages')
 
 const partAlerts = require('./parts/alerts')
 
@@ -25,6 +26,9 @@ const partSettings = require('./parts/settings')
 const partWar = require('./parts/war')
 
 const {Extra, Markup} = Telegraf
+
+// Try reading previous failed messages
+failedBsMessages.checkNowWorking()
 
 const tokenFilePath = process.env.NODE_ENV === 'production' ? process.env.npm_package_config_tokenpath : process.env.npm_package_config_tokenpathdebug
 const token = fs.readFileSync(tokenFilePath, 'utf8').trim()
