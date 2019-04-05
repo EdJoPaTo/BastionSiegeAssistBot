@@ -16,7 +16,7 @@ const {Extra, Markup} = Telegraf
 const bot = new Telegraf.Composer()
 
 bot.on('text', whenScreenIsOfType('war', async ctx => {
-  const {domainStats, battle} = ctx.state.screen.information
+  const {domainStats, battle, timestamp} = ctx.state.screen
   let text = `*${ctx.i18n.t('bs.war')}*\n`
   let extra = Extra.markdown()
 
@@ -28,7 +28,6 @@ bot.on('text', whenScreenIsOfType('war', async ctx => {
   text += '\n\n'
 
   if (battle) {
-    const {timestamp} = ctx.state.screen
     const now = Date.now() / 1000
     const minutesAgo = (now - timestamp) / 60
     if (minutesAgo > 8) {
@@ -37,7 +36,7 @@ bot.on('text', whenScreenIsOfType('war', async ctx => {
     }
 
     if (battle.enemy) {
-      const stats = playerStatsDb.get(battle.enemy)
+      const stats = playerStatsDb.get(battle.enemy.name)
       text += createPlayerStatsString(stats)
       extra = extra.markup(
         Markup.inlineKeyboard([

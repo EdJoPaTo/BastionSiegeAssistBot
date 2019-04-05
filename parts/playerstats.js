@@ -14,15 +14,15 @@ const {Extra, Markup} = Telegraf
 
 const bot = new Telegraf.Composer()
 
-bot.on('text', whenScreenContainsInformation('attackincoming', notNewMiddleware('battle.over'), ctx => {
-  const {attackincoming} = ctx.state.screen.information
-  const {text, extra} = generatePlayerStats(attackincoming.player)
+bot.on('text', whenScreenContainsInformation('attackIncoming', notNewMiddleware('battle.over'), ctx => {
+  const {attackIncoming} = ctx.state.screen
+  const {text, extra} = generatePlayerStats(attackIncoming.name)
   return ctx.reply(text, extra)
 }))
 
 bot.on('text', whenScreenContainsInformation('attackscout', notNewMiddleware('battle.scoutsGone', 2), ctx => {
-  const {attackscout} = ctx.state.screen.information
-  const {text} = generatePlayerStats(attackscout.player)
+  const {attackscout} = ctx.state.screen
+  const {text} = generatePlayerStats(attackscout.player.name)
 
   const keyboard = Markup.inlineKeyboard([
     Markup.switchToChatButton(ctx.i18n.t('list.shareAttack'), 'list')
@@ -32,11 +32,10 @@ bot.on('text', whenScreenContainsInformation('attackscout', notNewMiddleware('ba
 }))
 
 bot.on('text', whenScreenContainsInformation('allianceBattleStart', notNewMiddleware('battle.over'), async ctx => {
-  const {timestamp} = ctx.state.screen
-  const {allianceBattleStart} = ctx.state.screen.information
+  const {allianceBattleStart, timestamp} = ctx.state.screen
   const battle = allianceBattleStart.attack ?
-    {attack: [allianceBattleStart.ally], defence: [allianceBattleStart.enemy]} :
-    {attack: [allianceBattleStart.enemy], defence: [allianceBattleStart.ally]}
+    {attack: [allianceBattleStart.ally.name], defence: [allianceBattleStart.enemy.name]} :
+    {attack: [allianceBattleStart.enemy.name], defence: [allianceBattleStart.ally.name]}
 
   await wars.add(timestamp, battle)
 
@@ -44,21 +43,21 @@ bot.on('text', whenScreenContainsInformation('allianceBattleStart', notNewMiddle
   text += ctx.i18n.t('battle.inlineWar.updated')
   text += '\n\n'
 
-  const {text: statsText, extra} = generatePlayerStats(allianceBattleStart.enemy)
+  const {text: statsText, extra} = generatePlayerStats(allianceBattleStart.enemy.name)
   text += statsText
 
   return ctx.reply(text, extra)
 }))
 
 bot.on('text', whenScreenContainsInformation('allianceBattleSupport', notNewMiddleware('battle.over'), ctx => {
-  const {allianceBattleSupport} = ctx.state.screen.information
-  const {text, extra} = generatePlayerStats(allianceBattleSupport.player)
+  const {allianceBattleSupport} = ctx.state.screen
+  const {text, extra} = generatePlayerStats(allianceBattleSupport.name)
   return ctx.reply(text, extra)
 }))
 
-bot.on('text', whenScreenContainsInformation('alliancejoinrequest', notNewMiddleware(), ctx => {
-  const {alliancejoinrequest} = ctx.state.screen.information
-  const {text, extra} = generatePlayerStats(alliancejoinrequest.player)
+bot.on('text', whenScreenContainsInformation('allianceJoinRequest', notNewMiddleware(), ctx => {
+  const {allianceJoinRequest} = ctx.state.screen
+  const {text, extra} = generatePlayerStats(allianceJoinRequest.name)
   return ctx.reply(text, extra)
 }))
 
@@ -69,7 +68,7 @@ bot.on('text', whenScreenContainsInformation('castleSiegeParticipants', notNewMi
     return ctx.replyWithMarkdown(text)
   }
 
-  const {castleSiegeParticipants} = ctx.state.screen.information
+  const {castleSiegeParticipants} = ctx.state.screen
   text += castleSiegeParticipants
     .filter(o => o.players.length >= 5)
     .map(o => o.players.map(player => playerStatsDb.get(player)))

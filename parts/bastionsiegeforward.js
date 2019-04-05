@@ -1,9 +1,9 @@
 const Telegraf = require('telegraf')
+const {parseGamescreen} = require('bastion-siege-logic')
 
 const playerHistory = require('../lib/data/player-history')
 
 const {isForwardedFromBastionSiege} = require('../lib/input/bastion-siege-bot')
-const {detectGamescreen, getScreenInformation} = require('../lib/input/gamescreen')
 
 const bot = new Telegraf.Composer()
 
@@ -27,24 +27,12 @@ bot.on('text', Telegraf.optional(forwardedFromClone, ctx => {
 // Load game screen type and information
 bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, (ctx, next) => {
   const {text, forward_date: timestamp} = ctx.message
-  const ingameTimestamp = Math.floor(timestamp / 60) * 60
-  ctx.state.screen = {
-    ...detectGamescreen(text),
-    timestamp,
-    ingameTimestamp
-  }
 
   try {
-    ctx.state.screen.information = getScreenInformation(text)
+    ctx.state.screen = parseGamescreen(text, timestamp)
   } catch (error) {
-    console.error('could not get screen information', ctx.state.screen, text, error)
-    ctx.state.screen.information = {}
-  }
-
-  if (Object.keys(ctx.state.screen.information).length === 0) {
-    if (process.env.NODE_ENV !== 'production') {
-      console.log('newInformation is empty')
-    }
+    console.error('could not get screen information', text, error)
+    throw new Error('could not read Bastion Siege screen')
   }
 
   return next()
@@ -62,7 +50,7 @@ const WANTED_DATA = [
 
 // Save some gameInformation to session or ignore when already known
 bot.on('text', Telegraf.optional(isForwardedFromBastionSiege, (ctx, next) => {
-  const newInformation = ctx.state.screen.information
+  const newInformation = ctx.state.screen
   const {timestamp} = ctx.state.screen
 
   const dataAvailable = WANTED_DATA

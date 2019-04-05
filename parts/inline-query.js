@@ -1,4 +1,4 @@
-const {inputTextCleanup} = require('bastion-siege-logic')
+const {inputTextCleanup, MYSTICS_TEXT_EN} = require('bastion-siege-logic')
 const Telegraf = require('telegraf')
 
 const {sortBy} = require('../lib/javascript-abstraction/array')
@@ -6,8 +6,6 @@ const {sortBy} = require('../lib/javascript-abstraction/array')
 const playerStatsDb = require('../lib/data/playerstats-db')
 const poweruser = require('../lib/data/poweruser')
 const wars = require('../lib/data/wars')
-
-const {mystics} = require('../lib/input/game-text')
 
 const {getMidnightXDaysEarlier} = require('../lib/math/unix-timestamp')
 
@@ -81,9 +79,8 @@ bot.on('inline_query', async ctx => {
       .filter(o => queryTestFunc(createPlayerNameString(o)))
       .map(o => o.player)
   } else {
-    // TODO: migrate to bastion-siege-logic
-    // Currently only the english ones are in default search, mystics should be grouped by mystic, not by name
-    const freeOptions = [...mystics]
+    // TODO: Currently only the english ones are in default search, mystics should be grouped by mystic, not by name
+    const freeOptions = [...Object.values(MYSTICS_TEXT_EN)]
 
     if (user && ctx.session.gameInformation.playerTimestamp > getMidnightXDaysEarlier(now, poweruser.MAX_PLAYER_AGE_DAYS)) {
       freeOptions.push(user.name)

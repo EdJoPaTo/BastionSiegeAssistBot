@@ -1,6 +1,6 @@
 const Telegraf = require('telegraf')
 
-const {whenScreenContainsInformation} = require('../lib/input/gamescreen')
+const {whenScreenContainsInformation, whenScreenIsOfType} = require('../lib/input/gamescreen')
 
 const {ONE_DAY_IN_SECONDS} = require('../lib/math/unix-timestamp')
 
@@ -17,8 +17,7 @@ const MAXIMUM_PLAYER_AGE = ONE_DAY_IN_SECONDS * MAX_PLAYER_AGE_DAYS
 const bot = new Telegraf.Composer()
 
 bot.on('text', whenScreenContainsInformation('castleSiegePlayerJoined', notNewMiddleware('forward.old', castleSiege.MAXIMUM_JOIN_MINUTES), ctx => {
-  const {timestamp} = ctx.state.screen
-  const {castleSiegePlayerJoined} = ctx.state.screen.information
+  const {castleSiegePlayerJoined, timestamp} = ctx.state.screen
   const {alliance, player} = castleSiegePlayerJoined
   castleSiege.add(timestamp, alliance, player)
 
@@ -56,11 +55,11 @@ bot.on('text', whenScreenContainsInformation('castleSiegePlayerJoined', notNewMi
 }))
 
 bot.on('text', whenScreenContainsInformation('castleSiegeAllianceJoined', notNewMiddleware('forward.old', castleSiege.MAXIMUM_JOIN_MINUTES), ctx => {
-  const {castleSiegeAllianceJoined} = ctx.state.screen.information
+  const {castleSiegeAllianceJoined} = ctx.state.screen
   return ctx.reply(`Thats fancy ${castleSiegeAllianceJoined.alliance} joined but I dont know what to do with that information. 😇`)
 }))
 
-bot.on('text', whenScreenContainsInformation('castleSiegeYouJoined', notNewMiddleware('forward.old', castleSiege.MAXIMUM_JOIN_MINUTES), ctx => {
+bot.on('text', whenScreenIsOfType('castleSiegeYouJoined', notNewMiddleware('forward.old', castleSiege.MAXIMUM_JOIN_MINUTES), ctx => {
   return ctx.reply('Thats fancy you joined but I currently only work with messages of others joining in. 😇')
 }))
 
