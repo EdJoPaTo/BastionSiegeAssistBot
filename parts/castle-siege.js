@@ -1,3 +1,4 @@
+const debounce = require('debounce-promise')
 const Telegraf = require('telegraf')
 
 const {whenScreenContainsInformation, whenScreenIsOfType} = require('../lib/input/gamescreen')
@@ -12,15 +13,27 @@ const {createPlayerMarkdownLink, createPlayerNameString} = require('../lib/user-
 
 const {notNewMiddleware} = require('../lib/telegraf-middlewares')
 
+const DEBOUNCE_TIME = 200 // Milliseconds
+
 const MAXIMUM_PLAYER_AGE = ONE_DAY_IN_SECONDS * MAX_PLAYER_AGE_DAYS
 
 const bot = new Telegraf.Composer()
 
+const debouncedParticipants = {}
 bot.on('text', whenScreenContainsInformation('castleSiegePlayerJoined', notNewMiddleware('forward.old', castleSiege.MAXIMUM_JOIN_MINUTES), ctx => {
   const {castleSiegePlayerJoined, timestamp} = ctx.state.screen
   const {alliance, name} = castleSiegePlayerJoined
   castleSiege.add(timestamp, alliance, name)
 
+  const {id} = ctx.from
+  if (!debouncedParticipants[id]) {
+    debouncedParticipants[id] = debounce(replyCastleParticipants, DEBOUNCE_TIME)
+  }
+
+  debouncedParticipants[id](ctx, timestamp, alliance)
+}))
+
+function replyCastleParticipants(ctx, timestamp, alliance) {
   const participants = castleSiege.getParticipants(timestamp, alliance)
     .map(o => o.player)
     .filter(o => o) // There was a way that added unknown…
@@ -53,7 +66,7 @@ bot.on('text', whenScreenContainsInformation('castleSiegePlayerJoined', notNewMi
   text += '\n\n'
 
   return ctx.replyWithMarkdown(text)
-}))
+}
 
 bot.on('text', whenScreenContainsInformation('castleSiegeAllianceJoined', notNewMiddleware('forward.old', castleSiege.MAXIMUM_JOIN_MINUTES), ctx => {
   const {castleSiegeAllianceJoined} = ctx.state.screen
