@@ -18,11 +18,12 @@ const bot = new Telegraf.Composer()
 
 bot.on('text', whenScreenContainsInformation('castleSiegePlayerJoined', notNewMiddleware('forward.old', castleSiege.MAXIMUM_JOIN_MINUTES), ctx => {
   const {castleSiegePlayerJoined, timestamp} = ctx.state.screen
-  const {alliance, player} = castleSiegePlayerJoined
-  castleSiege.add(timestamp, alliance, player)
+  const {alliance, name} = castleSiegePlayerJoined
+  castleSiege.add(timestamp, alliance, name)
 
   const participants = castleSiege.getParticipants(timestamp, alliance)
     .map(o => o.player)
+    .filter(o => o) // There was a way that added unknown…
 
   const missingMates = userSessions.getRaw()
     .filter(o => o.data.gameInformation.playerTimestamp + MAXIMUM_PLAYER_AGE > timestamp)
