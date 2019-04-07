@@ -137,12 +137,12 @@ bot.action(/inlineWar:(.*):(.+)/, ctx => {
     alliance: ctx.match[1],
     name: ctx.match[2]
   }
-  wars.addInlineMessageToUpdate(now, player, ctx.callbackQuery.inline_message_id)
   const {timestamp, battle} = wars.getCurrent(now, player.name) || {}
   if (!timestamp) {
     return ctx.editMessageText('This war seems over…')
   }
 
+  wars.addInlineMessageToUpdate(now, player, ctx.callbackQuery.inline_message_id)
   const warText = createWarStats(timestamp, battle, player)
   return ctx.editMessageText(warText, Extra.markdown())
 })
