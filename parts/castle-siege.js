@@ -36,7 +36,6 @@ bot.on('text', whenScreenContainsInformation('castleSiegePlayerJoined', notNewMi
 function replyCastleParticipants(ctx, timestamp, alliance) {
   const participants = castleSiege.getParticipants(timestamp, alliance)
     .map(o => o.player)
-    .filter(o => o) // There was a way that added unknown…
 
   const missingMates = userSessions.getRaw()
     .filter(o => o.data.gameInformation.playerTimestamp + MAXIMUM_PLAYER_AGE > timestamp)
@@ -69,7 +68,9 @@ function replyCastleParticipants(ctx, timestamp, alliance) {
 }
 
 bot.on('text', whenScreenContainsInformation('castleSiegeAllianceJoined', notNewMiddleware('forward.old', castleSiege.MAXIMUM_JOIN_MINUTES), ctx => {
-  const {castleSiegeAllianceJoined} = ctx.state.screen
+  const {castleSiegeAllianceJoined, timestamp} = ctx.state.screen
+  castleSiege.add(timestamp, castleSiegeAllianceJoined.alliance, undefined)
+
   return ctx.reply(`Thats fancy ${castleSiegeAllianceJoined.alliance} joined but I dont know what to do with that information. 😇`)
 }))
 
