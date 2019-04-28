@@ -37,6 +37,7 @@
     "d3-node": "^2.1.0",
     "debounce-promise": "^3.1.0",
     "emoji-tree": "^1.1.2",
+    "fuzzysort": "^1.1.4",
     "json-stable-stringify": "^1.0.1",
     "moonmoji": "^1.1.10",
     "sharp": "^0.22.0",

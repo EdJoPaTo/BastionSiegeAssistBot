@@ -1,7 +1,8 @@
 const {inputTextCleanup, MYSTICS_TEXT_EN} = require('bastion-siege-logic')
+const fuzzysort = require('fuzzysort')
 const Telegraf = require('telegraf')
 
-const {sortBy} = require('../lib/javascript-abstraction/array')
+const {replaceLookingLikeAsciiChars} = require('../lib/javascript-abstraction/strings')
 
 const playerStatsDb = require('../lib/data/playerstats-db')
 const poweruser = require('../lib/data/poweruser')
@@ -20,7 +21,8 @@ const bot = new Telegraf.Composer()
 
 bot.on('inline_query', async ctx => {
   const {query} = ctx.inlineQuery
-  const queryTestFunc = getTestFunctionForQuery(query)
+  const cleanedUpQuery = replaceLookingLikeAsciiChars(inputTextCleanup(query))
+  const queryTestFunc = getTestFunctionForQuery(cleanedUpQuery)
   const offset = ctx.inlineQuery.offset || 0
   const now = Date.now() / 1000
   const isPoweruser = poweruser.isPoweruser(ctx.from.id)
@@ -75,9 +77,10 @@ bot.on('inline_query', async ctx => {
 
   if (isPoweruser && query && query.length >= 1) {
     const allPlayers = playerStatsDb.list()
-    players = allPlayers
-      .filter(o => queryTestFunc(createPlayerNameString(o)))
-      .map(o => o.player)
+    const result = await fuzzysort.goAsync(cleanedUpQuery, allPlayers, {
+      key: 'playerNameLookingLike'
+    })
+    players = result.map(o => o.obj.player)
   } else {
     // TODO: Currently only the english ones are in default search, mystics should be grouped by mystic, not by name
     const freeOptions = [...Object.values(MYSTICS_TEXT_EN)]
@@ -92,7 +95,6 @@ bot.on('inline_query', async ctx => {
 
   const playerResults = players
     .map(o => playerStatsDb.get(o))
-    .sort(sortBy(o => o.battlesObserved, true))
     .slice(offset, offset + 20)
     .map(stats => {
       return {
@@ -121,8 +123,7 @@ bot.on('inline_query', async ctx => {
   ], options)
 })
 
-function getTestFunctionForQuery(input) {
-  const query = inputTextCleanup(input)
+function getTestFunctionForQuery(query) {
   try {
     const regex = new RegExp(query, 'i')
     return o => regex.test(o)
