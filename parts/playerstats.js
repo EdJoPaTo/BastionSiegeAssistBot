@@ -1,5 +1,7 @@
 const Telegraf = require('telegraf')
 
+const {getUnicode} = require('../lib/javascript-abstraction/strings')
+
 const {whenScreenContainsInformation} = require('../lib/input/gamescreen')
 
 const playerStatsDb = require('../lib/data/playerstats-db')
@@ -22,13 +24,25 @@ bot.on('text', whenScreenContainsInformation('attackIncoming', notNewMiddleware(
 
 bot.on('text', whenScreenContainsInformation('attackscout', notNewMiddleware('battle.scoutsGone', 2), ctx => {
   const {attackscout} = ctx.state.screen
-  const {text} = generatePlayerStats(attackscout.player.name)
+  const {name} = attackscout.player
 
+  const possible = playerStatsDb.getLookingLike(name)
+
+  let prefix = ''
+  prefix += 'Search: '
+  prefix += getUnicode(name).join(' ')
+  prefix += '\n\n'
+
+  const {text, extra} = generatePlayerStats(possible.map(o => o.player))
+
+  // TODO: fix collective attack
+  /*
   const keyboard = Markup.inlineKeyboard([
     Markup.switchToChatButton(ctx.i18n.t('list.shareAttack'), 'list')
   ])
+  /**/
 
-  return ctx.reply(text, Extra.markdown().markup(keyboard))
+  return ctx.reply(prefix + text, extra)
 }))
 
 bot.on('text', whenScreenContainsInformation('allianceBattleStart', notNewMiddleware('battle.over'), async ctx => {
@@ -78,7 +92,7 @@ bot.on('text', whenScreenContainsInformation('castleSiegeParticipants', notNewMi
   return ctx.replyWithMarkdown(text)
 }))
 
-function generatePlayerStats(players) {
+function generatePlayerStats(players, short = false) {
   if (!Array.isArray(players)) {
     players = [players]
   }
@@ -88,7 +102,7 @@ function generatePlayerStats(players) {
   const buttons = allStats.map(o => createPlayerShareButton(o))
 
   let text = ''
-  if (allStats.length > 1) {
+  if (short) {
     text += allStats.map(o => createPlayerStatsTwoLineString(o, true)).join('\n')
   } else {
     text += allStats.map(o => createPlayerStatsString(o)).join('\n\n')
