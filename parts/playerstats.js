@@ -75,6 +75,22 @@ bot.on('text', whenScreenContainsInformation('allianceJoinRequest', notNewMiddle
   return ctx.reply(text, extra)
 }))
 
+bot.on('text', whenScreenContainsInformation('list', notNewMiddleware('forward.old'), ctx => {
+  if (!poweruser.isPoweruser(ctx.from.id)) {
+    return ctx.replyWithMarkdown(ctx.i18n.t('poweruser.usefulWhen'))
+  }
+
+  const {list} = ctx.state.screen
+  const names = list.map(o => o.name)
+
+  if (names.length === 0) {
+    return ctx.reply('not players…')
+  }
+
+  const {text, extra} = generatePlayerStats(names, true)
+  return ctx.reply(text, extra)
+}))
+
 bot.on('text', whenScreenContainsInformation('castleSiegeParticipants', notNewMiddleware('forward.old', 60), ctx => {
   let text = `*${ctx.i18n.t('bs.siege')}*\n`
   if (!poweruser.isPoweruser(ctx.from.id)) {
