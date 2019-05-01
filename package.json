@@ -13,7 +13,7 @@
   "homepage": "https://github.com/EdJoPaTo/BastionSiegeAssistBot#readme",
   "main": "index.js",
   "engines": {
-    "node": ">=11"
+    "node": ">=12"
   },
   "scripts": {
     "ava": "ava",
