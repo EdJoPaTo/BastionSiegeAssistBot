@@ -27,6 +27,9 @@ bot.on('text', whenScreenContainsInformation('attackscout', notNewMiddleware('ba
   const {name} = attackscout.player
 
   const possible = playerStatsDb.getLookingLike(name)
+  if (possible.length === 0) {
+    possible.push(playerStatsDb.get(name))
+  }
 
   let prefix = ''
   prefix += 'Search: '
