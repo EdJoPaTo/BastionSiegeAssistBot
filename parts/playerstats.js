@@ -1,7 +1,5 @@
 const Telegraf = require('telegraf')
 
-const {getUnicode} = require('../lib/javascript-abstraction/strings')
-
 const {whenScreenContainsInformation} = require('../lib/input/gamescreen')
 
 const playerStatsDb = require('../lib/data/playerstats-db')
@@ -31,11 +29,6 @@ bot.on('text', whenScreenContainsInformation('attackscout', notNewMiddleware('ba
     possible.push(playerStatsDb.get(name))
   }
 
-  let prefix = ''
-  prefix += 'Search: '
-  prefix += getUnicode(name).join(' ')
-  prefix += '\n\n'
-
   const {text, extra} = generatePlayerStats(possible.map(o => o.player))
 
   // TODO: fix collective attack
@@ -45,7 +38,7 @@ bot.on('text', whenScreenContainsInformation('attackscout', notNewMiddleware('ba
   ])
   /**/
 
-  return ctx.reply(prefix + text, extra)
+  return ctx.reply(text, extra)
 }))
 
 bot.on('text', whenScreenContainsInformation('allianceBattleStart', notNewMiddleware('battle.over'), async ctx => {
