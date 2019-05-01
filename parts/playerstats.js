@@ -1,5 +1,7 @@
 const Telegraf = require('telegraf')
 
+const {sortBy} = require('../lib/javascript-abstraction/array')
+
 const {whenScreenContainsInformation} = require('../lib/input/gamescreen')
 
 const playerStatsDb = require('../lib/data/playerstats-db')
@@ -25,6 +27,7 @@ bot.on('text', whenScreenContainsInformation('attackscout', notNewMiddleware('ba
   const {name} = attackscout.player
 
   const possible = playerStatsDb.getLookingLike(name)
+  possible.sort(sortBy(o => o.lastBattleTime, true))
   if (possible.length === 0) {
     possible.push(playerStatsDb.get(name))
   }
