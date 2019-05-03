@@ -35,8 +35,9 @@ function viewOptions(ctx) {
   const isPoweruser = poweruser.isPoweruser(ctx.from.id)
   const {alliance} = ctx.session.gameInformation.player || {}
   if (isPoweruser && alliance) {
-    options.push('allianceAttacks')
     options.push('allianceMates')
+    options.push('allianceSolo')
+    options.push('allianceAttacks')
   }
 
   return options
@@ -55,9 +56,10 @@ menu.select('view', viewOptions, {
   },
   textFunc: (ctx, key) => {
     switch (key) {
-      case 'solo': return ctx.i18n.t('battle.solo')
-      case 'allianceAttacks': return ctx.i18n.t('battle.alliance')
-      case 'allianceMates': return ctx.i18n.t('bs.allianceMembers')
+      case 'allianceAttacks': return emoji.alliance + ctx.i18n.t('battle.alliance')
+      case 'allianceMates': return emoji.alliance + ctx.i18n.t('bs.allianceMembers')
+      case 'allianceSolo': return emoji.alliance + ctx.i18n.t('battle.solo')
+      case 'solo': return emoji.solo + ctx.i18n.t('battle.solo')
       default: return key
     }
   }
@@ -144,6 +146,8 @@ function getBattlestatsText(ctx) {
       return createAllianceAttacks(ctx)
     case 'allianceMates':
       return createAllianceMates(ctx)
+    case 'allianceSolo':
+      return createAllianceSolo(ctx)
     default:
       return createSolo(ctx)
   }
@@ -219,6 +223,31 @@ function getAllianceRelevantData(ctx) {
     firstTimeRelevant,
     header: text
   }
+}
+
+function createAllianceSolo(ctx) {
+  const {firstTimeRelevant, allianceMates, header} = getAllianceRelevantData(ctx)
+
+  let text = ''
+  text += header
+  text += '\n'
+
+  if (!allianceMates) {
+    return ctx.replyWithMarkdown(text)
+  }
+
+  const allianceMateUserIds = allianceMates
+    .map(o => o.user)
+
+  const reports = battlereports.getAll()
+    .filter(o => allianceMateUserIds.includes(o.providingTgUser))
+    .filter(report => report.time > firstTimeRelevant)
+
+  const {type} = ctx.session.battlestats || BATTLESTATS_DEFAULTS
+  const stats = battleStats.generate(reports, o => o[type])
+  text += createBattleStatsString(stats, type, ctx.i18n.locale())
+
+  return text
 }
 
 function createAllianceAttacks(ctx) {
