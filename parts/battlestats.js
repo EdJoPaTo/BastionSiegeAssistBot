@@ -190,7 +190,7 @@ function createSolo(ctx) {
   return text
 }
 
-function createAllianceAttacks(ctx) {
+function getAllianceRelevantData(ctx) {
   const timeframe = getCurrentTimeframe(ctx)
   const firstTimeRelevant = getFirstTimeRelevantForTimeframe(timeframe)
 
@@ -199,21 +199,40 @@ function createAllianceAttacks(ctx) {
 
   if (!poweruser.isPoweruser(ctx.from.id)) {
     text += emoji.poweruser + ' ' + ctx.i18n.t('poweruser.usefulWhen')
-    return ctx.replyWithMarkdown(text)
+    return {header: text}
   }
 
   const {alliance} = ctx.session.gameInformation.player
   if (!alliance) {
     text += ctx.i18n.t('name.noAlliance')
+    return {header: text}
+  }
+
+  const allianceMates = poweruser.getPoweruserSessions()
+    .filter(o => o.data.gameInformation.player.alliance === alliance)
+
+  text += ctx.i18n.t('bs.allianceMembers')
+  text += `: ${allianceMates.length}${emoji.poweruser}\n`
+
+  return {
+    allianceMates,
+    firstTimeRelevant,
+    header: text
+  }
+}
+
+function createAllianceAttacks(ctx) {
+  const {firstTimeRelevant, allianceMates, header} = getAllianceRelevantData(ctx)
+
+  let text = ''
+  text += header
+
+  if (!allianceMates) {
     return ctx.replyWithMarkdown(text)
   }
 
-  const allianceMateNames = poweruser.getPoweruserSessions()
-    .filter(o => o.data.gameInformation.player.alliance === alliance)
+  const allianceMateNames = allianceMates
     .map(o => o.data.gameInformation.player.name)
-
-  text += ctx.i18n.t('bs.allianceMembers')
-  text += `: ${allianceMateNames.length}${emoji.poweruser}\n`
 
   const allReports = battlereports.getAll()
     .filter(o => o.friends.length > 1 || o.enemies.length > 1)
@@ -249,28 +268,14 @@ function createAllianceAttacks(ctx) {
 }
 
 function createAllianceMates(ctx) {
-  const timeframe = getCurrentTimeframe(ctx)
-  const firstTimeRelevant = getFirstTimeRelevantForTimeframe(timeframe)
+  const {firstTimeRelevant, allianceMates, header} = getAllianceRelevantData(ctx)
 
-  let text = createHeader(ctx, timeframe, true)
-  text += '\n'
+  let text = ''
+  text += header
 
-  if (!poweruser.isPoweruser(ctx.from.id)) {
-    text += emoji.poweruser + ' ' + ctx.i18n.t('poweruser.usefulWhen')
+  if (!allianceMates) {
     return ctx.replyWithMarkdown(text)
   }
-
-  const {alliance, name} = ctx.session.gameInformation.player
-  if (!alliance) {
-    text += ctx.i18n.t('name.noAlliance')
-    return ctx.replyWithMarkdown(text)
-  }
-
-  const allianceMates = poweruser.getPoweruserSessions()
-    .filter(o => o.data.gameInformation.player.alliance === alliance)
-
-  text += ctx.i18n.t('bs.allianceMembers')
-  text += `: ${allianceMates.length}${emoji.poweruser}\n`
 
   const relevantReports = battlereports.getAll()
     .filter(o => o.time > firstTimeRelevant)
@@ -300,6 +305,7 @@ function createAllianceMates(ctx) {
       }
     })
 
+  const {name} = ctx.session.gameInformation.player
   text += '\n'
   text += createRanking(mateInfo, 'battlereport', ctx.i18n.t('battlereports'), name)
   const {type} = (ctx.session.battlestats || BATTLESTATS_DEFAULTS)
