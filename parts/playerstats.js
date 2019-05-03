@@ -24,10 +24,13 @@ bot.on('text', whenScreenContainsInformation('attackIncoming', notNewMiddleware(
 
 bot.on('text', whenScreenContainsInformation('attackscout', notNewMiddleware('battle.scoutsGone', 2), ctx => {
   const {attackscout} = ctx.state.screen
-  const {name} = attackscout.player
+  const {player, terra} = attackscout
+  const {name} = player
 
   const possible = playerStatsDb.getLookingLike(name)
-  possible.sort(sortBy(o => o.lastBattleTime, true))
+    // NaN of o.terra does not change the order -> use time as fallback
+    .sort(sortBy(o => o.lastBattleTime, true))
+    .sort(sortBy(o => Math.abs(o.terra - terra, true)))
   if (possible.length === 0) {
     possible.push(playerStatsDb.get(name))
   }
