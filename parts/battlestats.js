@@ -187,6 +187,11 @@ function createSolo(ctx) {
   let text = createHeader(ctx, timeframe, false)
   text += '\n\n'
 
+  if (!poweruser.isPoweruser(ctx.from.id)) {
+    text += emoji.poweruser + ' ' + ctx.i18n.t('poweruser.usefulWhen')
+    text += '\n\n'
+  }
+
   const {type} = ctx.session.battlestats || BATTLESTATS_DEFAULTS
   const stats = battleStats.generate(reports, o => o[type])
   text += createBattleStatsString(stats, type, ctx.i18n.locale())
