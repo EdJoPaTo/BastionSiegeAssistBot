@@ -44,7 +44,7 @@
     "telegraf": "^3.28.0",
     "telegraf-i18n": "^6.5.0",
     "telegraf-inline-menu": "^3.5.2",
-    "telegraf-session-local": "0.0.6"
+    "telegraf-session-local": "0.0.7"
   },
   "devDependencies": {
     "ava": "^1.4.1",
