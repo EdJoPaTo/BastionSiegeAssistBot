@@ -66,7 +66,8 @@ battlereports: Laporan pertarungan
 botstats:
   title: Statistik Bot
   analysedPlayers: Pemain yang dianalisa
-  battlereportsWithin24h: Laporan pertarungan ditambahkan dalam 24 jam
+  within24h: dalam 24 jam
+  within30d: dalam 30 hari
   users: Pengguna
 buildings:
   capacity: Muatan

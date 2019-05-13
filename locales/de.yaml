@@ -85,7 +85,8 @@ battlestats:
 botstats:
   title: Statistiken über den Bot
   analysedPlayers: Analysierte Spieler
-  battlereportsWithin24h: In den letzten 24h hinzugefügte Kampfberichte
+  within24h: In den letzten 24 Stunden
+  within30d: In den letzten 30 Tagen
   users: Nutzer
 buildings:
   capacity: Kapazität
