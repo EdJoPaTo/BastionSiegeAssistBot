@@ -3,7 +3,7 @@ const {calcSemitotalGold, calcRecoveryMissingPeople, calcWallRepairCost, calcWal
 
 const battlereports = require('../lib/data/battlereports')
 const playerStatsDb = require('../lib/data/playerstats-db')
-const {isImmune} = require('../lib/data/poweruser')
+const {isImmune, getReportsTodayAmount} = require('../lib/data/poweruser')
 
 const {ONE_DAY_IN_SECONDS} = require('../lib/math/unix-timestamp')
 
@@ -138,6 +138,11 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
     } else {
       text += '\n' + ctx.i18n.t('battlereport.known')
     }
+
+    text += '\n'
+    const reportsToday = getReportsTodayAmount(ctx.from.id)
+    const requiredReports = 10
+    text += `📅 ${reportsToday} / ${requiredReports}${emoji.battlereport}`
 
     if (expectedName) {
       const expectedNameIsInFriends = report.friends.includes(expectedName)
