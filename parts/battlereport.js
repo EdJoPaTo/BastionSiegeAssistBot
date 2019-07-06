@@ -10,7 +10,7 @@ const {ONE_DAY_IN_SECONDS} = require('../lib/math/unix-timestamp')
 const {whenScreenContainsInformation} = require('../lib/input/gamescreen')
 
 const {createPlayerShareButton, createPlayerStatsString, createTwoSidesStatsString} = require('../lib/user-interface/player-stats')
-const {createSingleBattleShortStatsLine} = require('../lib/user-interface/battle-stats')
+const {createSingleBattleShortStatsLine, createSingleAllianceBattleShortStatsLine} = require('../lib/user-interface/battle-stats')
 const {formatNumberShort} = require('../lib/user-interface/format-number')
 const {emoji} = require('../lib/user-interface/output-text')
 
@@ -99,6 +99,11 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
     text += '\n'
     text += createSingleBattleShortStatsLine(report)
     text += '\n'
+
+    if (report.friends.length > 1 && report.won) {
+      text += createSingleAllianceBattleShortStatsLine(report)
+      text += '\n\n'
+    }
 
     const {name: expectedName} = ctx.session.gameInformation.player || {}
 
