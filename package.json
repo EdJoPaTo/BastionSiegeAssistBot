@@ -1,7 +1,7 @@
 {
   "name": "bastion-siege-assist-bot",
   "private": "true",
-  "version": "3.10.0",
+  "version": "3.11.0",
   "license": "MIT",
   "repository": {
     "type": "git",
