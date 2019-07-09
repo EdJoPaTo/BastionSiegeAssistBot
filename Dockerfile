@@ -1,6 +1,7 @@
 FROM node:12-alpine
 WORKDIR /app
 VOLUME /app/persist
+VOLUME /app/tmp
 
 RUN apk --no-cache add fontconfig font-noto && \
   fc-cache -f
