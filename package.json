@@ -24,10 +24,6 @@
     "test": "nyc ava",
     "xo": "xo"
   },
-  "config": {
-    "tokenpath": "/run/secrets/bastionsiegeassist-token.txt",
-    "tokenpathdebug": "token.txt"
-  },
   "dependencies": {
     "angle-distance": "^1.0.0",
     "array-filter-unique": "^2.1.0",

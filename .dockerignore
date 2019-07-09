@@ -7,4 +7,4 @@ node_modules
 
 # botfiles
 persist
-token.txt
+bot-token.txt
