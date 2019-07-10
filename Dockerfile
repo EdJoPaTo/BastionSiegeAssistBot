@@ -11,4 +11,4 @@ ADD package.json package-lock.json ./
 RUN npm ci
 
 ADD . .
-CMD ["npm", "start"]
+CMD node index.js
