@@ -127,7 +127,7 @@ function getTestFunctionForQuery(query) {
   try {
     const regex = new RegExp(query, 'i')
     return o => regex.test(o)
-  } catch (error) {
+  } catch (_) {
     return o => o.includes(query)
   }
 }

@@ -33,7 +33,7 @@ function canGetGamescreenContent(message) {
 
     const isEmpty = isEmptyContent(content)
     return !isEmpty
-  } catch (error) {
+  } catch (_) {
     // Nope, can not be detected
     return false
   }

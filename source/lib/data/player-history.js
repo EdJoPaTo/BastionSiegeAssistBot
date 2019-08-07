@@ -27,7 +27,7 @@ function load() {
         }
       }
     }
-  } catch (error) {
+  } catch (_) {
   }
 }
 
