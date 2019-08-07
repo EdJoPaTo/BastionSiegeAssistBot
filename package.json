@@ -16,13 +16,10 @@
     "node": ">=12"
   },
   "scripts": {
-    "ava": "ava",
-    "ava:watch": "ava -w",
-    "nyc": "nyc",
-    "start": "node source/index.js",
-    "pretest": "xo",
-    "test": "nyc ava",
-    "xo": "xo"
+    "build": "del dist && tsc",
+    "prepack": "npm run build",
+    "start": "ts-node source/index.js",
+    "test": "xo && nyc ava"
   },
   "dependencies": {
     "angle-distance": "^1.0.0",
@@ -37,32 +34,85 @@
     "json-stable-stringify": "^1.0.1",
     "moonmoji": "^1.1.10",
     "sharp": "^0.23.0",
+    "source-map-support": "^0.5.13",
     "telegraf": "^3.28.0",
     "telegraf-i18n": "^6.5.0",
     "telegraf-inline-menu": "^3.5.2",
     "telegraf-session-local": "^1.0.2"
   },
   "devDependencies": {
+    "@sindresorhus/tsconfig": "^0.4.0",
+    "@types/json-stable-stringify": "^1.0.32",
+    "@types/node": "^12.7.1",
+    "@typescript-eslint/eslint-plugin": "^1.13.0",
+    "@typescript-eslint/parser": "^1.13.0",
     "ava": "^2.0.0",
+    "del-cli": "^2.0.0",
+    "eslint-config-xo-typescript": "^0.15.0",
     "nyc": "^14.0.0",
+    "ts-node": "^8.3.0",
+    "typescript": "^3.5.3",
     "xo": "^0.24.0"
   },
   "ava": {
-    "modules": false,
-    "sources": [
-      "locales/*.yaml",
-      "source/**/*.js"
+    "babel": false,
+    "compileEnhancements": false,
+    "extensions": [
+      "js",
+      "ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ]
+  },
+  "nyc": {
+    "extension": [
+      ".js",
+      ".ts"
+    ],
+    "include": [
+      "source"
+    ],
+    "exclude": [
+      "**/*.test.ts"
+    ],
+    "reporter": [
+      "lcov",
+      "text"
     ]
   },
   "xo": {
     "space": true,
     "semicolon": false,
+    "extends": "xo-typescript",
+    "extensions": [
+      "js",
+      "ts"
+    ],
+    "rules": {
+      "ava/no-ignored-test-files": "off",
+      "@typescript-eslint/array-type": "warn",
+      "@typescript-eslint/await-thenable": "warn",
+      "@typescript-eslint/no-unused-vars": "warn",
+      "@typescript-eslint/no-var-requires": "warn",
+      "@typescript-eslint/promise-function-async": "warn",
+      "@typescript-eslint/restrict-plus-operands": "warn",
+      "@typescript-eslint/indent": [
+        "error",
+        2
+      ],
+      "@typescript-eslint/semi": [
+        "error",
+        "never"
+      ]
+    },
     "overrides": [
       {
         "files": [
-          "source/parts/inline-query.js"
+          "source/parts/inline-query.*"
         ],
         "rules": {
+          "@typescript-eslint/camelcase": "off",
           "camelcase": "off"
         }
       }
