@@ -160,3 +160,4 @@ bot.catch(error => {
 })
 
 bot.startPolling()
+console.log(new Date(), 'Bot started')
