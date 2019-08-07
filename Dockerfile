@@ -10,5 +10,6 @@ ENV NODE_ENV=production
 ADD package.json package-lock.json ./
 RUN npm ci
 
-ADD . .
+COPY locales locales
+COPY source ./
 CMD node index.js

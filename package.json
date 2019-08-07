@@ -1,6 +1,6 @@
 {
   "name": "bastion-siege-assist-bot",
-  "private": "true",
+  "private": true,
   "version": "4.0.0",
   "license": "MIT",
   "repository": {
@@ -11,7 +11,7 @@
     "url": "https://github.com/EdJoPaTo/BastionSiegeAssistBot/issues"
   },
   "homepage": "https://github.com/EdJoPaTo/BastionSiegeAssistBot#readme",
-  "main": "index.js",
+  "main": "source",
   "engines": {
     "node": ">=12"
   },
@@ -19,7 +19,7 @@
     "ava": "ava",
     "ava:watch": "ava -w",
     "nyc": "nyc",
-    "start": "node index.js",
+    "start": "node source/index.js",
     "pretest": "xo",
     "test": "nyc ava",
     "xo": "xo"
@@ -51,7 +51,7 @@
     "modules": false,
     "sources": [
       "locales/*.yaml",
-      "**/*.js"
+      "source/**/*.js"
     ]
   },
   "xo": {
@@ -60,15 +60,10 @@
     "overrides": [
       {
         "files": [
-          "parts/inline-query.js"
+          "source/parts/inline-query.js"
         ],
         "rules": {
-          "camelcase": [
-            "warn",
-            {
-              "properties": "never"
-            }
-          ]
+          "camelcase": "off"
         }
       }
     ]
