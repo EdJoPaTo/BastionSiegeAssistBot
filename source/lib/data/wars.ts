@@ -18,12 +18,12 @@ export function init(tg: any): void {
   telegram = tg
 }
 
-async function add(timestamp: number, battle: BattleAlliance): Promise<void> {
+export async function add(timestamp: number, battle: BattleAlliance): Promise<void> {
   const inlineMessagesToUpdate = addInternal(timestamp, battle)
   cache.save()
 
   await Promise.all(
-    inlineMessagesToUpdate.map(inlineMessage => updateInlineMessage(timestamp, battle, inlineMessage))
+    inlineMessagesToUpdate.map(async inlineMessage => updateInlineMessage(timestamp, battle, inlineMessage))
   )
 }
 
@@ -72,7 +72,7 @@ export function getCurrent(currentTimestamp: number, playername: string): War {
     .sort(sortBy(o => o.timestamp, true))[0]
 }
 
-export function addInlineMessageToUpdate(currentTimestamp: number, player: {name: string; alliance: string}, inlineMessageId: string) {
+export function addInlineMessageToUpdate(currentTimestamp: number, player: {name: string; alliance: string}, inlineMessageId: string): void {
   const entry = getCurrent(currentTimestamp, player.name)
   entry.inlineMessages.push({
     inlineMessageId,
