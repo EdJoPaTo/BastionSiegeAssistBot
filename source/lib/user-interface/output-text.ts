@@ -1,5 +1,6 @@
 import {EMOJI} from 'bastion-siege-logic'
 
+/* eslint @typescript-eslint/no-var-requires: warn */
 const moonmoji = require('moonmoji')
 
 type Dictionary<T> = {[key: string]: T}
