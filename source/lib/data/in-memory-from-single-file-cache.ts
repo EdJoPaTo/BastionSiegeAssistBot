@@ -1,28 +1,32 @@
-const {writeFileSync, readFileSync} = require('fs')
+import {writeFileSync, readFileSync} from 'fs'
 
-const stringify = require('json-stable-stringify')
+import stringify from 'json-stable-stringify'
 
-class InMemoryFromSingleFileCache {
-  constructor(file, defaultData = {}) {
-    this.file = file
+export default class InMemoryFromSingleFileCache<T> {
+  public data: T
+
+  constructor(
+    private readonly file: string,
+    defaultData: any = {}
+  ) {
     this.data = load(file, defaultData)
   }
 
-  save() {
+  save(): void {
     writeFileSync(this.file, stringify(this.data, {space: 2}) + '\n', 'utf8')
   }
 }
 
-function load(file, defaultData) {
+function load<T>(file: string, defaultData: T): T {
   const isArray = Array.isArray(defaultData)
   try {
-    const content = JSON.parse(readFileSync(file))
+    const content = JSON.parse(readFileSync(file, 'utf8'))
 
     if (isArray) {
       return [
-        ...defaultData,
+        ...defaultData as any,
         ...content
-      ]
+      ] as any
     }
 
     return {
@@ -39,8 +43,8 @@ function load(file, defaultData) {
 
     if (isArray) {
       return [
-        ...defaultData
-      ]
+        ...defaultData as any
+      ] as any
     }
 
     return {

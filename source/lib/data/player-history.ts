@@ -1,19 +1,21 @@
-const {writeFileSync, readFileSync, mkdirSync, readdirSync} = require('fs')
+import {writeFileSync, readFileSync, mkdirSync, readdirSync} from 'fs'
 
-const arrayFilterUnique = require('array-filter-unique')
-const stringify = require('json-stable-stringify')
+import arrayFilterUnique from 'array-filter-unique'
+import stringify from 'json-stable-stringify'
+
+type Dictionary<T> = {[key: string]: T}
 
 const KEEP_ONLY_LATEST = ['attackscout', 'effects', 'resources']
 
 const FOLDER = 'persist/player-history/'
 mkdirSync(FOLDER, {recursive: true})
 
-const playerData = {}
+const playerData: Dictionary<Dictionary<any>> = {}
 console.time('player history')
 load()
 console.timeEnd('player history')
 
-function load() {
+function load(): void {
   try {
     const userIds = readdirSync(FOLDER)
       .map(o => o.replace('.json', ''))
@@ -31,7 +33,7 @@ function load() {
   }
 }
 
-function loadUser(userId) {
+function loadUser(userId: number | string): any {
   const file = `${FOLDER}${userId}.json`
   try {
     return JSON.parse(readFileSync(file, 'utf8'))
@@ -41,18 +43,18 @@ function loadUser(userId) {
   }
 }
 
-function save(userId) {
+function save(userId: number): void {
   const file = `${FOLDER}${userId}.json`
   const content = stringify(playerData[userId], {space: 2}) + '\n'
   writeFileSync(file, content, 'utf8')
 }
 
-function add(userId, type, unixTimestamp, data) {
+export function add(userId: number, type: string, unixTimestamp: number, data: any): void {
   addInternal(userId, type, unixTimestamp, data)
   save(userId)
 }
 
-function addInternal(userId, type, unixTimestamp, data) {
+function addInternal(userId: number | string, type: string, unixTimestamp: number, data: any): void {
   if (!playerData[userId]) {
     playerData[userId] = {}
   }
@@ -72,7 +74,7 @@ function addInternal(userId, type, unixTimestamp, data) {
   const checkForKnown = [
     ...playerData[userId][type]
       .slice(-2)
-      .map(o => o.data),
+      .map((o: any) => o.data),
     data
   ]
 
@@ -99,7 +101,7 @@ function addInternal(userId, type, unixTimestamp, data) {
   }
 }
 
-function getAllTimestamps(userId, type) {
+export function getAllTimestamps(userId: number, type: string): readonly number[] {
   if (!playerData[userId] || !playerData[userId][type]) {
     return []
   }
@@ -107,11 +109,11 @@ function getAllTimestamps(userId, type) {
   return playerData[userId][type]
 }
 
-function getLastTimestamp(userId, type) {
+export function getLastTimestamp(userId: number, type: string): number {
   return getAllTimestamps(userId, type).slice(-1)[0]
 }
 
-function getLastTimeActive(userId) {
+export function getLastTimeActive(userId: number): number {
   if (!playerData[userId]) {
     return -Infinity
   }

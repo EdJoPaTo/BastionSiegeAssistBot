@@ -1,15 +1,17 @@
-const arrayFilterUnique = require('array-filter-unique')
+import arrayFilterUnique from 'array-filter-unique'
 
-const {sortBy} = require('../javascript-abstraction/array')
+import {CastleSiegeEntry} from '../types'
 
-const InMemoryFromSingleFileCache = require('./in-memory-from-single-file-cache')
+import {sortBy} from '../javascript-abstraction/array'
 
-const cache = new InMemoryFromSingleFileCache('tmp/castle-siege.json', [])
+import InMemoryFromSingleFileCache from './in-memory-from-single-file-cache'
 
-const MAXIMUM_JOIN_MINUTES = 60 * 5 // 5 hours
-const MAXIMUM_JOIN_SECONDS = 60 * MAXIMUM_JOIN_MINUTES
+const cache = new InMemoryFromSingleFileCache<CastleSiegeEntry[]>('tmp/castle-siege.json', [])
 
-function add(timestamp, alliance, player) {
+export const MAXIMUM_JOIN_MINUTES = 60 * 5 // 5 hours
+export const MAXIMUM_JOIN_SECONDS = 60 * MAXIMUM_JOIN_MINUTES
+
+export function add(timestamp: number, alliance: string, player: string): void {
   cache.data = cache.data
     .filter(o => o.timestamp > timestamp - MAXIMUM_JOIN_SECONDS)
     .filter(o => o.player !== player || o.alliance !== alliance)
@@ -23,7 +25,7 @@ function add(timestamp, alliance, player) {
   cache.save()
 }
 
-function getAlliances(currentTimestamp) {
+export function getAlliances(currentTimestamp: number): readonly string[] {
   return cache.data
     .filter(o => o.timestamp > currentTimestamp - MAXIMUM_JOIN_SECONDS)
     .sort(sortBy(o => o.timestamp))
@@ -31,7 +33,7 @@ function getAlliances(currentTimestamp) {
     .filter(arrayFilterUnique())
 }
 
-function getParticipants(currentTimestamp, alliance) {
+export function getParticipants(currentTimestamp: number, alliance: string): readonly CastleSiegeEntry[] {
   return cache.data
     .filter(o => o.timestamp > currentTimestamp - MAXIMUM_JOIN_SECONDS)
     .filter(o => o.alliance === alliance)
