@@ -1,11 +1,13 @@
-const {emoji} = require('./output-text')
+import {PoweruserCondition, PoweruserConditionType} from '../types'
 
-function getHintStrings(ctx, conditions) {
+import {emoji} from './output-text'
+
+export function getHintStrings(ctx: any, conditions: readonly PoweruserCondition[]): string[] {
   const hints = []
 
   hints.push(createHintText(
     conditions.filter(o => o.type === 'name')[0],
-    ctx.i18n.t('poweruser.nameOld') + ' ' + ctx.i18n.t('name.update'),
+    `${ctx.i18n.t('poweruser.nameOld')} ${ctx.i18n.t('name.update')}`,
     ctx.i18n.t('poweruser.nearlyOld')
   ))
 
@@ -22,10 +24,10 @@ function getHintStrings(ctx, conditions) {
   ))
 
   return hints
-    .filter(o => o)
+    .filter(o => o) as string[]
 }
 
-function createHintText(condition, badText, additionalWarningText) {
+function createHintText(condition: PoweruserCondition, badText: string, additionalWarningText: string): string | undefined {
   if (condition.status && !condition.warning) {
     return
   }
@@ -39,7 +41,7 @@ function createHintText(condition, badText, additionalWarningText) {
   return hint
 }
 
-function conditionEmoji(condition) {
+export function conditionEmoji(condition: PoweruserCondition): string {
   if (condition.status && !condition.warning) {
     return emoji.yes
   }
@@ -51,7 +53,7 @@ function conditionEmoji(condition) {
   return emoji.warning
 }
 
-function conditionTypeTranslation(ctx, type) {
+export function conditionTypeTranslation(ctx: any, type: PoweruserConditionType): string {
   switch (type) {
     case 'battlereports':
       return ctx.i18n.t('battlereports')

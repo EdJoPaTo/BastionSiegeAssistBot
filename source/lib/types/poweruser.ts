@@ -1,5 +1,7 @@
+export type PoweruserConditionType = 'battlereports' | 'buildings' | 'name' | 'workshop'
+
 export interface PoweruserCondition {
-  type: string;
+  type: PoweruserConditionType;
   required: boolean;
   status: boolean;
   warning: boolean;
