@@ -61,22 +61,22 @@ export function getConditions(id: number): readonly PoweruserCondition[] {
 
   conditions.push({
     required: true,
-    status: playerTimestamp && playerTimestamp > getMidnightXDaysEarlier(now, MAX_PLAYER_AGE_DAYS),
-    warning: playerTimestamp && playerTimestamp < getMidnightXDaysEarlier(now, 2),
+    status: Boolean(playerTimestamp && playerTimestamp > getMidnightXDaysEarlier(now, MAX_PLAYER_AGE_DAYS)),
+    warning: Boolean(playerTimestamp && playerTimestamp < getMidnightXDaysEarlier(now, 2)),
     type: 'name'
   })
 
   conditions.push({
     required: true,
-    status: buildingsTimestamp && buildingsTimestamp > getMidnightXDaysEarlier(now, MAX_BUILDING_AGE_DAYS),
-    warning: buildingsTimestamp && buildingsTimestamp < getMidnightXDaysEarlier(now, 4),
+    status: Boolean(buildingsTimestamp && buildingsTimestamp > getMidnightXDaysEarlier(now, MAX_BUILDING_AGE_DAYS)),
+    warning: Boolean(buildingsTimestamp && buildingsTimestamp < getMidnightXDaysEarlier(now, 4)),
     type: 'buildings'
   })
 
   conditions.push({
     required: true,
-    status: workshopTimestamp && workshopTimestamp > getMidnightXDaysEarlier(now, MAX_WORKSHOP_AGE_DAYS),
-    warning: workshopTimestamp && workshopTimestamp < getMidnightXDaysEarlier(now, 10),
+    status: Boolean(workshopTimestamp && workshopTimestamp > getMidnightXDaysEarlier(now, MAX_WORKSHOP_AGE_DAYS)),
+    warning: Boolean(workshopTimestamp && workshopTimestamp < getMidnightXDaysEarlier(now, 10)),
     type: 'workshop'
   })
 

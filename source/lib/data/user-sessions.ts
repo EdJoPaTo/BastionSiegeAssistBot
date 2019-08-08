@@ -1,10 +1,11 @@
 import stringify from 'json-stable-stringify'
 
+import {Session} from '../types'
+
 import {sortBy} from '../javascript-abstraction/array'
 
 const LocalSession = require('telegraf-session-local')
 
-type Session = any
 type Dictionary<T> = {[key: string]: T}
 
 export interface SessionRaw {
@@ -59,7 +60,7 @@ function updatePlayernameCache(): void {
     )
 
   const groupedByName = raw.reduce((coll, add) => {
-    const {name} = add.data.gameInformation.player
+    const {name} = add.data.gameInformation.player!
     if (!coll[name]) {
       coll[name] = []
     }
@@ -72,7 +73,7 @@ function updatePlayernameCache(): void {
   playernameCache = {}
   for (const name of Object.keys(groupedByName)) {
     const entries = groupedByName[name]
-      .sort(sortBy(o => o.data.gameInformation.playerTimestamp, true))
+      .sort(sortBy(o => o.data.gameInformation.playerTimestamp || 0, true))
 
     playernameCache[name] = entries[0].user
   }
