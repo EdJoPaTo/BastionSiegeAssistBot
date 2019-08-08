@@ -7,7 +7,7 @@ import {
   BattlereportResource
 } from 'bastion-siege-logic'
 
-import {Session, BattlestatsSettings, BattlereportInMemory, BattlestatsView} from '../lib/types'
+import {Session, BattlereportInMemory, BattlestatsView} from '../lib/types'
 
 import * as regexHelper from '../lib/javascript-abstraction/regex-helper'
 
@@ -26,11 +26,9 @@ import {emoji} from '../lib/user-interface/output-text'
 
 type Dictionary<T> = {[key: string]: T}
 
-const BATTLESTATS_DEFAULTS: BattlestatsSettings = {
-  timeframe: '24h',
-  type: 'gold',
-  view: 'solo'
-}
+const DEFAULT_TIMEFRAME = '24h'
+const DEFAULT_TYPE = 'gold'
+const DEFAULT_VIEW = 'solo'
 
 const menu = new TelegrafInlineMenu(getBattlestatsText)
 menu.setCommand('battlestats')
@@ -58,7 +56,7 @@ menu.select('view', viewOptions, {
   setFunc: (ctx: any, key) => {
     const session = ctx.session as Session
     if (!session.battlestats) {
-      session.battlestats = {...BATTLESTATS_DEFAULTS}
+      session.battlestats = {}
     }
 
     session.battlestats.view = key as BattlestatsView
@@ -75,23 +73,27 @@ menu.select('view', viewOptions, {
 })
 
 function getCurrentView(ctx: any): BattlestatsView {
-  const {view} = ctx.session.battlestats || BATTLESTATS_DEFAULTS
+  const {battlestats} = ctx.session as Session
+  const view = (battlestats && battlestats.view) || DEFAULT_VIEW
   if (!viewOptions(ctx).includes(view)) {
-    return BATTLESTATS_DEFAULTS.view
+    return DEFAULT_VIEW
   }
 
   return view
 }
 
+function getCurrentType(ctx: any): BattlereportResource {
+  const {battlestats} = ctx.session as Session
+  const type = battlestats && battlestats.type
+  return type || DEFAULT_TYPE
+}
+
 menu.select('rewardType', {gold: emoji.gold, terra: emoji.terra, karma: emoji.karma, gems: emoji.gem}, {
-  isSetFunc: (ctx: any, key) => {
-    const session = ctx.session as Session
-    return (session.battlestats || BATTLESTATS_DEFAULTS).type === key
-  },
+  isSetFunc: (ctx: any, key) => getCurrentType(ctx) === key,
   setFunc: (ctx: any, key) => {
     const session = ctx.session as Session
     if (!session.battlestats) {
-      session.battlestats = {...BATTLESTATS_DEFAULTS}
+      session.battlestats = {}
     }
 
     session.battlestats.type = key as BattlereportResource
@@ -121,9 +123,9 @@ function isCurrentTimeframe(ctx: any, selected: string): boolean {
 }
 
 function getCurrentTimeframe(ctx: any): string {
-  const session = ctx.session as Session
+  const {battlestats} = ctx.session as Session
+  const timeframe = (battlestats && battlestats.timeframe) || DEFAULT_TIMEFRAME
   const view = getCurrentView(ctx)
-  const {timeframe} = session.battlestats || BATTLESTATS_DEFAULTS
   if (timeframe.endsWith('h') || view === 'solo') {
     return timeframe
   }
@@ -134,7 +136,7 @@ function getCurrentTimeframe(ctx: any): string {
 function setCurrentTimeframe(ctx: any, newValue: string): void {
   const session = ctx.session as Session
   if (!session.battlestats) {
-    session.battlestats = {...BATTLESTATS_DEFAULTS}
+    session.battlestats = {}
   }
 
   session.battlestats.timeframe = newValue
@@ -193,7 +195,6 @@ function createHeader(ctx: any, timeframe: string, isAllianceRelated: boolean): 
 }
 
 function createSolo(ctx: any): string {
-  const session = ctx.session as Session
   const timeframe = getCurrentTimeframe(ctx)
   const firstTimeRelevant = getFirstTimeRelevantForTimeframe(timeframe)
   const reports = battlereports.getAll()
@@ -210,7 +211,7 @@ function createSolo(ctx: any): string {
     text += '\n\n'
   }
 
-  const {type} = session.battlestats || BATTLESTATS_DEFAULTS
+  const type = getCurrentType(ctx)
   const stats = battleStats.generate(reports, o => o[type])
   text += createBattleStatsString(stats, type, ctx.i18n.locale())
 
@@ -253,7 +254,6 @@ function getAllianceRelevantData(ctx: any): {allianceMates: SessionRaw[]; header
 }
 
 function createAllianceSolo(ctx: any): string {
-  const session = ctx.session as Session
   const {firstTimeRelevant, allianceMates, header} = getAllianceRelevantData(ctx)
 
   let text = ''
@@ -271,7 +271,7 @@ function createAllianceSolo(ctx: any): string {
     .filter(o => allianceMateUserIds.includes(o.providingTgUser))
     .filter(report => report.time > firstTimeRelevant)
 
-  const {type} = session.battlestats || BATTLESTATS_DEFAULTS
+  const type = getCurrentType(ctx)
   const stats = battleStats.generate(reports, o => o[type])
   text += createBattleStatsString(stats, type, ctx.i18n.locale())
 
@@ -279,7 +279,6 @@ function createAllianceSolo(ctx: any): string {
 }
 
 function createAllianceAttacks(ctx: any): string {
-  const session = ctx.session as Session
   const {firstTimeRelevant, allianceMates, header} = getAllianceRelevantData(ctx)
 
   let text = ''
@@ -315,7 +314,7 @@ function createAllianceAttacks(ctx: any): string {
   text += createAverageMaxString(battleParticipants, ctx.i18n.t('battlestats.attendance'), '', true)
   text += '\n\n'
 
-  const {type} = session.battlestats || BATTLESTATS_DEFAULTS
+  const type = getCurrentType(ctx)
   const stats = battleStats.generate(uniqueBattles, o => sameBattleResourceAssumption(
     reportsGroupedByBattle[uniqueBattlereportIdentifier(o)],
     type
@@ -326,7 +325,7 @@ function createAllianceAttacks(ctx: any): string {
 }
 
 function createAllianceMates(ctx: any): string {
-  const session = ctx.session as Session
+  const {gameInformation} = ctx.session as Session
   const {firstTimeRelevant, allianceMates, header} = getAllianceRelevantData(ctx)
 
   let text = ''
@@ -364,10 +363,10 @@ function createAllianceMates(ctx: any): string {
       }
     })
 
-  const {name} = session.gameInformation.player!
+  const {name} = gameInformation.player!
   text += '\n'
   text += createRanking(mateInfo, 'battlereport', ctx.i18n.t('battlereports'), name)
-  const {type} = (session.battlestats || BATTLESTATS_DEFAULTS)
+  const type = getCurrentType(ctx)
   text += createRanking(mateInfo, type, ctx.i18n.t('bs.resources.resources'), name)
 
   return text
