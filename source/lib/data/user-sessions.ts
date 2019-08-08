@@ -4,6 +4,7 @@ import {Session} from '../types'
 
 import {sortBy} from '../javascript-abstraction/array'
 
+/* eslint @typescript-eslint/no-var-requires: warn */
 const LocalSession = require('telegraf-session-local')
 
 type Dictionary<T> = {[key: string]: T}
@@ -73,7 +74,7 @@ function updatePlayernameCache(): void {
   playernameCache = {}
   for (const name of Object.keys(groupedByName)) {
     const entries = groupedByName[name]
-      .sort(sortBy(o => o.data.gameInformation.playerTimestamp || 0, true))
+      .sort(sortBy(o => o.data.gameInformation.playerTimestamp || 0, true))
 
     playernameCache[name] = entries[0].user
   }
