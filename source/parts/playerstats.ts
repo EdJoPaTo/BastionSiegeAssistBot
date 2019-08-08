@@ -1,26 +1,25 @@
-const Telegraf = require('telegraf')
+import {CastleSiegeParticipant, ListEntry} from 'bastion-siege-logic'
+import {Extra, Markup, Composer} from 'telegraf'
 
-const {whenScreenContainsInformation} = require('../lib/input/gamescreen')
+import {whenScreenContainsInformation} from '../lib/input/gamescreen'
 
-const playerStatsDb = require('../lib/data/playerstats-db')
-const poweruser = require('../lib/data/poweruser')
-const wars = require('../lib/data/wars')
+import * as playerStatsDb from '../lib/data/playerstats-db'
+import * as poweruser from '../lib/data/poweruser'
+import * as wars from '../lib/data/wars'
 
-const {createPlayerShareButton, createPlayerStatsString, createPlayerStatsTwoLineString, createMultipleStatsConclusion} = require('../lib/user-interface/player-stats')
+import {createPlayerShareButton, createPlayerStatsString, createPlayerStatsTwoLineString, createMultipleStatsConclusion} from '../lib/user-interface/player-stats'
 
-const {notNewMiddleware} = require('../lib/telegraf-middlewares')
+import {notNewMiddleware} from '../lib/telegraf-middlewares'
 
-const {Extra, Markup} = Telegraf
+const bot = new Composer()
 
-const bot = new Telegraf.Composer()
-
-bot.on('text', whenScreenContainsInformation('attackIncoming', notNewMiddleware('battle.over'), ctx => {
+bot.on('text', whenScreenContainsInformation('attackIncoming', notNewMiddleware('battle.over'), (ctx: any) => {
   const {attackIncoming} = ctx.state.screen
   const {text, extra} = generatePlayerStats(attackIncoming.name)
   return ctx.reply(text, extra)
 }))
 
-bot.on('text', whenScreenContainsInformation('attackscout', notNewMiddleware('battle.scoutsGone', 2), ctx => {
+bot.on('text', whenScreenContainsInformation('attackscout', notNewMiddleware('battle.scoutsGone', 2), (ctx: any) => {
   const {attackscout} = ctx.state.screen
   const {player, terra} = attackscout
   const {name} = player
@@ -42,7 +41,7 @@ bot.on('text', whenScreenContainsInformation('attackscout', notNewMiddleware('ba
   return ctx.reply(text, extra)
 }))
 
-bot.on('text', whenScreenContainsInformation('allianceBattleStart', notNewMiddleware('battle.over'), async ctx => {
+bot.on('text', whenScreenContainsInformation('allianceBattleStart', notNewMiddleware('battle.over'), async (ctx: any) => {
   const {allianceBattleStart, timestamp} = ctx.state.screen
   const battle = allianceBattleStart.attack ?
     {attack: [allianceBattleStart.ally.name], defence: [allianceBattleStart.enemy.name]} :
@@ -60,24 +59,24 @@ bot.on('text', whenScreenContainsInformation('allianceBattleStart', notNewMiddle
   return ctx.reply(text, extra)
 }))
 
-bot.on('text', whenScreenContainsInformation('allianceBattleSupport', notNewMiddleware('battle.over'), ctx => {
+bot.on('text', whenScreenContainsInformation('allianceBattleSupport', notNewMiddleware('battle.over'), (ctx: any) => {
   const {allianceBattleSupport} = ctx.state.screen
   const {text, extra} = generatePlayerStats(allianceBattleSupport.name)
   return ctx.reply(text, extra)
 }))
 
-bot.on('text', whenScreenContainsInformation('allianceJoinRequest', notNewMiddleware(), ctx => {
+bot.on('text', whenScreenContainsInformation('allianceJoinRequest', notNewMiddleware(), (ctx: any) => {
   const {allianceJoinRequest} = ctx.state.screen
   const {text, extra} = generatePlayerStats(allianceJoinRequest.name)
   return ctx.reply(text, extra)
 }))
 
-bot.on('text', whenScreenContainsInformation('list', notNewMiddleware('forward.old'), ctx => {
+bot.on('text', whenScreenContainsInformation('list', notNewMiddleware('forward.old'), (ctx: any) => {
   if (!poweruser.isPoweruser(ctx.from.id)) {
     return ctx.replyWithMarkdown(ctx.i18n.t('poweruser.usefulWhen'))
   }
 
-  const {list} = ctx.state.screen
+  const list = ctx.state.screen.list as ListEntry[]
   const names = list.map(o => o.name)
 
   if (names.length === 0) {
@@ -88,14 +87,14 @@ bot.on('text', whenScreenContainsInformation('list', notNewMiddleware('forward.o
   return ctx.reply(text, extra)
 }))
 
-bot.on('text', whenScreenContainsInformation('castleSiegeParticipants', notNewMiddleware('forward.old', 60 * 12), ctx => {
+bot.on('text', whenScreenContainsInformation('castleSiegeParticipants', notNewMiddleware('forward.old', 60 * 12), (ctx: any) => {
   let text = `*${ctx.i18n.t('bs.siege')}*\n`
   if (!poweruser.isPoweruser(ctx.from.id)) {
     text += ctx.i18n.t('poweruser.usefulWhen')
     return ctx.replyWithMarkdown(text)
   }
 
-  const {castleSiegeParticipants} = ctx.state.screen
+  const castleSiegeParticipants = ctx.state.screen.castleSiegeParticipants as CastleSiegeParticipant[]
   text += castleSiegeParticipants
     .filter(o => o.players.length >= 5)
     .map(o => o.players.map(player => playerStatsDb.get(player)))
@@ -105,7 +104,7 @@ bot.on('text', whenScreenContainsInformation('castleSiegeParticipants', notNewMi
   return ctx.replyWithMarkdown(text)
 }))
 
-function generatePlayerStats(players, short = false) {
+function generatePlayerStats(players: string | string[], short = false): {text: string; extra: any} {
   if (!Array.isArray(players)) {
     players = [players]
   }
@@ -123,7 +122,7 @@ function generatePlayerStats(players, short = false) {
 
   return {
     text,
-    extra: Extra.markdown().markup(Markup.inlineKeyboard(buttons, {columns: 2}))
+    extra: Extra.markdown().markup(Markup.inlineKeyboard(buttons as any, {columns: 2}))
   }
 }
 
