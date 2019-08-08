@@ -58,7 +58,6 @@
     "babel": false,
     "compileEnhancements": false,
     "extensions": [
-      "js",
       "ts"
     ],
     "require": [
@@ -67,7 +66,6 @@
   },
   "nyc": {
     "extension": [
-      ".js",
       ".ts"
     ],
     "include": [
