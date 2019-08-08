@@ -1,9 +1,12 @@
-const arrayFilterUnique = require('array-filter-unique')
+import {Battlereport} from 'bastion-siege-logic'
+import arrayFilterUnique from 'array-filter-unique'
 
-const {getSumAverageAmount} = require('./number-array')
-const {averageTimeOfDay, getMidnightXDaysEarlier} = require('./unix-timestamp')
+import {PlayerStats, PlayerStatsActivity, PlayerStatsLoot, ArmyEstimate} from '../types/player-stats'
 
-function generate(allBattlereports, playername, now) {
+import {averageTimeOfDay, getMidnightXDaysEarlier} from './unix-timestamp'
+import {getSumAverageAmount} from './number-array'
+
+export function generate(allBattlereports: readonly Battlereport[], playername: string, now: number): PlayerStats {
   const allWithTarget = allBattlereports
     .filter(o => o.enemies.includes(playername))
     // Only one of the multiple alliance attack reports should be considered
@@ -17,7 +20,7 @@ function generate(allBattlereports, playername, now) {
       }
 
       return sum
-    }, [])
+    }, [] as (string | undefined)[])
 
   const alliance = allAlliances.slice(-1)[0]
 
@@ -53,7 +56,7 @@ function generate(allBattlereports, playername, now) {
   }
 }
 
-function generateActivity(allReports, playername) {
+function generateActivity(allReports: readonly Battlereport[], playername: string): PlayerStatsActivity {
   const activeTimes = allReports
     // Being attacked or joined a defence
     .filter(o => !o.attack || o.enemies.indexOf(playername) > 0)
@@ -77,7 +80,7 @@ function generateActivity(allReports, playername) {
   }
 }
 
-function generateLoot(allReports) {
+function generateLoot(allReports: readonly Battlereport[]): PlayerStatsLoot {
   const lootRelevantReports = allReports
     .filter(o => o.enemies.length === 1)
     .filter(o => o.won)
@@ -107,8 +110,8 @@ function generateLoot(allReports) {
   }
 }
 
-function assumeArmy(relevantReports) {
-  const result = {}
+export function assumeArmy(relevantReports: readonly Battlereport[]): ArmyEstimate {
+  const result: any = {}
   let estimate = 0
   const lost = relevantReports
     .filter(o => !o.won)
@@ -146,7 +149,7 @@ function assumeArmy(relevantReports) {
   return result
 }
 
-function assumeTerra(soloReports) {
+function assumeTerra(soloReports: readonly Battlereport[]): number {
   let currentEstimate = NaN
 
   for (const report of soloReports) {

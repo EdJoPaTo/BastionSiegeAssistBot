@@ -4,6 +4,12 @@ import * as vector from './vector'
 
 import {getStdDeviation} from './number-array'
 
+export interface AverageTimeOfDay {
+  seconds: number;
+  stdDeviation: number;
+  accuracy: number;
+}
+
 export const ONE_HOUR_IN_SECONDS = 60 * 60
 export const ONE_DAY_IN_SECONDS = ONE_HOUR_IN_SECONDS * 24
 
@@ -32,7 +38,7 @@ export function getTimeDifference(baseTime: number, distantTime: number): number
   return angleDistance.general(baseTime, distantTime, ONE_DAY_IN_SECONDS)
 }
 
-export function averageTimeOfDay(unixTimestamps: number[]): {seconds: number; stdDeviation: number; accuracy: number} {
+export function averageTimeOfDay(unixTimestamps: number[]): AverageTimeOfDay {
   const secondsOfDay = unixTimestamps
     .map(o => o % ONE_DAY_IN_SECONDS)
   const coordinates = secondsOfDay
