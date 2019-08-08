@@ -1,5 +1,7 @@
-const {
+import {
   BATTLE_ODDS,
+  BattleBuilding,
+  Buildings,
   calcBuildingCost,
   calcBuildingCostPerWinchance,
   calcBuildingCostUntil,
@@ -15,20 +17,22 @@ const {
   calcStorageCapacity,
   calcStorageLevelNeededForUpgrade,
   calcTownhallLevelNeededForUpgrade,
-  estimateResourcesAfter
-} = require('bastion-siege-logic')
+  ConstructionName,
+  Constructions,
+  estimateResourcesAfter,
+  Resources
+} from 'bastion-siege-logic'
 
-const {formatNumberShort, formatTimeAmount} = require('../user-interface/format-number')
+import {emoji} from './output-text'
+import {formatNumberShort, formatTimeAmount} from './format-number'
 
-const {emoji} = require('./output-text')
+export const defaultBuildingsToShow: ConstructionName[] = ['townhall', 'storage', 'houses', 'mine', 'barracks', 'wall', 'trebuchet', 'ballista']
 
-const defaultBuildingsToShow = ['townhall', 'storage', 'houses', 'mine', 'barracks', 'wall', 'trebuchet', 'ballista']
-
-function getBuildingText(ctx, building) {
-  return emoji[building] + ' ' + ctx.i18n.t('bs.building.' + building)
+export function getBuildingText(ctx: any, building: ConstructionName): string {
+  return `${emoji[building]} ${ctx.i18n.t('bs.building.' + building)}`
 }
 
-function createBuildingCostPerWinChanceLine(battleType, buildingName, currentLevel) {
+export function createBuildingCostPerWinChanceLine(battleType: 'solo' | 'alliance', buildingName: BattleBuilding, currentLevel: number): string {
   const odds = BATTLE_ODDS[battleType][buildingName]
   const buildingLevelsRequired = 1 / odds
 
@@ -44,7 +48,7 @@ function createBuildingCostPerWinChanceLine(battleType, buildingName, currentLev
   return text
 }
 
-function createBuildingTimeStatsString(buildingName, buildings, resources) {
+export function createBuildingTimeStatsString(buildingName: ConstructionName, buildings: Constructions, resources: Resources): string {
   let text = ''
 
   text += emoji[buildingName] + ' '
@@ -85,7 +89,7 @@ function createBuildingTimeStatsString(buildingName, buildings, resources) {
   return text
 }
 
-function createBuildingMaxLevelStatsString(buildingName, buildings, resources) {
+export function createBuildingMaxLevelStatsString(buildingName: ConstructionName, buildings: Constructions, resources: Resources): string {
   const currentBuildingLevel = buildings[buildingName]
 
   let text = emoji[buildingName] + ' '
@@ -105,14 +109,15 @@ function createBuildingMaxLevelStatsString(buildingName, buildings, resources) {
 
   const difference = maxLevel - currentBuildingLevel
 
-  text += '+' + difference
+  text += '+'
+  text += difference
   text += ': '
   text += formatTimeAmount(minutesNeeded)
 
   return text
 }
 
-function createFillTimeStatsString(buildings, resources) {
+export function createFillTimeStatsString(buildings: Buildings, resources: Resources): string {
   let text = ''
 
   const goldCapacity = calcGoldCapacity(buildings.townhall)
@@ -146,7 +151,7 @@ function createFillTimeStatsString(buildings, resources) {
   return text
 }
 
-function createCapacityStatsString(buildings) {
+export function createCapacityStatsString(buildings: Buildings): string {
   const goldCapacity = calcGoldCapacity(buildings.townhall)
   const storageCapacity = calcStorageCapacity(buildings.storage)
 
@@ -157,7 +162,7 @@ function createCapacityStatsString(buildings) {
   return text
 }
 
-function createIncomeStatsString(buildings, timeInMinutes) {
+export function createIncomeStatsString(buildings: Buildings, timeInMinutes: number): string {
   const goldCapacity = calcGoldCapacity(buildings.townhall)
   const storageCapacity = calcStorageCapacity(buildings.storage)
 
@@ -179,11 +184,11 @@ function createIncomeStatsString(buildings, timeInMinutes) {
   return text
 }
 
-function createNeededMaterialStatString(cost, currentResources) {
-  const goldNeeded = cost.gold - currentResources.gold
-  const woodNeeded = cost.wood - currentResources.wood
-  const stoneNeeded = cost.stone - currentResources.stone
-  const foodNeeded = cost.food - currentResources.food
+export function createNeededMaterialStatString(cost: {gold?: number; wood?: number; stone?: number; food?: number}, currentResources: Resources): string {
+  const goldNeeded = (cost.gold || 0) - currentResources.gold
+  const woodNeeded = (cost.wood || 0) - currentResources.wood
+  const stoneNeeded = (cost.stone || 0) - currentResources.stone
+  const foodNeeded = (cost.food || 0) - currentResources.food
 
   const neededMaterial = []
   if (goldNeeded > 0) {

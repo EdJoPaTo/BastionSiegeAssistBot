@@ -8,21 +8,21 @@ import {
 
 test('needed material string only gold', t => {
   const cost = {gold: 100}
-  const resources = {gold: 0}
+  const resources = {gold: 0, stone: 0, wood: 0, food: 0}
 
   t.is(createNeededMaterialStatString(cost, resources), `100${emoji.gold}`)
 })
 
 test('needed material string only some gold', t => {
   const cost = {gold: 100}
-  const resources = {gold: 50}
+  const resources = {gold: 50, stone: 0, wood: 0, food: 0}
 
   t.is(createNeededMaterialStatString(cost, resources), `50${emoji.gold}`)
 })
 
 test('needed material string gold and stone', t => {
   const cost = {gold: 100, stone: 200}
-  const resources = {gold: 0, stone: 0}
+  const resources = {gold: 0, stone: 0, wood: 0, food: 0}
 
   t.is(createNeededMaterialStatString(cost, resources), `100${emoji.gold} 200${emoji.stone}`)
 })
