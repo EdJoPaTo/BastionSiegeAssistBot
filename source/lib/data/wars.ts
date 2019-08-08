@@ -1,30 +1,33 @@
-const {Extra} = require('telegraf')
+import {BattleAlliance} from 'bastion-siege-logic'
+import {Extra} from 'telegraf'
 
-const {sortBy} = require('../javascript-abstraction/array')
+import {War, WarInlineMessage} from '../types'
 
-const {createWarStats} = require('../user-interface/war-stats')
+import {sortBy} from '../javascript-abstraction/array'
 
-const InMemoryFromSingleFileCache = require('./in-memory-from-single-file-cache')
+import {createWarStats} from '../user-interface/war-stats'
 
-const cache = new InMemoryFromSingleFileCache('tmp/wars.json', [])
+import InMemoryFromSingleFileCache from './in-memory-from-single-file-cache'
+
+const cache = new InMemoryFromSingleFileCache<War[]>('tmp/wars.json', [])
 
 const MAX_BATTLE_AGE = 60 * 12 // 12 minutes
 
-let telegram
-function init(tg) {
+let telegram: any
+export function init(tg: any): void {
   telegram = tg
 }
 
-async function add(timestamp, battle) {
+async function add(timestamp: number, battle: BattleAlliance): Promise<void> {
   const inlineMessagesToUpdate = addInternal(timestamp, battle)
   cache.save()
 
-  return Promise.all(
+  await Promise.all(
     inlineMessagesToUpdate.map(inlineMessage => updateInlineMessage(timestamp, battle, inlineMessage))
   )
 }
 
-async function updateInlineMessage(timestamp, battle, inlineMessage) {
+async function updateInlineMessage(timestamp: number, battle: BattleAlliance, inlineMessage: WarInlineMessage): Promise<void> {
   const {inlineMessageId, player} = inlineMessage
   try {
     await telegram.editMessageText(undefined, undefined, inlineMessageId, createWarStats(timestamp, battle, player), Extra.markdown())
@@ -37,7 +40,7 @@ async function updateInlineMessage(timestamp, battle, inlineMessage) {
   }
 }
 
-function addInternal(timestamp, battle, initial = {}) {
+function addInternal(timestamp: number, battle: BattleAlliance, initial = {}): readonly WarInlineMessage[] {
   const replaces = cache.data
     .filter(o => o.battle.attack[0] === battle.attack[0] && o.battle.defence[0] === battle.defence[0])[0]
 
@@ -62,14 +65,14 @@ function addInternal(timestamp, battle, initial = {}) {
   return (replaces || {}).inlineMessages || []
 }
 
-function getCurrent(currentTimestamp, playername) {
+export function getCurrent(currentTimestamp: number, playername: string): War {
   return cache.data
     .filter(o => o.beginTimestamp > currentTimestamp - MAX_BATTLE_AGE)
     .filter(({battle}) => battle.attack.includes(playername) || battle.defence.includes(playername))
     .sort(sortBy(o => o.timestamp, true))[0]
 }
 
-function addInlineMessageToUpdate(currentTimestamp, player, inlineMessageId) {
+export function addInlineMessageToUpdate(currentTimestamp: number, player: {name: string; alliance: string}, inlineMessageId: string) {
   const entry = getCurrent(currentTimestamp, player.name)
   entry.inlineMessages.push({
     inlineMessageId,
