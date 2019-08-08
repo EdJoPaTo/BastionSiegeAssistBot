@@ -90,10 +90,6 @@
     "rules": {
       "ava/no-ignored-test-files": "off",
       "@typescript-eslint/array-type": "warn",
-      "@typescript-eslint/await-thenable": "warn",
-      "@typescript-eslint/no-var-requires": "warn",
-      "@typescript-eslint/promise-function-async": "warn",
-      "@typescript-eslint/restrict-plus-operands": "warn",
       "@typescript-eslint/indent": [
         "error",
         2
@@ -104,6 +100,17 @@
       ]
     },
     "overrides": [
+      {
+        "files": [
+          "source/**/*.js"
+        ],
+        "rules": {
+          "@typescript-eslint/await-thenable": "warn",
+          "@typescript-eslint/no-var-requires": "warn",
+          "@typescript-eslint/promise-function-async": "warn",
+          "@typescript-eslint/restrict-plus-operands": "warn"
+        }
+      },
       {
         "files": [
           "source/lib/types/failed-bs-message.*",
