@@ -29,16 +29,13 @@ bot.on('text', whenScreenContainsInformation('attackscout', notNewMiddleware('ba
     possible.push(playerStatsDb.get(name))
   }
 
-  const {text, extra} = generatePlayerStats(possible.map(o => o.player))
+  const {text} = generatePlayerStats(possible.map(o => o.player))
 
-  // TODO: fix collective attack
-  /*
   const keyboard = Markup.inlineKeyboard([
     Markup.switchToChatButton(ctx.i18n.t('list.shareAttack'), 'list')
-  ])
-  /**/
+  ] as any[])
 
-  return ctx.reply(text, extra)
+  return ctx.reply(text, Extra.markdown().markup(keyboard))
 }))
 
 bot.on('text', whenScreenContainsInformation('allianceBattleStart', notNewMiddleware('battle.over'), async (ctx: any) => {

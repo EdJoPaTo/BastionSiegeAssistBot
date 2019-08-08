@@ -63,8 +63,10 @@ export function createList(creatorId: number, listId: string, now: number): {tex
     attackscoutTimestamp > lastBattle &&
     attackscoutTimestamp > now - ATTACK_SCOUT_MAX_AGE
   ) {
-    const stats = playerStatsDb.get(attackscout.player.name)
-    text += createPlayerStatsString(stats)
+    const statsArr = playerStatsDb.getLookingLike(attackscout.player.name, attackscout.terra, true)
+    text += statsArr
+      .map(o => createPlayerStatsString(o))
+      .join('\n\n')
     text += '\n\n'
   }
 
