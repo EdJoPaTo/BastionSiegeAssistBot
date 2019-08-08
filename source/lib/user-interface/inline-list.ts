@@ -1,27 +1,39 @@
-const {Markup} = require('telegraf')
-const {calcBarracksCapacity, nextBattleTimestamp} = require('bastion-siege-logic')
+import {Markup} from 'telegraf'
+import {calcBarracksCapacity, nextBattleTimestamp} from 'bastion-siege-logic'
 
-const {sortBy} = require('../javascript-abstraction/array')
+import {Session, InlineListParticipant} from '../types'
 
-const lists = require('../data/inline-lists')
-const playerStatsDb = require('../data/playerstats-db')
-const poweruser = require('../data/poweruser')
-const userSessions = require('../data/user-sessions')
+import {sortBy} from '../javascript-abstraction/array'
 
-const {createPlayerNameString, createPlayerStatsString} = require('./player-stats')
-const {emoji} = require('./output-text')
-const {formatNumberShort, formatTimeAmount} = require('./format-number')
+import * as lists from '../data/inline-lists'
+import * as playerStatsDb from '../data/playerstats-db'
+import * as poweruser from '../data/poweruser'
+import * as userSessions from '../data/user-sessions'
+
+import {createPlayerNameString, createPlayerStatsString} from './player-stats'
+import {emoji} from './output-text'
+import {formatNumberShort, formatTimeAmount} from './format-number'
 
 const ATTACK_SCOUT_MAX_AGE = 60 * 15 // 15 min
 
-function createList(creatorId, listId, now) {
+interface EntryInformation {
+  player: string;
+  alliance?: string;
+  isPoweruser: boolean;
+  lastUpdate: number;
+  nextAllianceAttack: number;
+  barracks?: number;
+  trebuchet?: number;
+}
+
+export function createList(creatorId: number, listId: string, now: number): {text: string; keyboard: any} {
   const list = lists.getList(creatorId, listId, now)
   const {participants} = list
 
   const entries = Object.keys(participants)
     .map(o => Number(o))
     .map(id => getEntryInformation(id, participants[id], userSessions.getUser(id)))
-    .sort(sortBy(o => o.barracks, true))
+    .sort(sortBy(o => o.barracks || 0, true))
 
   let text = ''
 
@@ -47,6 +59,7 @@ function createList(creatorId, listId, now) {
   const {attackscout, attackscoutTimestamp, battleAllianceTimestamp, battleSoloTimestamp} = creatorSession.gameInformation
   const lastBattle = Math.max(battleAllianceTimestamp || 0, battleSoloTimestamp || 0)
   if (attackscoutTimestamp &&
+    attackscout &&
     attackscoutTimestamp > lastBattle &&
     attackscoutTimestamp > now - ATTACK_SCOUT_MAX_AGE
   ) {
@@ -64,9 +77,9 @@ function createList(creatorId, listId, now) {
   return {text, keyboard}
 }
 
-function createStatsLine(entries, now) {
+function createStatsLine(entries: readonly EntryInformation[], now: number): string[] {
   const totalArmy = entries
-    .map(o => calcBarracksCapacity(o.barracks))
+    .map(o => calcBarracksCapacity(o.barracks || 0))
     .reduce((a, b) => a + b, 0)
 
   const nextAllianceAttack = Math.max(
@@ -85,25 +98,25 @@ function createStatsLine(entries, now) {
   return statsLine
 }
 
-function getEntryInformation(userId, listEntry, session) {
+function getEntryInformation(userId: number, listEntry: InlineListParticipant, session: Session): EntryInformation {
   const information = session.gameInformation
 
   const {battleSoloTimestamp, battleAllianceTimestamp, domainStats} = information
-  const {karma} = domainStats || {}
+  const karma = domainStats && domainStats.karma
   const nextAllianceAttack = nextBattleTimestamp(battleSoloTimestamp, battleAllianceTimestamp, karma).alliance
 
   return {
-    player: information.player.name,
-    alliance: information.player.alliance,
+    player: information.player!.name,
+    alliance: information.player!.alliance,
     isPoweruser: poweruser.isPoweruser(userId),
     lastUpdate: listEntry.lastUpdate,
     nextAllianceAttack,
-    barracks: information.buildings.barracks || 0,
-    trebuchet: (information.workshop || {}).trebuchet
+    barracks: information.buildings && information.buildings.barracks,
+    trebuchet: information.workshop && information.workshop.trebuchet
   }
 }
 
-function createEntryString(information, now) {
+function createEntryString(information: EntryInformation, now: number): string {
   const {barracks, trebuchet} = information
   const parts = []
   parts.push(`${barracks}${emoji.barracks}`)
