@@ -22,19 +22,6 @@ const {formatNumberShort, formatTimeAmount} = require('../user-interface/format-
 
 const {emoji} = require('./output-text')
 
-const BUILDINGS = [
-  'townhall',
-  'storage',
-  'houses',
-  'farm',
-  'sawmill',
-  'mine',
-  'barracks',
-  'wall',
-  'trebuchet',
-  'ballista'
-]
-
 const defaultBuildingsToShow = ['townhall', 'storage', 'houses', 'mine', 'barracks', 'wall', 'trebuchet', 'ballista']
 
 function getBuildingText(ctx, building) {
@@ -219,7 +206,6 @@ function createNeededMaterialStatString(cost, currentResources) {
 }
 
 module.exports = {
-  BUILDINGS,
   defaultBuildingsToShow,
   getBuildingText,
   createBuildingCostPerWinChanceLine,

@@ -2,6 +2,7 @@ const {Extra, Markup} = require('telegraf')
 const I18n = require('telegraf-i18n')
 
 const {
+  CONSTRUCTIONS,
   calcBuildingCost,
   calcGoldCapacity,
   calcGoldIncome,
@@ -17,7 +18,6 @@ const {ONE_HOUR_IN_SECONDS} = require('../math/unix-timestamp')
 
 const {emoji} = require('./output-text')
 const {
-  BUILDINGS,
   getBuildingText,
   defaultBuildingsToShow
 } = require('./buildings')
@@ -87,7 +87,7 @@ class AlertHandler {
     if (resources && buildings.townhall) {
       const storageCapacity = calcStorageCapacity(buildings.storage)
       const goldCapacity = calcGoldCapacity(buildings.townhall)
-      const buildingUpgradeEvents = BUILDINGS
+      const buildingUpgradeEvents = CONSTRUCTIONS
         .filter(o => buildingsToShow.includes(o))
         .map(buildingName => ({
           name: buildingName,

@@ -1,8 +1,9 @@
+const {CONSTRUCTIONS} = require('bastion-siege-logic')
 const TelegrafInlineMenu = require('telegraf-inline-menu')
 
 const {toggleInArray} = require('../../lib/javascript-abstraction/array')
 
-const {BUILDINGS, getBuildingText, defaultBuildingsToShow} = require('../../lib/user-interface/buildings')
+const {getBuildingText, defaultBuildingsToShow} = require('../../lib/user-interface/buildings')
 
 function menuText(ctx) {
   let text = `*${ctx.i18n.t('bs.buildings')}*`
@@ -12,7 +13,7 @@ function menuText(ctx) {
 
 const menu = new TelegrafInlineMenu(menuText)
 
-menu.select('b', BUILDINGS, {
+menu.select('b', CONSTRUCTIONS, {
   multiselect: true,
   columns: 2,
   textFunc: getBuildingText,

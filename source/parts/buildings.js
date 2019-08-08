@@ -1,7 +1,7 @@
 const debounce = require('debounce-promise')
 const Telegraf = require('telegraf')
 const TelegrafInlineMenu = require('telegraf-inline-menu')
-const {calcMaxBuildingLevel, estimateResourcesAfter} = require('bastion-siege-logic')
+const {CONSTRUCTIONS, calcMaxBuildingLevel, estimateResourcesAfter} = require('bastion-siege-logic')
 
 const {calculateSecondsFromTimeframeString} = require('../lib/math/timeframe')
 
@@ -9,7 +9,6 @@ const {whenScreenContainsInformation} = require('../lib/input/gamescreen')
 
 const {emoji} = require('../lib/user-interface/output-text')
 const {
-  BUILDINGS,
   createBuildingCostPerWinChanceLine,
   createBuildingMaxLevelStatsString,
   createBuildingTimeStatsString,
@@ -153,7 +152,7 @@ function generateStatsText(ctx) {
 
   const selectedView = ctx.session.buildingsView || DEFAULT_VIEW
   if (selectedView === 'upgrades') {
-    const buildingsToShow = BUILDINGS
+    const buildingsToShow = CONSTRUCTIONS
       .filter(o => (ctx.session.buildings || defaultBuildingsToShow).includes(o))
 
     text += `*${ctx.i18n.t('buildings.upgrades')}*\n`
