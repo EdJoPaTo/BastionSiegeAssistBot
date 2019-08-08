@@ -1,22 +1,32 @@
-const {Markup} = require('telegraf')
-const {calcBarracksNeeded} = require('bastion-siege-logic')
+import {Markup, SwitchToChatButton} from 'telegraf'
+import {calcBarracksNeeded} from 'bastion-siege-logic'
 
-const {ONE_HOUR_IN_SECONDS} = require('../math/unix-timestamp')
-const {getSumAverageAmount} = require('../math/number-array')
+import {Player, PlayerStats, ArmyEstimate} from '../types'
 
-const {isImmune} = require('../data/poweruser')
+import {ONE_HOUR_IN_SECONDS} from '../math/unix-timestamp'
+import {getSumAverageAmount, SumAverageAmount} from '../math/number-array'
 
-const {emoji} = require('./output-text')
-const {createAverageMaxString, formatTypeOfData} = require('./number-array-strings')
-const {formatNumberShort, formatTimeFrame} = require('./format-number')
+import {isImmune} from '../data/poweruser'
 
-function createPlayerShareButton(infos) {
+import {emoji} from './output-text'
+import {createAverageMaxString, formatTypeOfData} from './number-array-strings'
+import {formatNumberShort, formatTimeFrame} from './format-number'
+
+type Dictionary<T> = {[key: string]: T}
+
+interface MultipleStatsConclusion {
+  alliance: string;
+  army: SumAverageAmount;
+  armyString: string;
+}
+
+export function createPlayerShareButton(infos: Player): SwitchToChatButton {
   const {player} = infos
-  const text = createPlayerNameString(infos)
+  const text = createPlayerNameString(infos, false)
   return Markup.switchToChatButton(text, player)
 }
 
-function createPlayerMarkdownLink(user, {player, alliance}) {
+export function createPlayerMarkdownLink(user: number, {player, alliance}: Player): string {
   let namePart = ''
   if (alliance) {
     namePart += alliance + ' '
@@ -29,7 +39,7 @@ function createPlayerMarkdownLink(user, {player, alliance}) {
   return `[${namePart}](${idPart})`
 }
 
-function createPlayerNameString({player, alliance}, markdown) {
+export function createPlayerNameString({player, alliance}: Player, markdown: boolean): string {
   let text = ''
   if (alliance) {
     text += alliance + ' '
@@ -47,7 +57,7 @@ function createPlayerNameString({player, alliance}, markdown) {
   return text
 }
 
-function createPlayerStatsString(stats) {
+export function createPlayerStatsString(stats: PlayerStats): string {
   let text = createPlayerNameString(stats, true)
 
   if (isImmune(stats.player)) {
@@ -138,8 +148,8 @@ function createPlayerStatsString(stats) {
   return text
 }
 
-function createArmyStatsBarLine(data) {
-  if (!isFinite(data.min)) {
+function createArmyStatsBarLine(data: ArmyEstimate): string {
+  if (!data.min || !isFinite(data.min)) {
     return '?????' + emoji.army
   }
 
@@ -150,7 +160,7 @@ function createArmyStatsBarLine(data) {
   return text
 }
 
-function createPlayerStatsTwoLineString(stats, markdown) {
+export function createPlayerStatsTwoLineString(stats: PlayerStats, markdown: boolean): string {
   let text = createPlayerNameString(stats, markdown)
   text += '\n  '
 
@@ -175,7 +185,7 @@ function createPlayerStatsTwoLineString(stats, markdown) {
   return text
 }
 
-function createPlayerStatsShortString(stats) {
+export function createPlayerStatsShortString(stats: PlayerStats): string {
   let text = ''
 
   if (isImmune(stats.player)) {
@@ -196,7 +206,7 @@ function createPlayerStatsShortString(stats) {
   return text.trim()
 }
 
-function createTwoSidesArmyStrengthString(side1stats, side2stats, playerArmyOverride = {}) {
+function createTwoSidesArmyStrengthString(side1stats: readonly PlayerStats[], side2stats: readonly PlayerStats[], playerArmyOverride: Dictionary<number>): string {
   const side1 = createMultipleStatsConclusion(side1stats, playerArmyOverride)
   const side2 = createMultipleStatsConclusion(side2stats, playerArmyOverride)
 
@@ -208,7 +218,7 @@ function createTwoSidesArmyStrengthString(side1stats, side2stats, playerArmyOver
   return text
 }
 
-function createTwoSidesOneLineString(side1stats, side2stats) {
+export function createTwoSidesOneLineString(side1stats: readonly PlayerStats[], side2stats: readonly PlayerStats[]): string {
   const side1 = createMultipleStatsConclusion(side1stats)
   const side2 = createMultipleStatsConclusion(side2stats)
 
@@ -222,7 +232,7 @@ function createTwoSidesOneLineString(side1stats, side2stats) {
   return text
 }
 
-function createTwoSidesStatsString(side1stats, side2stats, playerArmyOverride = {}) {
+export function createTwoSidesStatsString(side1stats: readonly PlayerStats[], side2stats: readonly PlayerStats[], playerArmyOverride: Dictionary<number> = {}): string {
   const side1 = createMultipleStatsConclusion(side1stats, playerArmyOverride)
   const side2 = createMultipleStatsConclusion(side2stats, playerArmyOverride)
 
@@ -238,7 +248,7 @@ function createTwoSidesStatsString(side1stats, side2stats, playerArmyOverride = 
   return text
 }
 
-function createMultipleStatsPlayerList(allianceEmoji, statsArr, playerNamesOverridden) {
+function createMultipleStatsPlayerList(allianceEmoji: string, statsArr: readonly PlayerStats[], playerNamesOverridden: readonly string[]): string {
   const immuneEntries = statsArr
     .filter(o => isImmune(o.player))
     .map(o => o.player)
@@ -286,7 +296,7 @@ function createMultipleStatsPlayerList(allianceEmoji, statsArr, playerNamesOverr
   return textParts.join('\n')
 }
 
-function createMultipleStatsConclusion(statsArr, playerArmyOverride = {}) {
+export function createMultipleStatsConclusion(statsArr: readonly PlayerStats[], playerArmyOverride: Dictionary<number> = {}): MultipleStatsConclusion {
   const alliance = statsArr
     .map(o => o.alliance)
     .filter(o => o)[0] || '❓'
