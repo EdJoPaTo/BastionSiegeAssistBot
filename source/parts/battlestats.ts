@@ -1,26 +1,32 @@
-const arrayFilterUnique = require('array-filter-unique')
-const Telegraf = require('telegraf')
-const TelegrafInlineMenu = require('telegraf-inline-menu')
-const {
+import {Composer} from 'telegraf'
+import arrayFilterUnique from 'array-filter-unique'
+import TelegrafInlineMenu from 'telegraf-inline-menu'
+import {
   sameBattleResourceAssumption,
-  uniqueBattlereportIdentifier
-} = require('bastion-siege-logic')
+  uniqueBattlereportIdentifier,
+  BattlereportResource
+} from 'bastion-siege-logic'
 
-const regexHelper = require('../lib/javascript-abstraction/regex-helper')
+import {Session, BattlestatsSettings, BattlereportInMemory, BattlestatsView} from '../lib/types'
 
-const battlereports = require('../lib/data/battlereports')
-const poweruser = require('../lib/data/poweruser')
+import * as regexHelper from '../lib/javascript-abstraction/regex-helper'
 
-const {getMidnightXDaysEarlier, getHoursEarlier} = require('../lib/math/unix-timestamp')
-const {getSumAverageAmount} = require('../lib/math/number-array')
-const battleStats = require('../lib/math/battle-stats')
+import {SessionRaw} from '../lib/data/user-sessions'
+import * as battlereports from '../lib/data/battlereports'
+import * as poweruser from '../lib/data/poweruser'
 
-const {createAverageMaxString} = require('../lib/user-interface/number-array-strings')
-const {createBattleStatsString, createRanking} = require('../lib/user-interface/battle-stats')
-const {createPlayerNameString} = require('../lib/user-interface/player-stats')
-const {emoji} = require('../lib/user-interface/output-text')
+import {getMidnightXDaysEarlier, getHoursEarlier} from '../lib/math/unix-timestamp'
+import {getSumAverageAmount} from '../lib/math/number-array'
+import * as battleStats from '../lib/math/battle-stats'
 
-const BATTLESTATS_DEFAULTS = {
+import {createAverageMaxString} from '../lib/user-interface/number-array-strings'
+import {createBattleStatsString, createRanking} from '../lib/user-interface/battle-stats'
+import {createPlayerNameString} from '../lib/user-interface/player-stats'
+import {emoji} from '../lib/user-interface/output-text'
+
+type Dictionary<T> = {[key: string]: T}
+
+const BATTLESTATS_DEFAULTS: BattlestatsSettings = {
   timeframe: '24h',
   type: 'gold',
   view: 'solo'
@@ -29,11 +35,13 @@ const BATTLESTATS_DEFAULTS = {
 const menu = new TelegrafInlineMenu(getBattlestatsText)
 menu.setCommand('battlestats')
 
-function viewOptions(ctx) {
-  const options = ['solo']
+function viewOptions(ctx: any): BattlestatsView[] {
+  const session = ctx.session as Session
+  const options: BattlestatsView[] = ['solo']
 
   const isPoweruser = poweruser.isPoweruser(ctx.from.id)
-  const {alliance} = ctx.session.gameInformation.player || {}
+  const {player} = session.gameInformation
+  const alliance = player && player.alliance
   if (isPoweruser && alliance) {
     options.push('allianceMates')
     options.push('allianceSolo')
@@ -45,27 +53,28 @@ function viewOptions(ctx) {
 
 menu.select('view', viewOptions, {
   columns: 2,
-  hide: ctx => viewOptions(ctx).length === 1,
+  hide: (ctx: any) => viewOptions(ctx).length === 1,
   isSetFunc: (ctx, key) => getCurrentView(ctx) === key,
-  setFunc: (ctx, key) => {
-    if (!ctx.session.battlestats) {
-      ctx.session.battlestats = {...BATTLESTATS_DEFAULTS}
+  setFunc: (ctx: any, key) => {
+    const session = ctx.session as Session
+    if (!session.battlestats) {
+      session.battlestats = {...BATTLESTATS_DEFAULTS}
     }
 
-    ctx.session.battlestats.view = key
+    session.battlestats.view = key as BattlestatsView
   },
-  textFunc: (ctx, key) => {
+  textFunc: (ctx: any, key) => {
     switch (key) {
-      case 'allianceAttacks': return emoji.alliance + ctx.i18n.t('battle.alliance')
-      case 'allianceMates': return emoji.alliance + ctx.i18n.t('bs.allianceMembers')
-      case 'allianceSolo': return emoji.alliance + ctx.i18n.t('battle.solo')
-      case 'solo': return emoji.solo + ctx.i18n.t('battle.solo')
+      case 'allianceAttacks': return `${emoji.alliance}${ctx.i18n.t('battle.alliance')}`
+      case 'allianceMates': return `${emoji.alliance}${ctx.i18n.t('bs.allianceMembers')}`
+      case 'allianceSolo': return `${emoji.alliance}${ctx.i18n.t('battle.solo')}`
+      case 'solo': return `${emoji.solo}${ctx.i18n.t('battle.solo')}`
       default: return key
     }
   }
 })
 
-function getCurrentView(ctx) {
+function getCurrentView(ctx: any): BattlestatsView {
   const {view} = ctx.session.battlestats || BATTLESTATS_DEFAULTS
   if (!viewOptions(ctx).includes(view)) {
     return BATTLESTATS_DEFAULTS.view
@@ -75,13 +84,17 @@ function getCurrentView(ctx) {
 }
 
 menu.select('rewardType', {gold: emoji.gold, terra: emoji.terra, karma: emoji.karma, gems: emoji.gem}, {
-  isSetFunc: (ctx, key) => (ctx.session.battlestats || BATTLESTATS_DEFAULTS).type === key,
-  setFunc: (ctx, key) => {
-    if (!ctx.session.battlestats) {
-      ctx.session.battlestats = {...BATTLESTATS_DEFAULTS}
+  isSetFunc: (ctx: any, key) => {
+    const session = ctx.session as Session
+    return (session.battlestats || BATTLESTATS_DEFAULTS).type === key
+  },
+  setFunc: (ctx: any, key) => {
+    const session = ctx.session as Session
+    if (!session.battlestats) {
+      session.battlestats = {...BATTLESTATS_DEFAULTS}
     }
 
-    ctx.session.battlestats.type = key
+    session.battlestats.type = key as BattlereportResource
   }
 })
 
@@ -91,25 +104,26 @@ menu.select('hours', ['6h', '12h', '24h', '48h'], {
 })
 
 menu.select('days', ['7d', '30d'], {
-  hide: ctx => getCurrentView(ctx) !== 'solo',
+  hide: (ctx: any) => getCurrentView(ctx) !== 'solo',
   setFunc: setCurrentTimeframe,
   isSetFunc: isCurrentTimeframe
 })
 
 menu.select('specific', ['all'], {
-  hide: ctx => getCurrentView(ctx) !== 'solo',
-  textFunc: ctx => ctx.i18n.t('battlestats.alltime'),
+  hide: (ctx: any) => getCurrentView(ctx) !== 'solo',
+  textFunc: (ctx: any) => ctx.i18n.t('battlestats.alltime'),
   setFunc: ctx => setCurrentTimeframe(ctx, 'all'),
   isSetFunc: ctx => isCurrentTimeframe(ctx, 'all')
 })
 
-function isCurrentTimeframe(ctx, selected) {
+function isCurrentTimeframe(ctx: any, selected: string): boolean {
   return getCurrentTimeframe(ctx) === selected
 }
 
-function getCurrentTimeframe(ctx) {
+function getCurrentTimeframe(ctx: any): string {
+  const session = ctx.session as Session
   const view = getCurrentView(ctx)
-  const {timeframe} = ctx.session.battlestats || BATTLESTATS_DEFAULTS
+  const {timeframe} = session.battlestats || BATTLESTATS_DEFAULTS
   if (timeframe.endsWith('h') || view === 'solo') {
     return timeframe
   }
@@ -117,21 +131,22 @@ function getCurrentTimeframe(ctx) {
   return '24h'
 }
 
-function setCurrentTimeframe(ctx, newValue) {
-  if (!ctx.session.battlestats) {
-    ctx.session.battlestats = {...BATTLESTATS_DEFAULTS}
+function setCurrentTimeframe(ctx: any, newValue: string): void {
+  const session = ctx.session as Session
+  if (!session.battlestats) {
+    session.battlestats = {...BATTLESTATS_DEFAULTS}
   }
 
-  ctx.session.battlestats.timeframe = newValue
+  session.battlestats.timeframe = newValue
 }
 
-function getFirstTimeRelevantForTimeframe(timeframe, now = Date.now() / 1000) {
+function getFirstTimeRelevantForTimeframe(timeframe: string, now = Date.now() / 1000): number {
   if (timeframe === 'all') {
     return 0
   }
 
   const scale = regexHelper.get(timeframe, /(d|h)/)
-  const amount = regexHelper.getNumber(timeframe, /(\d+)/)
+  const amount = regexHelper.getNumber(timeframe, /(\d+)/)!
   if (scale === 'd') {
     return getMidnightXDaysEarlier(now, amount)
   }
@@ -139,7 +154,7 @@ function getFirstTimeRelevantForTimeframe(timeframe, now = Date.now() / 1000) {
   return getHoursEarlier(now, amount)
 }
 
-function getBattlestatsText(ctx) {
+function getBattlestatsText(ctx: any): string {
   const view = getCurrentView(ctx)
   switch (view) {
     case 'allianceAttacks':
@@ -153,7 +168,7 @@ function getBattlestatsText(ctx) {
   }
 }
 
-function createHeader(ctx, timeframe, isAllianceRelated) {
+function createHeader(ctx: any, timeframe: string, isAllianceRelated: boolean): string {
   let text = ''
   text += '*'
   if (isAllianceRelated) {
@@ -177,7 +192,8 @@ function createHeader(ctx, timeframe, isAllianceRelated) {
   return text
 }
 
-function createSolo(ctx) {
+function createSolo(ctx: any): string {
+  const session = ctx.session as Session
   const timeframe = getCurrentTimeframe(ctx)
   const firstTimeRelevant = getFirstTimeRelevantForTimeframe(timeframe)
   const reports = battlereports.getAll()
@@ -188,18 +204,21 @@ function createSolo(ctx) {
   text += '\n\n'
 
   if (!poweruser.isPoweruser(ctx.from.id)) {
-    text += emoji.poweruser + ' ' + ctx.i18n.t('poweruser.usefulWhen')
+    text += emoji.poweruser
+    text += ' '
+    text += ctx.i18n.t('poweruser.usefulWhen')
     text += '\n\n'
   }
 
-  const {type} = ctx.session.battlestats || BATTLESTATS_DEFAULTS
+  const {type} = session.battlestats || BATTLESTATS_DEFAULTS
   const stats = battleStats.generate(reports, o => o[type])
   text += createBattleStatsString(stats, type, ctx.i18n.locale())
 
   return text
 }
 
-function getAllianceRelevantData(ctx) {
+function getAllianceRelevantData(ctx: any): {allianceMates: SessionRaw[]; header: string; firstTimeRelevant: number} {
+  const session = ctx.session as Session
   const timeframe = getCurrentTimeframe(ctx)
   const firstTimeRelevant = getFirstTimeRelevantForTimeframe(timeframe)
 
@@ -207,18 +226,21 @@ function getAllianceRelevantData(ctx) {
   text += '\n'
 
   if (!poweruser.isPoweruser(ctx.from.id)) {
-    text += emoji.poweruser + ' ' + ctx.i18n.t('poweruser.usefulWhen')
-    return {header: text}
+    text += emoji.poweruser
+    text += ' '
+    text += ctx.i18n.t('poweruser.usefulWhen')
+    return {header: text, firstTimeRelevant, allianceMates: []}
   }
 
-  const {alliance} = ctx.session.gameInformation.player
+  const {player} = session.gameInformation
+  const alliance = player && player.alliance
   if (!alliance) {
     text += ctx.i18n.t('name.noAlliance')
-    return {header: text}
+    return {header: text, firstTimeRelevant, allianceMates: []}
   }
 
   const allianceMates = poweruser.getPoweruserSessions()
-    .filter(o => o.data.gameInformation.player.alliance === alliance)
+    .filter(o => o.data.gameInformation.player!.alliance === alliance)
 
   text += ctx.i18n.t('bs.allianceMembers')
   text += `: ${allianceMates.length}${emoji.poweruser}\n`
@@ -230,7 +252,8 @@ function getAllianceRelevantData(ctx) {
   }
 }
 
-function createAllianceSolo(ctx) {
+function createAllianceSolo(ctx: any): string {
+  const session = ctx.session as Session
   const {firstTimeRelevant, allianceMates, header} = getAllianceRelevantData(ctx)
 
   let text = ''
@@ -248,14 +271,15 @@ function createAllianceSolo(ctx) {
     .filter(o => allianceMateUserIds.includes(o.providingTgUser))
     .filter(report => report.time > firstTimeRelevant)
 
-  const {type} = ctx.session.battlestats || BATTLESTATS_DEFAULTS
+  const {type} = session.battlestats || BATTLESTATS_DEFAULTS
   const stats = battleStats.generate(reports, o => o[type])
   text += createBattleStatsString(stats, type, ctx.i18n.locale())
 
   return text
 }
 
-function createAllianceAttacks(ctx) {
+function createAllianceAttacks(ctx: any): string {
+  const session = ctx.session as Session
   const {firstTimeRelevant, allianceMates, header} = getAllianceRelevantData(ctx)
 
   let text = ''
@@ -266,7 +290,7 @@ function createAllianceAttacks(ctx) {
   }
 
   const allianceMateNames = allianceMates
-    .map(o => o.data.gameInformation.player.name)
+    .map(o => o.data.gameInformation.player!.name)
 
   const allReports = battlereports.getAll()
     .filter(o => o.friends.length > 1 || o.enemies.length > 1)
@@ -285,13 +309,13 @@ function createAllianceAttacks(ctx) {
 
       coll[key].push(cur)
       return coll
-    }, {})
+    }, {} as Dictionary<BattlereportInMemory[]>)
 
   const battleParticipants = getSumAverageAmount(uniqueBattles.map(o => o.friends.length))
   text += createAverageMaxString(battleParticipants, ctx.i18n.t('battlestats.attendance'), '', true)
   text += '\n\n'
 
-  const {type} = ctx.session.battlestats || BATTLESTATS_DEFAULTS
+  const {type} = session.battlestats || BATTLESTATS_DEFAULTS
   const stats = battleStats.generate(uniqueBattles, o => sameBattleResourceAssumption(
     reportsGroupedByBattle[uniqueBattlereportIdentifier(o)],
     type
@@ -301,7 +325,8 @@ function createAllianceAttacks(ctx) {
   return text
 }
 
-function createAllianceMates(ctx) {
+function createAllianceMates(ctx: any): string {
+  const session = ctx.session as Session
   const {firstTimeRelevant, allianceMates, header} = getAllianceRelevantData(ctx)
 
   let text = ''
@@ -315,7 +340,7 @@ function createAllianceMates(ctx) {
     .filter(o => o.time > firstTimeRelevant)
 
   const mateInfo = allianceMates
-    .map(o => ({user: o.user, playername: o.data.gameInformation.player.name}))
+    .map(o => ({user: o.user, playername: o.data.gameInformation.player!.name}))
     .map(({user, playername}) => {
       const reports = relevantReports
         .filter(o => o.providingTgUser === user)
@@ -339,16 +364,16 @@ function createAllianceMates(ctx) {
       }
     })
 
-  const {name} = ctx.session.gameInformation.player
+  const {name} = session.gameInformation.player!
   text += '\n'
   text += createRanking(mateInfo, 'battlereport', ctx.i18n.t('battlereports'), name)
-  const {type} = (ctx.session.battlestats || BATTLESTATS_DEFAULTS)
+  const {type} = (session.battlestats || BATTLESTATS_DEFAULTS)
   text += createRanking(mateInfo, type, ctx.i18n.t('bs.resources.resources'), name)
 
   return text
 }
 
-const bot = new Telegraf.Composer()
+const bot = new Composer()
 bot.use(menu.init({
   actionCode: 'battlestats'
 }))

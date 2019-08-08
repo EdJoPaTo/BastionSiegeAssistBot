@@ -1,5 +1,6 @@
 export * from './battle-stats'
 export * from './battlereport'
+export * from './battlestats-settings'
 export * from './castle-siege'
 export * from './failed-bs-message'
 export * from './inline-list'

@@ -42,7 +42,7 @@ export function getSumAverageAmount(numbers: readonly (number | null | undefined
   }
 }
 
-export function getSumAverageAmountGroupedBy<T>(array: readonly T[], keySelector: (val: T) => string, numberSelector: (val: T) => number): GroupedSumAverageAmount {
+export function getSumAverageAmountGroupedBy<T>(array: readonly T[], keySelector: (val: T) => string, numberSelector: (val: T) => number | undefined): GroupedSumAverageAmount {
   const all = getSumAverageAmount(array.map(numberSelector))
 
   const grouped = array.reduce((col, add) => {
@@ -53,7 +53,7 @@ export function getSumAverageAmountGroupedBy<T>(array: readonly T[], keySelector
 
     col[key].push(numberSelector(add))
     return col
-  }, {} as Dictionary<number[]>)
+  }, {} as Dictionary<(number | undefined)[]>)
 
   const result: Dictionary<SumAverageAmount> = {}
   for (const key of Object.keys(grouped)) {

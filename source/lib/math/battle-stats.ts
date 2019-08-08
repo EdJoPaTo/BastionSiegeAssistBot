@@ -4,7 +4,7 @@ import {BattleStats} from '../types'
 
 import {getSumAverageAmount, getSumAverageAmountGroupedBy, GroupedSumAverageAmount} from './number-array'
 
-type ValueSelector = (report: Battlereport) => number
+type ValueSelector = (report: Battlereport) => number | undefined
 
 export function generate(battlereports: readonly Battlereport[], valueSelector: ValueSelector): BattleStats {
   const battlesWithoutDragonAndUndead = battlereports
