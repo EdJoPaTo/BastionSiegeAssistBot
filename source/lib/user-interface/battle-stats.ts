@@ -1,10 +1,15 @@
-const I18n = require('telegraf-i18n')
+import {Battlereport} from 'bastion-siege-logic'
+import I18n from 'telegraf-i18n'
 
-const {sortBy} = require('../javascript-abstraction/array')
+import {BattleStats} from '../types'
 
-const {emoji} = require('./output-text')
-const {formatNumberShort} = require('./format-number')
-const {createAverageSumString} = require('./number-array-strings')
+import {sortBy} from '../javascript-abstraction/array'
+
+import {GroupedSumAverageAmount, SumAverageAmount} from '../math/number-array'
+
+import {emoji} from './output-text'
+import {formatNumberShort} from './format-number'
+import {createAverageSumString} from './number-array-strings'
 
 const i18n = new I18n({
   directory: 'locales',
@@ -12,7 +17,7 @@ const i18n = new I18n({
   defaultLanguage: 'en'
 })
 
-function createBattleStatsString(stats, selector, language) {
+export function createBattleStatsString(stats: BattleStats, selector: string, language: string): string {
   let text = ''
   if (stats.reward.sum) {
     text += '\n' + createAverageSumString(stats.reward, `*${i18n.t(language, 'battlestats.total')}*`, emoji[selector], true)
@@ -28,7 +33,7 @@ function createBattleStatsString(stats, selector, language) {
   return text.trim()
 }
 
-function createBattleStatsStringPerAlliance(rewards, title, unit, isInteger) {
+function createBattleStatsStringPerAlliance(rewards: GroupedSumAverageAmount, title: string, unit: string, isInteger: boolean): string {
   if (rewards.all.amount === 0) {
     return ''
   }
@@ -53,7 +58,7 @@ function createBattleStatsStringPerAlliance(rewards, title, unit, isInteger) {
   return text
 }
 
-function createSingleBattleShortStatsLine(report) {
+export function createSingleBattleShortStatsLine(report: Battlereport): string {
   const {attack, won, terra, gold, gems, karma, soldiersAlive, soldiersTotal} = report
   let text = ''
 
@@ -84,7 +89,7 @@ function createSingleBattleShortStatsLine(report) {
   return text
 }
 
-function createSingleAllianceBattleShortStatsLine(report) {
+export function createSingleAllianceBattleShortStatsLine(report: Battlereport): string {
   const {won, friends, gold, terra} = report
   let text = ''
 
@@ -102,10 +107,14 @@ function createSingleAllianceBattleShortStatsLine(report) {
   return text
 }
 
-function createRanking(data, key, title, forceIncludeName) {
+function numberOfSAAOrNumber(saaOrNumber: number | SumAverageAmount, saaKey: keyof SumAverageAmount): number {
+  return typeof saaOrNumber === 'number' ? saaOrNumber : saaOrNumber[saaKey]
+}
+
+export function createRanking(data: any[], key: string, title: string, forceIncludeName: string): string {
   const entries = data
-    .filter(o => Number.isFinite(o[key]) ? o[key] > 0 : o[key].amount > 0)
-    .sort(sortBy(o => Number.isFinite(o[key]) ? o[key] : o[key].sum, true))
+    .filter(o => numberOfSAAOrNumber(o[key], 'amount') > 0)
+    .sort(sortBy(o => numberOfSAAOrNumber(o[key], 'sum'), true))
     .map((o, i) => {
       o.rank = i + 1
       return o
