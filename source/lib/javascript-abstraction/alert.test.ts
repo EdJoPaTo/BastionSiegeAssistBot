@@ -1,13 +1,15 @@
 import test from 'ava'
 
-const {
+import {
   createAlertAtTimestamp
-} = require('./alert')
+} from './alert'
 
 test('alert in future is returned', t => {
   const result = createAlertAtTimestamp(5000, () => {}, 0)
   t.truthy(result)
-  clearTimeout(result)
+  if (result) {
+    clearTimeout(result)
+  }
 })
 
 test('alert in past is not created', t => {

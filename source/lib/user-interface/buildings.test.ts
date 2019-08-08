@@ -1,10 +1,10 @@
 import test from 'ava'
 
-const {emoji} = require('./output-text')
+import {emoji} from './output-text'
 
-const {
+import {
   createNeededMaterialStatString
-} = require('./buildings')
+} from './buildings'
 
 test('needed material string only gold', t => {
   const cost = {gold: 100}

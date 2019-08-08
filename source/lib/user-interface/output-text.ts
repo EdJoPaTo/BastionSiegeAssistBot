@@ -1,10 +1,12 @@
+import {EMOJI} from 'bastion-siege-logic'
+
 const moonmoji = require('moonmoji')
 
-const {EMOJI: gamescreenEmoji} = require('bastion-siege-logic')
+type Dictionary<T> = {[key: string]: T}
 
-const emoji = {...gamescreenEmoji,
-  ballista: gamescreenEmoji.dragon,
-  gems: gamescreenEmoji.gem,
+export const emoji: Dictionary<string> = {...EMOJI,
+  ballista: EMOJI.dragon,
+  gems: EMOJI.gem,
   language: '🏳️‍🌈',
   backTo: '↪️',
   poweruser: '💙',
@@ -28,7 +30,7 @@ const emoji = {...gamescreenEmoji,
 
 setInterval(updateInactiveEmoji, 1000 * 60 * 60) // Every hour
 updateInactiveEmoji()
-function updateInactiveEmoji() {
+function updateInactiveEmoji(): void {
   emoji.inactive = moonmoji().emoji
 }
 

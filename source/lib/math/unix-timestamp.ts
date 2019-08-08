@@ -1,24 +1,24 @@
-const angleDistance = require('angle-distance')
+import * as angleDistance from 'angle-distance'
 
-const vector = require('./vector')
+import * as vector from './vector'
 
-const {getStdDeviation} = require('./number-array')
+import {getStdDeviation} from './number-array'
 
-const ONE_HOUR_IN_SECONDS = 60 * 60
-const ONE_DAY_IN_SECONDS = ONE_HOUR_IN_SECONDS * 24
+export const ONE_HOUR_IN_SECONDS = 60 * 60
+export const ONE_DAY_IN_SECONDS = ONE_HOUR_IN_SECONDS * 24
 
-function getMidnightXDaysEarlier(unixTimestamp, daysAgo) {
+export function getMidnightXDaysEarlier(unixTimestamp: number, daysAgo: number): number {
   const daysAgoTimestamp = unixTimestamp - (ONE_DAY_IN_SECONDS * daysAgo)
   const midnight = Math.ceil(daysAgoTimestamp / ONE_DAY_IN_SECONDS) * ONE_DAY_IN_SECONDS
   return midnight
 }
 
-function getHoursEarlier(unixTimestamp, hoursAgo) {
+export function getHoursEarlier(unixTimestamp: number, hoursAgo: number): number {
   const nHoursAgo = unixTimestamp - (ONE_HOUR_IN_SECONDS * hoursAgo)
   return nHoursAgo
 }
 
-function getTimeOfDayAsXYCoordinates(unixTimestamp) {
+export function getTimeOfDayAsXYCoordinates(unixTimestamp: number): vector.Vector {
   const secondsOfDay = unixTimestamp % ONE_DAY_IN_SECONDS
   const radian = secondsOfDay / ONE_DAY_IN_SECONDS * 2 * Math.PI
   const coordinates = {
@@ -28,11 +28,11 @@ function getTimeOfDayAsXYCoordinates(unixTimestamp) {
   return coordinates
 }
 
-function getTimeDifference(baseTime, distantTime) {
+export function getTimeDifference(baseTime: number, distantTime: number): number {
   return angleDistance.general(baseTime, distantTime, ONE_DAY_IN_SECONDS)
 }
 
-function averageTimeOfDay(unixTimestamps) {
+export function averageTimeOfDay(unixTimestamps: number[]): {seconds: number; stdDeviation: number; accuracy: number} {
   const secondsOfDay = unixTimestamps
     .map(o => o % ONE_DAY_IN_SECONDS)
   const coordinates = secondsOfDay

@@ -1,6 +1,6 @@
 import test from 'ava'
 
-const {get, getNumber} = require('./regex-helper')
+import {get, getNumber} from './regex-helper'
 
 test('get successful', t => {
   const result = get('was das denn?', /was (\S+)/)

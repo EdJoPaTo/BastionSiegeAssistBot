@@ -1,22 +1,24 @@
-const {formatNumberShort} = require('./format-number')
+import {SumAverageAmount} from '../math/number-array'
 
-function createSumAverageAmountString(data, name, unit, isInteger = false) {
+import {formatNumberShort} from './format-number'
+
+export function createSumAverageAmountString(data: SumAverageAmount, name: string, unit: string, isInteger = false): string {
   return createArrayDataString({data, name, unit}, ['avg', 'min', 'max', 'sum'], isInteger)
 }
 
-function createAmountAverageDeviationString(data, name, unit, isInteger = false) {
+export function createAmountAverageDeviationString(data: SumAverageAmount, name: string, unit: string, isInteger = false): string {
   return createArrayDataString({data, name, unit}, ['avg', 'stdDeviation'], isInteger)
 }
 
-function createAverageMaxString(data, name, unit, isInteger = false) {
+export function createAverageMaxString(data: SumAverageAmount, name: string, unit: string, isInteger = false): string {
   return createArrayDataString({data, name, unit}, ['avg', 'max'], isInteger)
 }
 
-function createAverageSumString(data, name, unit, isInteger = false) {
+export function createAverageSumString(data: SumAverageAmount, name: string, unit: string, isInteger = false): string {
   return createArrayDataString({data, name, unit}, ['avg', 'sum'], isInteger)
 }
 
-function createArrayDataString({data, name, unit}, selection, isInteger = false) {
+export function createArrayDataString({data, name, unit}: {data: SumAverageAmount; name: string; unit: string}, selection: readonly (keyof SumAverageAmount)[], isInteger = false): string {
   let line = name
   line += ` (${formatNumberShort(data.amount, true)})`
 
@@ -37,9 +39,9 @@ function createArrayDataString({data, name, unit}, selection, isInteger = false)
   return line
 }
 
-function formatTypeOfData(data, type, isInteger) {
+export function formatTypeOfData(data: SumAverageAmount, type: keyof SumAverageAmount, isInteger: boolean): string {
   switch (type) {
-    case 'average':
+    case 'average' as any:
     case 'avg':
       return '~' + formatNumberShort(data.avg)
     case 'stdDeviation':

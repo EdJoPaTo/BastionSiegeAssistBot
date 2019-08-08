@@ -1,9 +1,9 @@
 import test from 'ava'
 
-const {
+import {
   generate,
   assumeArmy
-} = require('./player-stats')
+} from './player-stats'
 
 const testNow = 1000000000
 const testReports = [

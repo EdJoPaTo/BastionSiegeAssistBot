@@ -1,11 +1,11 @@
 import test from 'ava'
 
-const {
+import {
   createAmountAverageDeviationString,
   createAverageMaxString,
   createAverageSumString,
   createSumAverageAmountString
-} = require('./number-array-strings')
+} from './number-array-strings'
 
 const testdata = {
   amount: 3,
@@ -30,7 +30,12 @@ test('createAmountAverageDeviationString', t => {
 
 test('createAmountAverageDeviationString no entries', t => {
   const data = {
-    amount: 0
+    amount: 0,
+    avg: NaN,
+    min: NaN,
+    max: NaN,
+    stdDeviation: NaN,
+    sum: 0
   }
   t.is(createAmountAverageDeviationString(data, 'Test', '€'), 'Test (0)')
 })
@@ -41,6 +46,7 @@ test('createAmountAverageDeviationString one entry', t => {
     avg: 2,
     min: 2,
     max: 2,
+    stdDeviation: NaN,
     sum: 2
   }
   t.is(createAmountAverageDeviationString(data, 'Test', '€'), 'Test (1): 2.00€')

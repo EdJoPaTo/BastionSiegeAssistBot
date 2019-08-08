@@ -1,12 +1,12 @@
-import test from 'ava'
+import test, {ExecutionContext} from 'ava'
 
-const {
+import {
   ONE_HOUR_IN_SECONDS,
   averageTimeOfDay,
   getMidnightXDaysEarlier,
   getTimeDifference,
   getTimeOfDayAsXYCoordinates
-} = require('./unix-timestamp')
+} from './unix-timestamp'
 
 test('getTimeOfDayAsXYCoordinates examples', t => {
   getTimeOfDayAsXYCoordinatesSpecific(t, ONE_HOUR_IN_SECONDS * 0, 0, 1)
@@ -15,7 +15,7 @@ test('getTimeOfDayAsXYCoordinates examples', t => {
   getTimeOfDayAsXYCoordinatesSpecific(t, ONE_HOUR_IN_SECONDS * 18, -1, -0)
 })
 
-function getTimeOfDayAsXYCoordinatesSpecific(t, input, expectedX, expectedY) {
+function getTimeOfDayAsXYCoordinatesSpecific(t: ExecutionContext, input: number, expectedX: number, expectedY: number): void {
   const result = getTimeOfDayAsXYCoordinates(input)
   t.is(Math.round(result.x * 100) / 100, expectedX)
   t.is(Math.round(result.y * 100) / 100, expectedY)
@@ -32,7 +32,7 @@ test('averageTimeOfDay one value examples', t => {
   averageTimeOfDayOneValue(t, ONE_HOUR_IN_SECONDS * 18)
 })
 
-function averageTimeOfDayOneValue(t, value) {
+function averageTimeOfDayOneValue(t: ExecutionContext, value: number): void {
   const {seconds, stdDeviation, accuracy} = averageTimeOfDay([value])
   t.is(seconds, value)
   t.is(accuracy, 1)
@@ -84,7 +84,7 @@ test('getTimeDifference long', timeDifferenceMacro, 11, 12, 23)
 test('getTimeDifference long negative', timeDifferenceMacro, -11, 12, 1)
 test('getTimeDifference 12h', timeDifferenceMacro, 12, 0, 12)
 
-function timeDifferenceMacro(t, expected, baseHour, otherHour) {
+function timeDifferenceMacro(t: ExecutionContext, expected: number, baseHour: number, otherHour: number): void {
   const result = getTimeDifference(baseHour * ONE_HOUR_IN_SECONDS, otherHour * ONE_HOUR_IN_SECONDS)
   t.is(result, expected * ONE_HOUR_IN_SECONDS)
 }

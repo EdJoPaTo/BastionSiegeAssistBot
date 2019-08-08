@@ -1,6 +1,6 @@
 const MAX_INT = 0x7FFFFFFF
 
-function createAlertAtTimestamp(timestamp, func, now = Date.now()) {
+export function createAlertAtTimestamp(timestamp: number, func: () => void, now = Date.now()): NodeJS.Timeout | void {
   const inMilliseconds = Math.floor(timestamp - now)
   if (inMilliseconds > MAX_INT) {
     // Skip as there is way to much time in between

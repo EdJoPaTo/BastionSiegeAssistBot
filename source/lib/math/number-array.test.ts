@@ -1,9 +1,9 @@
 import test from 'ava'
 
-const {
+import {
   getSumAverageAmount,
   getSumAverageAmountGroupedBy
-} = require('./number-array')
+} from './number-array'
 
 test('getSumAverageAmount', t => {
   t.deepEqual(getSumAverageAmount([1, 2, 3]), {
@@ -46,7 +46,7 @@ test('getSumAverageAmountGroupedBy example', t => {
     {key: 'B', value: 4}
   ]
 
-  const result = getSumAverageAmountGroupedBy(input, o => o.key, o => o.value, t)
+  const result = getSumAverageAmountGroupedBy(input, o => o.key, o => o.value)
 
   t.deepEqual(result.all, {
     amount: 4,

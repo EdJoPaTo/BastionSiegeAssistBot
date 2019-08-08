@@ -1,10 +1,12 @@
-function arrayFilterUniqueInBetween(selector = o => o) {
+type Dictionary<T> = {[key: string]: T}
+
+export function arrayFilterUniqueInBetween<T>(selector: (o: T) => string = o => String(o)): (_: T, i: number, arr: readonly T[]) => boolean {
   // True -> stay in array and not get filtered out
   // False -> filter out
 
-  const selected = {}
+  const selected: Dictionary<string> = {}
 
-  function select(arr, i) {
+  function select(arr: readonly T[], i: number): string {
     if (!selected[i]) {
       selected[i] = selector(arr[i])
     }
@@ -12,7 +14,7 @@ function arrayFilterUniqueInBetween(selector = o => o) {
     return selected[i]
   }
 
-  return (_o, i, arr) => {
+  return (_: T, i: number, arr: readonly T[]) => {
     if (i === 0 || i === arr.length - 1) {
       return true
     }
@@ -31,15 +33,15 @@ function arrayFilterUniqueInBetween(selector = o => o) {
 }
 
 // https://stackoverflow.com/questions/22010520/sort-by-number-of-occurrencecount-in-javascript-array
-function getOccurenceCount(arr) {
+export function getOccurenceCount(arr: readonly string[]): Dictionary<number> {
   return arr.reduce((p, c) => {
     p[c] = (p[c] || 0) + 1
     return p
-  }, {})
+  }, {} as Dictionary<number>)
 }
 
 // Usage: inputArr.sort(sortBy(o => 42))
-function sortBy(weightSelector, reverse) {
+export function sortBy<T>(weightSelector: (val: T) => number, reverse = false): (a: T, b: T) => number {
   if (reverse) {
     return (a, b) => weightSelector(b) - weightSelector(a)
   }
@@ -47,11 +49,12 @@ function sortBy(weightSelector, reverse) {
   return (a, b) => weightSelector(a) - weightSelector(b)
 }
 
-function toggleInArray(array, key) {
+export function toggleInArray<T>(array: T[], key: T): T[] {
   if (array.includes(key)) {
     array = array.filter(o => o !== key)
   } else {
     array.push(key)
+    /* eslint @typescript-eslint/require-array-sort-compare: warn */
     array.sort()
   }
 

@@ -1,4 +1,4 @@
-function get(text, pattern, group = 1) {
+export function get(text: string, pattern: string | RegExp, group = 1): string | undefined {
   const regex = new RegExp(pattern)
   const match = regex.exec(text)
   if (!match) {
@@ -8,7 +8,7 @@ function get(text, pattern, group = 1) {
   return match[group]
 }
 
-function getNumber(text, pattern, group = 1) {
+export function getNumber(text: string, pattern: string | RegExp, group = 1): number | undefined {
   const result = get(text, pattern, group)
   if (result === undefined) {
     return result

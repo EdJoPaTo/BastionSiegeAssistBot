@@ -1,6 +1,6 @@
 import test from 'ava'
 
-const {compareStrAsSimpleOne} = require('./strings')
+import {compareStrAsSimpleOne} from './strings'
 
 test('compareStrAsSimpleOne same', t => {
   t.is(compareStrAsSimpleOne('hey there', 'hey there'), 0)

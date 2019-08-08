@@ -1,9 +1,9 @@
-const Telegraf = require('telegraf')
+import Telegraf from 'telegraf'
 
 // When at least one of the name argument is available middlewares are executed
-function whenScreenContainsInformation(names, ...middlewares) {
+export function whenScreenContainsInformation(names: string | readonly string[], ...middlewares: any[]): (ctx: any, next: any) => void {
   const namesArr = Array.isArray(names) ? names : [names]
-  const predicate = ctx => {
+  const predicate = (ctx: any): boolean => {
     if (!ctx.state.screen) {
       return false
     }
@@ -12,13 +12,13 @@ function whenScreenContainsInformation(names, ...middlewares) {
     return namesArr.some(n => available.includes(n))
   }
 
-  return Telegraf.optional(predicate, ...middlewares)
+  return (Telegraf as any).optional(predicate, ...middlewares)
 }
 
-function whenScreenIsOfType(wantedTypes, ...middlewares) {
+export function whenScreenIsOfType(wantedTypes: string | readonly string[], ...middlewares: any[]): (ctx: any, next: any) => void {
   const typeArr = Array.isArray(wantedTypes) ? wantedTypes : [wantedTypes]
 
-  const predicate = ctx => {
+  const predicate = (ctx: any): boolean => {
     if (!ctx.state.screen) {
       return false
     }
@@ -26,7 +26,7 @@ function whenScreenIsOfType(wantedTypes, ...middlewares) {
     return typeArr.some(n => ctx.state.screen.type === n)
   }
 
-  return Telegraf.optional(predicate, ...middlewares)
+  return (Telegraf as any).optional(predicate, ...middlewares)
 }
 
 module.exports = {

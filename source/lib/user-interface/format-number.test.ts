@@ -1,11 +1,11 @@
 import test from 'ava'
 
-const {
+import {
   formatNumberShort,
   formatTime,
   formatTimeFrame,
   formatTimeAmount
-} = require('./format-number')
+} from './format-number'
 
 test('formatNumberShort float', t => {
   t.is(formatNumberShort(0), '0.00')

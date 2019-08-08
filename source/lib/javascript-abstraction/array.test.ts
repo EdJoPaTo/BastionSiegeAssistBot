@@ -1,12 +1,12 @@
-import test from 'ava'
+import test, {ExecutionContext} from 'ava'
 
-const {
+import {
   arrayFilterUniqueInBetween,
   getOccurenceCount,
   sortBy
-} = require('./array')
+} from './array'
 
-function arrayFilterUniqueInBetweenMacro(t, input, expected, selector) {
+function arrayFilterUniqueInBetweenMacro<T>(t: ExecutionContext, input: readonly T[], expected: readonly T[], selector?: (o: T) => string): void {
   const filtered = input
     .filter(arrayFilterUniqueInBetween(selector))
   t.deepEqual(filtered, expected)
@@ -28,9 +28,9 @@ test('arrayFilterUniqueInBetween example', arrayFilterUniqueInBetweenMacro,
 )
 
 test('arrayFilterUniqueInBetween example with selector', arrayFilterUniqueInBetweenMacro,
-  [{k: 'A', n: 0}, {k: 'A', n: 1}, {k: 'A', n: 2}, {k: 'B', n: 3}, {k: 'B', n: 4}, {k: 'B', n: 5}, {k: 'C', n: 6}],
-  [{k: 'A', n: 0}, {k: 'A', n: 2}, {k: 'B', n: 3}, {k: 'B', n: 5}, {k: 'C', n: 6}],
-  o => o.k
+  [{k: 'A', n: 0}, {k: 'A', n: 1}, {k: 'A', n: 2}, {k: 'B', n: 3}, {k: 'B', n: 4}, {k: 'B', n: 5}, {k: 'C', n: 6}] as any,
+  [{k: 'A', n: 0}, {k: 'A', n: 2}, {k: 'B', n: 3}, {k: 'B', n: 5}, {k: 'C', n: 6}] as any,
+  (o: any) => o.k
 )
 
 test('getOccurenceCount example', t => {
@@ -46,11 +46,11 @@ test('getOccurenceCount example', t => {
 test('sortBy example', t => {
   const input = ['A', 'a', 'C', 'B']
   const expected = ['A', 'B', 'C', 'a']
-  t.deepEqual(input.sort(sortBy(o => o.charCodeAt())), expected)
+  t.deepEqual(input.sort(sortBy(o => o.charCodeAt(0))), expected)
 })
 
 test('sortBy reverse example', t => {
   const input = ['A', 'a', 'C', 'B']
   const expected = ['a', 'C', 'B', 'A']
-  t.deepEqual(input.sort(sortBy(o => o.charCodeAt(), true)), expected)
+  t.deepEqual(input.sort(sortBy(o => o.charCodeAt(0), true)), expected)
 })

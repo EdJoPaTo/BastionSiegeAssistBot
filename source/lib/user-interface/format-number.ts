@@ -1,8 +1,8 @@
-const {ONE_DAY_IN_SECONDS} = require('../math/unix-timestamp')
+import {ONE_DAY_IN_SECONDS} from '../math/unix-timestamp'
 
 const allLetters = ['', 'k', 'M', 'B', 'T']
 
-function formatNumberShort(value, isInteger = false) {
+export function formatNumberShort(value?: number | null, isInteger = false): string {
   if (!value && value !== 0) {
     return 'NaN'
   }
@@ -27,7 +27,7 @@ function formatNumberShort(value, isInteger = false) {
   return (isNegative ? '-' : '') + valueString + letter
 }
 
-function formatTime(secondsOfDay, includeSeconds = false) {
+export function formatTime(secondsOfDay: number, includeSeconds = false): string {
   const fixedSecondsOfDay = (secondsOfDay + ONE_DAY_IN_SECONDS) % ONE_DAY_IN_SECONDS
 
   const seconds = Math.floor(fixedSecondsOfDay % 60)
@@ -55,7 +55,7 @@ function formatTime(secondsOfDay, includeSeconds = false) {
   return text
 }
 
-function formatTimeFrame({seconds, stdDeviation}) {
+export function formatTimeFrame({seconds, stdDeviation}: {seconds: number; stdDeviation: number}): string {
   const start = seconds - stdDeviation
   const end = seconds + stdDeviation
 
@@ -70,7 +70,7 @@ function formatTimeFrame({seconds, stdDeviation}) {
   return text
 }
 
-function formatTimeAmount(totalMinutes) {
+export function formatTimeAmount(totalMinutes: number): string {
   const minutes = Math.floor(totalMinutes) % 60
   const hours = Math.floor(totalMinutes / 60) % 24
   const days = Math.floor(totalMinutes / (60 * 24))
