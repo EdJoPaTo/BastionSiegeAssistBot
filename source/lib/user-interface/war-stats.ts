@@ -1,12 +1,14 @@
-const {calcBarracksCapacity} = require('bastion-siege-logic')
+import {calcBarracksCapacity, BattleAlliance} from 'bastion-siege-logic'
 
-const playerStatsDb = require('../data/playerstats-db')
-const userSessions = require('../data/user-sessions')
-const {MAX_PLAYER_AGE_DAYS, MAX_BUILDING_AGE_DAYS} = require('../data/poweruser')
+import * as playerStatsDb from '../data/playerstats-db'
+import * as userSessions from '../data/user-sessions'
+import {MAX_PLAYER_AGE_DAYS, MAX_BUILDING_AGE_DAYS} from '../data/poweruser'
 
-const {ONE_DAY_IN_SECONDS} = require('../math/unix-timestamp')
+import {ONE_DAY_IN_SECONDS} from '../math/unix-timestamp'
 
-const {createPlayerMarkdownLink, createPlayerNameString, createTwoSidesStatsString, createTwoSidesOneLineString} = require('./player-stats')
+import {createPlayerMarkdownLink, createPlayerNameString, createTwoSidesStatsString, createTwoSidesOneLineString} from './player-stats'
+
+type Dictionary<T> = {[key: string]: T}
 
 const MAXIMUM_BUILDINGS_AGE = ONE_DAY_IN_SECONDS * MAX_BUILDING_AGE_DAYS
 const MAXIMUM_PLAYER_AGE = ONE_DAY_IN_SECONDS * MAX_PLAYER_AGE_DAYS
@@ -14,7 +16,7 @@ const MAXIMUM_PLAYER_AGE = ONE_DAY_IN_SECONDS * MAX_PLAYER_AGE_DAYS
 const MINIMUM_BATTLE_SOLO_AGE = 60 * 10
 const MINIMUM_BATTLE_ALLIANCE_AGE = 60 * 60
 
-function createWarOneLineString(battle) {
+export function createWarOneLineString(battle: BattleAlliance): string {
   const attackStats = battle.attack
     .map(o => playerStatsDb.get(o))
   const defenceStats = battle.defence
@@ -22,20 +24,20 @@ function createWarOneLineString(battle) {
   return createTwoSidesOneLineString(attackStats, defenceStats)
 }
 
-function createWarStats(timestamp, battle, player) {
+export function createWarStats(timestamp: number, battle: BattleAlliance, player: {name: string; alliance: string}): string {
   const friends = battle.attack.includes(player.name) ? battle.attack : battle.defence
   const poweruserFriends = userSessions.getRaw()
     .map(o => o.data.gameInformation)
     .filter(o => o.player && friends.includes(o.player.name))
-    .filter(o => o.buildingsTimestamp + MAXIMUM_BUILDINGS_AGE > timestamp)
+    .filter(o => o.buildingsTimestamp && o.buildingsTimestamp + MAXIMUM_BUILDINGS_AGE > timestamp)
     .map(o => ({
-      alliance: o.player.alliance,
-      player: o.player.name,
-      barracks: o.buildings.barracks,
-      army: calcBarracksCapacity(o.buildings.barracks)
+      alliance: o.player!.alliance,
+      player: o.player!.name,
+      barracks: o.buildings!.barracks,
+      army: calcBarracksCapacity(o.buildings!.barracks)
     }))
 
-  const additionalArmyInformation = {}
+  const additionalArmyInformation: Dictionary<number> = {}
   for (const o of poweruserFriends) {
     additionalArmyInformation[o.player] = o.army
   }
@@ -44,12 +46,20 @@ function createWarStats(timestamp, battle, player) {
     .filter(o => !poweruserFriends.map(o => o.player).includes(o))
 
   const missingFriends = userSessions.getRaw()
-    .filter(o => o.data.gameInformation.playerTimestamp + MAXIMUM_PLAYER_AGE > timestamp)
-    .filter(o => o.data.gameInformation.player.alliance === player.alliance && player.alliance)
-    .filter(o => !friends.includes(o.data.gameInformation.player.name))
-    .filter(o => o.data.gameInformation.battleAllianceTimestamp + MINIMUM_BATTLE_ALLIANCE_AGE < timestamp)
-    .filter(o => o.data.gameInformation.battleSoloTimestamp + MINIMUM_BATTLE_SOLO_AGE < timestamp)
-    .map(({user, data}) => ({user, player: data.gameInformation.player.name}))
+    .filter(o => {
+      const {gameInformation} = o.data
+      if (!gameInformation.playerTimestamp || !gameInformation.player) {
+        return false
+      }
+
+      return gameInformation.playerTimestamp + MAXIMUM_PLAYER_AGE > timestamp &&
+        player.alliance &&
+        gameInformation.player.alliance === player.alliance &&
+        !friends.includes(gameInformation.player.name) &&
+        (gameInformation.battleAllianceTimestamp || 0) + MINIMUM_BATTLE_ALLIANCE_AGE < timestamp &&
+        (gameInformation.battleSoloTimestamp || 0) + MINIMUM_BATTLE_SOLO_AGE < timestamp
+    })
+    .map(({user, data}) => ({user, player: data.gameInformation.player!.name}))
 
   const attackStats = battle.attack
     .map(o => playerStatsDb.get(o))
