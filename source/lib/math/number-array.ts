@@ -9,6 +9,11 @@ export interface SumAverageAmount {
   sum: number;
 }
 
+export interface GroupedSumAverageAmount {
+  all: SumAverageAmount;
+  grouped: Dictionary<SumAverageAmount>;
+}
+
 export function getStdDeviation(numbers: readonly number[], average: number, distanceFunc = (base: number, other: number) => other - base): number {
   const tmpVariance = numbers
     .map(o => distanceFunc(average, o))
@@ -37,7 +42,7 @@ export function getSumAverageAmount(numbers: readonly (number | null | undefined
   }
 }
 
-export function getSumAverageAmountGroupedBy<T>(array: readonly T[], keySelector: (val: T) => string, numberSelector: (val: T) => number): {all: SumAverageAmount; grouped: Dictionary<SumAverageAmount>} {
+export function getSumAverageAmountGroupedBy<T>(array: readonly T[], keySelector: (val: T) => string, numberSelector: (val: T) => number): GroupedSumAverageAmount {
   const all = getSumAverageAmount(array.map(numberSelector))
 
   const grouped = array.reduce((col, add) => {

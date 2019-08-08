@@ -1,8 +1,12 @@
-const {EMOJI} = require('bastion-siege-logic')
+import {EMOJI, Battlereport} from 'bastion-siege-logic'
 
-const {getSumAverageAmount, getSumAverageAmountGroupedBy} = require('./number-array')
+import {BattleStats} from '../types'
 
-function generate(battlereports, valueSelector) {
+import {getSumAverageAmount, getSumAverageAmountGroupedBy, GroupedSumAverageAmount} from './number-array'
+
+type ValueSelector = (report: Battlereport) => number
+
+export function generate(battlereports: readonly Battlereport[], valueSelector: ValueSelector): BattleStats {
   const battlesWithoutDragonAndUndead = battlereports
     .filter(o => !o.enemyMystic)
 
@@ -16,7 +20,7 @@ function generate(battlereports, valueSelector) {
   }
 }
 
-function groupBySelector(report) {
+function groupBySelector(report: Battlereport): string {
   // TODO: refactor out of math
   const {enemyAlliance, enemyMystic} = report
   if (enemyAlliance) {
@@ -27,10 +31,10 @@ function groupBySelector(report) {
     return EMOJI[enemyMystic]
   }
 
-  return undefined
+  return 'undefined'
 }
 
-function generatePerAlliance(reports, valueSelector) {
+function generatePerAlliance(reports: readonly Battlereport[], valueSelector: ValueSelector): GroupedSumAverageAmount {
   return getSumAverageAmountGroupedBy(reports, groupBySelector, valueSelector)
 }
 
