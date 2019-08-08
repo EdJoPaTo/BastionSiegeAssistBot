@@ -3,6 +3,7 @@ import {Battlereport} from 'bastion-siege-logic'
 import {PlayerStats} from '../types'
 
 import {replaceLookingLikeAsciiChars} from '../javascript-abstraction/strings'
+import {sortBy} from '../javascript-abstraction/array'
 
 import {generate} from '../math/player-stats'
 import {getMidnightXDaysEarlier} from '../math/unix-timestamp'
@@ -45,12 +46,15 @@ export function get(player: string): PlayerStats {
   return playerStats[player].stats
 }
 
-export function getLookingLike(player: string, onlyRelevant = true): readonly PlayerStats[] {
+export function getLookingLike(player: string, terra = NaN, onlyFromNearPast = true): readonly PlayerStats[] {
   const searched = replaceLookingLikeAsciiChars(player)
   const allLookingAlike = list()
     .filter(o => o.playerNameLookingLike === searched)
+    // NaN of o.terra does not change the order -> use time as fallback
+    .sort(sortBy(o => o.lastBattleTime, true))
+    .sort(sortBy(o => Math.abs(o.terra - terra)))
 
-  if (!onlyRelevant) {
+  if (!onlyFromNearPast) {
     return allLookingAlike
   }
 

@@ -1,7 +1,5 @@
 const Telegraf = require('telegraf')
 
-const {sortBy} = require('../lib/javascript-abstraction/array')
-
 const {whenScreenContainsInformation} = require('../lib/input/gamescreen')
 
 const playerStatsDb = require('../lib/data/playerstats-db')
@@ -27,10 +25,7 @@ bot.on('text', whenScreenContainsInformation('attackscout', notNewMiddleware('ba
   const {player, terra} = attackscout
   const {name} = player
 
-  const possible = playerStatsDb.getLookingLike(name)
-    // NaN of o.terra does not change the order -> use time as fallback
-    .sort(sortBy(o => o.lastBattleTime, true))
-    .sort(sortBy(o => Math.abs(o.terra - terra, true)))
+  const possible = playerStatsDb.getLookingLike(name, terra, true)
   if (possible.length === 0) {
     possible.push(playerStatsDb.get(name))
   }
