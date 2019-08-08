@@ -1,11 +1,13 @@
-const {mkdirSync, readdirSync, readFileSync, writeFileSync} = require('fs')
+import {mkdirSync, readdirSync, readFileSync, writeFileSync} from 'fs'
 
-const {parseGamescreenContent} = require('bastion-siege-logic')
-const arrayFilterUnique = require('array-filter-unique')
-const stringify = require('json-stable-stringify')
+import {parseGamescreenContent, BattlereportRaw} from 'bastion-siege-logic'
+import arrayFilterUnique from 'array-filter-unique'
+import stringify from 'json-stable-stringify'
 
-const playerStatsDb = require('./playerstats-db')
-const poweruser = require('./poweruser')
+import {BattlereportAsString, BattlereportInMemory} from '../types'
+
+import * as playerStatsDb from './playerstats-db'
+import * as poweruser from './poweruser'
 
 const FOLDER = 'persist/battlereports/'
 mkdirSync(FOLDER, {recursive: true})
@@ -14,7 +16,7 @@ console.time('battlereports')
 const allRaw = loadRaw()
 console.timeLog('battlereports', 'loaded', allRaw.length, 'raw battlereports')
 const allBattlereports = allRaw
-  .map(({time, providingTgUser, text}) => {
+  .map(({time, providingTgUser, text}): BattlereportInMemory | null => {
     try {
       const {battlereport} = parseGamescreenContent(text)
       if (!battlereport) {
@@ -32,7 +34,7 @@ const allBattlereports = allRaw
       return null
     }
   })
-  .filter(o => o)
+  .filter(o => o) as BattlereportInMemory[]
 console.timeEnd('battlereports')
 console.log('battlereports: loaded', allBattlereports.length, 'battlereports')
 
@@ -49,7 +51,7 @@ const playerStats = playerStatsDb.list()
 console.timeLog('playerStatsDb')
 console.log('playerStatsDb: loaded', playerStats.length, 'playerStats')
 
-function getAllJsonsSync(folder) {
+function getAllJsonsSync(folder: string): readonly string[] {
   const content = readdirSync(folder)
   const folders = content.filter(o => !o.includes('.'))
   const files = content.filter(o => o.endsWith('.json'))
@@ -60,11 +62,10 @@ function getAllJsonsSync(folder) {
   ]
 }
 
-function loadRaw() {
+function loadRaw(): BattlereportAsString[] {
   const allFiles = getAllJsonsSync(FOLDER)
   const raws = allFiles
-    .map(o => loadRawFile(o))
-    .flat()
+    .flatMap(o => loadRawFile(o))
     // Ensure there are no duplicate reports.
     // When multiple people send the same report everyone but one will lose them
     .filter(arrayFilterUnique(o => `${o.time} ${o.text}`))
@@ -73,7 +74,7 @@ function loadRaw() {
   return raws
 }
 
-function loadRawFile(file) {
+function loadRawFile(file: string): readonly BattlereportAsString[] {
   try {
     const contentString = readFileSync(file, 'utf8')
     const {raw} = JSON.parse(contentString)
@@ -84,13 +85,13 @@ function loadRawFile(file) {
   }
 }
 
-function filenameKeyFromTimestamp(unixTimestamp) {
+function filenameKeyFromTimestamp(unixTimestamp: number): string {
   const date = new Date(unixTimestamp * 1000)
   const key = `${date.getUTCFullYear()}-${date.getUTCMonth() + 1}/${date.getUTCDate()}`
   return key
 }
 
-function saveRawSpecificTimestamp(timestamp) {
+function saveRawSpecificTimestamp(timestamp: number): void {
   const wantedKey = filenameKeyFromTimestamp(timestamp)
   const data = allRaw
     .filter(o => filenameKeyFromTimestamp(o.time) === wantedKey)
@@ -98,7 +99,7 @@ function saveRawSpecificTimestamp(timestamp) {
   saveRawFile(wantedKey, {raw: data})
 }
 
-function saveRawFile(key, data) {
+function saveRawFile(key: string, data: unknown): void {
   const fullFilename = `${FOLDER}${key}.json`
   const path = fullFilename.split('/').slice(0, -1).join('/')
   mkdirSync(path, {recursive: true})
@@ -107,11 +108,11 @@ function saveRawFile(key, data) {
   writeFileSync(fullFilename, content, 'utf8')
 }
 
-function getAll() {
+export function getAll(): readonly BattlereportInMemory[] {
   return [...allBattlereports]
 }
 
-function add(user, time, report, raw) {
+export function add(user: number, time: number, report: BattlereportRaw, raw: string): boolean {
   const exists = allRaw
     .filter(o => o.time === time)
     .some(o => o.text === raw)
@@ -121,7 +122,7 @@ function add(user, time, report, raw) {
   }
 
   if (report) {
-    const enrichedReport = {
+    const enrichedReport: BattlereportInMemory = {
       ...report,
       time,
       providingTgUser: user

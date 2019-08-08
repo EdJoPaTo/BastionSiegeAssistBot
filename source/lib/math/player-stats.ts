@@ -3,6 +3,8 @@ import arrayFilterUnique from 'array-filter-unique'
 
 import {PlayerStats, PlayerStatsActivity, PlayerStatsLoot, ArmyEstimate} from '../types/player-stats'
 
+import {replaceLookingLikeAsciiChars} from '../javascript-abstraction/strings'
+
 import {averageTimeOfDay, getMidnightXDaysEarlier} from './unix-timestamp'
 import {getSumAverageAmount} from './number-array'
 
@@ -42,6 +44,7 @@ export function generate(allBattlereports: readonly Battlereport[], playername: 
 
   return {
     player: playername,
+    playerNameLookingLike: replaceLookingLikeAsciiChars(playername),
     alliance,
     allAlliances,
     battlesObserved: allWithTarget.length,

@@ -1,15 +1,21 @@
-const {getHoursEarlier, getMidnightXDaysEarlier} = require('../math/unix-timestamp')
+import {Battlereport} from 'bastion-siege-logic'
 
-const userSessions = require('./user-sessions')
+import {BattlereportInMemory, PoweruserCondition} from '../types'
 
-const MAX_BUILDING_AGE_DAYS = 7
-const MAX_PLAYER_AGE_DAYS = 3
-const MAX_WORKSHOP_AGE_DAYS = 14
-const RELEVANT_REPORT_DAYS = 7
+import {getHoursEarlier, getMidnightXDaysEarlier} from '../math/unix-timestamp'
 
-const soloReportsOfUser = {}
+import * as userSessions from './user-sessions'
 
-function addReport(report) {
+type Dictionary<T> = {[key: string]: T}
+
+export const MAX_BUILDING_AGE_DAYS = 7
+export const MAX_PLAYER_AGE_DAYS = 3
+export const MAX_WORKSHOP_AGE_DAYS = 14
+export const RELEVANT_REPORT_DAYS = 7
+
+const soloReportsOfUser: Dictionary<BattlereportInMemory[]> = {}
+
+export function addReport(report: BattlereportInMemory): void {
   // Only solo reports
   if (report.friends.length > 1) {
     return
@@ -30,7 +36,7 @@ function addReport(report) {
   soloReportsOfUser[report.providingTgUser].push(report)
 }
 
-function isPoweruser(id) {
+export function isPoweruser(id: number): boolean {
   const conditions = getConditions(id)
     .filter(o => o.required)
 
@@ -39,11 +45,12 @@ function isPoweruser(id) {
   return allTrue
 }
 
-function getConditions(id) {
+export function getConditions(id: number): readonly PoweruserCondition[] {
   const now = Date.now() / 1000
-  const {buildingsTimestamp, playerTimestamp, workshopTimestamp} = (userSessions.getUser(id) || {}).gameInformation || {}
+  const gameInformation = (userSessions.getUser(id) || {}).gameInformation || {}
+  const {buildingsTimestamp, playerTimestamp, workshopTimestamp} = gameInformation
 
-  const conditions = []
+  const conditions: PoweruserCondition[] = []
 
   conditions.push({
     required: true,
@@ -76,7 +83,7 @@ function getConditions(id) {
   return conditions
 }
 
-function getRelevantReports(id) {
+function getRelevantReports(id: number): readonly Battlereport[] {
   if (!soloReportsOfUser[id]) {
     return []
   }
@@ -90,12 +97,12 @@ function getRelevantReports(id) {
   return soloReportsOfUser[id]
 }
 
-function hasSendEnoughReports(id) {
+export function hasSendEnoughReports(id: number): boolean {
   // Provided at least 5 reports per day
   return getRelevantReports(id).length >= RELEVANT_REPORT_DAYS * 5
 }
 
-function hasEasilySendEnoughReports(id) {
+function hasEasilySendEnoughReports(id: number): boolean {
   const now = Date.now() / 1000
   const minDate = getHoursEarlier(now, 24)
   const reports = getRelevantReports(id)
@@ -105,7 +112,7 @@ function hasEasilySendEnoughReports(id) {
   return reports.length >= 10
 }
 
-function getReportsTodayAmount(id) {
+export function getReportsTodayAmount(id: number): number {
   const now = Date.now() / 1000
   const minDate = getMidnightXDaysEarlier(now, 1)
   const reports = getRelevantReports(id)
@@ -114,12 +121,12 @@ function getReportsTodayAmount(id) {
   return reports.length
 }
 
-function getPoweruserSessions() {
+export function getPoweruserSessions(): readonly userSessions.SessionRaw[] {
   return userSessions.getRaw()
     .filter(o => isPoweruser(o.user))
 }
 
-function isImmune(playername) {
+export function isImmune(playername: string): boolean {
   const id = userSessions.getUserIdByName(playername)
 
   if (!isPoweruser(id)) {

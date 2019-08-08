@@ -65,6 +65,7 @@ test('generate example', t => {
   const resultB = generate(testReports, 'B', testNow)
   t.deepEqual(resultA, {
     player: 'A',
+    playerNameLookingLike: 'A',
     alliance: undefined,
     allAlliances: [undefined],
     lastBattleTime: 1000000030,
@@ -125,6 +126,7 @@ test('generate example', t => {
 
   t.deepEqual(resultB, {
     player: 'B',
+    playerNameLookingLike: 'B',
     alliance: undefined,
     allAlliances: [undefined],
     lastBattleTime: 1000000040,

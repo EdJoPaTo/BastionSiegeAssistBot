@@ -22,6 +22,7 @@ export interface PlayerStatsActivity {
 
 export interface PlayerStats extends PlayerStatsLoot, PlayerStatsActivity {
   player: string;
+  playerNameLookingLike: string;
   alliance?: string;
   allAlliances: (string | undefined)[];
   battlesObserved: number;

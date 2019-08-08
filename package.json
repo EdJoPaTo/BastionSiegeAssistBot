@@ -106,6 +106,7 @@
     "overrides": [
       {
         "files": [
+          "source/lib/types/failed-bs-message.*",
           "source/parts/inline-query.*"
         ],
         "rules": {

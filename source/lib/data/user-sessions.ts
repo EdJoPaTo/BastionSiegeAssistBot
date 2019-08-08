@@ -1,29 +1,38 @@
-const LocalSession = require('telegraf-session-local')
-const stringify = require('json-stable-stringify')
+import stringify from 'json-stable-stringify'
 
-const {sortBy} = require('../javascript-abstraction/array')
+import {sortBy} from '../javascript-abstraction/array'
+
+const LocalSession = require('telegraf-session-local')
+
+type Session = any
+type Dictionary<T> = {[key: string]: T}
+
+export interface SessionRaw {
+  user: number;
+  data: Session;
+}
 
 const localSession = new LocalSession({
   // Database name/path, where sessions will be located (default: 'sessions.json')
   database: 'persist/sessions.json',
   // Format of storage/database (default: JSON.stringify / JSON.parse)
   format: {
-    serialize: obj => stringify(obj, {space: 2}) + '\n',
-    deserialize: str => JSON.parse(str)
+    serialize: (obj: any) => stringify(obj, {space: 2}) + '\n',
+    deserialize: (str: string) => JSON.parse(str)
   },
-  getSessionKey: ctx => `${ctx.from.id}:${ctx.from.id}`
+  getSessionKey: (ctx: any) => `${ctx.from.id}:${ctx.from.id}`
 })
 
-function getRaw() {
+export function getRaw(): readonly SessionRaw[] {
   return localSession.DB
     .get('sessions').value()
-    .map(({id, data}) => {
+    .map(({id, data}: {id: string; data: any}) => {
       const user = Number(id.split(':')[0])
       return {user, data}
     })
 }
 
-function getUser(userId) {
+export function getUser(userId: number): Session {
   return localSession.DB
     .get('sessions')
     .getById(`${userId}:${userId}`)
@@ -31,11 +40,11 @@ function getUser(userId) {
     .value() || {}
 }
 
-let playernameCache = {}
+let playernameCache: Dictionary<number> = {}
 let playernameCacheAge = 0
 const PLAYERNAME_CACHE_MAX_AGE = 30 * 1000 // 30 seconds
 
-function updatePlayernameCache() {
+function updatePlayernameCache(): void {
   const minAge = Date.now() - PLAYERNAME_CACHE_MAX_AGE
   if (playernameCacheAge > minAge) {
     return
@@ -57,7 +66,7 @@ function updatePlayernameCache() {
 
     coll[name].push(add)
     return coll
-  }, {})
+  }, {} as Dictionary<SessionRaw[]>)
 
   playernameCacheAge = Date.now()
   playernameCache = {}
@@ -69,7 +78,7 @@ function updatePlayernameCache() {
   }
 }
 
-function getUserIdByName(playername) {
+export function getUserIdByName(playername: string): number {
   updatePlayernameCache()
   return playernameCache[playername]
 }

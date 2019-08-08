@@ -1,3 +1,7 @@
 export * from './battle-stats'
+export * from './battlereport'
 export * from './castle-siege'
+export * from './failed-bs-message'
+export * from './inline-list'
 export * from './player-stats'
+export * from './poweruser'

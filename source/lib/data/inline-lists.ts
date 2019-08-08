@@ -1,11 +1,14 @@
-const InMemoryFromSingleFileCache = require('./in-memory-from-single-file-cache')
+import {InlineList, InlineListParticipantAdd} from '../types'
 
-const PARTICIPANT_MAX_AGE = 60 * 12 // 12 min
+import InMemoryFromSingleFileCache from './in-memory-from-single-file-cache'
 
-// Data: Dictionary<tgId, {lastId: string, lists: Dictionary<listId, list>}>
-const cache = new InMemoryFromSingleFileCache('persist/inline-lists.json')
+export const PARTICIPANT_MAX_AGE = 60 * 12 // 12 min
 
-function getList(creatorId, listId, now) {
+type Dictionary<T> = {[key: string]: T}
+
+const cache = new InMemoryFromSingleFileCache<Dictionary<Dictionary<InlineList>>>('persist/inline-lists.json')
+
+export function getList(creatorId: number, listId: string, now: number): InlineList {
   const lists = cache.data[creatorId] || {}
   const list = lists[listId] || {}
 
@@ -25,7 +28,7 @@ function getList(creatorId, listId, now) {
   return list
 }
 
-function join(creatorId, listId, timestamp, joiningId, participantInfo = {}) {
+export function join(creatorId: number, listId: string, timestamp: number, joiningId: number, participantInfo: InlineListParticipantAdd = {}): InlineList {
   const list = getList(creatorId, listId, timestamp)
 
   list.lastUpdate = timestamp
@@ -47,7 +50,7 @@ function join(creatorId, listId, timestamp, joiningId, participantInfo = {}) {
   return list
 }
 
-function leave(creatorId, listId, timestamp, leaverId) {
+export function leave(creatorId: number, listId: string, timestamp: number, leaverId: number): InlineList {
   const list = getList(creatorId, listId, timestamp)
   list.lastUpdate = timestamp
 

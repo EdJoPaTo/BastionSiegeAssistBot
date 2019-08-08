@@ -1,11 +1,13 @@
-const {parseGamescreenContent} = require('bastion-siege-logic')
+import {parseGamescreenContent, GamescreenContent} from 'bastion-siege-logic'
 
-const battlereports = require('./battlereports')
-const InMemoryFromSingleFileCache = require('./in-memory-from-single-file-cache')
+import {FailedBSMessage} from '../types'
 
-const cache = new InMemoryFromSingleFileCache('persist/failed-bs-messages.json', [])
+import * as battlereports from './battlereports'
+import InMemoryFromSingleFileCache from './in-memory-from-single-file-cache'
 
-function checkNowWorking() {
+const cache = new InMemoryFromSingleFileCache<FailedBSMessage[]>('persist/failed-bs-messages.json', [])
+
+export function checkNowWorking(): void {
   if (cache.data.length > 0) {
     console.log('failed BS messages: start trying', cache.data.length, 'previous failed messages…')
   }
@@ -22,7 +24,7 @@ function checkNowWorking() {
   cache.save()
 }
 
-function canGetGamescreenContent(message) {
+function canGetGamescreenContent(message: FailedBSMessage): boolean {
   try {
     const content = parseGamescreenContent(message.text)
 
@@ -39,13 +41,13 @@ function canGetGamescreenContent(message) {
   }
 }
 
-function isEmptyContent(content) {
+export function isEmptyContent(content: GamescreenContent): boolean {
   const keysOfInterest = Object.keys(content)
     .filter(o => o !== 'timestamp' && o !== 'ingameTimestamp')
   return keysOfInterest.length === 0
 }
 
-async function add(message) {
+export async function add(message: FailedBSMessage): Promise<void> {
   cache.data.push(message)
   cache.save()
 }

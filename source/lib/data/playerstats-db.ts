@@ -1,12 +1,23 @@
-const {replaceLookingLikeAsciiChars} = require('../javascript-abstraction/strings')
+import {Battlereport} from 'bastion-siege-logic'
 
-const {generate} = require('../math/player-stats')
-const {getMidnightXDaysEarlier} = require('../math/unix-timestamp')
+import {PlayerStats} from '../types'
 
-const playerReports = {}
-const playerStats = {}
+import {replaceLookingLikeAsciiChars} from '../javascript-abstraction/strings'
 
-function addReport(report) {
+import {generate} from '../math/player-stats'
+import {getMidnightXDaysEarlier} from '../math/unix-timestamp'
+
+type Dictionary<T> = {[key: string]: T}
+
+interface PlayerReportEntry {
+  withReports: number;
+  stats: PlayerStats;
+}
+
+const playerReports: Dictionary<Battlereport[]> = {}
+const playerStats: Dictionary<PlayerReportEntry> = {}
+
+export function addReport(report: Battlereport): void {
   const {enemies} = report
 
   for (const enemy of enemies) {
@@ -18,14 +29,13 @@ function addReport(report) {
   }
 }
 
-function get(player) {
+export function get(player: string): PlayerStats {
   const reports = playerReports[player] || []
   const withReports = (playerStats[player] || {}).withReports || 0
 
   if (withReports < reports.length || !playerStats[player]) {
     // Providing the current time to something that will be cached is strange
     const newStats = generate(reports, player, Date.now() / 1000)
-    newStats.playerNameLookingLike = replaceLookingLikeAsciiChars(player)
     playerStats[player] = {
       withReports: reports.length,
       stats: newStats
@@ -35,7 +45,7 @@ function get(player) {
   return playerStats[player].stats
 }
 
-function getLookingLike(player, onlyRelevant = true) {
+export function getLookingLike(player: string, onlyRelevant = true): readonly PlayerStats[] {
   const searched = replaceLookingLikeAsciiChars(player)
   const allLookingAlike = list()
     .filter(o => o.playerNameLookingLike === searched)
@@ -53,7 +63,7 @@ function getLookingLike(player, onlyRelevant = true) {
     .filter(o => newEnoughAmount === 0 ? true : o.lastBattleTime > minDate)
 }
 
-function list() {
+export function list(): readonly PlayerStats[] {
   return Object.keys(playerReports)
     .map(name => get(name))
 }
