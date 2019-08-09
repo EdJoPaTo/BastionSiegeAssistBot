@@ -1,75 +1,79 @@
-const Telegraf = require('telegraf')
-const {calcSemitotalGold, calcRecoveryMissingPeople, calcWallRepairCost, calcWallArcherCapacity} = require('bastion-siege-logic')
+import {Composer, Extra, Markup} from 'telegraf'
+import {calcSemitotalGold, calcRecoveryMissingPeople, calcWallRepairCost, calcWallArcherCapacity, Battlereport} from 'bastion-siege-logic'
 
-const battlereports = require('../lib/data/battlereports')
-const playerStatsDb = require('../lib/data/playerstats-db')
-const {isImmune, getReportsTodayAmount} = require('../lib/data/poweruser')
+import {Session} from '../lib/types'
 
-const {ONE_DAY_IN_SECONDS} = require('../lib/math/unix-timestamp')
+import * as battlereports from '../lib/data/battlereports'
+import * as playerStatsDb from '../lib/data/playerstats-db'
+import {isImmune, getReportsTodayAmount} from '../lib/data/poweruser'
 
-const {whenScreenContainsInformation} = require('../lib/input/gamescreen')
+import {ONE_DAY_IN_SECONDS} from '../lib/math/unix-timestamp'
 
-const {createPlayerShareButton, createPlayerStatsString, createTwoSidesStatsString} = require('../lib/user-interface/player-stats')
-const {createSingleBattleShortStatsLine, createSingleAllianceBattleShortStatsLine} = require('../lib/user-interface/battle-stats')
-const {formatNumberShort} = require('../lib/user-interface/format-number')
-const {emoji} = require('../lib/user-interface/output-text')
+import {whenScreenContainsInformation} from '../lib/input/gamescreen'
 
-const {Extra, Markup} = Telegraf
+import {createPlayerShareButton, createPlayerStatsString, createTwoSidesStatsString} from '../lib/user-interface/player-stats'
+import {createSingleBattleShortStatsLine, createSingleAllianceBattleShortStatsLine} from '../lib/user-interface/battle-stats'
+import {formatNumberShort} from '../lib/user-interface/format-number'
+import {emoji} from '../lib/user-interface/output-text'
 
 const MAX_AGE_BUILDINGS = ONE_DAY_IN_SECONDS // 24h
 const MAX_AGE_REPORT_FOR_STATS = ONE_DAY_IN_SECONDS * 2 // 2 days
 
-const bot = new Telegraf.Composer()
+const bot = new Composer()
 
 // Save battlereport
-bot.on('text', whenScreenContainsInformation('battlereport', async ctx => {
-  const report = ctx.state.screen.battlereport
+bot.on('text', whenScreenContainsInformation('battlereport', async (ctx: any) => {
+  const report = ctx.state.screen.battlereport as Battlereport
   const {timestamp} = ctx.state.screen
 
-  const isNew = await battlereports.add(ctx.from.id, timestamp, report, ctx.message.text)
+  const isNew = battlereports.add(ctx.from.id, timestamp, report, ctx.message.text)
 
   const {text, extra} = await generateResponseText(ctx, report, timestamp, isNew)
 
   return ctx.reply(text, extra)
 }))
 
-function applyReportToGameInformation(ctx, report, timestamp, isNew) {
+function applyReportToGameInformation(ctx: any, report: Battlereport, timestamp: number, isNew: boolean): void {
+  const session = ctx.session as Session
   const {
     attack, enemies, friends, gold, soldiersAlive, soldiersTotal, karma, terra, won
   } = report
   const soldiersLost = soldiersTotal - soldiersAlive
-  const soldiersLostResult = calcRecoveryMissingPeople(ctx.session.gameInformation.buildings || {}, soldiersLost)
+  const soldiersLostResult = calcRecoveryMissingPeople(session.gameInformation.buildings! || {}, soldiersLost)
 
   if (isNew) {
-    if (timestamp > ctx.session.gameInformation.resourcesTimestamp) {
-      ctx.session.gameInformation.resources.gold += gold
+    if (session.gameInformation.resources && session.gameInformation.resourcesTimestamp && timestamp > session.gameInformation.resourcesTimestamp) {
+      session.gameInformation.resources.gold += gold
 
       if (isFinite(soldiersLostResult.gold)) {
-        ctx.session.gameInformation.resources.gold += soldiersLostResult.gold
+        session.gameInformation.resources.gold += soldiersLostResult.gold
       }
 
       if (attack) {
-        ctx.session.gameInformation.resources.food -= soldiersTotal // 1 food per send soldier required to start war
+        session.gameInformation.resources.food -= soldiersTotal // 1 food per send soldier required to start war
       }
 
-      ctx.session.gameInformation.resources.gold = Math.max(ctx.session.gameInformation.resources.gold, 0)
-      ctx.session.gameInformation.resources.food = Math.max(ctx.session.gameInformation.resources.food, 0)
+      session.gameInformation.resources.gold = Math.max(session.gameInformation.resources.gold, 0)
+      session.gameInformation.resources.food = Math.max(session.gameInformation.resources.food, 0)
     }
 
-    if (timestamp > ctx.session.gameInformation.domainStatsTimestamp) {
-      ctx.session.gameInformation.domainStats.karma += karma ? karma : 0
-      ctx.session.gameInformation.domainStats.terra += terra ? terra : 0
-      ctx.session.gameInformation.domainStats.wins += won ? 1 : 0
+    if (session.gameInformation.domainStats && session.gameInformation.domainStatsTimestamp && timestamp > session.gameInformation.domainStatsTimestamp) {
+      session.gameInformation.domainStats.karma += karma ? karma : 0
+      session.gameInformation.domainStats.terra += terra ? terra : 0
+      session.gameInformation.domainStats.wins += won ? 1 : 0
     }
   }
 
   if (attack) {
     const timestampType = (friends.length > 1 || enemies.length > 1) ? 'battleAllianceTimestamp' : 'battleSoloTimestamp'
-    ctx.session.gameInformation[timestampType] = Math.max(ctx.session.gameInformation[timestampType] || 0, timestamp)
+    session.gameInformation[timestampType] = Math.max(session.gameInformation[timestampType] || 0, timestamp)
   }
 }
 
-async function generateResponseText(ctx, report, timestamp, isNew) {
+async function generateResponseText(ctx: any, report: Battlereport, timestamp: number, isNew: boolean): Promise<{text: string; extra: any}> {
+  const session = ctx.session as Session
+  const {buildings} = session.gameInformation
+
   let text = '*Battlereport*'
   const baseExtra = Extra
     .markdown()
@@ -94,7 +98,7 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
     const buttons = [...attackerStats, ...defenderStats]
       .filter(o => !isImmune(o.player))
       .map(o => createPlayerShareButton(o))
-    const markup = Markup.inlineKeyboard(buttons, {columns: 2})
+    const markup = Markup.inlineKeyboard(buttons as any[], {columns: 2})
 
     text += '\n'
     text += createSingleBattleShortStatsLine(report)
@@ -105,18 +109,18 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
       text += '\n\n'
     }
 
-    const {name: expectedName} = ctx.session.gameInformation.player || {}
+    const expectedPlayer = session.gameInformation.player
+    const expectedName = expectedPlayer && expectedPlayer.name
 
-    if ((Date.now() / 1000) - MAX_AGE_BUILDINGS < ctx.session.gameInformation.buildingsTimestamp) {
-      const {buildings} = ctx.session.gameInformation
-
+    if (session.gameInformation.buildingsTimestamp && buildings && (Date.now() / 1000) - MAX_AGE_BUILDINGS < session.gameInformation.buildingsTimestamp) {
       const {soldiersAlive, soldiersTotal} = report
       const soldiersLost = soldiersTotal - soldiersAlive
       if (soldiersLost > 0) {
         const soldiersLostResult = calcRecoveryMissingPeople(buildings, soldiersLost)
 
         text += emoji.people + '→' + emoji.houses + '→' + emoji.barracks
-        text += soldiersLostResult.minutesNeeded + ' min'
+        text += soldiersLostResult.minutesNeeded
+        text += ' min'
         text += ': '
         text += formatNumberShort(soldiersLostResult.gold, true) + emoji.gold
         text += '\n'
@@ -127,7 +131,9 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
         const archerLostResult = calcRecoveryMissingPeople(buildings, calcWallArcherCapacity(buildings.wall))
 
         text += emoji.people + '→' + emoji.houses + '→' + emoji.wall
-        text += '≤' + archerLostResult.minutesNeeded + ' min'
+        text += '≤'
+        text += archerLostResult.minutesNeeded
+        text += ' min'
         text += ': '
         text += '≤' + formatNumberShort(archerLostResult.gold, true) + emoji.gold
         text += '\n'
@@ -139,9 +145,11 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
     }
 
     if (isNew) {
-      text += '\n' + ctx.i18n.t('battlereport.added')
+      text += '\n'
+      text += ctx.i18n.t('battlereport.added')
     } else {
-      text += '\n' + ctx.i18n.t('battlereport.known')
+      text += '\n'
+      text += ctx.i18n.t('battlereport.known')
     }
 
     text += '\n'
@@ -152,7 +160,8 @@ async function generateResponseText(ctx, report, timestamp, isNew) {
     if (expectedName) {
       const expectedNameIsInFriends = report.friends.includes(expectedName)
       if (!expectedNameIsInFriends) {
-        text += '\n' + ctx.i18n.t('battlereport.changedIngameName')
+        text += '\n'
+        text += ctx.i18n.t('battlereport.changedIngameName')
       }
     }
 
