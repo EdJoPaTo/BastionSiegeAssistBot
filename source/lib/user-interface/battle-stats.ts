@@ -90,7 +90,7 @@ export function createSingleBattleShortStatsLine(report: Battlereport): string {
 }
 
 export function createSingleAllianceBattleShortStatsLine(report: Battlereport): string {
-  const {won, friends, gold, terra} = report
+  const {won, friends, gold} = report
   let text = ''
 
   text += emoji.alliance
@@ -98,10 +98,6 @@ export function createSingleAllianceBattleShortStatsLine(report: Battlereport): 
   text += ' '
   const additionalStats = []
   additionalStats.push(formatNumberShort(gold * friends.length, true) + emoji.gold)
-
-  if (terra) {
-    additionalStats.push(formatNumberShort(terra * friends.length, true) + emoji.terra)
-  }
 
   text += additionalStats.join(' ')
   return text
