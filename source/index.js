@@ -34,11 +34,6 @@ const tokenFilePath = existsSync('/run/secrets') ? '/run/secrets/bot-token.txt' 
 const token = readFileSync(tokenFilePath, 'utf8').trim()
 const bot = new Telegraf(token)
 
-// For handling group/supergroup commands (/start@your_bot) you need to provide bot username.
-bot.telegram.getMe().then(botInfo => {
-  bot.options.username = botInfo.username
-})
-
 if (process.env.NODE_ENV !== 'production') {
   bot.use(async (ctx, next) => {
     const identifier = [
