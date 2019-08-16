@@ -29,8 +29,6 @@ export interface PlayerStats extends PlayerStatsLoot, PlayerStatsActivity {
   allAlliances: (string | undefined)[];
   battlesObserved: number;
   battlesObservedNearPast: number;
-  winsObserved: number;
-  lossesObserved: number;
   lastBattleTime: number;
   army: ArmyEstimate;
   terra: number;

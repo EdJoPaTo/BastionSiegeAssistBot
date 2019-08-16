@@ -120,9 +120,7 @@ test('generate example A', t => {
       sum: 0
     },
     battlesObserved: 4,
-    battlesObservedNearPast: 4,
-    winsObserved: 1,
-    lossesObserved: 1
+    battlesObservedNearPast: 4
   })
 })
 
@@ -186,9 +184,7 @@ test('generate example B', t => {
       sum: 0
     },
     battlesObserved: 3,
-    battlesObservedNearPast: 3,
-    winsObserved: 1,
-    lossesObserved: 0
+    battlesObservedNearPast: 3
   })
 })
 

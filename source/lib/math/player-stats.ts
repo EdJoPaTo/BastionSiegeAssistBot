@@ -31,11 +31,6 @@ export function generate(allBattlereports: readonly Battlereport[], playername: 
     // There has to be only one party involved we know the army about
     .filter(o => o.friends.length === 1)
 
-  const wonBattles = soloReports
-    .filter(o => o.won)
-  const lostBattles = soloReports
-    .filter(o => !o.won)
-
   const lastBattleTime = Math.max(...allWithTarget.map(o => o.time))
 
   const nearPastMinTimestamp = getMidnightXDaysEarlier(now, 30)
@@ -49,8 +44,6 @@ export function generate(allBattlereports: readonly Battlereport[], playername: 
     allAlliances,
     battlesObserved: allWithTarget.length,
     battlesObservedNearPast: nearPastReports.length,
-    winsObserved: wonBattles.length,
-    lossesObserved: lostBattles.length,
     lastBattleTime,
     ...generateActivity(nearPastReports, playername),
     ...generateLoot(nearPastReports),
