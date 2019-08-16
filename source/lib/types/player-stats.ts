@@ -18,6 +18,8 @@ export interface PlayerStatsActivity {
   activeTime: AverageTimeOfDay;
   attacksWithoutLossPercentage: number;
   inactiveTime: AverageTimeOfDay;
+  lastTimeObservedActive: number;
+  lastTimeObservedInactive: number;
 }
 
 export interface PlayerStats extends PlayerStatsLoot, PlayerStatsActivity {

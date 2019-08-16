@@ -58,6 +58,7 @@ export function createPlayerNameString({player, alliance}: Player, markdown: boo
 }
 
 export function createPlayerStatsString(stats: PlayerStats): string {
+  const now = Date.now() / 1000
   let text = createPlayerNameString(stats, true)
 
   if (isImmune(stats.player)) {
@@ -87,7 +88,7 @@ export function createPlayerStatsString(stats: PlayerStats): string {
   const randomFacs = []
   randomFacs.push(`${stats.battlesObserved}${emoji.battlereport}`)
 
-  const hoursAgo = ((Date.now() / 1000) - stats.lastBattleTime) / ONE_HOUR_IN_SECONDS
+  const hoursAgo = (now - stats.lastBattleTime) / ONE_HOUR_IN_SECONDS
   if (isFinite(hoursAgo)) {
     randomFacs.push(formatBattleHoursAgo(hoursAgo))
   }
@@ -114,6 +115,10 @@ export function createPlayerStatsString(stats: PlayerStats): string {
       parts.push(formatTypeOfData(stats.gems, 'avg', false) + emoji.gem)
     }
 
+    if (isFinite(stats.lastTimeObservedActive)) {
+      parts.push(formatBattleHoursAgo((now - stats.lastTimeObservedActive) / ONE_HOUR_IN_SECONDS))
+    }
+
     if (stats.activeTime.accuracy > 0) {
       parts.push(formatTimeFrame(stats.activeTime))
     }
@@ -125,6 +130,10 @@ export function createPlayerStatsString(stats: PlayerStats): string {
     const parts = []
     parts.push(emoji.inactive)
     parts.push(formatTypeOfData(stats.lootInactive, 'avg', false) + emoji.gold)
+
+    if (isFinite(stats.lastTimeObservedInactive)) {
+      parts.push(formatBattleHoursAgo((now - stats.lastTimeObservedInactive) / ONE_HOUR_IN_SECONDS))
+    }
 
     if (stats.attacksWithoutLossPercentage < 1 && stats.inactiveTime.accuracy > 0) {
       parts.push(formatTimeFrame(stats.inactiveTime))

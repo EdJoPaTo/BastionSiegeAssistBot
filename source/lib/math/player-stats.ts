@@ -74,12 +74,15 @@ function generateActivity(allReports: readonly Battlereport[], playername: strin
     .filter(o => o.soldiersAlive === o.soldiersTotal)
   const attacksWithoutLossPercentage = attacksWithoutLoss.length / attacks.length
 
-  const inactiveTime = averageTimeOfDay(attacksWithoutLoss.map(o => o.time))
+  const inactiveTimes = attacksWithoutLoss.map(o => o.time)
+  const inactiveTime = averageTimeOfDay(inactiveTimes)
 
   return {
     activeTime,
     attacksWithoutLossPercentage,
-    inactiveTime
+    inactiveTime,
+    lastTimeObservedActive: Math.max(...activeTimes),
+    lastTimeObservedInactive: Math.max(...inactiveTimes)
   }
 }
 
