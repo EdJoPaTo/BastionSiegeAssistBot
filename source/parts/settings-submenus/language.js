@@ -10,6 +10,7 @@ const {emoji} = require('../../lib/user-interface/output-text')
 const AVAILABLE_LANGUAGES = [
   'de',
   'en-GB',
+  'es',
   'id',
   'ru'
 ]

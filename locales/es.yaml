@@ -1,0 +1,234 @@
+menu:
+  back: Atras
+  nothingchanged: Nada cambió además de la hora actual.
+bs:
+  alliance: Alianza
+  allianceMembers: Mienbros
+  buildings: Contrucciones
+  siege: Asedio
+  war: Guerra
+  workshop: Taller
+  building:
+    townhall: Ayuntamiento 
+    storage: Almacén
+    houses: Casas
+    farm: Granjas
+    sawmill: Aserradero
+    mine: Mina
+    barracks: Barracas
+    wall: Muralla
+    trebuchet: Catapulta
+    ballista: Ballesta 
+  resources:
+    resources: Recurso
+    gold: Oro
+    wood: Madera
+    stone: Piedra
+    food: Comida
+    terra: Territorio   
+    karma: Karma
+    gems: Gemas
+alerts: Alertas
+alert:
+  buildingUpgrade:
+    name: Mejora de construcción disponible
+    upcoming: El edificio ${name} se puede actualizar
+  effect:
+    name: Efecto terminado
+    upcoming: El Efecto ${name} a terminado
+  nextBattle:
+    name: Siguiente Batalla Diponible 
+    alliance:
+      alert: Tu próximo ataque de alianza estará disponible en 1 min. ¡Prepárate y difunde la Informacion! 🥳😎
+      upcoming:  Ya puedes hacer tu proximo ataque de alianza.
+    solo:
+      alert: Ya puedes atacar de nuevo. Te deseo suerte. ☺️
+      upcoming: Puedes atacar de nuevo.
+  resourceWarning:
+    name: Niveles críticos de recursos alcanzados
+    goldFull:
+      upcoming: Reserva de Oro completa
+      alert: Reserva de Oro completa en 15 Minutos
+    foodEmpty:
+      upcoming: Sin Comida
+      alert: Sin comida en 12 horas
+battle:
+  solo: Batallas en Solitario 
+  alliance: Batallas con la Alianza
+  over: Esta batalla terminó hace tiempo… Envíame el report mejor. 😉
+  scoutsGone: Tus exploradores no han estado allí por mucho tiempo. Te ayudaré cuando vayas por allí la próxima vez. 😊
+  inlineWar:
+    updateButton: Empezando actualización 🤓
+    updated: Información de guerra actualizada!
+    share: Puedes compartir la información de guerra con el botón de abajo
+    info: >
+      💙 Una vez que inicies el mecanismo de actualización de este mensaje, se actualizará automáticamente con el estado actual de la batalla de tu alianza.
+      Esto es especialmente útil en los chats grupales con tus compañeros de alianza. 😎
+      
+      
+      Para proporcionar el estado actual de la batalla, reenvía tu informe de guerra al bot directamente.
+      Cada participante en la batalla puede modificar su estado.
+battlereport:
+  added: Gracias por el informe. Ya lo agregué 👌
+  known: Ya me has enviado este informe 🙃
+  changedIngameName: ❓ ¿Has cambiado tu nombre en el juego? Si es así, reenvíame una nueva pantalla del menú principal desde @BastionSiegeBot. Entonces estaré actualizado de nuevo. 😎
+battlereports: Reporte de Batalla
+battlestats:
+  alltime: Todo el tiempo
+  attendance: Asistencia en Batalla
+  lostAttacks: Ataques Perdidos
+  lostDefences: Defensas perdidas
+  title: Estadisticas de Batalla
+  wonAttacks: Ataques Exitosos
+  wonDefences: Defensas Exitosas
+  total: Todo
+botstats:
+  title: Estadisticas del Bot	
+  analysedPlayers: Jugadores Analizados
+  within24h: En 24 horas
+  within30d: En 30 dias
+  users: Usuarios
+buildings:
+  capacity: Capacidad
+  fillStorage: Llenar el almacén 
+  history: Historial
+  income: Ingresos
+  maxPossible: Max. actualizaciones posibles
+  upgrades: Actualizaciones
+  need:
+    buildings: Reenvíame la pantalla de construcción de tu juego para obtener estadísticas de actualización de construcción.
+    resources: Reenvíame la pantalla del juego que muestra tus recursos actuales para obtener estadísticas de actualización de construcción.
+  old:
+    buildings: Mi conocimiento de sus edificios es un poco viejo. Esto lleva a la inexactitud. Considere actualizarme con una nueva pantalla de construcción reenviada.
+    resources: Mi conocimiento de sus recursos es un poco viejo. Esto lleva a la inexactitud. Considere actualizarme con una nueva pantalla de recursos reenviados.
+  winChances: Oportunidad de victoria
+  winChance:
+    info: >
+      Cuando luchas contra otros, tu ejército, catapulta y muralla determinarán el resultado de tu batalla.
+      Cada soldado tiene la oportunidad de matar a un soldado enemigo.
+
+      La posibilidad de cada soldado se incrementa por catapulta o muralla.
+      Además, cuando un ejército es superior al otro, también recibe una bonificación.
+
+      Los costos de actualización de sus edificios relevantes se muestran junto al aumento de oportunidad para ganar.
+      El ejército, por ejemplo, otorga muchas menos posibilidades de ganar en una batalla de alianzas, lo que resulta en un mayor costo por oportunidad de ganar.
+
+
+      Ten en cuenta que solo se consideran el catapulta y la muralla de los primeros de cada lado de la batalla.
+      Cuando te estás uniendo a una batalla, tu muralla y tu catapulta son ignorados.
+effects:
+  updated: Actualizado tus efectos. 👌 \nMira /upcoming o habilita alertas con /settings.
+forward:
+  known: Eso ya lo sé. Lo ignoraré.
+  old: Eso es viejo. Lo ignoraré.
+language:
+  title: Idioma
+  info: >
+    Este bot tiene soporte para múltiples idiomas.
+
+
+    ¿Falta su idioma (`${from.language_code}`?) En el bot?
+    ¿O la traducción actual es (un poco) incorrecta?
+    Únase al grupo de soporte y mejoraremos este bot juntos. 😎
+  translateButton: agrega o mejora el idioma
+  helpTranslate: >
+    Este es el archivo de idioma de su idioma seleccionado actualmente.
+
+
+    Mejore lo que le gusta o traduzca a su propio idioma.
+    Luego informe al respecto en el Grupo de Apoyo BSA.
+
+
+    Solo debe abrirlo y editarlo con un editor de texto sin formato como Notepad ++ (Windows), Gedit (Linux) o TextEdit (macOS).
+
+    En el lado izquierdo de ':' se coloca el identificador.
+    Esto debe permanecer igual para que el bot obtenga la traducción correcta.
+    En el lado derecho de ':' está el texto traducido.
+    Necesitas cambiar o adaptar eso.
+list:
+  title: Lista
+  clearParticipants: Limpiar Participantes 
+  description: Tu lista
+  share: Comparte tu lista
+  shareAttack: Planifica un ataque conjunto
+  help: >
+    La lista es una herramienta para colaborar con otros.
+    Otros usuarios de este bot pueden unirse a su lista.
+    De esa manera puedes predecir la fuerza total de tu ejército.
+
+
+    Otros pueden ver tu último objetivo de explorador de ataque para que sepan a qué se unen.
+
+
+    Los jugadores que se unieron se marcarán con un ⏳ después de unos minutos.
+    Esto cambia a ⌛️ después de algunos minutos más y finalmente se eliminan como inactivos.
+    Simplemente presione 'Unirse' nuevamente para evitar caerse antes de que se agote el tiempo. :)
+mystics: Criaturas Míticas
+name:
+  need: Necesito tu nombre para eso. Envíame tu pantalla principal primero. 😅
+  noAlliance: No estás en ninguna Alianza en este momento. 
+  update: Envía la pantalla del menú principal desde @BastionSiegeBot para actualizar tu nombre actual en el juego.
+poweruser:
+  poweruser: Usuario Avanzado
+  immunity: Imunidad 
+  youare: ¡Eres un Usuario Avanzado!
+  notyet: Tu no eres (todavia) un Usario Avanzado.
+  usefulWhen: ¡Esto se vuelve mucho más útil tan pronto como eres un usuario avanzado!
+  nameRequired: ¡Eres casi un usuario avanzado! Simplemente envíeme su nombre dentro del juego proporcionando el menú principal de @BastionSiegeBot. Luego obtienes todas las cosas interesantes como inmunidad o estadísticas de guerra mejoradas.
+  nameOld: Para ser un usuario avanzado, necesito tu nombre actual en el juego. Su nombre debe actualizarse al menos cada 3 días.
+  buildingsOld: Para ser un usuario avanzado, necesito tus edificios actuales. Debe actualizar esto al menos cada 7 días.
+  workshopOld: Para ser un usuario avanzado, necesito tu taller actual. Debe actualizarlos al menos cada 14 días.
+  nearlyOld: Casi se ha agotado el tiempo disponible, deberías actualizarlos cuando tengas algo de tiempo. 😎
+  immunityTo: Actualmente se le otorga su inmunidad a ser localizado a ${name}.
+  noname: No tengo tu nombre, *no* puedo darte la inmunidad de ser localizado.
+  immunityDisabled: Actualmente *no* recibirás la inmunidad de ser localizado.
+settings: Ajustes
+setting:
+  alert:
+    infotext: Habilite las alertas que deseas recibir de mí.
+  buildings:
+    infotext: Puedes establecer qué edificios son de tu interés en /buildings y las alertas en /alerts. 
+upcoming:
+  title: Proximas Alertas
+  info: Tu puedes puedes seleccionar qué alertas deseas recibir en /settings.
+  noevents: No hay eventos próximos…
+  update: Actualizar 
+help:
+  joinBSAGroupButton: Únete al grupo de soporte de BastionSiegeAssist (ENG)
+  short: >
+    Ey, ${from.first_name}!
+
+    Debes reenviar las pantallas del juego de @BastionSiegeBot a mí.
+
+
+    Consulte /help para obtener ayuda adicional o únase al grupo de soporte.    
+  trySearchButton: Prueba la busqueda de jugadores…
+  search: >
+    Para buscar un jugador, escriba `@BastionSiegeAssistBot ${name}` en cualquier chat.
+    Simplemente comience con la @ en cualquier chat o use el botón a continuación para comenzar.
+    Una vez que haya utilizado la búsqueda en línea, su cliente de Telegram lo recordará y le sugerirá cuando ponga @.
+  full: >
+    Ey, ${from.first_name}!
+
+
+    Debes reenviar las pantallas del juego desde @BastionSiegeBot a mí.
+    
+    
+    Con pantallas reenviadas que contienen sus edificios o recursos actuales, puedo predecir cuándo estarán listas las actualizaciones.
+    
+    
+    Con informes de batalla puedo mostrar tu historia en batallas.
+    El reenvío del mensaje "Tus exploradores han encontrado..." muestra información sobre ese jugador como un posible botín y el ejército requerido.
+    
+    
+    Los informes de batalla que proporciones solo se usarán para asumir la fuerza del enemigo, nunca la tuya.
+    Sus propios datos que conozco no se considerarán para contarle a otros su fortaleza.
+    Se pone aún mejor: siempre y cuando me proporcione datos activamente, obtendrá inmunidad y nadie podrá usarme para controlarlo. ¡Serás un Usuario Avanzado aquí!
+    
+    
+    Vea /settings para usos más detallados de este bot.
+
+
+    ¿Tienes una idea o encontraste un error?
+    Únete al grupo de soporte BastionSiegeAssist con el botón a continuación y compártelo.
+    Hagamos que este bot sea aún mejor :)
