@@ -15,13 +15,13 @@ const bot = new Telegraf.Composer()
 let alertHandler
 
 function start(telegram) {
-  console.time(`recreateAlerts`)
+  console.time('recreateAlerts')
   alertHandler = new AlertHandler(telegram)
   userSessions.getRaw()
     .forEach(({user, data}) => {
       alertHandler.recreateAlerts(user, data)
     })
-  console.timeEnd(`recreateAlerts`)
+  console.timeEnd('recreateAlerts')
 }
 
 bot.use(async (ctx, next) => {
