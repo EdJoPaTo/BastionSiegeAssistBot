@@ -92,7 +92,24 @@ export function formatTimeAmount(totalMinutes: number): string {
   return parts.join(' ')
 }
 
+export function formatBattleHoursAgo(hoursAgo: number): string {
+  let text = ''
+
+  text += '≥'
+  if (hoursAgo < 24) {
+    text += Math.floor(hoursAgo)
+    text += 'h'
+  } else {
+    text += Math.floor(hoursAgo / 24)
+    text += 'd'
+  }
+
+  text += ' ago'
+  return text
+}
+
 module.exports = {
+  formatBattleHoursAgo,
   formatNumberShort,
   formatTime,
   formatTimeAmount,

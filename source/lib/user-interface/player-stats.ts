@@ -10,7 +10,7 @@ import {isImmune} from '../data/poweruser'
 
 import {emoji} from './output-text'
 import {createAverageMaxString, formatTypeOfData} from './number-array-strings'
-import {formatNumberShort, formatTimeFrame} from './format-number'
+import {formatNumberShort, formatTimeFrame, formatBattleHoursAgo} from './format-number'
 
 type Dictionary<T> = {[key: string]: T}
 
@@ -89,17 +89,7 @@ export function createPlayerStatsString(stats: PlayerStats): string {
 
   const hoursAgo = ((Date.now() / 1000) - stats.lastBattleTime) / ONE_HOUR_IN_SECONDS
   if (isFinite(hoursAgo)) {
-    let timestring = '≥'
-    if (hoursAgo < 24) {
-      timestring += Math.floor(hoursAgo)
-      timestring += 'h'
-    } else {
-      timestring += Math.floor(hoursAgo / 24)
-      timestring += 'd'
-    }
-
-    timestring += ' ago'
-    randomFacs.push(timestring)
+    randomFacs.push(formatBattleHoursAgo(hoursAgo))
   }
 
   if (stats.loot.amount > 0) {
