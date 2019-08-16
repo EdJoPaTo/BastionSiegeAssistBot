@@ -60,9 +60,8 @@ const testReports = [
   }
 ]
 
-test('generate example', t => {
+test('generate example A', t => {
   const resultA = generate(testReports, 'A', testNow)
-  const resultB = generate(testReports, 'B', testNow)
   t.deepEqual(resultA, {
     player: 'A',
     playerNameLookingLike: 'A',
@@ -125,7 +124,10 @@ test('generate example', t => {
     winsObserved: 1,
     lossesObserved: 1
   })
+})
 
+test('generate example B', t => {
+  const resultB = generate(testReports, 'B', testNow)
   t.deepEqual(resultB, {
     player: 'B',
     playerNameLookingLike: 'B',
