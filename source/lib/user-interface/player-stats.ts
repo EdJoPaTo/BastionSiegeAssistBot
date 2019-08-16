@@ -86,7 +86,7 @@ export function createPlayerStatsString(stats: PlayerStats): string {
   }
 
   const randomFacs = []
-  randomFacs.push(`${stats.battlesObserved}${emoji.battlereport}`)
+  randomFacs.push(`${stats.battlesObservedNearPast}${emoji.battlereport}`)
 
   const hoursAgo = (now - stats.lastBattleTime) / ONE_HOUR_IN_SECONDS
   if (isFinite(hoursAgo)) {
