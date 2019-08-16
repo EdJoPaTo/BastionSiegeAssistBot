@@ -109,10 +109,6 @@ export function getAllTimestamps(userId: number, type: string): readonly number[
   return playerData[userId][type]
 }
 
-export function getLastTimestamp(userId: number, type: string): number {
-  return getAllTimestamps(userId, type).slice(-1)[0]
-}
-
 export function getLastTimeActive(userId: number): number {
   if (!playerData[userId]) {
     return -Infinity
@@ -129,6 +125,5 @@ export function getLastTimeActive(userId: number): number {
 module.exports = {
   add,
   getAllTimestamps,
-  getLastTimestamp,
   getLastTimeActive
 }
