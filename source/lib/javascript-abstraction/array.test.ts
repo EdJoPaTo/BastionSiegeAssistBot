@@ -27,11 +27,15 @@ test('arrayFilterUniqueInBetween example', arrayFilterUniqueInBetweenMacro,
   ['A', 'A', 'B', 'A', 'A', 'C', 'C']
 )
 
-test('arrayFilterUniqueInBetween example with selector', arrayFilterUniqueInBetweenMacro,
-  [{k: 'A', n: 0}, {k: 'A', n: 1}, {k: 'A', n: 2}, {k: 'B', n: 3}, {k: 'B', n: 4}, {k: 'B', n: 5}, {k: 'C', n: 6}] as any,
-  [{k: 'A', n: 0}, {k: 'A', n: 2}, {k: 'B', n: 3}, {k: 'B', n: 5}, {k: 'C', n: 6}] as any,
-  (o: any) => o.k
-)
+test('arrayFilterUniqueInBetween example with selector', t => {
+  const input = [{k: 'A', n: 0}, {k: 'A', n: 1}, {k: 'A', n: 2}, {k: 'B', n: 3}, {k: 'B', n: 4}, {k: 'B', n: 5}, {k: 'C', n: 6}]
+  const expected = [{k: 'A', n: 0}, {k: 'A', n: 2}, {k: 'B', n: 3}, {k: 'B', n: 5}, {k: 'C', n: 6}]
+
+  const filtered = input
+    .filter(arrayFilterUniqueInBetween(o => o.k))
+
+  t.deepEqual(filtered, expected)
+})
 
 test('getOccurenceCount example', t => {
   const input = ['A', 'B', 'B', 'C', 'D', 'B', 'D', 'A', 'B']

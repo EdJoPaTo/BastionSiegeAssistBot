@@ -47,7 +47,7 @@ export function isEmptyContent(content: GamescreenContent): boolean {
   return keysOfInterest.length === 0
 }
 
-export async function add(message: FailedBSMessage): Promise<void> {
+export function add(message: FailedBSMessage): void {
   cache.data.push(message)
   cache.save()
 }
