@@ -3,7 +3,7 @@ menu:
   nothingchanged: Nada cambió además de la hora actual.
 bs:
   alliance: Alianza
-  allianceMembers: Mienbros
+  allianceMembers: Miembros
   buildings: Contrucciones
   siege: Asedio
   war: Guerra
@@ -20,7 +20,7 @@ bs:
     trebuchet: Catapulta
     ballista: Ballesta 
   resources:
-    resources: Recurso
+    resources: Recursos
     gold: Oro
     wood: Madera
     stone: Piedra
@@ -55,7 +55,7 @@ alert:
 battle:
   solo: Batallas en Solitario 
   alliance: Batallas con la Alianza
-  over: Esta batalla terminó hace tiempo… Envíame el report mejor. 😉
+  over: Esta batalla terminó hace tiempo… Envíame el reporte mejor. 😉
   scoutsGone: Tus exploradores no han estado allí por mucho tiempo. Te ayudaré cuando vayas por allí la próxima vez. 😊
   inlineWar:
     updateButton: Empezando actualización 🤓
@@ -72,7 +72,7 @@ battlereport:
   added: Gracias por el informe. Ya lo agregué 👌
   known: Ya me has enviado este informe 🙃
   changedIngameName: ❓ ¿Has cambiado tu nombre en el juego? Si es así, reenvíame una nueva pantalla del menú principal desde @BastionSiegeBot. Entonces estaré actualizado de nuevo. 😎
-battlereports: Reporte de Batalla
+battlereports: Reportes de Batalla
 battlestats:
   alltime: Todo el tiempo
   attendance: Asistencia en Batalla
@@ -90,7 +90,7 @@ botstats:
   users: Usuarios
 buildings:
   capacity: Capacidad
-  fillStorage: Llenar el almacén 
+  fillStorage: Llenar almacén 
   history: Historial
   income: Ingresos
   maxPossible: Max. actualizaciones posibles
@@ -99,8 +99,8 @@ buildings:
     buildings: Reenvíame la pantalla de construcción de tu juego para obtener estadísticas de actualización de construcción.
     resources: Reenvíame la pantalla del juego que muestra tus recursos actuales para obtener estadísticas de actualización de construcción.
   old:
-    buildings: Mi conocimiento de sus edificios es un poco viejo. Esto lleva a la inexactitud. Considere actualizarme con una nueva pantalla de construcción reenviada.
-    resources: Mi conocimiento de sus recursos es un poco viejo. Esto lleva a la inexactitud. Considere actualizarme con una nueva pantalla de recursos reenviados.
+    buildings: Mi conocimiento de sus edificios es un poco viejo. Esto hace que tenga datos inexactos. Considera actualizarme con una nueva pantalla de construcción reenviada.
+    resources: Mi conocimiento de sus recursos es un poco viejo. Esto hace que tenga datos inexactos. Considera actualizarme con una nueva pantalla de recursos reenviados.
   winChances: Oportunidad de victoria
   winChance:
     info: >
@@ -173,15 +173,15 @@ poweruser:
   immunity: Imunidad 
   youare: ¡Eres un Usuario Avanzado!
   notyet: Tu no eres (todavia) un Usario Avanzado.
-  usefulWhen: ¡Esto se vuelve mucho más útil tan pronto como eres un usuario avanzado!
+  usefulWhen: ¡Esto se vuelve mucho más útil tan pronto como seas un usuario avanzado!
   nameRequired: ¡Eres casi un usuario avanzado! Simplemente envíeme su nombre dentro del juego proporcionando el menú principal de @BastionSiegeBot. Luego obtienes todas las cosas interesantes como inmunidad o estadísticas de guerra mejoradas.
   nameOld: Para ser un usuario avanzado, necesito tu nombre actual en el juego. Su nombre debe actualizarse al menos cada 3 días.
   buildingsOld: Para ser un usuario avanzado, necesito tus edificios actuales. Debe actualizar esto al menos cada 7 días.
   workshopOld: Para ser un usuario avanzado, necesito tu taller actual. Debe actualizarlos al menos cada 14 días.
   nearlyOld: Casi se ha agotado el tiempo disponible, deberías actualizarlos cuando tengas algo de tiempo. 😎
-  immunityTo: Actualmente se le otorga su inmunidad a ser localizado a ${name}.
-  noname: No tengo tu nombre, *no* puedo darte la inmunidad de ser localizado.
-  immunityDisabled: Actualmente *no* recibirás la inmunidad de ser localizado.
+  immunityTo: Actualmente se le otorga su inmunidad a ser localizado en mi base de datos a ${name}.
+  noname: No tengo tu nombre, *no* puedo darte la inmunidad a ser localizado en mi base de datos.
+  immunityDisabled: Actualmente *no* recibirás la inmunidad a ser localizado en mi base de datos.
 settings: Ajustes
 setting:
   alert:
@@ -201,7 +201,7 @@ help:
     Debes reenviar las pantallas del juego de @BastionSiegeBot a mí.
 
 
-    Consulte /help para obtener ayuda adicional o únase al grupo de soporte.    
+    Consulte /help para obtener ayuda adicional o únase al grupo de soporte (ENG).    
   trySearchButton: Prueba la busqueda de jugadores…
   search: >
     Para buscar un jugador, escriba `@BastionSiegeAssistBot ${name}` en cualquier chat.
