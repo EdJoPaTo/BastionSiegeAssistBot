@@ -97,7 +97,10 @@ buildings:
       Perlu diingat bahwa hanya trebuset dan tembok yang pertama dari masing-masing pihak yang bertarung yang dipertimbangkan.
       Saat kamu baru saja bergabung dalam pertempuran, tembok dan trebusetmu diabaikan.
 effects:
-  updated: Perbarui efekmu. 👌\nLihat /upcoming atau aktifkan peringatan di /settings.
+  updated:
+    Perbarui efekmu. 👌
+  
+    Lihat /upcoming atau aktifkan peringatan di /settings.
 forward:
   known: Aku sudah tahu itu. Aku hanya akan mengabaikannya.
   old: Itu usang. Aku akan mengabaikannya.

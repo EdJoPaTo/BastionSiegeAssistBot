@@ -117,7 +117,10 @@ buildings:
       Denk dran, dass in Allianz Kämpfen nur vom jeweils Ersten der beiden Streitmächte der Wall oder das Katapult wirkt.
       Wenn du einem Kampf beitrittst zählt nur noch deine Armee.
 effects:
-  updated: Effekte aktualisiert! 👌\nSchau dir /upcoming an oder aktiviere Benachrichtungen in den /settings.
+  updated: >
+    Effekte aktualisiert! 👌
+    
+    Schau dir /upcoming an oder aktiviere Benachrichtungen in den /settings.
 forward:
   known: Das kenne ich schon. Ich ignoriere es einfach.
   old: Das ist alt. Ich ignoriere es einfach.

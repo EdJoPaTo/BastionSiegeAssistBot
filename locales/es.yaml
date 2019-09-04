@@ -117,7 +117,10 @@ buildings:
       Ten en cuenta que solo se consideran el catapulta y la muralla de los primeros de cada lado de la batalla.
       Cuando te estás uniendo a una batalla, tu muralla y tu catapulta son ignorados.
 effects:
-  updated: Actualizado tus efectos. 👌 \nMira /upcoming o habilita alertas con /settings.
+  updated: >
+    Actualizado tus efectos. 👌
+  
+    Mira /upcoming o habilita alertas con /settings.
 forward:
   known: Eso ya lo sé. Lo ignoraré.
   old: Eso es viejo. Lo ignoraré.

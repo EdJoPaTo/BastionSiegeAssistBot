@@ -117,7 +117,10 @@ buildings:
       Keep in mind that only the trebuchet and wall of the first ones of each battling side are considered.
       When you are just joining in on a battle your wall and trebuchet are ignored.
 effects:
-  updated: Updated your effects. 👌\nSee /upcoming or enable alerts in the /settings.
+  updated: >
+    Updated your effects. 👌
+    
+    See /upcoming or enable alerts in the /settings.
 forward:
   known: I already know that. I will just ignore it.
   old: That's old. I will just ignore it.
