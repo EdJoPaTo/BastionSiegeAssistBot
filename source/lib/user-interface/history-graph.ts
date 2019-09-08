@@ -1,4 +1,4 @@
-import d3 from 'd3'
+import * as d3 from 'd3'
 import sharp from 'sharp'
 
 /* eslint @typescript-eslint/no-var-requires: warn */
