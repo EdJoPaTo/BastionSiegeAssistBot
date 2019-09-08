@@ -52,7 +52,7 @@ export function createBuildingTimeStatsString(buildingName: ConstructionName, bu
   let text = ''
 
   text += emoji[buildingName] + ' '
-  if (!buildings[buildingName]) {
+  if (buildings[buildingName] === undefined) {
     text += `⚠️ unknown ${buildingName} level`
     return text
   }
@@ -93,7 +93,7 @@ export function createBuildingMaxLevelStatsString(buildingName: ConstructionName
   const currentBuildingLevel = buildings[buildingName]
 
   let text = emoji[buildingName] + ' '
-  if (!currentBuildingLevel) {
+  if (currentBuildingLevel === undefined) {
     text += `⚠️ unknown ${buildingName} level`
     return text
   }
