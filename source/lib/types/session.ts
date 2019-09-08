@@ -2,6 +2,9 @@ import {BuildingName, Attackscout, Buildings, DomainStats, Effect, Player, Resou
 
 import {BattlestatsSettings} from './battlestats-settings'
 
+export type BuildingView = 'upgrades' | 'history' | 'fillStorage' | 'income' | 'winChances'
+export const BUILDING_VIEWS: BuildingView[] = ['upgrades', 'history', 'fillStorage', 'income', 'winChances']
+
 export interface GameInformation {
   attackscout?: Attackscout;
   attackscoutTimestamp?: number;
@@ -34,6 +37,8 @@ export interface Session {
   battlestats?: BattlestatsSettings;
   buildings?: BuildingName[];
   buildingsHistoryTimeframe?: string;
+  buildingsTimeframe?: string;
+  buildingsView?: BuildingView;
   disableImmunity?: boolean;
   gameInformation: GameInformation;
   lastHintTimestamp?: number;

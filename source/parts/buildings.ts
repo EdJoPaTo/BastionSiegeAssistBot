@@ -1,14 +1,16 @@
-const debounce = require('debounce-promise')
-const Telegraf = require('telegraf')
-const TelegrafInlineMenu = require('telegraf-inline-menu')
-const {CONSTRUCTIONS, calcMaxBuildingLevel, estimateResourcesAfter} = require('bastion-siege-logic')
+import {Composer, ContextMessageUpdate} from 'telegraf'
+import {CONSTRUCTIONS, calcMaxBuildingLevel, estimateResourcesAfter, BattleBuilding} from 'bastion-siege-logic'
+import debounce from 'debounce-promise'
+import TelegrafInlineMenu from 'telegraf-inline-menu'
 
-const {calculateSecondsFromTimeframeString} = require('../lib/math/timeframe')
+import {Session, BUILDING_VIEWS, BuildingView} from '../lib/types'
 
-const {whenScreenContainsInformation} = require('../lib/input/gamescreen')
+import {calculateSecondsFromTimeframeString} from '../lib/math/timeframe'
 
-const {emoji} = require('../lib/user-interface/output-text')
-const {
+import {whenScreenContainsInformation} from '../lib/input/gamescreen'
+
+import {emoji} from '../lib/user-interface/output-text'
+import {
   createBuildingCostPerWinChanceLine,
   createBuildingMaxLevelStatsString,
   createBuildingTimeStatsString,
@@ -16,25 +18,20 @@ const {
   createFillTimeStatsString,
   createIncomeStatsString,
   defaultBuildingsToShow
-} = require('../lib/user-interface/buildings')
-const {DEFAULT_HISTORY_TIMEFRAME, buildingsHistoryGraphFromContext} = require('../lib/user-interface/buildings-history')
+} from '../lib/user-interface/buildings'
+import {DEFAULT_HISTORY_TIMEFRAME, buildingsHistoryGraphFromContext} from '../lib/user-interface/buildings-history'
 
-const buildingsMenu = require('./settings-submenus/buildings')
+import buildingsMenu from './settings-submenus/buildings'
+
+type Dictionary<T> = {[key: string]: T}
 
 const DEBOUNCE_TIME = 200 // Milliseconds
 
-const VIEWS = [
-  'upgrades',
-  'history',
-  'fillStorage',
-  'income',
-  'winChances'
-]
-const DEFAULT_VIEW = VIEWS[0]
+const DEFAULT_VIEW = BUILDING_VIEWS[0]
 
-const WIN_CHANCE_INFLUENCERS = ['barracks', 'trebuchet', 'wall']
+const WIN_CHANCE_INFLUENCERS: BattleBuilding[] = ['barracks', 'trebuchet', 'wall']
 
-const bot = new Telegraf.Composer()
+const bot = new Composer()
 
 const menu = new TelegrafInlineMenu(generateStatsText, {
   photo: generateStatsPhoto
@@ -43,53 +40,71 @@ const menu = new TelegrafInlineMenu(generateStatsText, {
 
 const replyMenuMiddleware = menu.replyMenuMiddleware().middleware()
 
-const debouncedBuildStats = {}
-bot.on('text', whenScreenContainsInformation(['buildings', 'resources', 'workshop'], ctx => {
+const debouncedBuildStats: Dictionary<(ctx: ContextMessageUpdate, next: any) => Promise<void>> = {}
+bot.on('text', whenScreenContainsInformation(['buildings', 'resources', 'workshop'], (ctx: any) => {
   const {id} = ctx.from
   if (!debouncedBuildStats[id]) {
     debouncedBuildStats[id] = debounce(replyMenuMiddleware, DEBOUNCE_TIME)
   }
 
-  debouncedBuildStats[id](ctx)
+  debouncedBuildStats[id](ctx, undefined)
 }))
 
-menu.submenu(ctx => emoji.houses + ' ' + ctx.i18n.t('bs.buildings'), 'buildings', buildingsMenu.menu, {
-  hide: ctx => (ctx.session.buildingsView || DEFAULT_VIEW) !== 'upgrades'
+menu.submenu(ctx => `${emoji.houses} ${(ctx as any).i18n.t('bs.buildings')}`, 'buildings', buildingsMenu.menu, {
+  hide: (ctx: any) => {
+    const session = ctx.session as Session
+    return (session.buildingsView || DEFAULT_VIEW) !== 'upgrades'
+  }
 })
 
 menu.select('t', ['1 min', '15 min', '30 min', '1h', '6h', '12h', '1d', '2d', '7d', '30d'], {
   columns: 5,
-  setFunc: (ctx, key) => {
-    ctx.session.buildingsTimeframe = key
+  setFunc: (ctx: any, key) => {
+    const session = ctx.session as Session
+    session.buildingsTimeframe = key
   },
-  isSetFunc: (ctx, key) => key === (ctx.session.buildingsTimeframe || '1 min'),
-  hide: ctx => (ctx.session.buildingsView || DEFAULT_VIEW) !== 'income'
+  isSetFunc: (ctx: any, key) => {
+    const session = ctx.session as Session
+    return key === (session.buildingsTimeframe || '1 min')
+  },
+  hide: (ctx: any) => (ctx.session.buildingsView || DEFAULT_VIEW) !== 'income'
 })
 
 menu.select('historyT', ['7d', '14d', '28d', '90d'], {
-  hide: ctx => (ctx.session.buildingsView || DEFAULT_VIEW) !== 'history',
-  isSetFunc: (ctx, key) => key === (ctx.session.buildingsHistoryTimeframe || DEFAULT_HISTORY_TIMEFRAME),
-  setFunc: (ctx, key) => {
-    ctx.session.buildingsHistoryTimeframe = key
+  hide: (ctx: any) => {
+    const session = ctx.session as Session
+    return (session.buildingsView || DEFAULT_VIEW) !== 'history'
+  },
+  isSetFunc: (ctx: any, key) => {
+    const session = ctx.session as Session
+    return key === (session.buildingsHistoryTimeframe || DEFAULT_HISTORY_TIMEFRAME)
+  },
+  setFunc: (ctx: any, key) => {
+    const session = ctx.session as Session
+    session.buildingsHistoryTimeframe = key
   }
 })
 
-menu.select('view', VIEWS, {
+menu.select('view', BUILDING_VIEWS, {
   columns: 2,
-  hide: ctx => creationNotPossibleReason(ctx) !== false,
-  textFunc: (ctx, key) => ctx.i18n.t('buildings.' + key),
-  isSetFunc: (ctx, key) => (ctx.session.buildingsView || DEFAULT_VIEW) === key,
-  setFunc: (ctx, key) => {
-    ctx.session.buildingsView = key
+  hide: (ctx: any) => creationNotPossibleReason(ctx) !== false,
+  textFunc: (ctx: any, key) => ctx.i18n.t('buildings.' + key),
+  isSetFunc: (ctx: any, key) => {
+    const session = ctx.session as Session
+    return (session.buildingsView || DEFAULT_VIEW) === key
+  },
+  setFunc: (ctx: any, key) => {
+    const session = ctx.session as Session
+    session.buildingsView = key as BuildingView
   }
 })
 
 bot.use(menu.init({
-  backButtonText: ctx => `🔙 ${ctx.i18n.t('menu.back')}…`,
+  backButtonText: (ctx: any) => `🔙 ${ctx.i18n.t('menu.back')}…`,
   actionCode: 'buildings'
 }))
 
-function creationNotPossibleReason(ctx) {
+function creationNotPossibleReason(ctx: any): string | false {
   const information = ctx.session.gameInformation
 
   if (!information.buildingsTimestamp) {
@@ -103,14 +118,15 @@ function creationNotPossibleReason(ctx) {
   return false
 }
 
-function creationWarnings(ctx) {
-  const information = ctx.session.gameInformation
+function creationWarnings(ctx: any): string[] {
+  const session = ctx.session as Session
+  const information = session.gameInformation
   const warnings = []
 
   // Unix timestamp just without seconds (/60)
   const currentTimestamp = Math.floor(Date.now() / 1000 / 60)
-  const resourceAgeMinutes = currentTimestamp - Math.floor(information.resourcesTimestamp / 60)
-  const buildingAgeMinutes = currentTimestamp - Math.floor(information.buildingsTimestamp / 60)
+  const resourceAgeMinutes = currentTimestamp - Math.floor(information.resourcesTimestamp! / 60)
+  const buildingAgeMinutes = currentTimestamp - Math.floor(information.buildingsTimestamp! / 60)
 
   if (resourceAgeMinutes > 30) {
     warnings.push(ctx.i18n.t('buildings.old.resources'))
@@ -123,9 +139,9 @@ function creationWarnings(ctx) {
   return warnings
 }
 
-async function generateStatsPhoto(ctx) {
+async function generateStatsPhoto(ctx: any): Promise<undefined | {source: Buffer}> {
   if (creationNotPossibleReason(ctx)) {
-    return
+    return undefined
   }
 
   const selectedView = ctx.session.buildingsView || DEFAULT_VIEW
@@ -133,9 +149,11 @@ async function generateStatsPhoto(ctx) {
     const buffer = await buildingsHistoryGraphFromContext(ctx)
     return {source: buffer}
   }
+
+  return undefined
 }
 
-function generateStatsText(ctx) {
+function generateStatsText(ctx: any): string {
   const notPossibleReason = creationNotPossibleReason(ctx)
   if (notPossibleReason) {
     return notPossibleReason
