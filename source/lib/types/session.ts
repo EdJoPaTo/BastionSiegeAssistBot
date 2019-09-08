@@ -33,6 +33,7 @@ export interface Session {
   alerts?: string[];
   battlestats?: BattlestatsSettings;
   buildings?: BuildingName[];
+  buildingsHistoryTimeframe?: string;
   disableImmunity?: boolean;
   gameInformation: GameInformation;
   lastHintTimestamp?: number;

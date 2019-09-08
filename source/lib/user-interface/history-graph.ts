@@ -1,17 +1,37 @@
-const d3 = require('d3')
+import d3 from 'd3'
+import sharp from 'sharp'
+
+/* eslint @typescript-eslint/no-var-requires: warn */
+/* eslint @typescript-eslint/no-require-imports: warn */
 const D3Node = require('d3-node')
-const sharp = require('sharp')
 
 // https://projects.susielu.com/viz-palette
 const COLORS = ['#e41a1c', '#377eb8', '#4daf4a', '#984ea3', '#ff7f00', '#a65628', '#f781bf', '#999999']
 
-async function createPngBuffer(minUnixTimestamp, options, ...series) {
+export interface Options {
+  height: number;
+  width: number;
+  unit: string;
+  labelNumberFormatter: (number: number) => string;
+}
+
+export interface Point {
+  timestamp: number;
+  value: number;
+}
+
+export interface Series {
+  labelText: string;
+  points: Point[];
+}
+
+export async function createPngBuffer(minUnixTimestamp: number, options: Options, ...series: Series[]): Promise<Buffer> {
   const svgString = createSvgString(minUnixTimestamp, options, ...series)
   const pngBuffer = await sharp(Buffer.from(svgString)).png().toBuffer()
   return pngBuffer
 }
 
-function createSvgString(minUnixTimestamp, options, ...series) {
+export function createSvgString(minUnixTimestamp: number, options: Options, ...series: Series[]): string {
   const margin = {top: 20, right: 170, bottom: 20, left: 0}
   const {height, width, unit, labelNumberFormatter} = options
 
@@ -25,16 +45,16 @@ function createSvgString(minUnixTimestamp, options, ...series) {
     .flatMap(s => s.points)
     .map(o => o.value)
 
-  const min = d3.min(relevantValues)
-  const max = d3.max(relevantValues)
+  const min = d3.min(relevantValues)!
+  const max = d3.max(relevantValues)!
 
   const y = d3.scaleLinear()
     .domain([min, max]).nice()
     .range([height - margin.bottom, margin.top])
 
   const line = d3.line()
-    .x(d => x(d.timestamp))
-    .y(d => y(d.value))
+    .x(d => x((d as any).timestamp))
+    .y(d => y((d as any).value))
 
   const svg = d3n.createSVG(width, height)
 
@@ -49,14 +69,14 @@ function createSvgString(minUnixTimestamp, options, ...series) {
 
     legend.append('g')
       .attr('fill', color)
-      .call(g => g.append('text')
+      .call((g: any) => g.append('text')
         .attr('x', width - margin.right + 65)
         .attr('y', yVal)
         .attr('text-anchor', 'end')
         .attr('font-weight', 'bold')
         .text(labelNumberFormatter(lastValue))
       )
-      .call(g => g.append('text')
+      .call((g: any) => g.append('text')
         .attr('x', width - margin.right + 70)
         .attr('y', yVal)
         .attr('text-anchor', 'begin')
@@ -68,7 +88,7 @@ function createSvgString(minUnixTimestamp, options, ...series) {
   svg.append('g')
     .attr('transform', `translate(0,${height - margin.bottom})`)
     .call(d3.axisBottom(x)
-      .tickFormat(multiFormat)
+      .tickFormat(date => multiFormat(date as Date))
       .tickSizeOuter(0)
     )
 
@@ -76,8 +96,8 @@ function createSvgString(minUnixTimestamp, options, ...series) {
   svg.append('g')
     .attr('transform', `translate(${width - margin.right},0)`)
     .call(d3.axisRight(y))
-    .call(g => g.select('.domain').remove())
-    .call(g => g.select('.tick:last-of-type text').clone()
+    .call((g: any) => g.select('.domain').remove())
+    .call((g: any) => g.select('.tick:last-of-type text').clone()
       .attr('x', -3)
       .attr('y', -8)
       .attr('text-anchor', 'end')
@@ -91,20 +111,20 @@ function createSvgString(minUnixTimestamp, options, ...series) {
     .attr('transform', `translate(0,${margin.top})`)
     .attr('opacity', 0.1)
     .call(d3.axisBottom(x)
-      .tickFormat('')
+      .tickFormat(() => '')
       .tickSize(height - margin.top - margin.bottom)
     )
-    .call(g => g.select('.domain').remove())
+    .call((g: any) => g.select('.domain').remove())
 
   // Y Grid
   svg.append('g')
     .attr('transform', `translate(${margin.left},0)`)
     .attr('opacity', 0.1)
     .call(d3.axisRight(y)
-      .tickFormat('')
+      .tickFormat(() => '')
       .tickSize(width - margin.left - margin.right)
     )
-    .call(g => g.select('.domain').remove())
+    .call((g: any) => g.select('.domain').remove())
 
   // Series
   for (let i = 0; i < series.length; i++) {
@@ -123,7 +143,7 @@ function createSvgString(minUnixTimestamp, options, ...series) {
   return d3n.svgString()
 }
 
-function multiFormat(date) {
+function multiFormat(date: Date): string {
   if (d3.timeSecond(date) < date) {
     return d3.timeFormat('.%L')(date)
   }

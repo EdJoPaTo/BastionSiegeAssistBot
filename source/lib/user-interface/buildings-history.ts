@@ -1,27 +1,32 @@
-const {arrayFilterUniqueInBetween} = require('../javascript-abstraction/array')
+import {Session} from '../types'
 
-const {calculateSecondsFromTimeframeString} = require('../math/timeframe')
+import {arrayFilterUniqueInBetween} from '../javascript-abstraction/array'
 
-const playerHistory = require('../data/player-history')
+import {calculateSecondsFromTimeframeString} from '../math/timeframe'
 
-const {createPngBuffer} = require('./history-graph')
+import * as playerHistory from '../data/player-history'
 
-const DEFAULT_HISTORY_TIMEFRAME = '28d'
+import {createPngBuffer, Options, Series} from './history-graph'
 
-async function buildingsHistoryGraphFromContext(ctx) {
-  const timeframe = ctx.session.buildingsHistoryTimeframe || DEFAULT_HISTORY_TIMEFRAME
+type Dictionary<T> = {[key: string]: T}
+
+export const DEFAULT_HISTORY_TIMEFRAME = '28d'
+
+export async function buildingsHistoryGraphFromContext(ctx: any): Promise<Buffer> {
+  const session = ctx.session as Session
+  const timeframe = session.buildingsHistoryTimeframe || DEFAULT_HISTORY_TIMEFRAME
   const timeframeInSeconds = calculateSecondsFromTimeframeString(timeframe)
   const minDate = Date.now() - (timeframeInSeconds * 1000)
   const minUnixTimestamp = minDate / 1000
 
   const buildingSeries = createHistorySeriesFromData(ctx, minUnixTimestamp,
-    playerHistory.getAllTimestamps(ctx.from.id, 'buildings')
+    playerHistory.getAllTimestamps(ctx.from.id, 'buildings') as any[]
   )
   const workshopSeries = createHistorySeriesFromData(ctx, minUnixTimestamp,
-    playerHistory.getAllTimestamps(ctx.from.id, 'workshop')
+    playerHistory.getAllTimestamps(ctx.from.id, 'workshop') as any[]
   )
 
-  const options = {
+  const options: Options = {
     height: 600,
     width: 800,
     unit: ctx.i18n.t('bs.buildings'),
@@ -32,8 +37,13 @@ async function buildingsHistoryGraphFromContext(ctx) {
   return buffer
 }
 
-function createHistorySeriesFromData(ctx, minTimestamp, allData) {
-  const data = []
+interface Data {
+  timestamp: number;
+  data: Dictionary<number>;
+}
+
+function createHistorySeriesFromData(ctx: any, minTimestamp: number, allData: Data[]): Series[] {
+  const data: Data[] = []
   for (let i = 0; i < allData.length; i++) {
     if (allData[i].timestamp > minTimestamp) {
       if (data.length === 0 && i > 0) {
@@ -60,7 +70,7 @@ function createHistorySeriesFromData(ctx, minTimestamp, allData) {
           timestamp: timestamp * 1000,
           value: data[key] || 0
         }))
-        .filter(arrayFilterUniqueInBetween(o => o.value))
+        .filter(arrayFilterUniqueInBetween(o => String(o.value)))
     }))
     .filter(o => o.points.length > 2)
 
