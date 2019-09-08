@@ -146,7 +146,7 @@ function getAsUnknown(userId: number, type: keyof PlayerHistory): Entry<unknown>
 }
 
 export function getAllTimestamps<Key extends keyof PlayerHistory>(userId: number, type: Key): PlayerHistory[Key] {
-  return get(userId)[type]
+  return get(userId)[type] || []
 }
 
 export function getLastTimeActive(userId: number): number {
