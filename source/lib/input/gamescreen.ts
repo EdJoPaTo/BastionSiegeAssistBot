@@ -1,7 +1,7 @@
-import Telegraf from 'telegraf'
+import Telegraf, {Middleware, ContextMessageUpdate} from 'telegraf'
 
 // When at least one of the name argument is available middlewares are executed
-export function whenScreenContainsInformation(names: string | readonly string[], ...middlewares: any[]): (ctx: any, next: any) => void {
+export function whenScreenContainsInformation(names: string | readonly string[], ...middlewares: Middleware<ContextMessageUpdate>[]): (ctx: any, next: any) => void {
   const namesArr = Array.isArray(names) ? names : [names]
   const predicate = (ctx: any): boolean => {
     if (!ctx.state.screen) {
@@ -15,7 +15,7 @@ export function whenScreenContainsInformation(names: string | readonly string[],
   return (Telegraf as any).optional(predicate, ...middlewares)
 }
 
-export function whenScreenIsOfType(wantedTypes: string | readonly string[], ...middlewares: any[]): (ctx: any, next: any) => void {
+export function whenScreenIsOfType(wantedTypes: string | readonly string[], ...middlewares: Middleware<ContextMessageUpdate>[]): (ctx: any, next: any) => void {
   const typeArr = Array.isArray(wantedTypes) ? wantedTypes : [wantedTypes]
 
   const predicate = (ctx: any): boolean => {
