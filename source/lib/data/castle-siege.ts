@@ -12,6 +12,10 @@ export const MAXIMUM_JOIN_MINUTES = 60 * 5 // 5 hours
 export const MAXIMUM_JOIN_SECONDS = 60 * MAXIMUM_JOIN_MINUTES
 
 export function add(timestamp: number, alliance: string, player: string | undefined): void {
+  if (!alliance) {
+    throw new Error('Its not possible to join the castle siege without an alliance.')
+  }
+
   cache.data = cache.data
     .filter(o => o.timestamp > timestamp - MAXIMUM_JOIN_SECONDS)
     .filter(o => o.player !== player || o.alliance !== alliance)
