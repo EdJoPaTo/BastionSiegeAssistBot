@@ -1,6 +1,6 @@
 import arrayFilterUnique from 'array-filter-unique'
 
-import {CastleSiegeEntry} from '../types'
+import {CastleSiegeEntry, CastleSiegePlayerEntry} from '../types'
 
 import {sortBy} from '../javascript-abstraction/array'
 
@@ -11,7 +11,7 @@ const cache = new InMemoryFromSingleFileCache<CastleSiegeEntry[]>('tmp/castle-si
 export const MAXIMUM_JOIN_MINUTES = 60 * 5 // 5 hours
 export const MAXIMUM_JOIN_SECONDS = 60 * MAXIMUM_JOIN_MINUTES
 
-export function add(timestamp: number, alliance: string, player: string): void {
+export function add(timestamp: number, alliance: string, player: string | undefined): void {
   cache.data = cache.data
     .filter(o => o.timestamp > timestamp - MAXIMUM_JOIN_SECONDS)
     .filter(o => o.player !== player || o.alliance !== alliance)
@@ -33,11 +33,14 @@ export function getAlliances(currentTimestamp: number): readonly string[] {
     .filter(arrayFilterUnique())
 }
 
-export function getParticipants(currentTimestamp: number, alliance: string): readonly CastleSiegeEntry[] {
-  return cache.data
+export function getParticipants(currentTimestamp: number, alliance: string): readonly CastleSiegePlayerEntry[] {
+  // Joined alliances have no player
+  const onlyPlayerEntries: CastleSiegePlayerEntry[] = cache.data
+    .filter(o => o.player) as CastleSiegePlayerEntry[]
+
+  return onlyPlayerEntries
     .filter(o => o.timestamp > currentTimestamp - MAXIMUM_JOIN_SECONDS)
     .filter(o => o.alliance === alliance)
-    .filter(o => o.player) // Joined alliances have no player
     .sort(sortBy(o => o.timestamp))
 }
 
