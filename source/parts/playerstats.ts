@@ -8,6 +8,7 @@ import * as poweruser from '../lib/data/poweruser'
 import * as wars from '../lib/data/wars'
 
 import {createPlayerShareButton, createPlayerStatsString, createPlayerStatsTwoLineString, createMultipleStatsConclusion} from '../lib/user-interface/player-stats'
+import {emoji} from '../lib/user-interface/output-text'
 
 import {notNewMiddleware} from '../lib/telegraf-middlewares'
 
@@ -32,7 +33,8 @@ bot.on('text', whenScreenContainsInformation('attackscout', notNewMiddleware('ba
   const {text} = generatePlayerStats(possible.map(o => o.player))
 
   const keyboard = Markup.inlineKeyboard([
-    Markup.switchToChatButton(ctx.i18n.t('list.shareAttack'), 'list')
+    Markup.urlButton(emoji.backTo + 'Bastion Siege', 'https://t.me/BastionSiegeBot'),
+    Markup.switchToChatButton(emoji.alliance + emoji.list + (ctx.i18n.t('list.shareAttack') as string), 'list')
   ] as any[])
 
   return ctx.reply(text, Extra.markdown().markup(keyboard))
