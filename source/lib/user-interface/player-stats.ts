@@ -192,7 +192,7 @@ export function createPlayerStatsShortString(stats: PlayerStats): string {
     return text
   }
 
-  text += ` ${stats.battlesObserved} battle${stats.battlesObserved > 1 ? 's' : ''} observed.`
+  text += ` ${stats.battlesObservedNearPast} battle${stats.battlesObserved > 1 ? 's' : ''} observed.`
 
   if (stats.attacksWithoutLossPercentage >= 0) {
     text += ` Inactive: ${Math.round(stats.attacksWithoutLossPercentage * 100)}%.`
