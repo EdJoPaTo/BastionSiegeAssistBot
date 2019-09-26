@@ -26,14 +26,16 @@ export function generate(allBattlereports: readonly Battlereport[], playername: 
 
   const alliance = allAlliances.slice(-1)[0]
 
+  const nearPastMinTimestamp = getMidnightXDaysEarlier(now, 30)
+
   const soloReports = allWithTarget
     .filter(o => o.enemies.length === 1)
     // There has to be only one party involved we know the army about
     .filter(o => o.friends.length === 1)
+    .filter(o => o.time > nearPastMinTimestamp)
 
   const lastBattleTime = Math.max(...allWithTarget.map(o => o.time))
 
-  const nearPastMinTimestamp = getMidnightXDaysEarlier(now, 30)
   const nearPastReports = allWithTarget
     .filter(o => o.time > nearPastMinTimestamp)
 

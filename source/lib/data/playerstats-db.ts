@@ -15,11 +15,18 @@ interface PlayerReportEntry {
   stats: PlayerStats;
 }
 
+const RELEVANT_REPORT_DAYS = 60
+
 const playerReports: Dictionary<Battlereport[]> = {}
 const playerStats: Dictionary<PlayerReportEntry> = {}
 
 export function addReport(report: Battlereport): void {
   const {enemies} = report
+
+  const now = Date.now() / 1000
+  if (report.time < getMidnightXDaysEarlier(now, RELEVANT_REPORT_DAYS)) {
+    return
+  }
 
   for (const enemy of enemies) {
     if (!playerReports[enemy]) {
