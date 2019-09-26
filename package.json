@@ -47,15 +47,15 @@
     "@types/json-stable-stringify": "^1.0.32",
     "@types/node": "^12.7.1",
     "@types/sharp": "^0.22.2",
-    "@typescript-eslint/eslint-plugin": "^1.13.0",
-    "@typescript-eslint/parser": "^1.13.0",
+    "@typescript-eslint/eslint-plugin": "^2.3.1",
+    "@typescript-eslint/parser": "^2.3.1",
     "ava": "^2.0.0",
     "del-cli": "^3.0.0",
-    "eslint-config-xo-typescript": "^0.15.0",
+    "eslint-config-xo-typescript": "^0.18.0",
     "nyc": "^14.0.0",
     "ts-node": "^8.3.0",
     "typescript": "^3.5.3",
-    "xo": "^0.24.0"
+    "xo": "^0.25.3"
   },
   "ava": {
     "babel": false,
@@ -92,8 +92,8 @@
     ],
     "rules": {
       "ava/no-ignored-test-files": "off",
+      "prefer-named-capture-group": "warn",
       "@typescript-eslint/array-type": "warn",
-      "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/require-await": "warn",
       "@typescript-eslint/indent": [
         "error",

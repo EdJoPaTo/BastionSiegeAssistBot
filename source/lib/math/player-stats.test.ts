@@ -228,7 +228,7 @@ test('lost attacks are not considered for loot', t => {
   }]
 
   const result = generate(reports, 'A', testNow)
-  t.deepEqual(result.loot.amount, 0)
+  t.is(result.loot.amount, 0)
 })
 
 test('old reports are not considered for loot', t => {
@@ -249,7 +249,7 @@ test('old reports are not considered for loot', t => {
   }]
 
   const result = generate(reports, 'A', testNow)
-  t.deepEqual(result.loot.amount, 0)
+  t.is(result.loot.amount, 0)
 })
 
 test('alliance attack against solo target is considered for loot', t => {

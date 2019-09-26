@@ -6,14 +6,14 @@ export default class InMemoryFromSingleFileCache<T> {
   public data: T
 
   constructor(
-    private readonly file: string,
+    private readonly _file: string,
     defaultData: any = {}
   ) {
-    this.data = load(file, defaultData)
+    this.data = load(this._file, defaultData)
   }
 
   save(): void {
-    writeFileSync(this.file, stringify(this.data, {space: 2}) + '\n', 'utf8')
+    writeFileSync(this._file, stringify(this.data, {space: 2}) + '\n', 'utf8')
   }
 }
 

@@ -49,7 +49,7 @@ if (process.env.NODE_ENV !== 'production') {
     console.time(identifier)
     await next()
     if (data) {
-      console.timeLog(identifier, data.length, data.replace(/\n/g, '\\n').substr(0, 50))
+      console.timeLog(identifier, data.length, data.replace(/\n/g, '\\n').slice(0, 50))
     } else {
       console.timeLog(identifier)
     }

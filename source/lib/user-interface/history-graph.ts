@@ -1,3 +1,5 @@
+/* eslint unicorn/no-for-loop: off */
+
 import * as d3 from 'd3'
 import sharp from 'sharp'
 
