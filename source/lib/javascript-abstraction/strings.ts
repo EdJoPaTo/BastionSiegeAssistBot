@@ -1,3 +1,5 @@
+type Dictionary<T> = {[key: string]: T}
+
 export function compareStrAsSimpleOne(str1: string, str2: string): number {
   const tmp1 = str1.replace(/[^\w\d]/g, '')
   const tmp2 = str2.replace(/[^\w\d]/g, '')
@@ -14,28 +16,37 @@ export function getUnicode(text: string): readonly string[] {
   return result
 }
 
+const LOOKING_ALIKE_SUBSTITUTION: Dictionary<string[]> = {
+  3: ['\u0417'],
+  A: ['\u0410'],
+  a: ['\u0430'],
+  B: ['\u0412'],
+  C: ['\u0421'],
+  c: ['\u0441'],
+  E: ['\u0415'],
+  e: ['\u0435'],
+  H: ['\u041D'],
+  K: ['\u041A'],
+  M: ['\u041C'],
+  O: ['\u041E'],
+  o: ['\u043E'],
+  P: ['\u0420'],
+  p: ['\u0440'],
+  r: ['\u0433'],
+  T: ['\u0422'],
+  X: ['\u0425'],
+  x: ['\u0445'],
+  y: ['\u0443']
+}
+
 export function replaceLookingLikeAsciiChars(input: string): string {
-  const result = input
-    .replace(/\u0410/g, 'A')
-    .replace(/\u0412/g, 'B')
-    .replace(/\u0415/g, 'E')
-    .replace(/\u0417/g, '3')
-    .replace(/\u041A/g, 'K')
-    .replace(/\u041C/g, 'M')
-    .replace(/\u041D/g, 'H')
-    .replace(/\u041E/g, 'O')
-    .replace(/\u0420/g, 'P')
-    .replace(/\u0421/g, 'C')
-    .replace(/\u0422/g, 'T')
-    .replace(/\u0425/g, 'X')
-    .replace(/\u0430/g, 'a')
-    .replace(/\u0433/g, 'r')
-    .replace(/\u0435/g, 'e')
-    .replace(/\u043E/g, 'o')
-    .replace(/\u0440/g, 'p')
-    .replace(/\u0441/g, 'c')
-    .replace(/\u0443/g, 'y')
-    .replace(/\u0445/g, 'x')
+  let result = input
+  for (const char of Object.keys(LOOKING_ALIKE_SUBSTITUTION)) {
+    const toBeReplaced = LOOKING_ALIKE_SUBSTITUTION[char]
+    const pattern = `[${toBeReplaced.join('')}]`
+    const regex = new RegExp(pattern, 'g')
+    result = result.replace(regex, char)
+  }
 
   return result
 }
