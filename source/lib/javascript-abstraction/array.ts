@@ -1,10 +1,8 @@
-type Dictionary<T> = {[key: string]: T}
-
 export function arrayFilterUniqueInBetween<T>(selector: (o: T) => string = o => String(o)): (_: T, i: number, arr: readonly T[]) => boolean {
   // True -> stay in array and not get filtered out
   // False -> filter out
 
-  const selected: Dictionary<string> = {}
+  const selected: Record<number, string> = {}
 
   function select(arr: readonly T[], i: number): string {
     if (!selected[i]) {
@@ -33,11 +31,11 @@ export function arrayFilterUniqueInBetween<T>(selector: (o: T) => string = o => 
 }
 
 // https://stackoverflow.com/questions/22010520/sort-by-number-of-occurrencecount-in-javascript-array
-export function getOccurenceCount(arr: readonly string[]): Dictionary<number> {
-  return arr.reduce((p, c) => {
+export function getOccurenceCount(arr: readonly string[]): Record<string, number> {
+  return arr.reduce((p: Record<string, number>, c) => {
     p[c] = (p[c] || 0) + 1
     return p
-  }, {} as Dictionary<number>)
+  }, {})
 }
 
 // Usage: inputArr.sort(sortBy(o => 42))

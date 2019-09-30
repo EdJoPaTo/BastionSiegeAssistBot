@@ -1,5 +1,3 @@
-type Dictionary<T> = {[key: string]: T}
-
 export function compareStrAsSimpleOne(str1: string, str2: string): number {
   const tmp1 = str1.replace(/[^\w\d]/g, '')
   const tmp2 = str2.replace(/[^\w\d]/g, '')
@@ -16,7 +14,7 @@ export function getUnicode(text: string): readonly string[] {
   return result
 }
 
-const LOOKING_ALIKE_SUBSTITUTION: Dictionary<string[]> = {
+const LOOKING_ALIKE_SUBSTITUTION: Record<string, string[]> = {
   3: ['\u0417'],
   A: ['\u0410'],
   a: ['\u0430'],
