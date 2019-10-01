@@ -5,7 +5,10 @@ import {whenScreenContainsInformation} from '../lib/input/gamescreen'
 
 import * as playerStatsDb from '../lib/data/playerstats-db'
 import * as poweruser from '../lib/data/poweruser'
+import * as userSessions from '../lib/data/user-sessions'
 import * as wars from '../lib/data/wars'
+
+import {getMidnightXDaysEarlier} from '../lib/math/unix-timestamp'
 
 import {createPlayerShareButton, createPlayerStatsString, createPlayerStatsTwoLineString, createMultipleStatsConclusion} from '../lib/user-interface/player-stats'
 import {emoji} from '../lib/user-interface/output-text'
@@ -101,6 +104,38 @@ bot.on('text', whenScreenContainsInformation('castleSiegeParticipants', notNewMi
     .join('\n')
 
   return ctx.replyWithMarkdown(text)
+}))
+
+bot.on('text', whenScreenContainsInformation('chat', notNewMiddleware('forward.old', 60 * 4), (ctx: any) => {
+  let text = ''
+  if (!poweruser.isPoweruser(ctx.from.id)) {
+    text += ctx.i18n.t('poweruser.usefulWhen')
+    return ctx.replyWithMarkdown(text)
+  }
+
+  const now = Date.now() / 1000
+  const {chat} = ctx.state.screen as Gamescreen
+  const userId = userSessions.getUserIdByName(chat!.sender)
+  const {text: statsText, extra} = generatePlayerStats(chat!.sender)
+
+  if (userId !== undefined) {
+    const user = userSessions.getUser(userId)
+    const minTimestamp = getMidnightXDaysEarlier(now, poweruser.MAX_PLAYER_AGE_DAYS)
+    const {player} = user.gameInformation
+    if (player && user.gameInformation.playerTimestamp! > minTimestamp) {
+      if (user.__username) {
+        text += '@' + user.__username
+      } else {
+        text += `[${player.name}](tg://user?id=${userId})`
+      }
+
+      text += '\n\n'
+    }
+  }
+
+  text += statsText
+
+  return ctx.reply(text, extra)
 }))
 
 function generatePlayerStats(players: string | string[], short = false): {text: string; extra: any} {
