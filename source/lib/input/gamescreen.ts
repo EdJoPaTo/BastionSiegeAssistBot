@@ -1,14 +1,25 @@
 import Telegraf, {Middleware, ContextMessageUpdate} from 'telegraf'
+// TODO: wait for https://github.com/krmax44/always-array/pull/9
+// import alwaysArray, {SingleOrArray} from 'always-array'
+import {Gamescreen} from 'bastion-siege-logic'
+
+type GamescreenKey = keyof Gamescreen
+
+type SingleOrArray<T> = T | (readonly T[])
+function alwaysArray<T>(input: SingleOrArray<T>): readonly T[] {
+  return Array.isArray(input) ? input : [input]
+}
 
 // When at least one of the name argument is available middlewares are executed
-export function whenScreenContainsInformation(names: string | readonly string[], ...middlewares: Middleware<ContextMessageUpdate>[]): (ctx: any, next: any) => void {
-  const namesArr = Array.isArray(names) ? names : [names]
+export function whenScreenContainsInformation(names: SingleOrArray<GamescreenKey>, ...middlewares: Middleware<ContextMessageUpdate>[]): (ctx: any, next: any) => void {
+  const namesArr = alwaysArray(names)
   const predicate = (ctx: any): boolean => {
     if (!ctx.state.screen) {
       return false
     }
 
-    const available = Object.keys(ctx.state.screen || {})
+    const screen: Gamescreen = ctx.state.screen || {}
+    const available = Object.keys(screen) as GamescreenKey[]
     return namesArr.some(n => available.includes(n))
   }
 
