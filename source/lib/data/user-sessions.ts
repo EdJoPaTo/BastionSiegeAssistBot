@@ -80,7 +80,7 @@ function updatePlayernameCache(): void {
   }
 }
 
-export function getUserIdByName(playername: string): number {
+export function getUserIdByName(playername: string): number | undefined {
   updatePlayernameCache()
   return playernameCache[playername]
 }

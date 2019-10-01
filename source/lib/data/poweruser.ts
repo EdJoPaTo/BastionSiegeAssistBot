@@ -129,7 +129,7 @@ export function getPoweruserSessions(): readonly userSessions.SessionRaw[] {
 export function isImmune(playername: string): boolean {
   const id = userSessions.getUserIdByName(playername)
 
-  if (!isPoweruser(id)) {
+  if (!id || !isPoweruser(id)) {
     return false
   }
 
