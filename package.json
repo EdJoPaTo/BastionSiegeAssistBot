@@ -92,9 +92,9 @@
     ],
     "rules": {
       "ava/no-ignored-test-files": "off",
-      "prefer-named-capture-group": "warn",
-      "@typescript-eslint/array-type": "warn",
-      "@typescript-eslint/require-await": "warn",
+      "prefer-named-capture-group": "off",
+      "@typescript-eslint/array-type": "off",
+      "@typescript-eslint/require-await": "off",
       "@typescript-eslint/indent": [
         "error",
         2
