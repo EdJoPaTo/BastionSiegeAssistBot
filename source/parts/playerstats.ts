@@ -19,7 +19,7 @@ const bot = new Composer()
 
 bot.on('text', whenScreenContainsInformation('attackIncoming', notNewMiddleware('battle.over'), (ctx: any) => {
   const {attackIncoming} = ctx.state.screen as Gamescreen
-  const {text, extra} = generatePlayerStats(attackIncoming!.name)
+  const {text, extra} = generatePlayerStats(attackIncoming!.name, false)
   return ctx.reply(text, extra)
 }))
 
@@ -33,7 +33,7 @@ bot.on('text', whenScreenContainsInformation('attackscout', notNewMiddleware('ba
     possible.push(playerStatsDb.get(name))
   }
 
-  const {text} = generatePlayerStats(possible.map(o => o.player))
+  const {text} = generatePlayerStats(possible.map(o => o.player), false)
 
   const keyboard = Markup.inlineKeyboard([
     Markup.urlButton(emoji.backTo + 'Bastion Siege', 'https://t.me/BastionSiegeBot'),
@@ -55,7 +55,7 @@ bot.on('text', whenScreenContainsInformation('allianceBattleStart', notNewMiddle
   text += ctx.i18n.t('battle.inlineWar.updated')
   text += '\n\n'
 
-  const {text: statsText, extra} = generatePlayerStats(allianceBattleStart!.enemy.name)
+  const {text: statsText, extra} = generatePlayerStats(allianceBattleStart!.enemy.name, false)
   text += statsText
 
   return ctx.reply(text, extra)
@@ -63,13 +63,13 @@ bot.on('text', whenScreenContainsInformation('allianceBattleStart', notNewMiddle
 
 bot.on('text', whenScreenContainsInformation('allianceBattleSupport', notNewMiddleware('battle.over'), (ctx: any) => {
   const {allianceBattleSupport} = ctx.state.screen as Gamescreen
-  const {text, extra} = generatePlayerStats(allianceBattleSupport!.name)
+  const {text, extra} = generatePlayerStats(allianceBattleSupport!.name, false)
   return ctx.reply(text, extra)
 }))
 
 bot.on('text', whenScreenContainsInformation('allianceJoinRequest', notNewMiddleware(), (ctx: any) => {
   const {allianceJoinRequest} = ctx.state.screen as Gamescreen
-  const {text, extra} = generatePlayerStats(allianceJoinRequest!.name)
+  const {text, extra} = generatePlayerStats(allianceJoinRequest!.name, false)
   return ctx.reply(text, extra)
 }))
 
@@ -116,7 +116,7 @@ bot.on('text', whenScreenContainsInformation('chat', notNewMiddleware('forward.o
   const now = Date.now() / 1000
   const {chat} = ctx.state.screen as Gamescreen
   const userId = userSessions.getUserIdByName(chat!.sender)
-  const {text: statsText, extra} = generatePlayerStats(chat!.sender)
+  const {text: statsText, extra} = generatePlayerStats(chat!.sender, false)
 
   if (userId !== undefined) {
     const user = userSessions.getUser(userId)
@@ -138,7 +138,7 @@ bot.on('text', whenScreenContainsInformation('chat', notNewMiddleware('forward.o
   return ctx.reply(text, extra)
 }))
 
-function generatePlayerStats(players: string | string[], short = false): {text: string; extra: any} {
+function generatePlayerStats(players: string | string[], short: boolean): {text: string; extra: any} {
   if (!Array.isArray(players)) {
     players = [players]
   }
