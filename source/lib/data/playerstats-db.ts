@@ -61,17 +61,17 @@ export function getLookingLike(player: string, terra = NaN, onlyFromNearPast = t
     .sort(sortBy(o => o.lastBattleTime, true))
     .sort(sortBy(o => Math.abs(o.terra - terra)))
 
-  if (!onlyFromNearPast) {
-    return allLookingAlike
+  return onlyFromNearPast ? filterNearPast(allLookingAlike) : allLookingAlike
+}
+
+function filterNearPast(all: PlayerStats[]): PlayerStats[] {
+  const minDate = getMidnightXDaysEarlier(Date.now() / 1000, 30)
+  const newEnoughExist = all.some(o => o.lastBattleTime > minDate)
+  if (!newEnoughExist) {
+    return all
   }
 
-  const minDate = getMidnightXDaysEarlier(Date.now() / 1000, 30)
-  const newEnoughAmount = allLookingAlike
-    .filter(o => o.lastBattleTime > minDate)
-    .length
-
-  return allLookingAlike
-    .filter(o => newEnoughAmount === 0 ? true : o.lastBattleTime > minDate)
+  return all.filter(o => o.lastBattleTime > minDate)
 }
 
 export function list(): readonly PlayerStats[] {
