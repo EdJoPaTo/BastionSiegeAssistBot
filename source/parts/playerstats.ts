@@ -147,7 +147,9 @@ function generatePlayerStats(players: string | string[], short: boolean): {text:
 
   const allStats = players
     .map(o => statsFromPlayernameWhenUnique(o))
-  const buttons = allStats.map(o => createPlayerShareButton(o))
+  const buttons = allStats
+    .filter(o => o.battlesObservedNearPast > 0)
+    .map(o => createPlayerShareButton(o))
 
   let text = ''
   if (short) {
