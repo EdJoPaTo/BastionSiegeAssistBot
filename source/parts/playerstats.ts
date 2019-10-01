@@ -1,6 +1,8 @@
 import {Gamescreen} from 'bastion-siege-logic'
 import {Extra, Markup, Composer} from 'telegraf'
 
+import {PlayerStats} from '../lib/types'
+
 import {whenScreenContainsInformation} from '../lib/input/gamescreen'
 
 import * as playerStatsDb from '../lib/data/playerstats-db'
@@ -144,7 +146,7 @@ function generatePlayerStats(players: string | string[], short: boolean): {text:
   }
 
   const allStats = players
-    .map(o => playerStatsDb.get(o))
+    .map(o => statsFromPlayernameWhenUnique(o))
   const buttons = allStats.map(o => createPlayerShareButton(o))
 
   let text = ''
@@ -158,6 +160,17 @@ function generatePlayerStats(players: string | string[], short: boolean): {text:
     text,
     extra: Extra.markdown().markup(Markup.inlineKeyboard(buttons as any, {columns: 2}))
   }
+}
+
+function statsFromPlayernameWhenUnique(player: string): PlayerStats {
+  if (player.endsWith('~') && player.length === 14) {
+    const possible = playerStatsDb.getFromShortened(player)
+    if (possible.length === 1) {
+      return possible[0]
+    }
+  }
+
+  return playerStatsDb.get(player)
 }
 
 module.exports = {

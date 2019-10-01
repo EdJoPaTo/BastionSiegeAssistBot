@@ -64,6 +64,19 @@ export function getLookingLike(player: string, terra = NaN, onlyFromNearPast = t
   return onlyFromNearPast ? filterNearPast(allLookingAlike) : allLookingAlike
 }
 
+export function getFromShortened(playerShortened: string, onlyFromNearPast = true): PlayerStats[] {
+  const searched = playerShortened.endsWith('~') ? playerShortened.slice(0, playerShortened.length - 1) : playerShortened
+  if (searched.length !== 13) {
+    throw new Error('shortened name does not seem to be from a ranking')
+  }
+
+  const allLookingAlike = list()
+    .filter(o => o.player.startsWith(searched))
+    .sort(sortBy(o => o.lastBattleTime, true))
+
+  return onlyFromNearPast ? filterNearPast(allLookingAlike) : allLookingAlike
+}
+
 function filterNearPast(all: PlayerStats[]): PlayerStats[] {
   const minDate = getMidnightXDaysEarlier(Date.now() / 1000, 30)
   const newEnoughExist = all.some(o => o.lastBattleTime > minDate)
@@ -83,5 +96,6 @@ module.exports = {
   addReport,
   get,
   getLookingLike,
+  getFromShortened,
   list
 }
