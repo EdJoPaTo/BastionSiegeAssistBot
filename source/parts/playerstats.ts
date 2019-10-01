@@ -1,4 +1,4 @@
-import {CastleSiegeParticipant, ListEntry} from 'bastion-siege-logic'
+import {Gamescreen} from 'bastion-siege-logic'
 import {Extra, Markup, Composer} from 'telegraf'
 
 import {whenScreenContainsInformation} from '../lib/input/gamescreen'
@@ -15,14 +15,14 @@ import {notNewMiddleware} from '../lib/telegraf-middlewares'
 const bot = new Composer()
 
 bot.on('text', whenScreenContainsInformation('attackIncoming', notNewMiddleware('battle.over'), (ctx: any) => {
-  const {attackIncoming} = ctx.state.screen
-  const {text, extra} = generatePlayerStats(attackIncoming.name)
+  const {attackIncoming} = ctx.state.screen as Gamescreen
+  const {text, extra} = generatePlayerStats(attackIncoming!.name)
   return ctx.reply(text, extra)
 }))
 
 bot.on('text', whenScreenContainsInformation('attackscout', notNewMiddleware('battle.scoutsGone', 2), (ctx: any) => {
-  const {attackscout} = ctx.state.screen
-  const {player, terra} = attackscout
+  const {attackscout} = ctx.state.screen as Gamescreen
+  const {player, terra} = attackscout!
   const {name} = player
 
   const possible = playerStatsDb.getLookingLike(name, terra, true)
@@ -41,10 +41,10 @@ bot.on('text', whenScreenContainsInformation('attackscout', notNewMiddleware('ba
 }))
 
 bot.on('text', whenScreenContainsInformation('allianceBattleStart', notNewMiddleware('battle.over'), async (ctx: any) => {
-  const {allianceBattleStart, timestamp} = ctx.state.screen
-  const battle = allianceBattleStart.attack ?
-    {attack: [allianceBattleStart.ally.name], defence: [allianceBattleStart.enemy.name]} :
-    {attack: [allianceBattleStart.enemy.name], defence: [allianceBattleStart.ally.name]}
+  const {allianceBattleStart, timestamp} = ctx.state.screen as Gamescreen
+  const battle = allianceBattleStart!.attack ?
+    {attack: [allianceBattleStart!.ally.name], defence: [allianceBattleStart!.enemy.name]} :
+    {attack: [allianceBattleStart!.enemy.name], defence: [allianceBattleStart!.ally.name]}
 
   await wars.add(timestamp, battle)
 
@@ -52,21 +52,21 @@ bot.on('text', whenScreenContainsInformation('allianceBattleStart', notNewMiddle
   text += ctx.i18n.t('battle.inlineWar.updated')
   text += '\n\n'
 
-  const {text: statsText, extra} = generatePlayerStats(allianceBattleStart.enemy.name)
+  const {text: statsText, extra} = generatePlayerStats(allianceBattleStart!.enemy.name)
   text += statsText
 
   return ctx.reply(text, extra)
 }))
 
 bot.on('text', whenScreenContainsInformation('allianceBattleSupport', notNewMiddleware('battle.over'), (ctx: any) => {
-  const {allianceBattleSupport} = ctx.state.screen
-  const {text, extra} = generatePlayerStats(allianceBattleSupport.name)
+  const {allianceBattleSupport} = ctx.state.screen as Gamescreen
+  const {text, extra} = generatePlayerStats(allianceBattleSupport!.name)
   return ctx.reply(text, extra)
 }))
 
 bot.on('text', whenScreenContainsInformation('allianceJoinRequest', notNewMiddleware(), (ctx: any) => {
-  const {allianceJoinRequest} = ctx.state.screen
-  const {text, extra} = generatePlayerStats(allianceJoinRequest.name)
+  const {allianceJoinRequest} = ctx.state.screen as Gamescreen
+  const {text, extra} = generatePlayerStats(allianceJoinRequest!.name)
   return ctx.reply(text, extra)
 }))
 
@@ -75,8 +75,8 @@ bot.on('text', whenScreenContainsInformation('list', notNewMiddleware('forward.o
     return ctx.replyWithMarkdown(ctx.i18n.t('poweruser.usefulWhen'))
   }
 
-  const list = ctx.state.screen.list as ListEntry[]
-  const names = list.map(o => o.name)
+  const {list} = ctx.state.screen as Gamescreen
+  const names = list!.map(o => o.name)
 
   if (names.length === 0) {
     return ctx.reply('not players…')
@@ -93,8 +93,8 @@ bot.on('text', whenScreenContainsInformation('castleSiegeParticipants', notNewMi
     return ctx.replyWithMarkdown(text)
   }
 
-  const castleSiegeParticipants = ctx.state.screen.castleSiegeParticipants as CastleSiegeParticipant[]
-  text += castleSiegeParticipants
+  const {castleSiegeParticipants} = ctx.state.screen as Gamescreen
+  text += castleSiegeParticipants!
     .filter(o => o.players.length >= 5)
     .map(o => o.players.map(player => playerStatsDb.get(player)))
     .map(o => createMultipleStatsConclusion(o).armyString)
