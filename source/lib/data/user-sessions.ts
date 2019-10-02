@@ -35,11 +35,15 @@ export function getRaw(): readonly SessionRaw[] {
 }
 
 export function getUser(userId: number): Session {
+  const fallback: Session = {
+    gameInformation: {}
+  }
+
   return localSession.DB
     .get('sessions')
     .getById(`${userId}:${userId}`)
     .get('data')
-    .value() || {}
+    .value() || fallback
 }
 
 let playernameCache: Dictionary<number> = {}

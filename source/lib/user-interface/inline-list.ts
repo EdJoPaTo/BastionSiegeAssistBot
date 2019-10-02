@@ -5,6 +5,8 @@ import {Session, InlineListParticipant} from '../types'
 
 import {sortBy} from '../javascript-abstraction/array'
 
+import {getMidnightXDaysEarlier} from '../math/unix-timestamp'
+
 import * as lists from '../data/inline-lists'
 import * as playerStatsDb from '../data/playerstats-db'
 import * as poweruser from '../data/poweruser'
@@ -33,7 +35,7 @@ export function createList(creatorId: number, listId: string, now: number): {tex
 
   const entries = Object.keys(participants)
     .map(o => Number(o))
-    .map(id => getEntryInformation(id, participants[id], userSessions.getUser(id)))
+    .map(id => getEntryInformation(id, participants[id], userSessions.getUser(id), now))
     .sort(sortBy(o => o.barracks || 0, true))
 
   let text = ''
@@ -101,28 +103,36 @@ function createStatsLine(entries: readonly EntryInformation[], now: number): str
   return statsLine
 }
 
-function getEntryInformation(userId: number, listEntry: InlineListParticipant, session: Session): EntryInformation {
+function getEntryInformation(userId: number, listEntry: InlineListParticipant, session: Session, now: number): EntryInformation {
   const information = session.gameInformation
-  const {battleSoloTimestamp, battleAllianceTimestamp, domainStats} = information
+  const {battleSoloTimestamp, battleAllianceTimestamp, domainStats, playerTimestamp, buildingsTimestamp, workshopTimestamp} = information
+
+  const minPlayerTimestamp = getMidnightXDaysEarlier(now, poweruser.MAX_PLAYER_AGE_DAYS)
+  const minBuildingTimestamp = getMidnightXDaysEarlier(now, poweruser.MAX_BUILDING_AGE_DAYS)
+  const minWorkshopTimestamp = getMidnightXDaysEarlier(now, poweruser.MAX_WORKSHOP_AGE_DAYS)
+
+  const player = playerTimestamp! > minPlayerTimestamp && information.player ? information.player : {name: '???'}
+
   const karma = domainStats && domainStats.karma
   const nextAllianceAttack = nextBattleTimestamp(battleSoloTimestamp, battleAllianceTimestamp, karma).alliance
 
   return {
     id: userId,
-    player: information.player!.name,
-    alliance: information.player!.alliance,
+    player: player.name,
+    alliance: player.alliance,
     isPoweruser: poweruser.isPoweruser(userId),
     lastUpdate: listEntry.lastUpdate,
     nextAllianceAttack,
-    barracks: information.buildings && information.buildings.barracks,
-    trebuchet: information.workshop && information.workshop.trebuchet
+    barracks: buildingsTimestamp! > minBuildingTimestamp && information.buildings ? information.buildings.barracks : undefined,
+    trebuchet: workshopTimestamp! > minWorkshopTimestamp && information.workshop ? information.workshop.trebuchet : undefined
   }
 }
 
 function createEntryString(information: EntryInformation, now: number): string {
   const {barracks, trebuchet} = information
   const parts = []
-  parts.push(`${barracks}${emoji.barracks}`)
+  parts.push(`${barracks === undefined ? '?' : barracks}${emoji.barracks}`)
+
   if (trebuchet) {
     parts.push(`${trebuchet}${emoji.trebuchet}`)
   }

@@ -8,6 +8,7 @@ import * as lists from '../lib/data/inline-lists'
 import * as poweruser from '../lib/data/poweruser'
 
 import {createList} from '../lib/user-interface/inline-list'
+import {emoji} from '../lib/user-interface/output-text'
 
 const bot = new Composer()
 
@@ -33,7 +34,7 @@ bot.action(/inlineList:(\d+):([^:]+):.+/, async (ctx, next) => {
   }
 })
 
-bot.action(/inlineList:(\d+):([^:]+):join:(.*)/, (ctx: any) => {
+bot.action(/inlineList:(\d+):([^:]+):join:(.*)/, async (ctx: any) => {
   const session = ctx.session as Session
   const creatorId = Number(ctx.match[1])
   const listId = ctx.match[2]
@@ -41,14 +42,14 @@ bot.action(/inlineList:(\d+):([^:]+):join:(.*)/, (ctx: any) => {
   const now = Date.now() / 1000
   const {buildingsTimestamp, playerTimestamp} = session.gameInformation
 
-  if (!playerTimestamp || playerTimestamp < getMidnightXDaysEarlier(now, poweruser.MAX_PLAYER_AGE_DAYS)) {
-    const text = ctx.i18n.t('name.need')
-    return ctx.answerCbQuery(text, true)
-  }
+  let text = emoji.warning
 
-  if (!buildingsTimestamp || buildingsTimestamp < getMidnightXDaysEarlier(now, poweruser.MAX_BUILDING_AGE_DAYS)) {
-    const text = ctx.i18n.t('buildings.need.buildings')
-    return ctx.answerCbQuery(text, true)
+  if (!playerTimestamp || playerTimestamp < getMidnightXDaysEarlier(now, poweruser.MAX_PLAYER_AGE_DAYS)) {
+    text += ctx.i18n.t('name.need')
+    await ctx.answerCbQuery(text)
+  } else if (!buildingsTimestamp || buildingsTimestamp < getMidnightXDaysEarlier(now, poweruser.MAX_BUILDING_AGE_DAYS)) {
+    text += ctx.i18n.t('buildings.need.buildings')
+    await ctx.answerCbQuery(text)
   }
 
   lists.join(creatorId, listId, Date.now() / 1000, ctx.from.id, {})
