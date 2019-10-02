@@ -10,13 +10,14 @@ import * as playerStatsDb from '../data/playerstats-db'
 import * as poweruser from '../data/poweruser'
 import * as userSessions from '../data/user-sessions'
 
-import {createPlayerNameString, createPlayerStatsString} from './player-stats'
+import {createPlayerMarkdownLink, createPlayerStatsString} from './player-stats'
 import {emoji} from './output-text'
 import {formatNumberShort, formatTimeAmount} from './format-number'
 
 const ATTACK_SCOUT_MAX_AGE = 60 * 15 // 15 min
 
 interface EntryInformation {
+  id: number;
   player: string;
   alliance?: string;
   isPoweruser: boolean;
@@ -102,12 +103,12 @@ function createStatsLine(entries: readonly EntryInformation[], now: number): str
 
 function getEntryInformation(userId: number, listEntry: InlineListParticipant, session: Session): EntryInformation {
   const information = session.gameInformation
-
   const {battleSoloTimestamp, battleAllianceTimestamp, domainStats} = information
   const karma = domainStats && domainStats.karma
   const nextAllianceAttack = nextBattleTimestamp(battleSoloTimestamp, battleAllianceTimestamp, karma).alliance
 
   return {
+    id: userId,
     player: information.player!.name,
     alliance: information.player!.alliance,
     isPoweruser: poweruser.isPoweruser(userId),
@@ -137,7 +138,7 @@ function createEntryString(information: EntryInformation, now: number): string {
     parts.push(emoji.poweruser)
   }
 
-  parts.push(createPlayerNameString(information, true))
+  parts.push(createPlayerMarkdownLink(information.id, information))
 
   const secondsUntilNextAllianceAttack = information.nextAllianceAttack - now
   if (secondsUntilNextAllianceAttack > 0) {
