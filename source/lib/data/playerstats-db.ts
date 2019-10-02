@@ -87,7 +87,7 @@ function filterNearPast(all: PlayerStats[]): PlayerStats[] {
   return all.filter(o => o.lastBattleTime > minDate)
 }
 
-export function list(): readonly PlayerStats[] {
+export function list(): PlayerStats[] {
   return Object.keys(playerReports)
     .map(name => get(name))
 }

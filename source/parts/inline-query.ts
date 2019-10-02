@@ -1,44 +1,57 @@
-const {inputTextCleanup, MYSTICS_TEXT_EN} = require('bastion-siege-logic')
-const fuzzysort = require('fuzzysort')
-const Telegraf = require('telegraf')
+import {inputTextCleanup, MYSTICS_TEXT_EN} from 'bastion-siege-logic'
+import fuzzysort from 'fuzzysort'
+import {Composer, Extra, Markup} from 'telegraf'
 
-const {replaceLookingLikeAsciiChars} = require('../lib/javascript-abstraction/strings')
+import {replaceLookingLikeAsciiChars} from '../lib/javascript-abstraction/strings'
 
-const playerStatsDb = require('../lib/data/playerstats-db')
-const poweruser = require('../lib/data/poweruser')
-const wars = require('../lib/data/wars')
+import {Context} from '../lib/types'
 
-const {getMidnightXDaysEarlier} = require('../lib/math/unix-timestamp')
+import * as playerStatsDb from '../lib/data/playerstats-db'
+import * as poweruser from '../lib/data/poweruser'
+import * as wars from '../lib/data/wars'
 
-const {createPlayerNameString, createPlayerStatsString, createPlayerStatsShortString} = require('../lib/user-interface/player-stats')
-const {createWarOneLineString, createWarStats} = require('../lib/user-interface/war-stats')
-const {emoji} = require('../lib/user-interface/output-text')
-const {createList} = require('../lib/user-interface/inline-list')
+import {getMidnightXDaysEarlier} from '../lib/math/unix-timestamp'
 
-const {Extra, Markup} = Telegraf
+import {createPlayerNameString, createPlayerStatsString, createPlayerStatsShortString} from '../lib/user-interface/player-stats'
+import {createWarOneLineString, createWarStats} from '../lib/user-interface/war-stats'
+import {emoji} from '../lib/user-interface/output-text'
+import {createList} from '../lib/user-interface/inline-list'
 
-const bot = new Telegraf.Composer()
+interface AnswerInlineQueryOptions {
+  cache_time?: number;
+  is_personal?: boolean;
+  next_offset?: string;
+  switch_pm_text?: string;
+  switch_pm_parameter?: string;
+}
+
+const bot = new Composer<Context>()
 
 bot.on('inline_query', async ctx => {
-  const {query} = ctx.inlineQuery
+  const {query} = ctx.inlineQuery!
   const cleanedUpQuery = replaceLookingLikeAsciiChars(inputTextCleanup(query))
   const queryTestFunc = getTestFunctionForQuery(cleanedUpQuery)
-  const offset = ctx.inlineQuery.offset || 0
+  const offset = Number(ctx.inlineQuery!.offset) || 0
   const now = Date.now() / 1000
-  const isPoweruser = poweruser.isPoweruser(ctx.from.id)
+  const isPoweruser = poweruser.isPoweruser(ctx.from!.id)
 
   const statics = []
-  const user = ctx.session.gameInformation.player
+  const user = ctx.session.gameInformation.player!
   if (isPoweruser) {
     const {timestamp, battle} = wars.getCurrent(now, user.name) || {}
     if (timestamp && battle) {
+      let message_text = ''
+      message_text += createWarStats(now, battle, user)
+      message_text += '\n\n'
+      message_text += ctx.i18n.t('battle.inlineWar.info')
+
       statics.push({
         type: 'article',
         id: 'war',
         title: emoji.poweruser + ' ' + ctx.i18n.t('bs.war'),
         description: createWarOneLineString(battle),
         input_message_content: {
-          message_text: createWarStats(now, battle, user) + '\n\n' + ctx.i18n.t('battle.inlineWar.info'),
+          message_text,
           parse_mode: 'markdown'
         },
         reply_markup: Markup.inlineKeyboard([
@@ -47,7 +60,7 @@ bot.on('inline_query', async ctx => {
       })
     }
 
-    const {text, keyboard} = createList(ctx.from.id, 'default', now)
+    const {text, keyboard} = createList(ctx.from!.id, 'default', now)
     statics.push({
       type: 'article',
       id: 'list-default',
@@ -64,8 +77,8 @@ bot.on('inline_query', async ctx => {
   const filteredStatics = statics
     .filter(o => queryTestFunc(JSON.stringify(o)))
 
-  let players = []
-  const options = {
+  let players: string[] = []
+  const options: AnswerInlineQueryOptions = {
     is_personal: true,
     cache_time: 20
   }
@@ -85,7 +98,7 @@ bot.on('inline_query', async ctx => {
     // TODO: Currently only the english ones are in default search, mystics should be grouped by mystic, not by name
     const freeOptions = [...Object.values(MYSTICS_TEXT_EN)]
 
-    if (user && ctx.session.gameInformation.playerTimestamp > getMidnightXDaysEarlier(now, poweruser.MAX_PLAYER_AGE_DAYS)) {
+    if (user && ctx.session.gameInformation.playerTimestamp! > getMidnightXDaysEarlier(now, poweruser.MAX_PLAYER_AGE_DAYS)) {
       freeOptions.push(user.name)
     }
 
@@ -100,7 +113,7 @@ bot.on('inline_query', async ctx => {
       return {
         type: 'article',
         id: `player-${stats.player}`,
-        title: createPlayerNameString(stats),
+        title: createPlayerNameString(stats, false),
         description: createPlayerStatsShortString(stats),
         input_message_content: {
           message_text: createPlayerStatsString(stats),
@@ -110,7 +123,7 @@ bot.on('inline_query', async ctx => {
     })
 
   if (players.length > offset + 20) {
-    options.next_offset = offset + 20
+    options.next_offset = String(offset + 20)
   }
 
   if (process.env.NODE_ENV !== 'production') {
@@ -123,7 +136,7 @@ bot.on('inline_query', async ctx => {
   ], options)
 })
 
-function getTestFunctionForQuery(query) {
+function getTestFunctionForQuery(query: string): (o: string) => boolean {
   try {
     const regex = new RegExp(query, 'i')
     return o => regex.test(o)
@@ -132,20 +145,20 @@ function getTestFunctionForQuery(query) {
   }
 }
 
-bot.action(/inlineWar:(.*):(.+)/, ctx => {
+bot.action(/inlineWar:(.*):(.+)/, async ctx => {
   const now = Date.now() / 1000
   const player = {
-    alliance: ctx.match[1],
-    name: ctx.match[2]
+    alliance: ctx.match![1],
+    name: ctx.match![2]
   }
   const {timestamp, battle} = wars.getCurrent(now, player.name) || {}
   if (!timestamp) {
     return ctx.editMessageText('This war seems over…')
   }
 
-  wars.addInlineMessageToUpdate(now, player, ctx.callbackQuery.inline_message_id)
+  wars.addInlineMessageToUpdate(now, player, ctx.callbackQuery!.inline_message_id!)
   const warText = createWarStats(timestamp, battle, player)
-  return ctx.editMessageText(warText, Extra.markdown())
+  return ctx.editMessageText(warText, Extra.markdown() as any)
 })
 
 module.exports = {

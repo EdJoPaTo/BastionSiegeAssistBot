@@ -24,7 +24,7 @@ export function createWarOneLineString(battle: BattleAlliance): string {
   return createTwoSidesOneLineString(attackStats, defenceStats)
 }
 
-export function createWarStats(timestamp: number, battle: BattleAlliance, player: {name: string; alliance: string}): string {
+export function createWarStats(timestamp: number, battle: BattleAlliance, player: {name: string; alliance?: string}): string {
   const friends = battle.attack.includes(player.name) ? battle.attack : battle.defence
   const poweruserFriends = userSessions.getRaw()
     .map(o => o.data.gameInformation)
@@ -70,7 +70,8 @@ export function createWarStats(timestamp: number, battle: BattleAlliance, player
   let text = ''
 
   if (missingFriends.length > 0) {
-    text += player.alliance + ' '
+    text += player.alliance
+    text += ' '
     text += `Missing (${missingFriends.length}): `
     text += missingFriends
       .sort((a, b) => a.player.localeCompare(b.player))
