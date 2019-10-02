@@ -59,20 +59,20 @@ bot.on('inline_query', async ctx => {
         ])
       })
     }
-
-    const {text, keyboard} = createList(ctx.from!.id, 'default', now)
-    statics.push({
-      type: 'article',
-      id: 'list-default',
-      title: emoji.list + emoji.poweruser + ' ' + ctx.i18n.t('list.title'),
-      description: ctx.i18n.t('list.description'),
-      input_message_content: {
-        message_text: text,
-        parse_mode: 'markdown'
-      },
-      reply_markup: keyboard
-    })
   }
+
+  const {text, keyboard} = createList(ctx.from!.id, 'default', now)
+  statics.push({
+    type: 'article',
+    id: 'list-default',
+    title: emoji.list + ' ' + ctx.i18n.t('list.title'),
+    description: ctx.i18n.t('list.description'),
+    input_message_content: {
+      message_text: text,
+      parse_mode: 'markdown'
+    },
+    reply_markup: keyboard
+  })
 
   const filteredStatics = statics
     .filter(o => queryTestFunc(JSON.stringify(o)))

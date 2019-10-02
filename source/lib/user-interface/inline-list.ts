@@ -40,7 +40,7 @@ export function createList(creatorId: number, listId: string, now: number): {tex
 
   let text = ''
 
-  text += emoji.poweruser + emoji.list + ' *List*\n'
+  text += emoji.list + ' *List*\n'
   const statsLine = createStatsLine(entries, now)
   if (statsLine.length > 0) {
     text += statsLine.join('  ')
