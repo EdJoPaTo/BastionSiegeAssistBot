@@ -47,11 +47,11 @@
     "@types/json-stable-stringify": "^1.0.32",
     "@types/node": "^12.7.1",
     "@types/sharp": "^0.22.2",
-    "@typescript-eslint/eslint-plugin": "^2.3.1",
-    "@typescript-eslint/parser": "^2.3.1",
+    "@typescript-eslint/eslint-plugin": "^2.3.2",
+    "@typescript-eslint/parser": "^2.3.2",
     "ava": "^2.0.0",
     "del-cli": "^3.0.0",
-    "eslint-config-xo-typescript": "^0.18.0",
+    "eslint-config-xo-typescript": "^0.19.0",
     "nyc": "^14.0.0",
     "ts-node": "^8.3.0",
     "typescript": "^3.5.3",
@@ -94,7 +94,13 @@
       "ava/no-ignored-test-files": "off",
       "prefer-named-capture-group": "off",
       "@typescript-eslint/array-type": "off",
-      "@typescript-eslint/require-await": "off",
+      "@typescript-eslint/strict-boolean-expressions": "off",
+      "@typescript-eslint/no-unnecessary-condition": [
+        "warn",
+        {
+          "ignoreRhs": true
+        }
+      ],
       "@typescript-eslint/indent": [
         "error",
         2
