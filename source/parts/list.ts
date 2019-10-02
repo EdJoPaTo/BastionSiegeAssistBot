@@ -1,23 +1,25 @@
-const Telegraf = require('telegraf')
+import {Composer, Extra} from 'telegraf'
 
-const {getMidnightXDaysEarlier} = require('../lib/math/unix-timestamp')
+import {Session} from '../lib/types'
 
-const lists = require('../lib/data/inline-lists')
-const poweruser = require('../lib/data/poweruser')
+import {getMidnightXDaysEarlier} from '../lib/math/unix-timestamp'
 
-const {createList} = require('../lib/user-interface/inline-list')
+import * as lists from '../lib/data/inline-lists'
+import * as poweruser from '../lib/data/poweruser'
 
-const {Extra} = Telegraf
+import {createList} from '../lib/user-interface/inline-list'
 
-const bot = new Telegraf.Composer()
+const bot = new Composer()
 
 bot.action(/inlineList:(\d+):([^:]+):.+/, async (ctx, next) => {
   try {
     const now = Date.now() / 1000
-    const creatorId = Number(ctx.match[1])
-    const listId = ctx.match[2]
+    const creatorId = Number(ctx.match![1])
+    const listId = ctx.match![2]
 
-    await next()
+    if (next) {
+      await next()
+    }
 
     const {text, keyboard} = createList(creatorId, listId, now)
     await ctx.answerCbQuery()
@@ -31,12 +33,13 @@ bot.action(/inlineList:(\d+):([^:]+):.+/, async (ctx, next) => {
   }
 })
 
-bot.action(/inlineList:(\d+):([^:]+):join:(.*)/, ctx => {
+bot.action(/inlineList:(\d+):([^:]+):join:(.*)/, (ctx: any) => {
+  const session = ctx.session as Session
   const creatorId = Number(ctx.match[1])
   const listId = ctx.match[2]
 
   const now = Date.now() / 1000
-  const {buildingsTimestamp, playerTimestamp} = ctx.session.gameInformation
+  const {buildingsTimestamp, playerTimestamp} = session.gameInformation
 
   if (!playerTimestamp || playerTimestamp < getMidnightXDaysEarlier(now, poweruser.MAX_PLAYER_AGE_DAYS)) {
     const text = ctx.i18n.t('name.need')
@@ -52,9 +55,9 @@ bot.action(/inlineList:(\d+):([^:]+):join:(.*)/, ctx => {
 })
 
 bot.action(/inlineList:(\d+):([^:]+):leave/, ctx => {
-  const creatorId = Number(ctx.match[1])
-  const listId = ctx.match[2]
-  lists.leave(creatorId, listId, Date.now() / 1000, ctx.from.id)
+  const creatorId = Number(ctx.match![1])
+  const listId = ctx.match![2]
+  lists.leave(creatorId, listId, Date.now() / 1000, ctx.from!.id)
 })
 
 module.exports = {
