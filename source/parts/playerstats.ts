@@ -1,5 +1,6 @@
-import {Gamescreen} from 'bastion-siege-logic'
 import {Extra, Markup, Composer} from 'telegraf'
+import {Gamescreen} from 'bastion-siege-logic'
+import {markdown as format} from 'telegram-format'
 
 import {PlayerStats} from '../lib/types'
 
@@ -117,28 +118,40 @@ bot.on('text', whenScreenContainsInformation('chat', notNewMiddleware('forward.o
 
   const now = Date.now() / 1000
   const {chat} = ctx.state.screen as Gamescreen
-  const userId = userSessions.getUserIdByName(chat!.sender)
   const {text: statsText, extra} = generatePlayerStats(chat!.sender, false)
 
-  if (userId !== undefined) {
-    const user = userSessions.getUser(userId)
-    const minTimestamp = getMidnightXDaysEarlier(now, poweruser.MAX_PLAYER_AGE_DAYS)
-    const {player} = user.gameInformation
-    if (player && user.gameInformation.playerTimestamp! > minTimestamp) {
-      if (user.__username) {
-        text += '@' + user.__username
-      } else {
-        text += `[${player.name}](tg://user?id=${userId})`
-      }
-
-      text += '\n\n'
-    }
-  }
+  text += userMarkdownTagWhenKnown(chat!.sender, now) || format.escape(chat!.sender)
+  text += ': '
+  text += format.escape(chat!.text)
+  text += '\n\n'
 
   text += statsText
 
   return ctx.reply(text, extra)
 }))
+
+function userMarkdownTagWhenKnown(name: string, now: number): string | undefined {
+  const userId = userSessions.getUserIdByName(name)
+  if (userId === undefined) {
+    return
+  }
+
+  const user = userSessions.getUser(userId)
+  const minTimestamp = getMidnightXDaysEarlier(now, poweruser.MAX_PLAYER_AGE_DAYS)
+  const {player, playerTimestamp} = user.gameInformation
+  if (!player || !playerTimestamp || playerTimestamp < minTimestamp) {
+    return
+  }
+
+  let text = ''
+  if (user.__username) {
+    text += '@' + user.__username
+  } else {
+    text += format.url(player.name, `tg://user?id=${userId}`)
+  }
+
+  return text
+}
 
 function generatePlayerStats(players: string | string[], short: boolean): {text: string; extra: any} {
   if (!Array.isArray(players)) {

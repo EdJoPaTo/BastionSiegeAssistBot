@@ -38,7 +38,8 @@
     "telegraf": "^3.28.0",
     "telegraf-i18n": "^6.5.0",
     "telegraf-inline-menu": "^3.5.2",
-    "telegraf-session-local": "^1.0.2"
+    "telegraf-session-local": "^1.0.2",
+    "telegram-format": "^1.1.0"
   },
   "devDependencies": {
     "@sindresorhus/tsconfig": "^0.4.0",
