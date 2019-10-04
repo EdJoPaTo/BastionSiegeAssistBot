@@ -47,6 +47,7 @@ bot.on('text', whenScreenContainsInformation('attackscout', notNewMiddleware('ba
 }))
 
 bot.on('text', whenScreenContainsInformation('allianceBattleStart', notNewMiddleware('battle.over'), async (ctx: any) => {
+  const now = Date.now() / 1000
   const {allianceBattleStart, timestamp} = ctx.state.screen as Gamescreen
   const battle = allianceBattleStart!.attack ?
     {attack: [allianceBattleStart!.ally.name], defence: [allianceBattleStart!.enemy.name]} :
@@ -57,6 +58,12 @@ bot.on('text', whenScreenContainsInformation('allianceBattleStart', notNewMiddle
   let text = ''
   text += ctx.i18n.t('battle.inlineWar.updated')
   text += '\n\n'
+
+  const tag = userMarkdownTagWhenKnown(allianceBattleStart!.ally.name, now)
+  if (tag) {
+    text += tag
+    text += '\n\n'
+  }
 
   const {text: statsText, extra} = generatePlayerStats(allianceBattleStart!.enemy.name, false)
   text += statsText
