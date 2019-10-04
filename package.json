@@ -97,7 +97,7 @@
       "@typescript-eslint/array-type": "off",
       "@typescript-eslint/strict-boolean-expressions": "off",
       "@typescript-eslint/no-unnecessary-condition": [
-        "warn",
+        "off",
         {
           "ignoreRhs": true
         }
