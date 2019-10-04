@@ -117,16 +117,11 @@ bot.on('text', whenScreenContainsInformation('castleSiegeParticipants', notNewMi
 }))
 
 bot.on('text', whenScreenContainsInformation('chat', notNewMiddleware('forward.old', 60 * 4), (ctx: any) => {
-  let text = ''
-  if (!poweruser.isPoweruser(ctx.from.id)) {
-    text += ctx.i18n.t('poweruser.usefulWhen')
-    return ctx.replyWithMarkdown(text)
-  }
-
   const now = Date.now() / 1000
   const {chat} = ctx.state.screen as Gamescreen
   const {text: statsText, extra} = generatePlayerStats(chat!.sender, false)
 
+  let text = ''
   text += userMarkdownTagWhenKnown(chat!.sender, now) || format.escape(chat!.sender)
   text += ': '
   text += format.escape(chat!.text)
