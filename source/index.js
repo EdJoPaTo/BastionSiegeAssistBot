@@ -66,6 +66,11 @@ bot.use(async (ctx, next) => {
       return
     }
 
+    if (error.message.includes('RESULT_ID_INVALID')) {
+      console.warn('ERROR', error.message)
+      return
+    }
+
     console.error('try to send error to user', ctx.update, error)
     let text = '🔥 Something went wrong here!'
     text += '\n'
