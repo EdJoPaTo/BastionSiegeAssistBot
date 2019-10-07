@@ -19,7 +19,7 @@
     "build": "del dist && tsc",
     "prepack": "npm run build",
     "start": "ts-node source/index.js",
-    "test": "xo && nyc ava"
+    "test": "tsc && xo && nyc ava"
   },
   "dependencies": {
     "angle-distance": "^1.0.0",
@@ -60,19 +60,14 @@
   },
   "ava": {
     "babel": false,
-    "compileEnhancements": false,
-    "extensions": [
-      "ts"
-    ],
-    "require": [
-      "ts-node/register"
-    ]
+    "compileEnhancements": false
   },
   "nyc": {
     "extension": [
       ".ts"
     ],
     "include": [
+      "dist/source",
       "source"
     ],
     "exclude": [
