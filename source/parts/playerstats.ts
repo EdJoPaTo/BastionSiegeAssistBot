@@ -132,6 +132,12 @@ bot.on('text', whenScreenContainsInformation('chat', notNewMiddleware('forward.o
   return ctx.reply(text, extra)
 }))
 
+bot.on('text', whenScreenContainsInformation('conqueror', notNewMiddleware('forward.old'), (ctx: any) => {
+  const {conqueror} = ctx.state.screen as Gamescreen
+  const {text, extra} = generatePlayerStats(conqueror!.name, false)
+  return ctx.reply(text, extra)
+}))
+
 function userMarkdownTagWhenKnown(name: string, now: number): string | undefined {
   const userId = userSessions.getUserIdByName(name)
   if (userId === undefined) {
