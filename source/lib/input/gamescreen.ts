@@ -1,7 +1,7 @@
+import {Gamescreen} from 'bastion-siege-logic'
 import Telegraf, {Middleware, ContextMessageUpdate} from 'telegraf'
 // TODO: wait for https://github.com/krmax44/always-array/pull/9
 // import alwaysArray, {SingleOrArray} from 'always-array'
-import {Gamescreen} from 'bastion-siege-logic'
 
 type GamescreenKey = keyof Gamescreen
 
@@ -30,11 +30,12 @@ export function whenScreenIsOfType(wantedTypes: string | readonly string[], ...m
   const typeArr = Array.isArray(wantedTypes) ? wantedTypes : [wantedTypes]
 
   const predicate = (ctx: any): boolean => {
-    if (!ctx.state.screen) {
+    const screen = ctx.state.screen as Gamescreen
+    if (!screen) {
       return false
     }
 
-    return typeArr.some(n => ctx.state.screen.type === n)
+    return typeArr.some(n => screen.type === n)
   }
 
   return (Telegraf as any).optional(predicate, ...middlewares)
