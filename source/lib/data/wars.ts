@@ -32,7 +32,9 @@ async function updateInlineMessage(timestamp: number, battle: BattleAlliance, in
   try {
     await telegram.editMessageText(undefined, undefined, inlineMessageId, createWarStats(timestamp, battle, player), Extra.markdown())
   } catch (error) {
-    if (error.message.startsWith('400: Bad Request: message is not modified')) {
+    if (error.message.startsWith('400: Bad Request: message is not modified') ||
+      error.message.includes('400: Bad Request: MESSAGE_ID_INVALID')
+    ) {
       return
     }
 
