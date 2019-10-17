@@ -152,11 +152,7 @@ function userMarkdownTagWhenKnown(name: string, now: number): string | undefined
   }
 
   let text = ''
-  if (user.__username) {
-    text += '@' + user.__username
-  } else {
-    text += format.url(player.name, `tg://user?id=${userId}`)
-  }
+  text += format.url(player.name, `tg://user?id=${userId}`)
 
   return text
 }
