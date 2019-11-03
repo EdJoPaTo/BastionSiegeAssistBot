@@ -6,17 +6,7 @@ import {emoji} from '../../lib/user-interface/output-text'
 
 /* eslint @typescript-eslint/no-var-requires: warn */
 /* eslint @typescript-eslint/no-require-imports: warn */
-const countryEmoji = require('country-emoji')
-
-// First language code: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-// Second country code: https://en.wikipedia.org/wiki/ISO_3166-1
-const AVAILABLE_LANGUAGES = [
-  'de',
-  'en-GB',
-  'es',
-  'id',
-  'ru'
-]
+const localeEmoji = require('locale-emoji')
 
 const i18n = new I18n({
   directory: 'locales'
@@ -31,20 +21,17 @@ function menuText(ctx: any): string {
 
 export const menu = new TelegrafInlineMenu(menuText)
 
-menu.select('lang', AVAILABLE_LANGUAGES, {
+menu.select('lang', i18n.availableLocales(), {
   columns: 2,
   isSetFunc: (ctx: any, key) => key.toLowerCase().startsWith(ctx.i18n.locale().toLowerCase()),
   setFunc: (ctx: any, key) => ctx.i18n.locale(key),
   textFunc: (_ctx, key) => {
-    const countryCode = key.split('-').slice(-1)[0]
-    const lang = key.split('-')[0]
-
     let result = ''
-    result += countryEmoji.flag(countryCode)
+    result += localeEmoji(key)
     result += ' '
-    result += lang
+    result += key
 
-    const progress = i18n.translationProgress(lang)
+    const progress = i18n.translationProgress(key)
     if (progress !== 1) {
       result += ` (${(progress * 100).toFixed(1)}%)`
     }
@@ -56,7 +43,7 @@ menu.select('lang', AVAILABLE_LANGUAGES, {
 menu.simpleButton((ctx: any) => ctx.i18n.t('language.translateButton'), 'translate', {
   doFunc: async (ctx: any) => {
     await ctx.replyWithDocument({
-      source: `locales/${ctx.i18n.locale().split('-')[0]}.yaml`
+      source: `locales/${ctx.i18n.locale()}.yaml`
     }, new Extra({
       caption: ctx.i18n.t('language.helpTranslate')
     }).markdown().markup(
@@ -65,7 +52,7 @@ menu.simpleButton((ctx: any) => ctx.i18n.t('language.translateButton'), 'transla
       ])
     ))
 
-    if (ctx.i18n.locale().split('-')[0] !== 'en') {
+    if (ctx.i18n.locale() !== 'en') {
       await ctx.replyWithDocument({
         source: 'locales/en.yaml'
       }, new Extra({
@@ -73,12 +60,12 @@ menu.simpleButton((ctx: any) => ctx.i18n.t('language.translateButton'), 'transla
       }))
     }
 
-    const missingTranslations = i18n.missingKeys(ctx.i18n.locale().split('-')[0])
+    const missingTranslations = i18n.missingKeys(ctx.i18n.locale())
     if (missingTranslations.length > 0) {
       const missingTranslationsText = missingTranslations
         .map(o => '`' + o + '`')
         .join('\n')
-      await ctx.replyWithMarkdown(`Missing \`${ctx.i18n.locale().split('-')[0]}\` translations:\n${missingTranslationsText}`)
+      await ctx.replyWithMarkdown(`Missing \`${ctx.i18n.locale()}\` translations:\n${missingTranslationsText}`)
     }
   }
 })
