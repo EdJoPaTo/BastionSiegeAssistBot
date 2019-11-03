@@ -37,11 +37,11 @@ menu.switchToChatButton((ctx: any) => ctx.i18n.t('list.share'), 'list', {
 
 menu.button((ctx: any) => ctx.i18n.t('list.clearParticipants'), 'clear-participants', {
   hide: ctx => !poweruser.isPoweruser(ctx.from!.id) || Object.keys(lists.getList(ctx.from!.id, 'default', Date.now() / 1000).participants).length === 0,
-  doFunc: ctx => {
+  doFunc: async ctx => {
     const now = Date.now() / 1000
     const {participants} = lists.getList(ctx.from!.id, 'default', now)
     const participantIds = Object.keys(participants).map(o => Number(o))
 
-    lists.leave(ctx.from!.id, 'default', now, participantIds)
+    await lists.leave(ctx.from!.id, 'default', now, participantIds)
   }
 })

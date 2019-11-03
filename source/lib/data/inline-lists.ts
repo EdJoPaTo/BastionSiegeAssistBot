@@ -1,15 +1,13 @@
-import {InlineList, InlineListParticipantAdd} from '../types'
+import {KeyValueInMemoryFile} from '@edjopato/datastore'
 
-import InMemoryFromSingleFileCache from './in-memory-from-single-file-cache'
+import {InlineList, InlineListParticipantAdd} from '../types'
 
 export const PARTICIPANT_MAX_AGE = 60 * 12 // 12 min
 
-type Dictionary<T> = {[key: string]: T}
-
-const cache = new InMemoryFromSingleFileCache<Dictionary<Dictionary<InlineList>>>('persist/inline-lists.json')
+const data = new KeyValueInMemoryFile<Record<string, InlineList>>('persist/inline-lists.json')
 
 export function getList(creatorId: number, listId: string, now: number): InlineList {
-  const lists = cache.data[creatorId] || {}
+  const lists = data.get(String(creatorId)) || {}
   const list = lists[listId] || {}
 
   if (!list.participants) {
@@ -28,7 +26,13 @@ export function getList(creatorId: number, listId: string, now: number): InlineL
   return list
 }
 
-export function join(creatorId: number, listId: string, timestamp: number, joiningId: number, participantInfo: InlineListParticipantAdd = {}): InlineList {
+async function saveList(creatorId: number, listId: string, list: InlineList): Promise<void> {
+  const lists = data.get(String(creatorId)) || {}
+  lists[listId] = list
+  await data.set(String(creatorId), lists)
+}
+
+export async function join(creatorId: number, listId: string, timestamp: number, joiningId: number | number[], participantInfo: InlineListParticipantAdd = {}): Promise<InlineList> {
   const list = getList(creatorId, listId, timestamp)
 
   list.lastUpdate = timestamp
@@ -41,16 +45,11 @@ export function join(creatorId: number, listId: string, timestamp: number, joini
     }
   }
 
-  if (!cache.data[creatorId]) {
-    cache.data[creatorId] = {}
-  }
-
-  cache.data[creatorId][listId] = list
-  cache.save()
+  await saveList(creatorId, listId, list)
   return list
 }
 
-export function leave(creatorId: number, listId: string, timestamp: number, leaverId: number | number[]): InlineList {
+export async function leave(creatorId: number, listId: string, timestamp: number, leaverId: number | number[]): Promise<InlineList> {
   const list = getList(creatorId, listId, timestamp)
   list.lastUpdate = timestamp
 
@@ -59,6 +58,6 @@ export function leave(creatorId: number, listId: string, timestamp: number, leav
     delete list.participants[id]
   }
 
-  cache.save()
+  await saveList(creatorId, listId, list)
   return list
 }

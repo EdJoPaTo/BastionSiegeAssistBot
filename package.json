@@ -22,6 +22,7 @@
     "test": "tsc && xo && nyc ava"
   },
   "dependencies": {
+    "@edjopato/datastore": "^0.1.0",
     "angle-distance": "^1.0.0",
     "array-filter-unique": "^2.1.0",
     "bastion-siege-logic": "^2.2.0",

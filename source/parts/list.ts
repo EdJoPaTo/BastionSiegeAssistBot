@@ -52,11 +52,11 @@ bot.action(/inlineList:(\d+):([^:]+):join:(.*)/, async (ctx: any) => {
     await ctx.answerCbQuery(text)
   }
 
-  lists.join(creatorId, listId, Date.now() / 1000, ctx.from.id, {})
+  await lists.join(creatorId, listId, Date.now() / 1000, ctx.from.id, {})
 })
 
-bot.action(/inlineList:(\d+):([^:]+):leave/, ctx => {
+bot.action(/inlineList:(\d+):([^:]+):leave/, async ctx => {
   const creatorId = Number(ctx.match![1])
   const listId = ctx.match![2]
-  lists.leave(creatorId, listId, Date.now() / 1000, ctx.from!.id)
+  await lists.leave(creatorId, listId, Date.now() / 1000, ctx.from!.id)
 })
