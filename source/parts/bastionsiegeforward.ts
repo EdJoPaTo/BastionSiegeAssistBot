@@ -59,7 +59,7 @@ const WANTED_DATA: (keyof PlayerHistory)[] = [
 ]
 
 // Save some gameInformation to session or ignore when already known
-bot.on('text', Composer.optional(isForwardedFromBastionSiege, (ctx: any, next) => {
+bot.on('text', Composer.optional(isForwardedFromBastionSiege, async (ctx: any, next) => {
   const session = ctx.session as Session
   const newInformation = ctx.state.screen as Gamescreen
   const {timestamp} = newInformation
@@ -76,11 +76,11 @@ bot.on('text', Composer.optional(isForwardedFromBastionSiege, (ctx: any, next) =
     return ctx.reply(ctx.i18n.t('forward.known'))
   }
 
-  for (const data of newData) {
+  await Promise.all(newData.map(async data => {
     (session.gameInformation as any)[data + 'Timestamp'] = timestamp
     session.gameInformation[data] = newInformation[data] as any
-    playerHistory.add(ctx.from.id, data, timestamp, newInformation[data])
-  }
+    await playerHistory.add(ctx.from.id, data, timestamp, newInformation[data])
+  }))
 
   return next && next()
 }))

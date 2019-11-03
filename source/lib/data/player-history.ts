@@ -1,5 +1,4 @@
-import {writeFileSync, readFileSync, mkdirSync, readdirSync} from 'fs'
-
+import {KeyValueInMemoryFiles} from '@edjopato/datastore'
 import arrayFilterUnique from 'array-filter-unique'
 import stringify from 'json-stable-stringify'
 
@@ -7,69 +6,12 @@ import {PlayerHistory, PlayerHistoryEntry} from '../types/player-history'
 
 const KEEP_ONLY_LATEST = ['attackscout', 'effects', 'resources']
 
-const FOLDER = 'persist/player-history/'
-mkdirSync(FOLDER, {recursive: true})
-
-const playerData: Record<number, PlayerHistory> = {}
 console.time('player history')
-load()
+const playerData = new KeyValueInMemoryFiles<PlayerHistory>('persist/player-history')
 console.timeEnd('player history')
 
-function load(): void {
-  try {
-    const userIds = readdirSync(FOLDER)
-      .map(o => Number(o.replace('.json', '')))
-
-    for (const id of userIds) {
-      const content = loadUser(id)
-
-      for (const type of Object.keys(content) as (keyof PlayerHistory)[]) {
-        for (const {timestamp, data} of content[type]) {
-          addInternal(id, type, timestamp, data)
-        }
-      }
-    }
-  } catch (_) {
-  }
-}
-
-function loadUser(userId: number): PlayerHistory {
-  const file = `${FOLDER}${userId}.json`
-  try {
-    return JSON.parse(readFileSync(file, 'utf8'))
-  } catch (error) {
-    console.error('failed loading', file, error)
-    return {
-      attackscout: [],
-      buildings: [],
-      domainStats: [],
-      effects: [],
-      player: [],
-      resources: [],
-      workshop: []
-    }
-  }
-}
-
-function save(userId: number): void {
-  const file = `${FOLDER}${userId}.json`
-  const content = stringify(playerData[userId], {space: 2}) + '\n'
-  writeFileSync(file, content, 'utf8')
-}
-
-export function add(userId: number, type: keyof PlayerHistory, unixTimestamp: number, data: any): void {
-  addInternal(userId, type, unixTimestamp, data)
-  save(userId)
-}
-
-function addInternal(userId: number, type: keyof PlayerHistory, unixTimestamp: number, data: any): void {
-  if (!playerData[userId]) {
-    playerData[userId] = {} as any
-  }
-
-  if (!playerData[userId][type]) {
-    playerData[userId][type] = []
-  }
+export async function add(userId: number, type: keyof PlayerHistory, unixTimestamp: number, data: any): Promise<void> {
+  const current = get(userId)
 
   if (type === 'player') {
     data = {
@@ -80,7 +22,7 @@ function addInternal(userId: number, type: keyof PlayerHistory, unixTimestamp: n
   }
 
   const checkForKnown = [
-    ...(playerData[userId][type] as PlayerHistoryEntry<unknown>[])
+    ...(current[type] as PlayerHistoryEntry<unknown>[])
       .slice(-2)
       .map((o: PlayerHistoryEntry<unknown>) => o.data),
     data
@@ -92,41 +34,39 @@ function addInternal(userId: number, type: keyof PlayerHistory, unixTimestamp: n
     .length
 
   if (KEEP_ONLY_LATEST.includes(type)) {
-    playerData[userId][type] = [{
+    current[type] = [{
       timestamp: unixTimestamp,
       data
     }]
   } else if (checkForKnown.length === 3 && different === 1) {
     // Both last values are the same so just update the timestamp of the last
-    const lastIndex = playerData[userId][type].length - 1
-    playerData[userId][type][lastIndex].timestamp = unixTimestamp
+    const lastIndex = current[type].length - 1
+    current[type][lastIndex].timestamp = unixTimestamp
   } else {
     // New
-    playerData[userId][type].push({
+    current[type].push({
       timestamp: unixTimestamp,
       data
     })
   }
+
+  await playerData.set(String(userId), current)
 }
 
 export function get(userId: number): PlayerHistory {
-  if (!playerData[userId]) {
-    playerData[userId] = {
-      attackscout: [],
-      buildings: [],
-      domainStats: [],
-      effects: [],
-      player: [],
-      resources: [],
-      workshop: []
-    }
+  return playerData.get(String(userId)) || {
+    attackscout: [],
+    buildings: [],
+    domainStats: [],
+    effects: [],
+    player: [],
+    resources: [],
+    workshop: []
   }
-
-  return playerData[userId]
 }
 
-function getAsUnknown(userId: number, type: keyof PlayerHistory): PlayerHistoryEntry<unknown>[] {
-  return get(userId)[type]
+function getAsUnknown(playerHistory: PlayerHistory, type: keyof PlayerHistory): PlayerHistoryEntry<unknown>[] {
+  return playerHistory[type]
 }
 
 export function getAllTimestamps<Key extends keyof PlayerHistory>(userId: number, type: Key): PlayerHistory[Key] {
@@ -134,13 +74,10 @@ export function getAllTimestamps<Key extends keyof PlayerHistory>(userId: number
 }
 
 export function getLastTimeActive(userId: number): number {
-  if (!playerData[userId]) {
-    return -Infinity
-  }
-
-  const keys = Object.keys(playerData[userId]) as (keyof PlayerHistory)[]
+  const data = get(userId)
+  const keys = Object.keys(data) as (keyof PlayerHistory)[]
   const lastTimestamps = keys
-    .flatMap(o => getAsUnknown(userId, o).slice(-1))
+    .flatMap(o => getAsUnknown(data, o).slice(-1))
     .map(o => o.timestamp)
 
   return Math.max(...lastTimestamps)
