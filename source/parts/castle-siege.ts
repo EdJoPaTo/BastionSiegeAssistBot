@@ -80,7 +80,3 @@ bot.on('text', whenScreenContainsInformation('castleSiegeAllianceJoined', notNew
 bot.on('text', whenScreenIsOfType('castleSiegeYouJoined', notNewMiddleware('forward.old', castleSiege.MAXIMUM_JOIN_MINUTES), async ctx => {
   return ctx.reply('Thats fancy you joined but I currently only work with messages of others joining in. 😇')
 }))
-
-module.exports = {
-  bot
-}

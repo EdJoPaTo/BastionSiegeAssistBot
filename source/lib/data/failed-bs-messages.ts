@@ -51,9 +51,3 @@ export function add(message: FailedBSMessage): void {
   cache.data.push(message)
   cache.save()
 }
-
-module.exports = {
-  add,
-  checkNowWorking,
-  isEmptyContent
-}

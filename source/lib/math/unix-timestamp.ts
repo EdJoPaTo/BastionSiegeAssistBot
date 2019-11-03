@@ -61,13 +61,3 @@ export function averageTimeOfDay(unixTimestamps: number[]): AverageTimeOfDay {
     accuracy
   }
 }
-
-module.exports = {
-  ONE_HOUR_IN_SECONDS,
-  ONE_DAY_IN_SECONDS,
-  averageTimeOfDay,
-  getHoursEarlier,
-  getMidnightXDaysEarlier,
-  getTimeDifference,
-  getTimeOfDayAsXYCoordinates
-}

@@ -376,7 +376,3 @@ export const bot = new Composer()
 bot.use(menu.init({
   actionCode: 'battlestats'
 }))
-
-module.exports = {
-  bot
-}

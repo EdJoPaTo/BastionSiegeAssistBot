@@ -28,7 +28,3 @@ bot.use(settingsMenu.init({
   backButtonText: (ctx: any) => `🔙 ${ctx.i18n.t('menu.back')}…`,
   actionCode: 'settings'
 }))
-
-module.exports = {
-  bot
-}

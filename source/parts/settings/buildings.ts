@@ -29,7 +29,3 @@ menu.select('b', CONSTRUCTIONS, {
     return (session.buildings || [...defaultBuildingsToShow]).includes(key as ConstructionName)
   }
 })
-
-module.exports = {
-  menu
-}

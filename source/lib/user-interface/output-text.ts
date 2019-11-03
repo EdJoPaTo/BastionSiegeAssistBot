@@ -40,7 +40,3 @@ updateInactiveEmoji()
 function updateInactiveEmoji(): void {
   emoji.inactive = moonmoji().emoji
 }
-
-module.exports = {
-  emoji
-}

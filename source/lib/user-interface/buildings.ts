@@ -209,15 +209,3 @@ export function createNeededMaterialStatString(cost: {gold?: number; wood?: numb
 
   return neededMaterial.join(' ')
 }
-
-module.exports = {
-  defaultBuildingsToShow,
-  getBuildingText,
-  createBuildingCostPerWinChanceLine,
-  createBuildingTimeStatsString,
-  createBuildingMaxLevelStatsString,
-  createFillTimeStatsString,
-  createCapacityStatsString,
-  createIncomeStatsString,
-  createNeededMaterialStatString
-}

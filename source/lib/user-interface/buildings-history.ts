@@ -76,8 +76,3 @@ function createHistorySeriesFromData(ctx: any, minTimestamp: number, allData: Da
 
   return series
 }
-
-module.exports = {
-  DEFAULT_HISTORY_TIMEFRAME,
-  buildingsHistoryGraphFromContext
-}

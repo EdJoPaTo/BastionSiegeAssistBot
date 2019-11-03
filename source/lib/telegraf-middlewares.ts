@@ -11,7 +11,3 @@ export function notNewMiddleware(i18nMessage = 'forward.old', maxAgeInMinutes = 
     return next && next()
   }
 }
-
-module.exports = {
-  notNewMiddleware
-}

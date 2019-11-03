@@ -195,7 +195,3 @@ async function generateResponseText(ctx: any, report: Battlereport, timestamp: n
     }
   }
 }
-
-module.exports = {
-  bot
-}

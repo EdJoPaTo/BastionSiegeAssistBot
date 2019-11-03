@@ -82,10 +82,3 @@ export function addInlineMessageToUpdate(currentTimestamp: number, player: {name
   })
   cache.save()
 }
-
-module.exports = {
-  add,
-  addInlineMessageToUpdate,
-  getCurrent,
-  init
-}

@@ -161,7 +161,3 @@ bot.action(/inlineWar:(.*):(.+)/, async ctx => {
   const warText = createWarStats(timestamp, battle, player)
   return ctx.editMessageText(warText, Extra.markdown() as any)
 })
-
-module.exports = {
-  bot
-}

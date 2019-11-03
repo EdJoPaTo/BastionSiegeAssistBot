@@ -140,17 +140,3 @@ export function isImmune(playername: string): boolean {
 
   return true
 }
-
-module.exports = {
-  MAX_BUILDING_AGE_DAYS,
-  MAX_PLAYER_AGE_DAYS,
-  MAX_WORKSHOP_AGE_DAYS,
-  RELEVANT_REPORT_DAYS,
-  addReport,
-  getConditions,
-  getPoweruserSessions,
-  getReportsTodayAmount,
-  hasSendEnoughReports,
-  isImmune,
-  isPoweruser
-}

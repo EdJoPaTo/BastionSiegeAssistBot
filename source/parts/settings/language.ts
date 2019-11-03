@@ -71,7 +71,3 @@ menu.simpleButton((ctx: any) => ctx.i18n.t('language.translateButton'), 'transla
 })
 
 menu.urlButton((ctx: any) => ctx.i18n.t('help.joinBSAGroupButton'), 'https://t.me/joinchat/AC0dV1dG2Y7sOFQPtZm9Dw')
-
-module.exports = {
-  menu
-}

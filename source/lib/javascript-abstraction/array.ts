@@ -58,10 +58,3 @@ export function toggleInArray<T>(array: T[], key: T): T[] {
 
   return array
 }
-
-module.exports = {
-  arrayFilterUniqueInBetween,
-  getOccurenceCount,
-  sortBy,
-  toggleInArray
-}

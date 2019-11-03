@@ -176,8 +176,3 @@ function multiFormat(date: Date): string {
 
   return d3.timeFormat('%Y')(date)
 }
-
-module.exports = {
-  createPngBuffer,
-  createSvgString
-}

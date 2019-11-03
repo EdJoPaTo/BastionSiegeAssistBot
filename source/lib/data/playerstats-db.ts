@@ -91,11 +91,3 @@ export function list(): PlayerStats[] {
   return Object.keys(playerReports)
     .map(name => get(name))
 }
-
-module.exports = {
-  addReport,
-  get,
-  getLookingLike,
-  getFromShortened,
-  list
-}

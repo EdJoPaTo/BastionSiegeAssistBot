@@ -31,7 +31,3 @@ menu.select('type', ALERTS, {
     return (session.alerts || []).includes(key as Alert)
   }
 })
-
-module.exports = {
-  menu
-}

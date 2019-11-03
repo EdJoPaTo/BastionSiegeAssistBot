@@ -85,7 +85,3 @@ function generateText(information: GameInformation): string {
 
   return text
 }
-
-module.exports = {
-  bot
-}

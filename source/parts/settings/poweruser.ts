@@ -79,7 +79,3 @@ menu.toggle(buttonText(emoji.immunity, 'poweruser.immunity'), 'immunity', {
     return !session.disableImmunity
   }
 })
-
-module.exports = {
-  menu
-}

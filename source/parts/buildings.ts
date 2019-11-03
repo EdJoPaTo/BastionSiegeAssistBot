@@ -233,7 +233,3 @@ function generateStatsText(ctx: any): string {
 
   return text
 }
-
-module.exports = {
-  bot
-}

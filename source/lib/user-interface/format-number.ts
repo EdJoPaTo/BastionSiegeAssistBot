@@ -107,11 +107,3 @@ export function formatBattleHoursAgo(hoursAgo: number): string {
   text += ' ago'
   return text
 }
-
-module.exports = {
-  formatBattleHoursAgo,
-  formatNumberShort,
-  formatTime,
-  formatTimeAmount,
-  formatTimeFrame
-}

@@ -90,10 +90,3 @@ export function getUserIdByName(playername: string): number | undefined {
 }
 
 export const middleware = (): any => localSession.middleware()
-
-module.exports = {
-  getRaw,
-  getUser,
-  getUserIdByName,
-  middleware: () => localSession.middleware()
-}

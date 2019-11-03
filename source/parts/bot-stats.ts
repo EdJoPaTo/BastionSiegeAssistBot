@@ -34,7 +34,3 @@ bot.command('botstats', async (ctx: any) => {
 
   return ctx.replyWithMarkdown(text)
 })
-
-module.exports = {
-  bot
-}

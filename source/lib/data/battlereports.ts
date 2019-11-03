@@ -143,8 +143,3 @@ export function add(user: number, time: number, report: BattlereportRaw, raw: st
 
   return true // Is a new report
 }
-
-module.exports = {
-  add,
-  getAll
-}

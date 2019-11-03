@@ -15,7 +15,3 @@ export function createAlertAtTimestamp(timestamp: number, func: () => void, now 
 
   return undefined
 }
-
-module.exports = {
-  createAlertAtTimestamp
-}

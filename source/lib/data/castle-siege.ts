@@ -47,11 +47,3 @@ export function getParticipants(currentTimestamp: number, alliance: string): rea
     .filter(o => o.alliance === alliance)
     .sort(sortBy(o => o.timestamp))
 }
-
-module.exports = {
-  MAXIMUM_JOIN_MINUTES,
-  MAXIMUM_JOIN_SECONDS,
-  add,
-  getAlliances,
-  getParticipants
-}

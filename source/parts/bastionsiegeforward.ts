@@ -84,7 +84,3 @@ bot.on('text', Composer.optional(isForwardedFromBastionSiege, (ctx: any, next) =
 
   return next && next()
 }))
-
-module.exports = {
-  bot
-}

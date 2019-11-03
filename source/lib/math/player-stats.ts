@@ -169,8 +169,3 @@ function assumeTerra(soloReports: readonly Battlereport[]): number {
 
   return currentEstimate
 }
-
-module.exports = {
-  assumeArmy,
-  generate
-}

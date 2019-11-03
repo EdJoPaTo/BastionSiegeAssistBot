@@ -157,7 +157,3 @@ function createEntryString(information: EntryInformation, now: number): string {
 
   return parts.join(' ')
 }
-
-module.exports = {
-  createList
-}

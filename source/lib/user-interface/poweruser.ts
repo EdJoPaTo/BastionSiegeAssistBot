@@ -64,9 +64,3 @@ export function conditionTypeTranslation(ctx: any, type: PoweruserConditionType)
       return type
   }
 }
-
-module.exports = {
-  conditionEmoji,
-  conditionTypeTranslation,
-  getHintStrings
-}

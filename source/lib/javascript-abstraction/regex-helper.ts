@@ -16,8 +16,3 @@ export function getNumber(text: string, pattern: string | RegExp, group = 1): nu
 
   return Number(result)
 }
-
-module.exports = {
-  get,
-  getNumber
-}

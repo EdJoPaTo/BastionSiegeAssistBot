@@ -145,9 +145,3 @@ export function getLastTimeActive(userId: number): number {
 
   return Math.max(...lastTimestamps)
 }
-
-module.exports = {
-  add,
-  getAllTimestamps,
-  getLastTimeActive
-}

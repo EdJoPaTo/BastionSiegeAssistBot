@@ -23,10 +23,3 @@ export function calculateSecondsFromTimeframeString(timeframe: string): number {
 
   throw new Error('unknown unit')
 }
-
-module.exports = {
-  MINUTE_IN_SECONDS,
-  HOUR_IN_SECONDS,
-  DAY_IN_SECONDS,
-  calculateSecondsFromTimeframeString
-}

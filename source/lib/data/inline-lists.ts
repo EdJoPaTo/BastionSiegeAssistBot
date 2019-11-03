@@ -62,10 +62,3 @@ export function leave(creatorId: number, listId: string, timestamp: number, leav
   cache.save()
   return list
 }
-
-module.exports = {
-  PARTICIPANT_MAX_AGE,
-  getList,
-  join,
-  leave
-}

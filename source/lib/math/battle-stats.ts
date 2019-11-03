@@ -37,7 +37,3 @@ function groupBySelector(report: Battlereport): string {
 function generatePerAlliance(reports: readonly Battlereport[], valueSelector: ValueSelector): GroupedSumAverageAmount {
   return getSumAverageAmountGroupedBy(reports, groupBySelector, valueSelector)
 }
-
-module.exports = {
-  generate
-}

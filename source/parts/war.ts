@@ -86,7 +86,3 @@ bot.on('text', whenScreenIsOfType('war', async (ctx: any) => {
 function isBattleSolo(battle: BattleSolo | BattleAlliance): battle is BattleSolo {
   return Boolean((battle as any).enemy)
 }
-
-module.exports = {
-  bot
-}

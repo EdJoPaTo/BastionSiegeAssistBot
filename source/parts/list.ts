@@ -60,7 +60,3 @@ bot.action(/inlineList:(\d+):([^:]+):leave/, ctx => {
   const listId = ctx.match![2]
   lists.leave(creatorId, listId, Date.now() / 1000, ctx.from!.id)
 })
-
-module.exports = {
-  bot
-}

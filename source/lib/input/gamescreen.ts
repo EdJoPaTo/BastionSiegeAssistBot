@@ -40,8 +40,3 @@ export function whenScreenIsOfType(wantedTypes: string | readonly string[], ...m
 
   return (Telegraf as any).optional(predicate, ...middlewares)
 }
-
-module.exports = {
-  whenScreenContainsInformation,
-  whenScreenIsOfType
-}

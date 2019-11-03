@@ -92,8 +92,3 @@ export function createWarStats(timestamp: number, battle: BattleAlliance, player
 
   return text
 }
-
-module.exports = {
-  createWarOneLineString,
-  createWarStats
-}

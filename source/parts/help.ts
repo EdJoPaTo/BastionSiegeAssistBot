@@ -47,7 +47,3 @@ bot.on('text', Composer.optional(ctx => !isAnOwnInlineQuery(ctx), (ctx: any) => 
   ])
   return ctx.replyWithMarkdown(text, Extra.markup(keyboard) as any)
 }))
-
-module.exports = {
-  bot
-}

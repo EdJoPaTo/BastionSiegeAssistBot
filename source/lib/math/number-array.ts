@@ -65,9 +65,3 @@ export function getSumAverageAmountGroupedBy<T>(array: readonly T[], keySelector
     grouped: result
   }
 }
-
-module.exports = {
-  getStdDeviation,
-  getSumAverageAmount,
-  getSumAverageAmountGroupedBy
-}

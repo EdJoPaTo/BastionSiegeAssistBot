@@ -191,7 +191,3 @@ function statsFromPlayernameWhenUnique(player: string): PlayerStats {
 
   return playerStatsDb.get(player)
 }
-
-module.exports = {
-  bot
-}

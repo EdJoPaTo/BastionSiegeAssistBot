@@ -326,15 +326,3 @@ export function createMultipleStatsConclusion(statsArr: readonly PlayerStats[], 
     armyString
   }
 }
-
-module.exports = {
-  createMultipleStatsConclusion,
-  createPlayerMarkdownLink,
-  createPlayerNameString,
-  createPlayerShareButton,
-  createPlayerStatsShortString,
-  createPlayerStatsString,
-  createPlayerStatsTwoLineString,
-  createTwoSidesOneLineString,
-  createTwoSidesStatsString
-}

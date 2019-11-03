@@ -7,7 +7,3 @@ export const bot = new Composer()
 bot.on('text', whenScreenContainsInformation('effects', (ctx: any) => {
   return ctx.reply(ctx.i18n.t('effects.updated'))
 }))
-
-module.exports = {
-  bot
-}

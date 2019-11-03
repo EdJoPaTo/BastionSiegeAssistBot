@@ -97,8 +97,3 @@ function generateUpcomingText(ctx: any): {text: string; extra: any} {
     )
   return {text, extra}
 }
-
-module.exports = {
-  bot,
-  start
-}

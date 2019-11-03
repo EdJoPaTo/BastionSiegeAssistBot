@@ -139,10 +139,3 @@ export function createRanking(data: any[], key: string, title: string, forceIncl
 
   return text
 }
-
-module.exports = {
-  createBattleStatsString,
-  createRanking,
-  createSingleAllianceBattleShortStatsLine,
-  createSingleBattleShortStatsLine
-}

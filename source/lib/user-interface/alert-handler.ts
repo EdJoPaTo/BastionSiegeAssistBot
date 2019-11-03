@@ -206,8 +206,3 @@ function handleSendAlertError(user: number, error: Error): void {
       console.error('send Alert failed', user, error.message, error)
   }
 }
-
-module.exports = {
-  AlertHandler,
-  getAlertText
-}

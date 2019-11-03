@@ -56,12 +56,3 @@ export function formatTypeOfData(data: SumAverageAmount, type: keyof SumAverageA
       throw new Error('undefined data type to show')
   }
 }
-
-module.exports = {
-  createAmountAverageDeviationString,
-  createArrayDataString,
-  createAverageMaxString,
-  createAverageSumString,
-  createSumAverageAmountString,
-  formatTypeOfData
-}

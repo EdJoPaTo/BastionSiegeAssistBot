@@ -13,8 +13,3 @@ export function average(vectorArr: readonly Vector[]): Vector {
 export function length(vector: Vector): number {
   return Math.sqrt((vector.x * vector.x) + (vector.y * vector.y))
 }
-
-module.exports = {
-  average,
-  length
-}

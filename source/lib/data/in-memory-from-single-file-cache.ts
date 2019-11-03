@@ -52,5 +52,3 @@ function load<T>(file: string, defaultData: T): T {
     }
   }
 }
-
-module.exports = InMemoryFromSingleFileCache

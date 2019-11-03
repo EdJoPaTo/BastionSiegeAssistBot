@@ -48,9 +48,3 @@ export function replaceLookingLikeAsciiChars(input: string): string {
 
   return result
 }
-
-module.exports = {
-  compareStrAsSimpleOne,
-  getUnicode,
-  replaceLookingLikeAsciiChars
-}

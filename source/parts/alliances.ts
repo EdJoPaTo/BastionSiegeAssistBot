@@ -49,7 +49,3 @@ bot.command('alliances', (ctx: any) => {
 
   return ctx.replyWithMarkdown(text)
 })
-
-module.exports = {
-  bot
-}

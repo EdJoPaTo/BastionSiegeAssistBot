@@ -45,7 +45,3 @@ menu.button((ctx: any) => ctx.i18n.t('list.clearParticipants'), 'clear-participa
     lists.leave(ctx.from!.id, 'default', now, participantIds)
   }
 })
-
-module.exports = {
-  menu
-}

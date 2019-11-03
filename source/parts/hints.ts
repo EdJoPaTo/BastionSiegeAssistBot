@@ -35,7 +35,3 @@ bot.on('text', async (ctx, next) => {
 
   return next && next()
 })
-
-module.exports = {
-  bot
-}
