@@ -1,32 +1,16 @@
 import {writeFileSync, readFileSync, mkdirSync, readdirSync} from 'fs'
 
-import {Attackscout, Buildings, DomainStats, Effect, Player, Resources, Workshop} from 'bastion-siege-logic'
 import arrayFilterUnique from 'array-filter-unique'
 import stringify from 'json-stable-stringify'
 
-type Dictionary<T> = {[key: string]: T}
-
-interface PlayerHistory {
-  attackscout: Entry<Attackscout>[];
-  buildings: Entry<Buildings>[];
-  domainStats: Entry<DomainStats>[];
-  effects: Entry<Effect[]>[];
-  player: Entry<Player>[];
-  resources: Entry<Resources>[];
-  workshop: Entry<Workshop>[];
-}
-
-interface Entry<T> {
-  data: T;
-  timestamp: number;
-}
+import {PlayerHistory, PlayerHistoryEntry} from '../types/player-history'
 
 const KEEP_ONLY_LATEST = ['attackscout', 'effects', 'resources']
 
 const FOLDER = 'persist/player-history/'
 mkdirSync(FOLDER, {recursive: true})
 
-const playerData: Dictionary<PlayerHistory> = {}
+const playerData: Record<number, PlayerHistory> = {}
 console.time('player history')
 load()
 console.timeEnd('player history')
@@ -96,9 +80,9 @@ function addInternal(userId: number, type: keyof PlayerHistory, unixTimestamp: n
   }
 
   const checkForKnown = [
-    ...(playerData[userId][type] as Entry<unknown>[])
+    ...(playerData[userId][type] as PlayerHistoryEntry<unknown>[])
       .slice(-2)
-      .map((o: Entry<unknown>) => o.data),
+      .map((o: PlayerHistoryEntry<unknown>) => o.data),
     data
   ]
 
@@ -141,7 +125,7 @@ export function get(userId: number): PlayerHistory {
   return playerData[userId]
 }
 
-function getAsUnknown(userId: number, type: keyof PlayerHistory): Entry<unknown>[] {
+function getAsUnknown(userId: number, type: keyof PlayerHistory): PlayerHistoryEntry<unknown>[] {
   return get(userId)[type]
 }
 
