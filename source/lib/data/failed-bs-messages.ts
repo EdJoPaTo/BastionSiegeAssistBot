@@ -1,27 +1,28 @@
 import {parseGamescreenContent, GamescreenContent} from 'bastion-siege-logic'
+import {RawObjectInMemoryFile} from '@edjopato/datastore'
 
 import {FailedBSMessage} from '../types'
 
 import * as battlereports from './battlereports'
-import InMemoryFromSingleFileCache from './in-memory-from-single-file-cache'
 
-const cache = new InMemoryFromSingleFileCache<FailedBSMessage[]>('persist/failed-bs-messages.json', [])
+const data = new RawObjectInMemoryFile<FailedBSMessage[]>('persist/failed-bs-messages.json')
 
-export function checkNowWorking(): void {
-  if (cache.data.length > 0) {
-    console.log('failed BS messages: start trying', cache.data.length, 'previous failed messages…')
+export async function checkNowWorking(): Promise<void> {
+  const previouslyFailed = data.get() || []
+  if (previouslyFailed.length > 0) {
+    console.log('failed BS messages: start trying', previouslyFailed.length, 'previous failed messages…')
   }
 
-  cache.data = cache.data
+  const stillFailing = previouslyFailed
     .filter(o => !canGetGamescreenContent(o))
 
-  if (cache.data.length > 0) {
-    console.warn('failed BS messages: still', cache.data.length, 'messages not detectable')
+  if (stillFailing.length > 0) {
+    console.warn('failed BS messages: still', stillFailing.length, 'messages not detectable')
   } else {
     console.log('failed BS messages: no failing BS messages :)')
   }
 
-  cache.save()
+  await data.set(stillFailing)
 }
 
 function canGetGamescreenContent(message: FailedBSMessage): boolean {
@@ -47,7 +48,8 @@ export function isEmptyContent(content: GamescreenContent): boolean {
   return keysOfInterest.length === 0
 }
 
-export function add(message: FailedBSMessage): void {
-  cache.data.push(message)
-  cache.save()
+export async function add(message: FailedBSMessage): Promise<void> {
+  const current = data.get() || []
+  current.push(message)
+  await data.set(current)
 }

@@ -30,18 +30,18 @@ bot.on('text', Composer.optional(forwardedFromClone, async ctx => {
 }))
 
 // Load game screen type and information
-bot.on('text', Composer.optional(isForwardedFromBastionSiege, (ctx, next) => {
+bot.on('text', Composer.optional(isForwardedFromBastionSiege, async (ctx, next) => {
   const {text, forward_date: timestamp} = ctx.message
 
   try {
     ctx.state.screen = parseGamescreen(text, timestamp)
 
     if (failedBsMessages.isEmptyContent(ctx.state.screen)) {
-      failedBsMessages.add(ctx.message)
+      await failedBsMessages.add(ctx.message)
     }
   } catch (error) {
     console.error('could not get screen information', text, error)
-    failedBsMessages.add(ctx.message)
+    await failedBsMessages.add(ctx.message)
     throw new Error('could not read Bastion Siege screen')
   }
 
