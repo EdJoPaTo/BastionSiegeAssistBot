@@ -1,5 +1,6 @@
 import {BattleAlliance} from 'bastion-siege-logic'
 import {Extra} from 'telegraf'
+import {RawObjectInMemoryFile} from '@edjopato/datastore'
 
 import {War, WarInlineMessage} from '../types'
 
@@ -7,9 +8,7 @@ import {sortBy} from '../javascript-abstraction/array'
 
 import {createWarStats} from '../user-interface/war-stats'
 
-import InMemoryFromSingleFileCache from './in-memory-from-single-file-cache'
-
-const cache = new InMemoryFromSingleFileCache<War[]>('tmp/wars.json', [])
+const data = new RawObjectInMemoryFile<War[]>('tmp/wars.json')
 
 const MAX_BATTLE_AGE = 60 * 12 // 12 minutes
 
@@ -19,9 +18,7 @@ export function init(tg: any): void {
 }
 
 export async function add(timestamp: number, battle: BattleAlliance): Promise<void> {
-  const inlineMessagesToUpdate = addInternal(timestamp, battle)
-  cache.save()
-
+  const inlineMessagesToUpdate = await addInternal(timestamp, battle)
   await Promise.all(
     inlineMessagesToUpdate.map(async inlineMessage => updateInlineMessage(timestamp, battle, inlineMessage))
   )
@@ -42,12 +39,14 @@ async function updateInlineMessage(timestamp: number, battle: BattleAlliance, in
   }
 }
 
-function addInternal(timestamp: number, battle: BattleAlliance, initial = {}): readonly WarInlineMessage[] {
-  const replaces = cache.data
+async function addInternal(timestamp: number, battle: BattleAlliance, initial = {}): Promise<readonly WarInlineMessage[]> {
+  const content = data.get() || []
+
+  const replaces: War | undefined = content
     .filter(o => o.battle.attack[0] === battle.attack[0] && o.battle.defence[0] === battle.defence[0])[0]
 
   if (!replaces) {
-    cache.data.push({
+    content.push({
       inlineMessages: [],
       ...initial,
       battle,
@@ -61,24 +60,37 @@ function addInternal(timestamp: number, battle: BattleAlliance, initial = {}): r
     replaces.beginTimestamp = timestamp
   }
 
-  cache.data = cache.data
+  const cleanedUp = content
     .filter(o => o.beginTimestamp > timestamp - MAX_BATTLE_AGE)
 
+  await data.set(cleanedUp)
   return (replaces || {}).inlineMessages || []
 }
 
-export function getCurrent(currentTimestamp: number, playername: string): War {
-  return cache.data
-    .filter(o => o.beginTimestamp > currentTimestamp - MAX_BATTLE_AGE)
-    .filter(({battle}) => battle.attack.includes(playername) || battle.defence.includes(playername))
-    .sort(sortBy(o => o.timestamp, true))[0]
+export function getCurrent(currentTimestamp: number, playername: string): War | undefined {
+  return getCurrentInternal(currentTimestamp, playername).relevant
 }
 
-export function addInlineMessageToUpdate(currentTimestamp: number, player: {name: string; alliance: string}, inlineMessageId: string): void {
-  const entry = getCurrent(currentTimestamp, player.name)
-  entry.inlineMessages.push({
+function getCurrentInternal(currentTimestamp: number, playername: string): {all: War[]; relevant: War | undefined} {
+  const all = data.get() || []
+  const relevant = all
+    .filter(o => o.beginTimestamp > currentTimestamp - MAX_BATTLE_AGE)
+    .filter(({battle}) => battle.attack.includes(playername) || battle.defence.includes(playername))
+    .sort(sortBy(o => o.timestamp, true))
+
+  return {all, relevant: relevant[0]}
+}
+
+export async function addInlineMessageToUpdate(currentTimestamp: number, player: {name: string; alliance: string}, inlineMessageId: string): Promise<void> {
+  const {all, relevant} = getCurrentInternal(currentTimestamp, player.name)
+  if (!relevant) {
+    throw new Error('there is no war to update')
+  }
+
+  relevant.inlineMessages.push({
     inlineMessageId,
     player
   })
-  cache.save()
+
+  await data.set(all)
 }
