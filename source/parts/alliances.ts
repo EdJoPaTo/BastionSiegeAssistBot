@@ -11,7 +11,7 @@ import {getMidnightXDaysEarlier} from '../lib/math/unix-timestamp'
 
 import {createMultipleStatsConclusion} from '../lib/user-interface/player-stats'
 
-const bot = new Composer()
+export const bot = new Composer()
 
 bot.command('alliances', (ctx: any) => {
   let text = `*${ctx.i18n.t('bs.alliance')}*\n`

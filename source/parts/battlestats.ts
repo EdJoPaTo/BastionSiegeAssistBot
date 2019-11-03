@@ -372,7 +372,7 @@ function createAllianceMates(ctx: any): string {
   return text
 }
 
-const bot = new Composer()
+export const bot = new Composer()
 bot.use(menu.init({
   actionCode: 'battlestats'
 }))

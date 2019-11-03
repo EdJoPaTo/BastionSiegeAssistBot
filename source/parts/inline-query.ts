@@ -25,9 +25,10 @@ interface AnswerInlineQueryOptions {
   switch_pm_parameter?: string;
 }
 
-const bot = new Composer<Context>()
+export const bot = new Composer<Context>()
 
 bot.on('inline_query', async ctx => {
+  const {session} = ctx
   const {query} = ctx.inlineQuery!
   const cleanedUpQuery = replaceLookingLikeAsciiChars(inputTextCleanup(query))
   const queryTestFunc = getTestFunctionForQuery(cleanedUpQuery)
@@ -36,7 +37,7 @@ bot.on('inline_query', async ctx => {
   const isPoweruser = poweruser.isPoweruser(ctx.from!.id)
 
   const statics = []
-  const user = ctx.session.gameInformation.player!
+  const user = session.gameInformation.player!
   if (isPoweruser) {
     const {timestamp, battle} = wars.getCurrent(now, user.name) || {}
     if (timestamp && battle) {
@@ -98,7 +99,7 @@ bot.on('inline_query', async ctx => {
     // TODO: Currently only the english ones are in default search, mystics should be grouped by mystic, not by name
     const freeOptions = [...Object.values(MYSTICS_TEXT_EN)]
 
-    if (user && ctx.session.gameInformation.playerTimestamp! > getMidnightXDaysEarlier(now, poweruser.MAX_PLAYER_AGE_DAYS)) {
+    if (user && session.gameInformation.playerTimestamp! > getMidnightXDaysEarlier(now, poweruser.MAX_PLAYER_AGE_DAYS)) {
       freeOptions.push(user.name)
     }
 

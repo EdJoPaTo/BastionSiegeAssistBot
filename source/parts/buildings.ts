@@ -31,7 +31,7 @@ const DEFAULT_VIEW = BUILDING_VIEWS[0]
 
 const WIN_CHANCE_INFLUENCERS: BattleBuilding[] = ['barracks', 'trebuchet', 'wall']
 
-const bot = new Composer()
+export const bot = new Composer()
 
 const menu = new TelegrafInlineMenu(generateStatsText, {
   photo: generateStatsPhoto

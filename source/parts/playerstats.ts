@@ -18,7 +18,7 @@ import {emoji} from '../lib/user-interface/output-text'
 
 import {notNewMiddleware} from '../lib/telegraf-middlewares'
 
-const bot = new Composer()
+export const bot = new Composer()
 
 bot.on('text', whenScreenContainsInformation('attackIncoming', notNewMiddleware('battle.over'), (ctx: any) => {
   const {attackIncoming} = ctx.state.screen as Gamescreen

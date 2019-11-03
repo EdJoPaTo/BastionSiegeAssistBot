@@ -18,7 +18,7 @@
   "scripts": {
     "build": "del dist && tsc",
     "prepack": "npm run build",
-    "start": "ts-node source/index.js",
+    "start": "ts-node source/index.ts",
     "test": "tsc && xo && nyc ava"
   },
   "dependencies": {

@@ -10,7 +10,7 @@ import * as poweruser from '../lib/data/poweruser'
 import {createList} from '../lib/user-interface/inline-list'
 import {emoji} from '../lib/user-interface/output-text'
 
-const bot = new Composer()
+export const bot = new Composer()
 
 bot.action(/inlineList:(\d+):([^:]+):.+/, async (ctx, next) => {
   try {

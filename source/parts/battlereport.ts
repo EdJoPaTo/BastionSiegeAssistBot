@@ -19,7 +19,7 @@ import {emoji} from '../lib/user-interface/output-text'
 const MAX_AGE_BUILDINGS = ONE_DAY_IN_SECONDS // 24h
 const MAX_AGE_REPORT_FOR_STATS = ONE_DAY_IN_SECONDS * 2 // 2 days
 
-const bot = new Composer()
+export const bot = new Composer()
 
 // Save battlereport
 bot.on('text', whenScreenContainsInformation('battlereport', async (ctx: any) => {

@@ -20,7 +20,7 @@ const DEBOUNCE_TIME = 200 // Milliseconds
 
 const MAXIMUM_PLAYER_AGE = ONE_DAY_IN_SECONDS * MAX_PLAYER_AGE_DAYS
 
-const bot = new Composer()
+export const bot = new Composer()
 
 const debouncedParticipants: Dictionary<(ctx: ContextMessageUpdate, timestamp: number, alliance: string) => Promise<void>> = {}
 bot.on('text', whenScreenContainsInformation('castleSiegePlayerJoined', notNewMiddleware('forward.old', castleSiege.MAXIMUM_JOIN_MINUTES), ctx => {

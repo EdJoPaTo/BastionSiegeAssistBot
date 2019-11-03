@@ -12,7 +12,7 @@ import {createWarOneLineString} from '../lib/user-interface/war-stats'
 import {emoji} from '../lib/user-interface/output-text'
 import {formatNumberShort} from '../lib/user-interface/format-number'
 
-const bot = new Composer()
+export const bot = new Composer()
 
 bot.on('text', whenScreenIsOfType('war', async (ctx: any) => {
   const screen = ctx.state.screen as Gamescreen
