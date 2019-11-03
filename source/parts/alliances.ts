@@ -23,7 +23,6 @@ bot.command('alliances', (ctx: any) => {
   const minDate = getMidnightXDaysEarlier(Date.now() / 1000, 7) // Seen within 7 days
 
   const playerStats = playerStatsDb.list()
-    .filter(o => o.alliance !== undefined)
     .filter(o => o.lastBattleTime > minDate)
 
   const groupedByAlliance = playerStats
