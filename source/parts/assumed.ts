@@ -1,38 +1,40 @@
-const Telegraf = require('telegraf')
-const {estimateResourcesAfter} = require('bastion-siege-logic')
+import {Composer, Extra, Markup, ContextMessageUpdate} from 'telegraf'
+import {estimateResourcesAfter, Constructions, ResourceName, DomainStats} from 'bastion-siege-logic'
 
-const {compareStrAsSimpleOne} = require('../lib/javascript-abstraction/strings')
+import {compareStrAsSimpleOne} from '../lib/javascript-abstraction/strings'
 
-const {emoji} = require('../lib/user-interface/output-text')
-const {formatNumberShort, formatTimeAmount} = require('../lib/user-interface/format-number')
+import {Session, GameInformation} from '../lib/types'
 
-const {Markup, Extra} = Telegraf
+import {emoji} from '../lib/user-interface/output-text'
+import {formatNumberShort, formatTimeAmount} from '../lib/user-interface/format-number'
 
-const bot = new Telegraf.Composer()
+export const bot = new Composer()
 const prefix = '*Currently Assumed Data*\nBattlereports and time influences what the bot expects from your game data.\nKnown issues: people in houses are not considered for gold income\n\n'
 
 const updateMarkup = Extra.markdown().markup(Markup.inlineKeyboard([
   Markup.callbackButton('estimate current situation', 'assumed'),
   Markup.urlButton('Join BastionSiegeAssist Support Group', 'https://t.me/joinchat/AC0dV1dG2Y7sOFQPtZm9Dw')
-], {columns: 1}))
+] as any, {columns: 1}))
 
 bot.command('assumed', sendAssumed)
 
-function sendAssumed(ctx) {
-  const information = ctx.session.gameInformation
+async function sendAssumed(ctx: ContextMessageUpdate): Promise<void> {
+  const session = (ctx as any).session as Session
+  const information = session.gameInformation
 
   if (!information.resourcesTimestamp) {
-    return ctx.replyWithMarkdown(prefix + 'Please forward me a screen from the game showing your current resources first.')
+    await ctx.replyWithMarkdown(prefix + 'Please forward me a screen from the game showing your current resources first.')
   }
 
   const statsText = generateText(information)
-  return ctx.replyWithMarkdown(prefix + statsText, updateMarkup)
+  await ctx.replyWithMarkdown(prefix + statsText, updateMarkup)
 }
 
 bot.action('assumed', async ctx => {
   try {
-    const newStats = prefix + generateText(ctx.session.gameInformation)
-    const oldStats = ctx.callbackQuery.message.text
+    const session = (ctx as any).session as Session
+    const newStats = prefix + generateText(session.gameInformation)
+    const oldStats = ctx.callbackQuery!.message!.text!
 
     if (compareStrAsSimpleOne(newStats, oldStats) === 0) {
       return ctx.answerCbQuery('thats already as good as I can estimate!')
@@ -45,36 +47,36 @@ bot.action('assumed', async ctx => {
   }
 })
 
-function generateText(information) {
+function generateText(information: GameInformation): string {
   // Unix timestamp just without seconds (/60)
   const currentTimestamp = Math.floor(Date.now() / 1000 / 60)
-  const resourceAgeMinutes = currentTimestamp - Math.floor(information.resourcesTimestamp / 60)
+  const resourceAgeMinutes = currentTimestamp - Math.floor(information.resourcesTimestamp! / 60)
 
-  const buildings = {...information.buildings, ...information.workshop}
+  const buildings: Constructions = {...information.buildings!, ...information.workshop!}
 
-  const estimatedResources = estimateResourcesAfter(information.resources, buildings, resourceAgeMinutes)
+  const estimatedResources = estimateResourcesAfter(information.resources!, buildings, resourceAgeMinutes)
 
   let text = ''
 
   const combined = {
     ...estimatedResources,
-    ...information.domainStats
+    ...information.domainStats!
   }
-  const keys = Object.keys(combined)
+  const keys = Object.keys(combined) as (ResourceName | keyof DomainStats)[]
   text += keys.map(key => {
     const value = combined[key]
     const short = formatNumberShort(value, true)
     const longNeeded = compareStrAsSimpleOne(String(value), short) !== 0
-    const long = longNeeded ? '  ' + value : ''
+    const long = longNeeded ? '  ' + String(value) : ''
     return `${emoji[key]} ${short}${long}`
   }).join('\n') + '\n'
 
   text += '\n'
   text += '*Age of last well known Data*\n'
   text += ['resources', 'buildings', 'domainStats']
-    .filter(o => information[o + 'Timestamp'])
+    .filter(o => (information as any)[o + 'Timestamp'])
     .map(o => {
-      const timestamp = information[o + 'Timestamp']
+      const timestamp: number = (information as any)[o + 'Timestamp']
       const ageInMinutes = currentTimestamp - Math.floor(timestamp / 60)
       const ageString = formatTimeAmount(ageInMinutes)
       return `${o}: ${ageString}`
