@@ -50,7 +50,7 @@ export function join(creatorId: number, listId: string, timestamp: number, joini
   return list
 }
 
-export function leave(creatorId: number, listId: string, timestamp: number, leaverId: number): InlineList {
+export function leave(creatorId: number, listId: string, timestamp: number, leaverId: number | number[]): InlineList {
   const list = getList(creatorId, listId, timestamp)
   list.lastUpdate = timestamp
 

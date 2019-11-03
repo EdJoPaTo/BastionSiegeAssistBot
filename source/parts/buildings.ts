@@ -21,7 +21,7 @@ import {
 } from '../lib/user-interface/buildings'
 import {DEFAULT_HISTORY_TIMEFRAME, buildingsHistoryGraphFromContext} from '../lib/user-interface/buildings-history'
 
-import buildingsMenu from './settings-submenus/buildings'
+import * as buildingsMenu from './settings/buildings'
 
 type Dictionary<T> = {[key: string]: T}
 
