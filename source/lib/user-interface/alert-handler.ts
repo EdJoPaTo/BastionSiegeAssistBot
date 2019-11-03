@@ -1,7 +1,7 @@
-const {Extra, Markup} = require('telegraf')
-const I18n = require('telegraf-i18n')
+import {Extra, Markup, Telegram} from 'telegraf'
+import I18n from 'telegraf-i18n'
 
-const {
+import {
   CONSTRUCTIONS,
   calcBuildingCost,
   calcGoldCapacity,
@@ -10,17 +10,28 @@ const {
   calcProductionFood,
   calcStorageCapacity,
   nextBattleTimestamp
-} = require('bastion-siege-logic')
+} from 'bastion-siege-logic'
 
-const {createAlertAtTimestamp} = require('../javascript-abstraction/alert')
+import {createAlertAtTimestamp} from '../javascript-abstraction/alert'
 
-const {ONE_HOUR_IN_SECONDS} = require('../math/unix-timestamp')
+import {ONE_HOUR_IN_SECONDS} from '../math/unix-timestamp'
 
-const {emoji} = require('./output-text')
-const {
+import {Alert, Session} from '../types'
+
+import {emoji} from './output-text'
+import {
   getBuildingText,
   defaultBuildingsToShow
-} = require('./buildings')
+} from './buildings'
+
+interface EventEntry {
+  type: Alert;
+  timestamp: number;
+  text: string;
+  alertHeadsUpTime?: number;
+  alertMessage?: string;
+  timeoutId?: NodeJS.Timeout;
+}
 
 const i18n = new I18n({
   directory: 'locales',
@@ -28,42 +39,29 @@ const i18n = new I18n({
   defaultLanguage: 'en'
 })
 
-function asContext(language) {
+function asContext(language: string | undefined): {i18n: any} {
   return {
-    i18n: i18n.createContext(language)
+    i18n: i18n.createContext(language || 'en', {})
   }
 }
 
-const alertEmojis = {
-  disabled: '🔕',
-  enabled: '🔔',
-  buildingUpgrade: emoji.houses,
-  effect: '✨',
-  nextBattle: emoji.army,
-  resourceWarning: emoji.food
+export function getAlertText(ctx: any, alertKey: Alert): string {
+  const e = emoji[alertKey]
+  const l = ctx.i18n.t('alert.' + alertKey + '.name')
+  return `${e} ${l}`
 }
 
-const ALERT_TYPES = [
-  'buildingUpgrade',
-  'effect',
-  'nextBattle',
-  'resourceWarning'
-]
+export class AlertHandler {
+  private readonly _alertsOfUsers: Record<number, EventEntry[]> = {}
 
-function getAlertText(ctx, alertKey) {
-  return alertEmojis[alertKey] + ' ' + ctx.i18n.t('alert.' + alertKey + '.name')
-}
+  constructor(
+    private readonly _telegram: Telegram
+  ) {}
 
-class AlertHandler {
-  constructor(telegram) {
-    this.telegram = telegram
-    this.alertsOfUsers = {}
-  }
+  generateUpcomingEventsList({buildings: buildingsToShowSession, gameInformation, __language_code: language}: Session = {gameInformation: {}}): EventEntry[] {
+    const eventList: EventEntry[] = []
 
-  generateUpcomingEventsList({buildings: buildingsToShow, gameInformation, __language_code: language} = {}) {
-    let eventList = []
-
-    const {battleSoloTimestamp, battleAllianceTimestamp, domainStats} = gameInformation || {}
+    const {battleSoloTimestamp, battleAllianceTimestamp, domainStats} = gameInformation
     const {karma} = domainStats || {}
     const nextBattleTimestamps = nextBattleTimestamp(battleSoloTimestamp, battleAllianceTimestamp, karma)
     eventList.push({
@@ -81,36 +79,35 @@ class AlertHandler {
     })
 
     const {resources, resourcesTimestamp} = gameInformation
-    const resourceTimestampMinutes = Math.floor(resourcesTimestamp / 60)
-    const buildings = {...gameInformation.buildings, ...gameInformation.workshop}
-    buildingsToShow = buildingsToShow || defaultBuildingsToShow
+    const resourceTimestampMinutes = Math.floor(resourcesTimestamp! / 60)
+    const buildings = {...gameInformation.buildings!, ...gameInformation.workshop!}
+    const buildingsToShow = buildingsToShowSession || defaultBuildingsToShow
     if (resources && buildings.townhall) {
       const storageCapacity = calcStorageCapacity(buildings.storage)
       const goldCapacity = calcGoldCapacity(buildings.townhall)
       const buildingUpgradeEvents = CONSTRUCTIONS
         .filter(o => buildingsToShow.includes(o))
-        .map(buildingName => ({
-          name: buildingName,
-          cost: calcBuildingCost(buildingName, buildings[buildingName])
-        }))
+        .map(buildingName => {
+          const cost = calcBuildingCost(buildingName, buildings[buildingName])
+          const minutesNeeded = calcMinutesNeeded(cost, buildings, resources)
+          const timestamp = (resourceTimestampMinutes + minutesNeeded) * 60
+          return {
+            name: buildingName,
+            cost,
+            minutesNeeded,
+            timestamp
+          }
+        })
         .filter(({cost}) => cost.gold <= goldCapacity)
         .filter(({cost}) => cost.wood <= storageCapacity)
         .filter(({cost}) => cost.stone <= storageCapacity)
-        .map(o => {
-          o.minutesNeeded = calcMinutesNeeded(o.cost, buildings, resources)
-          return o
-        })
         .filter(o => o.minutesNeeded > 0)
-        .map(o => {
-          o.timestamp = (resourceTimestampMinutes + o.minutesNeeded) * 60
-          return o
-        })
-        .map(o => ({
+        .map((o): EventEntry => ({
           type: 'buildingUpgrade',
           timestamp: o.timestamp,
           text: i18n.t(language, 'alert.buildingUpgrade.upcoming', {name: getBuildingText(asContext(language), o.name)})
         }))
-      eventList = eventList.concat(buildingUpgradeEvents)
+      eventList.push(...buildingUpgradeEvents)
 
       const goldProduction = calcGoldIncome(buildings.townhall, buildings.houses)
       const goldFillTimeNeeded = (goldCapacity - resources.gold) / goldProduction
@@ -136,12 +133,12 @@ class AlertHandler {
     }
 
     const {effects, effectsTimestamp} = gameInformation
-    if (effects) {
+    if (effects && effectsTimestamp) {
       const effectEvents = effects
-        .map(effect => {
-          let {timestamp} = effect
+        .map((effect): EventEntry => {
+          let {timestamp, minutesRemaining} = effect
           if (!timestamp) {
-            timestamp = effectsTimestamp + (effect.minutesRemaining * 60)
+            timestamp = effectsTimestamp + (minutesRemaining! * 60)
           }
 
           return {
@@ -152,18 +149,18 @@ class AlertHandler {
             })
           }
         })
-      eventList = eventList.concat(effectEvents)
+      eventList.push(...effectEvents)
     }
 
     return eventList
   }
 
-  recreateAlerts(user, session) {
-    const oldAlerts = this.alertsOfUsers[user] || []
+  recreateAlerts(user: number, session: Session): void {
+    const oldAlerts = this._alertsOfUsers[user] || []
     oldAlerts
-      .filter(o => o.timeoutID)
+      .filter(o => o.timeoutId)
       .forEach(o => {
-        clearTimeout(o.timeoutID)
+        clearTimeout(o.timeoutId!)
       })
 
     const enabledAlerts = session.alerts || []
@@ -172,34 +169,34 @@ class AlertHandler {
 
     const newAlerts = eventList.map(event => this.createAlertForEvent(user, event))
 
-    this.alertsOfUsers[user] = newAlerts
+    this._alertsOfUsers[user] = newAlerts
   }
 
-  createAlertForEvent(user, event) {
+  createAlertForEvent(user: number, event: EventEntry): EventEntry {
     const unixTimestamp = event.timestamp - (event.alertHeadsUpTime || 0)
     const timestamp = unixTimestamp * 1000
-    const timeoutID = createAlertAtTimestamp(timestamp, () => this.sendAlertForEvent(user, event))
-    if (timeoutID) {
-      event.timeoutID = timeoutID
+    const timeoutId = createAlertAtTimestamp(timestamp, () => this.sendAlertForEvent(user, event))
+    if (timeoutId) {
+      event.timeoutId = timeoutId
     }
 
     return event
   }
 
-  sendAlertForEvent(user, {type, alertMessage, text}) {
-    let message = alertEmojis.enabled
-    message += alertEmojis[type]
+  sendAlertForEvent(user: number, {type, alertMessage, text}: EventEntry): void {
+    let message = emoji.alertEnabled
+    message += emoji[type]
     message += alertMessage || text
 
     const keyboard = Markup.inlineKeyboard([
       Markup.urlButton(emoji.backTo + 'Open BastionSiege…', 'https://t.me/BastionSiegeBot')
     ])
-    this.telegram.sendMessage(user, message, Extra.markdown().markup(keyboard))
+    this._telegram.sendMessage(user, message, Extra.markdown().markup(keyboard))
       .catch(error => handleSendAlertError(user, error))
   }
 }
 
-function handleSendAlertError(user, error) {
+function handleSendAlertError(user: number, error: Error): void {
   switch (error.message) {
     case '400: Bad Request: chat not found':
     case '403: Forbidden: bot was blocked by the user':
@@ -210,8 +207,7 @@ function handleSendAlertError(user, error) {
   }
 }
 
-module.exports = Object.assign(AlertHandler, {
-  alertEmojis,
-  ALERT_TYPES,
+module.exports = {
+  AlertHandler,
   getAlertText
-})
+}

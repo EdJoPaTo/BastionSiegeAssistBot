@@ -1,7 +1,6 @@
 import {Composer} from 'telegraf'
 import TelegrafInlineMenu from 'telegraf-inline-menu'
 
-import {alertEmojis} from '../../lib/user-interface/alert-handler'
 import {buttonText} from '../../lib/user-interface/menu'
 import {emoji} from '../../lib/user-interface/output-text'
 
@@ -14,7 +13,7 @@ import * as poweruserMenu from './poweruser'
 const settingsMenu = new TelegrafInlineMenu((ctx: any) => `*${ctx.i18n.t('settings')}*`)
 settingsMenu.setCommand('settings')
 
-settingsMenu.submenu(buttonText(alertEmojis.enabled, 'alerts'), 'alerts', alertsMenu.menu)
+settingsMenu.submenu(buttonText(emoji.alertEnabled, 'alerts'), 'alerts', alertsMenu.menu)
 
 settingsMenu.submenu(buttonText(emoji.houses, 'bs.buildings'), 'buildings', buildingsMenu.menu)
 

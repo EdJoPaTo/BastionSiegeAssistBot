@@ -2,9 +2,10 @@ import TelegrafInlineMenu from 'telegraf-inline-menu'
 
 import {toggleInArray} from '../../lib/javascript-abstraction/array'
 
-import {Session} from '../../lib/types'
+import {Session, ALERTS, Alert} from '../../lib/types'
 
-import {alertEmojis, ALERT_TYPES, getAlertText} from '../../lib/user-interface/alert-handler'
+import {emoji} from '../../lib/user-interface/output-text'
+import {getAlertText} from '../../lib/user-interface/alert-handler'
 
 function menuText(ctx: any): string {
   let text = `*${ctx.i18n.t('alerts')}*`
@@ -15,19 +16,19 @@ function menuText(ctx: any): string {
 
 export const menu = new TelegrafInlineMenu(menuText)
 
-menu.select('type', ALERT_TYPES, {
+menu.select('type', ALERTS, {
   multiselect: true,
   columns: 1,
-  prefixTrue: alertEmojis.enabled,
-  prefixFalse: alertEmojis.disabled,
-  textFunc: getAlertText,
+  prefixTrue: emoji.alertEnabled,
+  prefixFalse: emoji.alertDisabled,
+  textFunc: (ctx, key) => getAlertText(ctx, key as Alert),
   setFunc: (ctx: any, key) => {
     const session = ctx.session as Session
-    session.alerts = toggleInArray(session.alerts || [], key)
+    session.alerts = toggleInArray(session.alerts || [], key as Alert)
   },
   isSetFunc: (ctx: any, key) => {
     const session = ctx.session as Session
-    return (session.alerts || []).includes(key)
+    return (session.alerts || []).includes(key as Alert)
   }
 })
 

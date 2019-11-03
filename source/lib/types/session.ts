@@ -5,6 +5,9 @@ import {BattlestatsSettings} from './battlestats-settings'
 export type BuildingView = 'upgrades' | 'history' | 'fillStorage' | 'income' | 'winChances'
 export const BUILDING_VIEWS: BuildingView[] = ['upgrades', 'history', 'fillStorage', 'income', 'winChances']
 
+export type Alert = 'buildingUpgrade' | 'effect' | 'nextBattle' | 'resourceWarning'
+export const ALERTS: Alert[] = ['buildingUpgrade', 'effect', 'nextBattle', 'resourceWarning']
+
 export interface GameInformation {
   attackscout?: Attackscout;
   attackscoutTimestamp?: number;
@@ -32,8 +35,9 @@ export interface GameInformation {
 }
 
 export interface Session {
+  __language_code?: string;
   __username?: string;
-  alerts?: string[];
+  alerts?: Alert[];
   battlestats?: BattlestatsSettings;
   buildings?: ConstructionName[];
   buildingsHistoryTimeframe?: string;

@@ -5,10 +5,10 @@ const {compareStrAsSimpleOne} = require('../lib/javascript-abstraction/strings')
 
 const userSessions = require('../lib/data/user-sessions')
 
-const AlertHandler = require('../lib/user-interface/alert-handler')
+const {emoji} = require('../lib/user-interface/output-text')
 const {formatTimeAmount} = require('../lib/user-interface/format-number')
+const {AlertHandler} = require('../lib/user-interface/alert-handler')
 
-const {alertEmojis} = AlertHandler
 const {Extra, Markup} = Telegraf
 
 const bot = new Telegraf.Composer()
@@ -64,8 +64,8 @@ function generateUpcomingText(ctx) {
     .map(event => {
       let text = ''
       text += '*'
-      text += enabledAlerts.includes(event.type) ? alertEmojis.enabled : alertEmojis.disabled
-      text += alertEmojis[event.type]
+      text += enabledAlerts.includes(event.type) ? emoji.alertEnabled : emoji.alertDisabled
+      text += emoji[event.type]
       text += ' '
       text += formatTimeAmount((event.timestamp - now) / 60)
       text += '*'

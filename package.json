@@ -122,6 +122,7 @@
       {
         "files": [
           "source/lib/types/failed-bs-message.*",
+          "source/lib/types/session.*",
           "source/parts/inline-query.*"
         ],
         "rules": {
