@@ -1,19 +1,18 @@
-const Telegraf = require('telegraf')
+import {Composer} from 'telegraf'
 
-const battlereports = require('../lib/data/battlereports')
-const playerStatsDb = require('../lib/data/playerstats-db')
-const userSessions = require('../lib/data/user-sessions')
+import * as battlereports from '../lib/data/battlereports'
+import * as playerStatsDb from '../lib/data/playerstats-db'
+import * as poweruser from '../lib/data/poweruser'
+import * as userSessions from '../lib/data/user-sessions'
 
-const poweruser = require('../lib/data/poweruser')
+import {getHoursEarlier, getMidnightXDaysEarlier} from '../lib/math/unix-timestamp'
 
-const {getHoursEarlier, getMidnightXDaysEarlier} = require('../lib/math/unix-timestamp')
+import {emoji} from '../lib/user-interface/output-text'
 
-const {emoji} = require('../lib/user-interface/output-text')
+export const bot = new Composer()
 
-const bot = new Telegraf.Composer()
-
-bot.command('botstats', async ctx => {
-  const allBattlereports = await battlereports.getAll()
+bot.command('botstats', async (ctx: any) => {
+  const allBattlereports = battlereports.getAll()
   const enemies = playerStatsDb.list()
   const users = userSessions.getRaw().length
   const powerusers = poweruser.getPoweruserSessions().length
