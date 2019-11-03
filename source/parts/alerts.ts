@@ -1,20 +1,20 @@
-const Telegraf = require('telegraf')
-const stringify = require('json-stable-stringify')
+import {Composer, Extra, Markup, Telegram} from 'telegraf'
+import stringify from 'json-stable-stringify'
 
-const {compareStrAsSimpleOne} = require('../lib/javascript-abstraction/strings')
+import {compareStrAsSimpleOne} from '../lib/javascript-abstraction/strings'
 
-const userSessions = require('../lib/data/user-sessions')
+import {Session} from '../lib/types'
 
-const {emoji} = require('../lib/user-interface/output-text')
-const {formatTimeAmount} = require('../lib/user-interface/format-number')
-const {AlertHandler} = require('../lib/user-interface/alert-handler')
+import * as userSessions from '../lib/data/user-sessions'
 
-const {Extra, Markup} = Telegraf
+import {emoji} from '../lib/user-interface/output-text'
+import {formatTimeAmount} from '../lib/user-interface/format-number'
+import {AlertHandler} from '../lib/user-interface/alert-handler'
 
-const bot = new Telegraf.Composer()
-let alertHandler
+export const bot = new Composer()
+let alertHandler: AlertHandler
 
-function start(telegram) {
+export function start(telegram: Telegram): void {
   console.time('recreateAlerts')
   alertHandler = new AlertHandler(telegram)
   userSessions.getRaw()
@@ -24,9 +24,12 @@ function start(telegram) {
   console.timeEnd('recreateAlerts')
 }
 
-bot.use(async (ctx, next) => {
+bot.use(async (ctx: any, next) => {
   const before = stringify(ctx.session)
-  await next()
+  if (next) {
+    await next()
+  }
+
   const after = stringify(ctx.session)
 
   if (before !== after) {
@@ -34,17 +37,17 @@ bot.use(async (ctx, next) => {
   }
 })
 
-bot.command('upcoming', ctx => {
+bot.command('upcoming', async ctx => {
   const {text, extra} = generateUpcomingText(ctx)
   return ctx.reply(text, extra)
 })
 
-bot.action('upcoming', ctx => {
+bot.action('upcoming', async ctx => {
   const {text, extra} = generateUpcomingText(ctx)
 
-  const oldText = ctx.callbackQuery.message.text
+  const oldText = ctx.callbackQuery!.message!.text!
   if (compareStrAsSimpleOne(oldText, text) === 0) {
-    return ctx.answerCbQuery(ctx.i18n.t('menu.nothingchanged'))
+    return ctx.answerCbQuery((ctx as any).i18n.t('menu.nothingchanged'))
   }
 
   return Promise.all([
@@ -53,10 +56,11 @@ bot.action('upcoming', ctx => {
   ])
 })
 
-function generateUpcomingText(ctx) {
-  const enabledAlerts = ctx.session.alerts || []
+function generateUpcomingText(ctx: any): {text: string; extra: any} {
+  const session = ctx.session as Session
+  const enabledAlerts = session.alerts || []
   const now = Date.now() / 1000
-  const eventList = alertHandler.generateUpcomingEventsList(ctx.session)
+  const eventList = alertHandler.generateUpcomingEventsList(session)
     .filter(o => o.timestamp > now)
     .sort((a, b) => a.timestamp - b.timestamp)
 
@@ -75,7 +79,8 @@ function generateUpcomingText(ctx) {
     })
 
   let text = `*${ctx.i18n.t('upcoming.title')}*`
-  text += '\n' + ctx.i18n.t('upcoming.info')
+  text += '\n'
+  text += ctx.i18n.t('upcoming.info')
 
   text += '\n'
   text += '\n' + entries.join('\n')
