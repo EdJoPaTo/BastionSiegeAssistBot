@@ -27,16 +27,23 @@ export function createArrayDataString({data, name, unit}: {data: SumAverageAmoun
   }
 
   line += ': '
-
-  if (data.amount === 1) {
-    line += formatNumberShort(data.sum, isInteger) + unit
-  } else {
-    line += selection
-      .map(o => formatTypeOfData(data, o, isInteger) + unit)
-      .join(' ')
-  }
+  line += createSimpleDataString(data, unit, selection, isInteger)
 
   return line
+}
+
+export function createSimpleDataString(data: SumAverageAmount, unit: string, selection: readonly (keyof SumAverageAmount)[], isInteger: boolean): string {
+  if (data.amount === 0) {
+    return 'NaN' + unit
+  }
+
+  if (data.amount === 1) {
+    return formatNumberShort(data.sum, isInteger) + unit
+  }
+
+  return selection
+    .map(o => formatTypeOfData(data, o, isInteger) + unit)
+    .join(' ')
 }
 
 export function formatTypeOfData(data: SumAverageAmount, type: keyof SumAverageAmount, isInteger: boolean): string {
