@@ -1,3 +1,4 @@
+import {Battlereport} from 'bastion-siege-logic'
 import test from 'ava'
 
 import {
@@ -6,11 +7,12 @@ import {
 } from './player-stats'
 
 const testNow = 1000000000
-const testReports = [
+const testReports: Battlereport[] = [
   {
     attack: false,
     enemies: ['A'],
     friends: ['me'],
+    me: 'me',
     gold: -100,
     soldiersAlive: 0,
     soldiersTotal: 1000,
@@ -21,6 +23,7 @@ const testReports = [
     attack: true,
     enemies: ['A'],
     friends: ['me'],
+    me: 'me',
     gold: 1000,
     soldiersAlive: 1000,
     soldiersTotal: 2000,
@@ -31,6 +34,7 @@ const testReports = [
     attack: true,
     enemies: ['A', 'B'],
     friends: ['me'],
+    me: 'me',
     gold: 2000,
     soldiersAlive: 1500,
     soldiersTotal: 3000,
@@ -41,6 +45,7 @@ const testReports = [
     attack: false,
     enemies: ['A', 'B'],
     friends: ['me', 'me2'],
+    me: 'me',
     gold: 1000,
     soldiersAlive: 50,
     soldiersTotal: 100,
@@ -51,6 +56,7 @@ const testReports = [
     attack: true,
     enemies: ['B'],
     friends: ['me'],
+    me: 'me',
     gold: 2000,
     soldiersAlive: 2500,
     soldiersTotal: 5000,
@@ -189,7 +195,7 @@ test('generate example B', t => {
 })
 
 test('alliance attack alone lost is ignored', t => {
-  const reports = [...testReports, {
+  const reports: Battlereport[] = [...testReports, {
     attack: true,
     enemies: [
       'A',
@@ -198,6 +204,7 @@ test('alliance attack alone lost is ignored', t => {
     friends: [
       'me'
     ],
+    me: 'me',
     gold: 100,
     soldiersAlive: 0,
     soldiersTotal: 1500,
@@ -211,7 +218,7 @@ test('alliance attack alone lost is ignored', t => {
 })
 
 test('lost attacks are not considered for loot', t => {
-  const reports = [{
+  const reports: Battlereport[] = [{
     attack: true,
     enemies: [
       'A'
@@ -219,6 +226,7 @@ test('lost attacks are not considered for loot', t => {
     friends: [
       'me'
     ],
+    me: 'me',
     gold: -100,
     soldiersAlive: 0,
     soldiersTotal: 1500,
@@ -232,7 +240,7 @@ test('lost attacks are not considered for loot', t => {
 })
 
 test('old reports are not considered for loot', t => {
-  const reports = [{
+  const reports: Battlereport[] = [{
     attack: true,
     enemies: [
       'A'
@@ -240,6 +248,7 @@ test('old reports are not considered for loot', t => {
     friends: [
       'me'
     ],
+    me: 'me',
     gold: 1000000,
     soldiersAlive: 1000,
     soldiersTotal: 1500,
@@ -253,7 +262,7 @@ test('old reports are not considered for loot', t => {
 })
 
 test('alliance attack against solo target is considered for loot', t => {
-  const reports = [...testReports, {
+  const reports: Battlereport[] = [...testReports, {
     attack: true,
     enemies: [
       'A'
@@ -262,6 +271,7 @@ test('alliance attack against solo target is considered for loot', t => {
       'me',
       'me2'
     ],
+    me: 'me',
     gold: 7000000,
     soldiersAlive: 0,
     soldiersTotal: 100,
@@ -276,7 +286,7 @@ test('alliance attack against solo target is considered for loot', t => {
 })
 
 test('two alliance repotts at the same time are counted only once for loot', t => {
-  const report = {
+  const report: Battlereport = {
     attack: true,
     enemies: [
       'A'
@@ -285,6 +295,7 @@ test('two alliance repotts at the same time are counted only once for loot', t =
       'me',
       'me2'
     ],
+    me: 'me',
     gold: 7000000,
     soldiersAlive: 0,
     soldiersTotal: 100,
@@ -303,7 +314,7 @@ test('two alliance repotts at the same time are counted only once for loot', t =
 
 test('alliance attack alone won', t => {
   // This is an idea to consider but it is not implemented
-  const reports = [...testReports, {
+  const reports: Battlereport[] = [...testReports, {
     attack: true,
     enemies: [
       'A',
@@ -312,6 +323,7 @@ test('alliance attack alone won', t => {
     friends: [
       'me'
     ],
+    me: 'me',
     gold: 100,
     soldiersAlive: 750,
     soldiersTotal: 1500,
@@ -342,7 +354,7 @@ test('assumeArmy basic example', t => {
 })
 
 test('assume Army based on gold lost', t => {
-  const reports = [{
+  const reports: Battlereport[] = [{
     attack: false,
     enemies: [
       'A'
@@ -350,6 +362,7 @@ test('assume Army based on gold lost', t => {
     friends: [
       'me'
     ],
+    me: 'me',
     gold: -700000,
     soldiersAlive: 0,
     soldiersTotal: 0,
