@@ -1,4 +1,4 @@
-import {Extra, Markup, Composer} from 'telegraf'
+import {Extra, Markup, Composer, SwitchToChatButton} from 'telegraf'
 import {Gamescreen} from 'bastion-siege-logic'
 import {markdown as format} from 'telegram-format'
 
@@ -12,8 +12,10 @@ import * as userSessions from '../lib/data/user-sessions'
 import * as wars from '../lib/data/wars'
 
 import {getMidnightXDaysEarlier} from '../lib/math/unix-timestamp'
+import {getSumAverageAmount} from '../lib/math/number-array'
 
 import {createPlayerShareButton, createPlayerStatsString, createPlayerStatsTwoLineString, createMultipleStatsConclusion} from '../lib/user-interface/player-stats'
+import {createSimpleDataString} from '../lib/user-interface/number-array-strings'
 import {emoji} from '../lib/user-interface/output-text'
 
 import {notNewMiddleware} from '../lib/telegraf-middlewares'
@@ -157,7 +159,7 @@ function userMarkdownTagWhenKnown(name: string, now: number): string | undefined
   return text
 }
 
-function generatePlayerStats(players: string | string[], short: boolean): {text: string; extra: any} {
+function generatePlayerStatsRaw(players: string | string[]): {allStats: PlayerStats[]; buttons: SwitchToChatButton[]} {
   if (!Array.isArray(players)) {
     players = [players]
   }
@@ -168,11 +170,26 @@ function generatePlayerStats(players: string | string[], short: boolean): {text:
     .filter(o => o.battlesObservedNearPast > 0)
     .map(o => createPlayerShareButton(o))
 
+  return {allStats, buttons}
+}
+
+function generatePlayerStats(players: string | string[], short: boolean): {text: string; extra: any} {
+  const {allStats, buttons} = generatePlayerStatsRaw(players)
+
   let text = ''
   if (short) {
     text += allStats.map(o => createPlayerStatsTwoLineString(o, true)).join('\n')
   } else {
     text += allStats.map(o => createPlayerStatsString(o)).join('\n\n')
+  }
+
+  if (allStats.length > 4) {
+    text += '\n\n'
+
+    const armySAA = getSumAverageAmount(allStats.map(o => o.army.min))
+    text += armySAA.amount
+    text += ': '
+    text += createSimpleDataString(armySAA, emoji.army, ['avg', 'stdDeviation'], true) + '\n'
   }
 
   return {
