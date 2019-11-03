@@ -23,10 +23,10 @@ const MAXIMUM_PLAYER_AGE = ONE_DAY_IN_SECONDS * MAX_PLAYER_AGE_DAYS
 export const bot = new Composer()
 
 const debouncedParticipants: Dictionary<(ctx: ContextMessageUpdate, timestamp: number, alliance: string) => Promise<void>> = {}
-bot.on('text', whenScreenContainsInformation('castleSiegePlayerJoined', notNewMiddleware('forward.old', castleSiege.MAXIMUM_JOIN_MINUTES), ctx => {
+bot.on('text', whenScreenContainsInformation('castleSiegePlayerJoined', notNewMiddleware('forward.old', castleSiege.MAXIMUM_JOIN_MINUTES), async ctx => {
   const {castleSiegePlayerJoined, timestamp} = (ctx as any).state.screen as Gamescreen
   const {alliance, name} = castleSiegePlayerJoined!
-  castleSiege.add(timestamp, alliance!, name)
+  await castleSiege.add(timestamp, alliance!, name)
 
   const {id} = ctx.from!
   if (!debouncedParticipants[id]) {
@@ -72,8 +72,7 @@ async function replyCastleParticipants(ctx: ContextMessageUpdate, timestamp: num
 
 bot.on('text', whenScreenContainsInformation('castleSiegeAllianceJoined', notNewMiddleware('forward.old', castleSiege.MAXIMUM_JOIN_MINUTES), async ctx => {
   const {castleSiegeAllianceJoined, timestamp} = (ctx as any).state.screen as Gamescreen
-  castleSiege.add(timestamp, castleSiegeAllianceJoined!.alliance, undefined)
-
+  await castleSiege.add(timestamp, castleSiegeAllianceJoined!.alliance, undefined)
   return ctx.reply(`Thats fancy ${castleSiegeAllianceJoined!.alliance} joined but I dont know what to do with that information. 😇`)
 }))
 
