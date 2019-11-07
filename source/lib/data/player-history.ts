@@ -12,6 +12,9 @@ console.timeEnd('player history')
 
 export async function add(userId: number, type: keyof PlayerHistory, unixTimestamp: number, data: any): Promise<void> {
   const current = get(userId)
+  if (!current[type]) {
+    current[type] = []
+  }
 
   if (type === 'player') {
     data = {
