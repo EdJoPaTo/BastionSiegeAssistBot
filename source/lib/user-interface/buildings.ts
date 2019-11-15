@@ -13,7 +13,6 @@ import {
   calcProduction,
   calcProductionFood,
   calcSemitotalGold,
-  calcSemitotalGoldIncome,
   calcStorageCapacity,
   calcStorageLevelNeededForUpgrade,
   calcTownhallLevelNeededForUpgrade,
@@ -170,12 +169,8 @@ export function createIncomeStatsString(buildings: Buildings, timeInMinutes: num
   const woodIncome = calcProduction(buildings.sawmill) * timeInMinutes
   const stoneIncome = calcProduction(buildings.mine) * timeInMinutes
   const foodIncome = calcProductionFood(buildings.farm, buildings.houses) * timeInMinutes
-  const semitotalIncome = calcSemitotalGoldIncome(buildings) * timeInMinutes
 
   let text = ''
-  text += `= ${formatNumberShort(semitotalIncome, true)}${emoji.gold}\n`
-
-  text += '\n'
   text += `${emoji.townhall} ${formatNumberShort(goldIncome, true)}${emoji.gold}${goldIncome > goldCapacity ? ' ⚠️' : ''}\n`
   text += `${emoji.sawmill} ${formatNumberShort(woodIncome, true)}${emoji.wood}${woodIncome > storageCapacity ? ' ⚠️' : ''}\n`
   text += `${emoji.mine} ${formatNumberShort(stoneIncome, true)}${emoji.stone}${stoneIncome > storageCapacity ? ' ⚠️' : ''}\n`
