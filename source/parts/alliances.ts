@@ -1,4 +1,5 @@
 import {Composer} from 'telegraf'
+import arrayReduceGroupBy from 'array-reduce-group-by'
 
 import {sortBy} from '../lib/javascript-abstraction/array'
 
@@ -26,15 +27,7 @@ bot.command('alliances', (ctx: any) => {
     .filter(o => o.lastBattleTime > minDate)
 
   const groupedByAlliance = playerStats
-    .reduce((coll: Record<string, PlayerStats[]>, add) => {
-      const {alliance} = add
-      if (!coll[alliance!]) {
-        coll[alliance!] = []
-      }
-
-      coll[alliance!].push(add)
-      return coll
-    }, {})
+    .reduce(arrayReduceGroupBy<string, PlayerStats>(o => o.alliance!), {})
 
   const entries = Object.keys(groupedByAlliance)
     .map(o => createMultipleStatsConclusion(groupedByAlliance[o]))

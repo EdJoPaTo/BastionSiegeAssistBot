@@ -1,3 +1,4 @@
+import arrayReduceGroupBy from 'array-reduce-group-by'
 import stringify from 'json-stable-stringify'
 
 import {Session} from '../types'
@@ -64,15 +65,7 @@ function updatePlayernameCache(): void {
       o.data.gameInformation.player.name
     )
 
-  const groupedByName = raw.reduce((coll, add) => {
-    const {name} = add.data.gameInformation.player!
-    if (!coll[name]) {
-      coll[name] = []
-    }
-
-    coll[name].push(add)
-    return coll
-  }, {} as Dictionary<SessionRaw[]>)
+  const groupedByName = raw.reduce(arrayReduceGroupBy(o => o.data.gameInformation.player!.name), {})
 
   playernameCacheAge = Date.now()
   playernameCache = {}

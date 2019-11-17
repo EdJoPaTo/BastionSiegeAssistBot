@@ -1,5 +1,6 @@
 import {Composer} from 'telegraf'
 import arrayFilterUnique from 'array-filter-unique'
+import arrayReduceGroupBy from 'array-reduce-group-by'
 import TelegrafInlineMenu from 'telegraf-inline-menu'
 import {
   sameBattleResourceAssumption,
@@ -7,7 +8,7 @@ import {
   BattlereportResource
 } from 'bastion-siege-logic'
 
-import {Session, BattlereportInMemory, BattlestatsView} from '../lib/types'
+import {Session, BattlestatsView} from '../lib/types'
 
 import * as regexHelper from '../lib/javascript-abstraction/regex-helper'
 
@@ -23,8 +24,6 @@ import {createAverageMaxString} from '../lib/user-interface/number-array-strings
 import {createBattleStatsString, createRanking} from '../lib/user-interface/battle-stats'
 import {createPlayerNameString} from '../lib/user-interface/player-stats'
 import {emoji} from '../lib/user-interface/output-text'
-
-type Dictionary<T> = {[key: string]: T}
 
 const DEFAULT_TIMEFRAME = '24h'
 const DEFAULT_TYPE = 'gold'
@@ -300,15 +299,7 @@ function createAllianceAttacks(ctx: any): string {
     .filter(arrayFilterUnique(uniqueBattlereportIdentifier))
 
   const reportsGroupedByBattle = allReports
-    .reduce((coll, cur) => {
-      const key = uniqueBattlereportIdentifier(cur)
-      if (!coll[key]) {
-        coll[key] = []
-      }
-
-      coll[key].push(cur)
-      return coll
-    }, {} as Dictionary<BattlereportInMemory[]>)
+    .reduce(arrayReduceGroupBy(uniqueBattlereportIdentifier), {})
 
   const battleParticipants = getSumAverageAmount(uniqueBattles.map(o => o.friends.length))
   text += createAverageMaxString(battleParticipants, ctx.i18n.t('battlestats.attendance'), '', true)
