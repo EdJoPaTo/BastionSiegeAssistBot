@@ -2,6 +2,7 @@ import {Composer, Extra, Markup, Telegram} from 'telegraf'
 import stringify from 'json-stable-stringify'
 
 import {compareStrAsSimpleOne} from '../lib/javascript-abstraction/strings'
+import {sortBy} from '../lib/javascript-abstraction/array'
 
 import {Session} from '../lib/types'
 
@@ -62,7 +63,7 @@ function generateUpcomingText(ctx: any): {text: string; extra: any} {
   const now = Date.now() / 1000
   const eventList = alertHandler.generateUpcomingEventsList(session)
     .filter(o => o.timestamp > now)
-    .sort((a, b) => a.timestamp - b.timestamp)
+    .sort(sortBy(o => o.timestamp))
 
   const entries = eventList
     .map(event => {

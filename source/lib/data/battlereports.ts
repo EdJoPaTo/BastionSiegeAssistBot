@@ -4,6 +4,8 @@ import {parseGamescreenContent, BattlereportRaw} from 'bastion-siege-logic'
 import arrayFilterUnique from 'array-filter-unique'
 import stringify from 'json-stable-stringify'
 
+import {sortBy} from '../javascript-abstraction/array'
+
 import {BattlereportAsString, BattlereportInMemory} from '../types'
 
 import * as playerStatsDb from './playerstats-db'
@@ -69,7 +71,7 @@ function loadRaw(): BattlereportAsString[] {
     // Ensure there are no duplicate reports.
     // When multiple people send the same report everyone but one will lose them
     .filter(arrayFilterUnique(o => `${o.time} ${o.text}`))
-    .sort((a, b) => a.time - b.time)
+    .sort(sortBy(o => o.time))
 
   return raws
 }
@@ -138,7 +140,7 @@ export function add(user: number, time: number, report: BattlereportRaw, raw: st
     text: raw,
     time
   })
-  allRaw.sort((a, b) => a.time - b.time)
+  allRaw.sort(sortBy(o => o.time))
   saveRawSpecificTimestamp(time)
 
   return true // Is a new report
