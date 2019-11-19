@@ -5,9 +5,9 @@ import I18n from 'telegraf-i18n'
 
 import {Session} from './lib/types'
 
+import {initData} from './lib/data'
 import * as userSessions from './lib/data/user-sessions'
 import * as wars from './lib/data/wars'
-import * as failedBsMessages from './lib/data/failed-bs-messages'
 
 import * as bastionsiegeforward from './parts/bastionsiegeforward'
 import * as inlineQuery from './parts/inline-query'
@@ -27,8 +27,7 @@ import * as partPlayerStats from './parts/playerstats'
 import * as partSettings from './parts/settings'
 import * as partWar from './parts/war'
 
-// Try reading previous failed messages
-failedBsMessages.checkNowWorking()
+initData()
 
 const tokenFilePath = existsSync('/run/secrets') ? '/run/secrets/bot-token.txt' : 'bot-token.txt'
 const token = readFileSync(tokenFilePath, 'utf8').trim()

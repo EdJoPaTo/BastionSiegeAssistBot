@@ -1,5 +1,3 @@
-import {Battlereport} from 'bastion-siege-logic'
-
 import {PlayerStats} from '../types'
 
 import {replaceLookingLikeAsciiChars} from '../javascript-abstraction/strings'
@@ -8,38 +6,18 @@ import {sortBy} from '../javascript-abstraction/array'
 import {generate} from '../math/player-stats'
 import {getMidnightXDaysEarlier} from '../math/unix-timestamp'
 
-type Dictionary<T> = {[key: string]: T}
+import * as battlereports from './ingame/battlereports'
 
 interface PlayerReportEntry {
   withReports: number;
   stats: PlayerStats;
 }
 
-const RELEVANT_REPORT_DAYS = 60
-
-const playerReports: Dictionary<Battlereport[]> = {}
-const playerStats: Dictionary<PlayerReportEntry> = {}
-
-export function addReport(report: Battlereport): void {
-  const {enemies} = report
-
-  const now = Date.now() / 1000
-  if (report.time < getMidnightXDaysEarlier(now, RELEVANT_REPORT_DAYS)) {
-    return
-  }
-
-  for (const enemy of enemies) {
-    if (!playerReports[enemy]) {
-      playerReports[enemy] = []
-    }
-
-    playerReports[enemy].push(report)
-  }
-}
+const playerStats: Record<string, PlayerReportEntry> = {}
 
 export function get(player: string): PlayerStats {
-  const reports = playerReports[player] || []
-  const withReports = (playerStats[player] || {}).withReports || 0
+  const reports = battlereports.getByTargetPlayername(player)
+  const withReports = playerStats[player] ? playerStats[player].withReports : 0
 
   if (withReports < reports.length || !playerStats[player]) {
     // Providing the current time to something that will be cached is strange
@@ -88,6 +66,6 @@ function filterNearPast(all: PlayerStats[]): PlayerStats[] {
 }
 
 export function list(): PlayerStats[] {
-  return Object.keys(playerReports)
+  return battlereports.listTargetPlayernames()
     .map(name => get(name))
 }

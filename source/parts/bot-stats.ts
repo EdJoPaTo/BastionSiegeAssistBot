@@ -1,6 +1,6 @@
 import {Composer} from 'telegraf'
 
-import * as battlereports from '../lib/data/battlereports'
+import * as messages from '../lib/data/ingame/messages'
 import * as playerStatsDb from '../lib/data/playerstats-db'
 import * as poweruser from '../lib/data/poweruser'
 import * as userSessions from '../lib/data/user-sessions'
@@ -12,7 +12,7 @@ import {emoji} from '../lib/user-interface/output-text'
 export const bot = new Composer()
 
 bot.command('botstats', async (ctx: any) => {
-  const allBattlereports = battlereports.getAll()
+  const allBattlereports = messages.battlereports.values()
   const enemies = playerStatsDb.list()
   const users = userSessions.getRaw().length
   const powerusers = poweruser.getPoweruserSessions().length

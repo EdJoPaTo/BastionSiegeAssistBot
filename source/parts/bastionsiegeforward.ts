@@ -1,11 +1,11 @@
 import {Composer, ContextMessageUpdate} from 'telegraf'
-import {parseGamescreen, Gamescreen} from 'bastion-siege-logic'
+import {Gamescreen} from 'bastion-siege-logic'
 
 import {PlayerHistory} from '../lib/types/player-history'
 import {Session} from '../lib/types'
 
+import {parseAndSave} from '../lib/data/ingame/parse'
 import * as playerHistory from '../lib/data/player-history'
-import * as failedBsMessages from '../lib/data/failed-bs-messages'
 
 import {isForwardedFromBastionSiege} from '../lib/input/bastion-siege-bot'
 
@@ -33,19 +33,11 @@ bot.on('text', Composer.optional(forwardedFromClone, async ctx => {
 bot.on('text', Composer.optional(isForwardedFromBastionSiege, async (ctx, next) => {
   const {text, forward_date: timestamp} = ctx.message
 
-  try {
-    ctx.state.screen = parseGamescreen(text, timestamp)
+  ctx.state = parseAndSave(ctx.from!.id, timestamp, text)
 
-    if (failedBsMessages.isEmptyContent(ctx.state.screen)) {
-      await failedBsMessages.add(ctx.message)
-    }
-  } catch (error) {
-    console.error('could not get screen information', text, error)
-    await failedBsMessages.add(ctx.message)
-    throw new Error('could not read Bastion Siege screen')
+  if (next) {
+    await next()
   }
-
-  return next && next()
 }))
 
 const WANTED_DATA: (keyof PlayerHistory)[] = [

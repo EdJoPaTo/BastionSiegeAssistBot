@@ -1,40 +1,17 @@
 import {Battlereport} from 'bastion-siege-logic'
 
-import {BattlereportInMemory, PoweruserCondition} from '../types'
+import {PoweruserCondition} from '../types'
 
 import {getHoursEarlier, getMidnightXDaysEarlier} from '../math/unix-timestamp'
 
 import * as userSessions from './user-sessions'
 
-type Dictionary<T> = {[key: string]: T}
+import * as battlereports from './ingame/battlereports'
 
 export const MAX_BUILDING_AGE_DAYS = 7
 export const MAX_PLAYER_AGE_DAYS = 3
 export const MAX_WORKSHOP_AGE_DAYS = 14
 export const RELEVANT_REPORT_DAYS = 7
-
-const soloReportsOfUser: Dictionary<BattlereportInMemory[]> = {}
-
-export function addReport(report: BattlereportInMemory): void {
-  // Only solo reports
-  if (report.friends.length > 1) {
-    return
-  }
-
-  // An old report that is not to be considered
-  // This is using the time of adding so it has to be checked later too
-  // But this is a good prefilter
-  const now = Date.now() / 1000
-  if (report.time < getMidnightXDaysEarlier(now, RELEVANT_REPORT_DAYS)) {
-    return
-  }
-
-  if (!soloReportsOfUser[report.providingTgUser]) {
-    soloReportsOfUser[report.providingTgUser] = []
-  }
-
-  soloReportsOfUser[report.providingTgUser].push(report)
-}
 
 export function isPoweruser(id: number): boolean {
   const conditions = getConditions(id)
@@ -84,17 +61,14 @@ export function getConditions(id: number): readonly PoweruserCondition[] {
 }
 
 function getRelevantReports(id: number): readonly Battlereport[] {
-  if (!soloReportsOfUser[id]) {
-    return []
-  }
-
   const now = Date.now() / 1000
-
   const minDate = getMidnightXDaysEarlier(now, RELEVANT_REPORT_DAYS)
-  soloReportsOfUser[id] = soloReportsOfUser[id]
+  const reportsOfUser = battlereports.getByProvidingUser(id)
+  const relevantReports = reportsOfUser
+    .filter(o => o.enemies.length === 1)
     .filter(o => o.time > minDate)
 
-  return soloReportsOfUser[id]
+  return relevantReports
 }
 
 export function hasSendEnoughReports(id: number): boolean {

@@ -3,7 +3,6 @@ import {calcSemitotalGold, calcRecoveryMissingPeople, calcWallRepairCost, calcWa
 
 import {Session} from '../lib/types'
 
-import * as battlereports from '../lib/data/battlereports'
 import * as playerStatsDb from '../lib/data/playerstats-db'
 import {isImmune, getReportsTodayAmount} from '../lib/data/poweruser'
 
@@ -21,12 +20,10 @@ const MAX_AGE_REPORT_FOR_STATS = ONE_DAY_IN_SECONDS * 2 // 2 days
 
 export const bot = new Composer()
 
-// Save battlereport
 bot.on('text', whenScreenContainsInformation('battlereport', async (ctx: any) => {
   const report = ctx.state.screen.battlereport as Battlereport
   const {timestamp} = ctx.state.screen
-
-  const isNew = battlereports.add(ctx.from.id, timestamp, report, ctx.message.text)
+  const isNew = ctx.state.isNewBattlereport
 
   const {text, extra} = await generateResponseText(ctx, report, timestamp, isNew)
 

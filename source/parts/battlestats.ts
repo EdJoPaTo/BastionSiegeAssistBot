@@ -13,7 +13,7 @@ import {Session, BattlestatsView} from '../lib/types'
 import * as regexHelper from '../lib/javascript-abstraction/regex-helper'
 
 import {SessionRaw} from '../lib/data/user-sessions'
-import * as battlereports from '../lib/data/battlereports'
+import * as battlereports from '../lib/data/ingame/battlereports'
 import * as poweruser from '../lib/data/poweruser'
 
 import {getMidnightXDaysEarlier, getHoursEarlier} from '../lib/math/unix-timestamp'
@@ -196,8 +196,7 @@ function createHeader(ctx: any, timeframe: string, isAllianceRelated: boolean): 
 function createSolo(ctx: any): string {
   const timeframe = getCurrentTimeframe(ctx)
   const firstTimeRelevant = getFirstTimeRelevantForTimeframe(timeframe)
-  const reports = battlereports.getAll()
-    .filter(o => o.providingTgUser === ctx.from.id)
+  const reports = battlereports.getByProvidingUser(ctx.from.id)
     .filter(report => report.time > firstTimeRelevant)
 
   let text = createHeader(ctx, timeframe, false)
@@ -263,11 +262,8 @@ function createAllianceSolo(ctx: any): string {
     return ctx.replyWithMarkdown(text)
   }
 
-  const allianceMateUserIds = allianceMates
-    .map(o => o.user)
-
-  const reports = battlereports.getAll()
-    .filter(o => allianceMateUserIds.includes(o.providingTgUser))
+  const reports = allianceMates
+    .flatMap(o => battlereports.getByProvidingUser(o.user))
     .filter(report => report.time > firstTimeRelevant)
 
   const type = getCurrentType(ctx)
@@ -287,13 +283,10 @@ function createAllianceAttacks(ctx: any): string {
     return ctx.replyWithMarkdown(text)
   }
 
-  const allianceMateNames = allianceMates
-    .map(o => o.data.gameInformation.player!.name)
-
-  const allReports = battlereports.getAll()
+  const allReports = allianceMates
+    .flatMap(o => battlereports.getByProvidingUser(o.user))
     .filter(o => o.friends.length > 1 || o.enemies.length > 1)
-    .filter(o => o.time > firstTimeRelevant)
-    .filter(o => o.friends.some(friend => allianceMateNames.includes(friend)))
+    .filter(report => report.time > firstTimeRelevant)
 
   const uniqueBattles = allReports
     .filter(arrayFilterUnique(uniqueBattlereportIdentifier))
@@ -326,14 +319,11 @@ function createAllianceMates(ctx: any): string {
     return ctx.replyWithMarkdown(text)
   }
 
-  const relevantReports = battlereports.getAll()
-    .filter(o => o.time > firstTimeRelevant)
-
   const mateInfo = allianceMates
     .map(o => ({user: o.user, playername: o.data.gameInformation.player!.name}))
     .map(({user, playername}) => {
-      const reports = relevantReports
-        .filter(o => o.providingTgUser === user)
+      const reports = battlereports.getByProvidingUser(user)
+        .filter(o => o.time > firstTimeRelevant)
 
       const solo = reports
         .filter(o => o.won)
