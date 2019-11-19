@@ -63,11 +63,7 @@ export function getConditions(id: number): readonly PoweruserCondition[] {
 function getRelevantReports(id: number): readonly Battlereport[] {
   const now = Date.now() / 1000
   const minDate = getMidnightXDaysEarlier(now, RELEVANT_REPORT_DAYS)
-  const reportsOfUser = battlereports.getByProvidingUser(id)
-  const relevantReports = reportsOfUser
-    .filter(o => o.enemies.length === 1)
-    .filter(o => o.time > minDate)
-
+  const relevantReports = battlereports.getRelevantForPoweruser(id, minDate)
   return relevantReports
 }
 
