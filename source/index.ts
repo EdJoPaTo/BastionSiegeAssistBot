@@ -129,6 +129,7 @@ bot.use((ctx, next) => {
 
     keysWithValueNull
       .forEach(o => {
+        /* eslint @typescript-eslint/no-dynamic-delete: off */
         delete session.gameInformation[o]
       })
   }

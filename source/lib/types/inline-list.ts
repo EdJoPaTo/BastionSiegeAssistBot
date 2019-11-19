@@ -1,5 +1,3 @@
-type Dictionary<T> = {[key: string]: T}
-
 export type InlineListParticipantAdd = {}
 
 export interface InlineListParticipant extends InlineListParticipantAdd {
@@ -8,5 +6,5 @@ export interface InlineListParticipant extends InlineListParticipantAdd {
 
 export interface InlineList {
   lastUpdate: number;
-  participants: Dictionary<InlineListParticipant>;
+  participants: Record<number, InlineListParticipant>;
 }

@@ -1,3 +1,4 @@
+import {ContextMessageUpdate} from 'telegraf'
 import arrayReduceGroupBy from 'array-reduce-group-by'
 import stringify from 'json-stable-stringify'
 
@@ -23,7 +24,7 @@ const localSession = new LocalSession({
     serialize: (obj: any) => stringify(obj, {space: 2}) + '\n',
     deserialize: (str: string) => JSON.parse(str)
   },
-  getSessionKey: (ctx: any) => `${ctx.from.id}:${ctx.from.id}`
+  getSessionKey: (ctx: ContextMessageUpdate) => `${ctx.from!.id}:${ctx.from!.id}`
 })
 
 export function getRaw(): readonly SessionRaw[] {

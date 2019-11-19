@@ -50,11 +50,11 @@
     "@types/json-stable-stringify": "^1.0.32",
     "@types/node": "^12.7.1",
     "@types/sharp": "^0.23.0",
-    "@typescript-eslint/eslint-plugin": "^2.3.2",
-    "@typescript-eslint/parser": "^2.3.2",
+    "@typescript-eslint/eslint-plugin": "^2.8.0",
+    "@typescript-eslint/parser": "^2.8.0",
     "ava": "^2.0.0",
     "del-cli": "^3.0.0",
-    "eslint-config-xo-typescript": "^0.21.0",
+    "eslint-config-xo-typescript": "^0.22.0",
     "nyc": "^14.0.0",
     "ts-node": "^8.3.0",
     "typescript": "^3.5.3",
@@ -91,6 +91,8 @@
       "ava/no-ignored-test-files": "off",
       "prefer-named-capture-group": "off",
       "@typescript-eslint/array-type": "off",
+      "@typescript-eslint/restrict-template-expressions": "warn",
+      "@typescript-eslint/no-untyped-public-signature": "off",
       "@typescript-eslint/indent": [
         "error",
         2

@@ -1,3 +1,5 @@
+/* eslint @typescript-eslint/no-dynamic-delete: warn */
+
 import {KeyValueInMemoryFile} from '@edjopato/datastore'
 
 import {InlineList, InlineListParticipantAdd} from '../types'
@@ -17,7 +19,7 @@ export function getList(creatorId: number, listId: string, now: number): InlineL
   const {participants} = list
   const minParticipantTimestamp = now - PARTICIPANT_MAX_AGE
 
-  for (const key of Object.keys(participants)) {
+  for (const key of Object.keys(participants).map(o => Number(o))) {
     if (participants[key].lastUpdate < minParticipantTimestamp) {
       delete participants[key]
     }
