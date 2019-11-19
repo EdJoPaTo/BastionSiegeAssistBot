@@ -8,11 +8,17 @@ export interface RawMessage {
 
 console.time('load messages')
 
+export const attackscouts = new ManyFilesStore<RawMessage>('persist/messages/attackscouts', rawMessageKeyFunc)
+console.timeLog('load messages', 'attackscouts', attackscouts.values().length)
+
 export const battlereports = new ManyFilesStore<RawMessage>('persist/messages/battlereports', rawMessageKeyFunc)
 console.timeLog('load messages', 'battlereports', battlereports.values().length)
 
 export const failed = new ManyFilesStore<RawMessage>('persist/messages/failed', rawMessageKeyFunc)
 console.timeLog('load messages', 'failed', failed.values().length)
+
+export const goldrankings = new ManyFilesStore<RawMessage>('persist/messages/goldrankings', rawMessageKeyFunc)
+console.timeLog('load messages', 'goldrankings', goldrankings.values().length)
 
 console.timeEnd('load messages')
 

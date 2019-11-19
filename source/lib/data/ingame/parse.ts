@@ -25,6 +25,14 @@ export function parseAndSave(providingTgUser: number, time: number, text: string
       })
     }
 
+    if (content.attackscout) {
+      messages.attackscouts.add(raw)
+    }
+
+    if (content.type === 'rankingGold') {
+      messages.goldrankings.add(raw)
+    }
+
     if (isEmptyContent(content)) {
       // BastionSiege message content could not be determined
       throw new Error('could not read Bastion Siege screen')
