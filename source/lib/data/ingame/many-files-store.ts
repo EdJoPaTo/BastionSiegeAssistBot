@@ -1,4 +1,4 @@
-import {readdirSync, readFileSync, writeFileSync, mkdirSync} from 'fs'
+import {readdirSync, readFileSync, writeFileSync, mkdirSync, existsSync} from 'fs'
 
 import arrayFilterUnique from 'array-filter-unique'
 import arrayReduceGroupBy from 'array-reduce-group-by'
@@ -91,16 +91,19 @@ function keysFromFilesystem(directory: string): string[] {
 
 export function loadAll(directory: string): unknown[] {
   const allKeys = keysFromFilesystem(directory)
-  const allFiles = allKeys.map(o => `${directory}/${o}.json`)
+  return allKeys
+    .flatMap(o => loadSubset(directory, o))
+}
 
-  const result = []
-  for (const file of allFiles) {
-    const content = JSON.parse(readFileSync(file, 'utf8'))
-    const ofInterest = Array.isArray(content) ? content : content.raw
-    result.push(...ofInterest)
+function loadSubset(directory: string, key: string): unknown[] {
+  const file = `${directory}/${key}.json`
+  if (!existsSync(file)) {
+    return []
   }
 
-  return result
+  const content = JSON.parse(readFileSync(file, 'utf8'))
+  const ofInterest = Array.isArray(content) ? content : content.raw
+  return ofInterest
 }
 
 export function saveAll<T>(directory: string, allEntries: T[], keyFunc: (entry: T) => string): void {
