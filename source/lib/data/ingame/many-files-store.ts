@@ -18,30 +18,27 @@ export class ManyFilesStore<T> {
       .reduce(arrayReduceGroupBy(keyFunc), {})
   }
 
+  valuesOfKey(key: string): readonly T[] {
+    return this._entries[key] || []
+  }
+
   values(): T[] {
     return Object.values(this._entries).flat()
   }
 
   exists(entry: T): boolean {
     const key = this.keyFunc(entry)
-    if (!this._entries[key]) {
-      return false
-    }
-
     const stringified = stringify(entry)
-    return this._entries[key].some(o => stringify(o) === stringified)
+    return this.valuesOfKey(key)
+      .some(o => stringify(o) === stringified)
   }
 
   add(entry: T | readonly T[]): void {
     const entries = Array.isArray(entry) ? entry : [entry]
     const grouped = entries.reduce(arrayReduceGroupBy(this.keyFunc), {})
     for (const key of Object.keys(grouped)) {
-      if (!this._entries[key]) {
-        this._entries[key] = []
-      }
-
       this._entries[key] = [
-        ...this._entries[key],
+        ...this.valuesOfKey(key),
         ...grouped[key]
       ]
         .filter(arrayFilterUnique(o => stringify(o)))
@@ -58,12 +55,8 @@ export class ManyFilesStore<T> {
     const entries: T[] = Array.isArray(entry) ? entry : [entry]
     const grouped = entries.reduce(arrayReduceGroupBy(this.keyFunc), {})
     for (const key of Object.keys(grouped)) {
-      if (!this._entries[key]) {
-        continue
-      }
-
       const stringifiedToBeDeleted = grouped[key].map(o => stringify(o))
-      this._entries[key] = this._entries[key]
+      this._entries[key] = this.valuesOfKey(key)
         .filter(o => !stringifiedToBeDeleted.includes(stringify(o)))
 
       saveSubset(this.directory, key, this._entries[key])
