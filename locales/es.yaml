@@ -199,7 +199,7 @@ upcoming:
 help:
   joinBSAGroupButton: Únete al grupo de soporte de BastionSiegeAssist (ENG)
   short: >
-    Ey!
+    Ey! o/
 
     Debes reenviar las pantallas del juego de @BastionSiegeBot a mí.
 
@@ -211,7 +211,7 @@ help:
     Simplemente comience con la @ en cualquier chat o use el botón a continuación para comenzar.
     Una vez que haya utilizado la búsqueda en línea, su cliente de Telegram lo recordará y le sugerirá cuando ponga @.
   full: >
-    Ey!
+    Ey! o/
 
 
     Debes reenviar las pantallas del juego desde @BastionSiegeBot a mí.
