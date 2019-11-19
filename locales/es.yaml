@@ -182,7 +182,7 @@ poweruser:
   buildingsOld: Para ser un usuario avanzado, necesito tus edificios actuales. Debe actualizar esto al menos cada 7 días.
   workshopOld: Para ser un usuario avanzado, necesito tu taller actual. Debe actualizarlos al menos cada 14 días.
   nearlyOld: Casi se ha agotado el tiempo disponible, deberías actualizarlos cuando tengas algo de tiempo. 😎
-  immunityTo: Actualmente se le otorga su inmunidad a ser localizado en mi base de datos a `${name}`.
+  immunityTo: Actualmente se le otorga su inmunidad a ser localizado en mi base de datos a ${name}.
   noname: No tengo tu nombre, *no* puedo darte la inmunidad a ser localizado en mi base de datos.
   immunityDisabled: Actualmente *no* recibirás la inmunidad a ser localizado en mi base de datos.
 settings: Ajustes
@@ -199,7 +199,7 @@ upcoming:
 help:
   joinBSAGroupButton: Únete al grupo de soporte de BastionSiegeAssist (ENG)
   short: >
-    Ey, `${from.first_name}`!
+    Ey!
 
     Debes reenviar las pantallas del juego de @BastionSiegeBot a mí.
 
@@ -211,7 +211,7 @@ help:
     Simplemente comience con la @ en cualquier chat o use el botón a continuación para comenzar.
     Una vez que haya utilizado la búsqueda en línea, su cliente de Telegram lo recordará y le sugerirá cuando ponga @.
   full: >
-    Ey, `${from.first_name}`!
+    Ey!
 
 
     Debes reenviar las pantallas del juego desde @BastionSiegeBot a mí.

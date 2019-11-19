@@ -182,7 +182,7 @@ poweruser:
   buildingsOld: To be a power user I need your current buildings. You must update these at least every 7 days.
   workshopOld: To be a power user I need your current workshop. You must update these at least every 14 days.
   nearlyOld: As this time is nearly reached you should update them when you have time to spare. 😎
-  immunityTo: Currently your immunity is granted to `${name}`.
+  immunityTo: Currently your immunity is granted to ${name}.
   noname: I do not have your name. *No one* will get immunity.
   immunityDisabled: Currently *no one* will get immunity.
 settings: Settings
@@ -199,7 +199,7 @@ upcoming:
 help:
   joinBSAGroupButton: Join BastionSiegeAssist Support Group
   short: >
-    Hey `${from.first_name}`!
+    Hey!
 
     You should forward ingame screens from @BastionSiegeBot to me.
 
@@ -211,7 +211,7 @@ help:
     Just start with the @ in any chat or use the button below to get started.
     Once you used the inline search your Telegram Client will remember and suggest it on typing the @.
   full: >
-    Hey `${from.first_name}`!
+    Hey!
 
 
     You should forward ingame screens from @BastionSiegeBot to me.

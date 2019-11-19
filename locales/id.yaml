@@ -145,7 +145,7 @@ poweruser:
   buildingsOld: Untuk menjadi pengguna daya, aku membutuhkan bangunanmu saat ini. Kamu harus memperbarui ini setidaknya setiap 7 hari.
   workshopOld: Untuk menjadi pengguna daya, aku membutuhkan bengkelmu saat ini. Kamu harus memperbarui ini setidaknya setiap 14 hari.
   nearlyOld: Karena sisa waktu hampir tercapai, kamu harus memperbaruinya ketika kamu punya waktu luang. 😎
-  immunityTo: Saat ini kekebalanmu diberikan kepada `${name}`.
+  immunityTo: Saat ini kekebalanmu diberikan kepada ${name}.
   noname: Aku tidak punya namamu. *Tidak seorangpun* akan mendapatkan kekebalan.
   immunityDisabled: Saat ini *tidak seorangpun* akan mendapatkan kekebalan.
 settings: Pengaturan
@@ -162,7 +162,7 @@ upcoming:
 help:
   joinBSAGroupButton: Bergabunglah dengan Kelompok Dukungan BastionSiegeAssist
   short: >
-    Hai `${from.first_name}`!
+    Hai!
 
     Kamu harus meneruskan layar game dari @BastionSiegeBot kepadaku.
 
@@ -174,7 +174,7 @@ help:
     Mulai saja dengan @ dalam obrolan apa pun atau gunakan tombol di bawah ini untuk memulai.
     Setelah kamu menggunakan pencarian inline, Klien Telegrammu akan mengingat dan menyarankannya untuk mengetikkan @.
   full: >
-    Hai `${from.first_name}`!
+    Hai!
 
 
     Kamu harus meneruskan layar game dari @BastionSiegeBot kepadaku.
