@@ -1,5 +1,3 @@
-type Dictionary<T> = {[key: string]: T}
-
 export interface SumAverageAmount {
   amount: number;
   avg: number;
@@ -11,7 +9,7 @@ export interface SumAverageAmount {
 
 export interface GroupedSumAverageAmount {
   all: SumAverageAmount;
-  grouped: Dictionary<SumAverageAmount>;
+  grouped: Record<string, SumAverageAmount>;
 }
 
 export function getStdDeviation(numbers: readonly number[], average: number, distanceFunc = (base: number, other: number) => other - base): number {
@@ -53,9 +51,9 @@ export function getSumAverageAmountGroupedBy<T>(array: readonly T[], keySelector
 
     col[key].push(numberSelector(add))
     return col
-  }, {} as Dictionary<(number | undefined)[]>)
+  }, {} as Record<string, Array<number | undefined>>)
 
-  const result: Dictionary<SumAverageAmount> = {}
+  const result: Record<string, SumAverageAmount> = {}
   for (const key of Object.keys(grouped)) {
     result[key] = getSumAverageAmount(grouped[key])
   }

@@ -12,8 +12,6 @@ import {emoji} from './output-text'
 import {createAverageMaxString, formatTypeOfData} from './number-array-strings'
 import {formatNumberShort, formatTimeFrame, formatBattleHoursAgo} from './format-number'
 
-type Dictionary<T> = {[key: string]: T}
-
 interface MultipleStatsConclusion {
   alliance: string;
   army: SumAverageAmount;
@@ -205,7 +203,7 @@ export function createPlayerStatsShortString(stats: PlayerStats): string {
   return text.trim()
 }
 
-function createTwoSidesArmyStrengthString(side1stats: readonly PlayerStats[], side2stats: readonly PlayerStats[], playerArmyOverride: Dictionary<number>): string {
+function createTwoSidesArmyStrengthString(side1stats: readonly PlayerStats[], side2stats: readonly PlayerStats[], playerArmyOverride: Record<string, number>): string {
   const side1 = createMultipleStatsConclusion(side1stats, playerArmyOverride)
   const side2 = createMultipleStatsConclusion(side2stats, playerArmyOverride)
 
@@ -231,7 +229,7 @@ export function createTwoSidesOneLineString(side1stats: readonly PlayerStats[], 
   return text
 }
 
-export function createTwoSidesStatsString(side1stats: readonly PlayerStats[], side2stats: readonly PlayerStats[], playerArmyOverride: Dictionary<number> = {}): string {
+export function createTwoSidesStatsString(side1stats: readonly PlayerStats[], side2stats: readonly PlayerStats[], playerArmyOverride: Record<string, number> = {}): string {
   const side1 = createMultipleStatsConclusion(side1stats, playerArmyOverride)
   const side2 = createMultipleStatsConclusion(side2stats, playerArmyOverride)
 
@@ -295,7 +293,7 @@ function createMultipleStatsPlayerList(allianceEmoji: string, statsArr: readonly
   return textParts.join('\n')
 }
 
-export function createMultipleStatsConclusion(statsArr: readonly PlayerStats[], playerArmyOverride: Dictionary<number> = {}): MultipleStatsConclusion {
+export function createMultipleStatsConclusion(statsArr: readonly PlayerStats[], playerArmyOverride: Record<string, number> = {}): MultipleStatsConclusion {
   const alliance = statsArr
     .map(o => o.alliance)
     .filter(o => o)[0] || '❓'

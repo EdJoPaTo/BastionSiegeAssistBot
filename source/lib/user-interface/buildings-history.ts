@@ -8,8 +8,6 @@ import * as playerHistory from '../data/player-history'
 
 import {createPngBuffer, Options, Series} from './history-graph'
 
-type Dictionary<T> = {[key: string]: T}
-
 export const DEFAULT_HISTORY_TIMEFRAME = '28d'
 
 export async function buildingsHistoryGraphFromContext(ctx: any): Promise<Buffer> {
@@ -39,7 +37,7 @@ export async function buildingsHistoryGraphFromContext(ctx: any): Promise<Buffer
 
 interface Data {
   timestamp: number;
-  data: Dictionary<number>;
+  data: Record<string, number>;
 }
 
 function createHistorySeriesFromData(ctx: any, minTimestamp: number, allData: Data[]): Series[] {

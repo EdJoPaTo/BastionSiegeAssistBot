@@ -9,8 +9,6 @@ import {sortBy} from '../javascript-abstraction/array'
 /* eslint @typescript-eslint/no-var-requires: warn */
 const LocalSession = require('telegraf-session-local')
 
-type Dictionary<T> = {[key: string]: T}
-
 export interface SessionRaw {
   user: number;
   data: Session;
@@ -48,7 +46,7 @@ export function getUser(userId: number): Session {
     .value() || fallback
 }
 
-let playernameCache: Dictionary<number> = {}
+let playernameCache: Record<string, number> = {}
 let playernameCacheAge = 0
 const PLAYERNAME_CACHE_MAX_AGE = 30 * 1000 // 30 seconds
 

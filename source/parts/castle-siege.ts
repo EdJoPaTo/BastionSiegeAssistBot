@@ -14,15 +14,13 @@ import {createPlayerMarkdownLink, createPlayerNameString} from '../lib/user-inte
 
 import {notNewMiddleware} from '../lib/telegraf-middlewares'
 
-type Dictionary<T> = {[key: string]: T}
-
 const DEBOUNCE_TIME = 200 // Milliseconds
 
 const MAXIMUM_PLAYER_AGE = ONE_DAY_IN_SECONDS * MAX_PLAYER_AGE_DAYS
 
 export const bot = new Composer()
 
-const debouncedParticipants: Dictionary<(ctx: ContextMessageUpdate, timestamp: number, alliance: string) => Promise<void>> = {}
+const debouncedParticipants: Record<number, (ctx: ContextMessageUpdate, timestamp: number, alliance: string) => Promise<void>> = {}
 bot.on('text', whenScreenContainsInformation('castleSiegePlayerJoined', notNewMiddleware('forward.old', castleSiege.MAXIMUM_JOIN_MINUTES), async ctx => {
   const {castleSiegePlayerJoined, timestamp} = (ctx as any).state.screen as Gamescreen
   const {alliance, name} = castleSiegePlayerJoined!

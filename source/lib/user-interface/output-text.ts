@@ -3,9 +3,7 @@ import {EMOJI} from 'bastion-siege-logic'
 /* eslint @typescript-eslint/no-var-requires: warn */
 const moonmoji = require('moonmoji')
 
-type Dictionary<T> = {[key: string]: T}
-
-export const emoji: Dictionary<string> = {...EMOJI,
+export const emoji: Record<string, string> = {...EMOJI,
   ballista: EMOJI.dragon,
   gems: EMOJI.gem,
   language: '🏳️‍🌈',

@@ -23,8 +23,6 @@ import {DEFAULT_HISTORY_TIMEFRAME, buildingsHistoryGraphFromContext} from '../li
 
 import * as buildingsMenu from './settings/buildings'
 
-type Dictionary<T> = {[key: string]: T}
-
 const DEBOUNCE_TIME = 200 // Milliseconds
 
 const DEFAULT_VIEW = BUILDING_VIEWS[0]
@@ -40,7 +38,7 @@ const menu = new TelegrafInlineMenu(generateStatsText, {
 
 const replyMenuMiddleware = menu.replyMenuMiddleware().middleware()
 
-const debouncedBuildStats: Dictionary<(ctx: ContextMessageUpdate, next: any) => Promise<void>> = {}
+const debouncedBuildStats: Record<number, (ctx: ContextMessageUpdate, next: any) => Promise<void>> = {}
 bot.on('text', whenScreenContainsInformation(['buildings', 'resources', 'workshop'], (ctx: any) => {
   const {id} = ctx.from
   if (!debouncedBuildStats[id]) {

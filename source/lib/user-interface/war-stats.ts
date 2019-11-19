@@ -8,8 +8,6 @@ import {ONE_DAY_IN_SECONDS} from '../math/unix-timestamp'
 
 import {createPlayerMarkdownLink, createPlayerNameString, createTwoSidesStatsString, createTwoSidesOneLineString} from './player-stats'
 
-type Dictionary<T> = {[key: string]: T}
-
 const MAXIMUM_BUILDINGS_AGE = ONE_DAY_IN_SECONDS * MAX_BUILDING_AGE_DAYS
 const MAXIMUM_PLAYER_AGE = ONE_DAY_IN_SECONDS * MAX_PLAYER_AGE_DAYS
 
@@ -37,7 +35,7 @@ export function createWarStats(timestamp: number, battle: BattleAlliance, player
       army: calcBarracksCapacity(o.buildings!.barracks)
     }))
 
-  const additionalArmyInformation: Dictionary<number> = {}
+  const additionalArmyInformation: Record<string, number> = {}
   for (const o of poweruserFriends) {
     additionalArmyInformation[o.player] = o.army
   }
