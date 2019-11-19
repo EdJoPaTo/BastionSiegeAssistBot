@@ -19,7 +19,7 @@ const localSession = new LocalSession({
   database: 'persist/sessions.json',
   // Format of storage/database (default: JSON.stringify / JSON.parse)
   format: {
-    serialize: (obj: any) => stringify(obj, {space: 2}) + '\n',
+    serialize: (obj: any) => stringify(obj, {space: '\t'}) + '\n',
     deserialize: (str: string) => JSON.parse(str)
   },
   getSessionKey: (ctx: ContextMessageUpdate) => `${ctx.from!.id}:${ctx.from!.id}`
