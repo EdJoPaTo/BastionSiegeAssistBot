@@ -1,4 +1,4 @@
-import {ConstructionName, Attackscout, Buildings, DomainStats, Effect, Player, Resources, Workshop} from 'bastion-siege-logic'
+import {ConstructionName, Buildings, DomainStats, Effect, Player, Resources, Workshop} from 'bastion-siege-logic'
 
 import {BattlestatsSettings} from './battlestats-settings'
 
@@ -9,9 +9,6 @@ export type Alert = 'buildingUpgrade' | 'effect' | 'nextBattle' | 'resourceWarni
 export const ALERTS: Alert[] = ['buildingUpgrade', 'effect', 'nextBattle', 'resourceWarning']
 
 export interface GameInformation {
-  attackscout?: Attackscout;
-  attackscoutTimestamp?: number;
-
   battleAllianceTimestamp?: number;
   battleSoloTimestamp?: number;
 
