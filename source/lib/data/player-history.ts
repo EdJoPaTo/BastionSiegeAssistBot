@@ -4,7 +4,7 @@ import stringify from 'json-stable-stringify'
 
 import {PlayerHistory, PlayerHistoryEntry} from '../types/player-history'
 
-const KEEP_ONLY_LATEST = ['attackscout', 'effects', 'resources']
+const KEEP_ONLY_LATEST = ['effects', 'resources']
 
 console.time('player history')
 const playerData = new KeyValueInMemoryFiles<PlayerHistory>('persist/player-history')
@@ -57,8 +57,13 @@ export async function add(userId: number, type: keyof PlayerHistory, unixTimesta
 }
 
 export function get(userId: number): PlayerHistory {
-  return playerData.get(String(userId)) || {
-    attackscout: [],
+  const current = playerData.get(String(userId))
+  if (current) {
+    // TODO: remove migration
+    delete (current as any).attackscout
+  }
+
+  return current || {
     buildings: [],
     domainStats: [],
     effects: [],

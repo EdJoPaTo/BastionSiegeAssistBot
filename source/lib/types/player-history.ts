@@ -1,7 +1,6 @@
-import {Attackscout, Buildings, DomainStats, Effect, Player, Resources, Workshop} from 'bastion-siege-logic'
+import {Buildings, DomainStats, Effect, Player, Resources, Workshop} from 'bastion-siege-logic'
 
 export interface PlayerHistory {
-  attackscout: PlayerHistoryEntry<Attackscout>[];
   buildings: PlayerHistoryEntry<Buildings>[];
   domainStats: PlayerHistoryEntry<DomainStats>[];
   effects: PlayerHistoryEntry<Effect[]>[];

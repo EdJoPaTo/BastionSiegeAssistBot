@@ -41,7 +41,6 @@ bot.on('text', Composer.optional(isForwardedFromBastionSiege, async (ctx, next) 
 }))
 
 const WANTED_DATA: (keyof PlayerHistory)[] = [
-  'attackscout',
   'buildings',
   'domainStats',
   'effects',
