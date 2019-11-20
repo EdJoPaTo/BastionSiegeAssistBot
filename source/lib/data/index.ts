@@ -6,6 +6,7 @@ import {FailedBSMessage} from '../types'
 
 import {loadAll} from './ingame/many-files-store'
 import {tryRemoveFailed} from './ingame/failed-bs-messages'
+import * as attackscouts from './ingame/attackscouts'
 import * as battlereports from './ingame/battlereports'
 import * as messages from './ingame/messages'
 
@@ -37,6 +38,10 @@ export function initData(): void {
 
   tryRemoveFailed()
 
+  console.time('init attackscouts')
+  initAttackscouts()
+  console.timeEnd('init attackscouts')
+
   console.time('init battlereports')
   initBattlereports()
   console.timeEnd('init battlereports')
@@ -46,6 +51,26 @@ export function initData(): void {
   console.timeEnd('init playerStatsDb')
 
   console.timeEnd('init data-ingame')
+}
+
+function initAttackscouts(): void {
+  for (const {providingTgUser, text, time} of messages.attackscouts.values()) {
+    try {
+      const {attackscout} = parseGamescreenContent(text)
+      if (!attackscout) {
+        console.warn('parsed existing attackscout was empty!', providingTgUser, time, new Date(time * 1000))
+        continue
+      }
+
+      attackscouts.add({
+        ...attackscout,
+        providingTgUser,
+        time
+      })
+    } catch (_) {
+      console.warn('failed to parse existing attackscout!', providingTgUser, time, new Date(time * 1000))
+    }
+  }
 }
 
 function initBattlereports(): void {

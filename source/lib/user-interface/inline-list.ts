@@ -7,6 +7,7 @@ import {sortBy} from '../javascript-abstraction/array'
 
 import {getMidnightXDaysEarlier} from '../math/unix-timestamp'
 
+import * as attackscouts from '../data/ingame/attackscouts'
 import * as lists from '../data/inline-lists'
 import * as playerStatsDb from '../data/playerstats-db'
 import * as poweruser from '../data/poweruser'
@@ -59,12 +60,12 @@ export function createList(creatorId: number, listId: string, now: number): {tex
   text += '\n\n'
 
   const creatorSession = userSessions.getUser(creatorId)
-  const {attackscout, attackscoutTimestamp, battleAllianceTimestamp, battleSoloTimestamp} = creatorSession.gameInformation
+  const attackscout = attackscouts.getLastAttackscoutOfUser(creatorId)
+  const {battleAllianceTimestamp, battleSoloTimestamp} = creatorSession.gameInformation
   const lastBattle = Math.max(battleAllianceTimestamp || 0, battleSoloTimestamp || 0)
-  if (attackscoutTimestamp &&
-    attackscout &&
-    attackscoutTimestamp > lastBattle &&
-    attackscoutTimestamp > now - ATTACK_SCOUT_MAX_AGE
+  if (attackscout &&
+    attackscout.time > lastBattle &&
+    attackscout.time > now - ATTACK_SCOUT_MAX_AGE
   ) {
     const statsArr = playerStatsDb.getLookingLike(attackscout.player.name, attackscout.terra, true)
     text += statsArr

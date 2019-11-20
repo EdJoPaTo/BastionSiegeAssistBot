@@ -1,6 +1,7 @@
 import {parseGamescreen, Gamescreen} from 'bastion-siege-logic'
 
 import {isEmptyContent} from './failed-bs-messages'
+import * as attackscouts from './attackscouts'
 import * as battlereports from './battlereports'
 import * as messages from './messages'
 
@@ -27,6 +28,11 @@ export function parseAndSave(providingTgUser: number, time: number, text: string
 
     if (content.attackscout) {
       messages.attackscouts.add(raw)
+      attackscouts.add({
+        ...content.attackscout,
+        providingTgUser,
+        time
+      })
     }
 
     if (content.type === 'rankingGold') {
