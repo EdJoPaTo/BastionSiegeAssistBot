@@ -1,5 +1,6 @@
-import {Markup, SwitchToChatButton} from 'telegraf'
 import {calcBarracksNeeded} from 'bastion-siege-logic'
+import {Markup, SwitchToChatButton} from 'telegraf'
+import arrayFilterUnique from 'array-filter-unique'
 
 import {Player, PlayerStats, ArmyEstimate} from '../types'
 
@@ -64,8 +65,12 @@ export function createPlayerStatsString(stats: PlayerStats): string {
     return text
   }
 
-  const allianceHistoryToShow = stats.allAlliances.filter(o => o)
-  if (allianceHistoryToShow.filter(o => o !== stats.alliance).length > 0) {
+  const allianceHistoryToShow = stats.allAlliances
+    .filter(o => o)
+    .filter(o => o !== stats.alliance)
+    .reverse()
+    .filter(arrayFilterUnique())
+  if (allianceHistoryToShow.length > 0) {
     text += ` (${allianceHistoryToShow.join('')})`
   }
 
