@@ -69,7 +69,7 @@ export function createList(creatorId: number, listId: string, now: number): {tex
   ) {
     const statsArr = playerStatsDb.getLookingLike(attackscout.player.name, attackscout.terra, true)
     text += statsArr
-      .map(o => createPlayerStatsString(o))
+      .map(o => createPlayerStatsString(o, creatorSession.timeZone || 'UTC'))
       .join('\n\n')
     text += '\n\n'
   }

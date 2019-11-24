@@ -117,7 +117,7 @@ bot.on('inline_query', async ctx => {
         title: createPlayerNameString(stats, false),
         description: createPlayerStatsShortString(stats),
         input_message_content: {
-          message_text: createPlayerStatsString(stats),
+          message_text: createPlayerStatsString(stats, session.timeZone || 'UTC'),
           parse_mode: 'markdown'
         }
       }

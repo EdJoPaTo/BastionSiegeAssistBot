@@ -56,7 +56,7 @@ export function createPlayerNameString({player, alliance}: Player, markdown: boo
   return text
 }
 
-export function createPlayerStatsString(stats: PlayerStats): string {
+export function createPlayerStatsString(stats: PlayerStats, timeZone: string): string {
   const now = Date.now() / 1000
   let text = createPlayerNameString(stats, true)
 
@@ -123,7 +123,7 @@ export function createPlayerStatsString(stats: PlayerStats): string {
     }
 
     if (stats.activeTime.accuracy > 0) {
-      parts.push(formatTimeFrame(stats.activeTime))
+      parts.push(formatTimeFrame(stats.activeTime, timeZone))
     }
 
     text += '\n' + parts.join(' ')
@@ -139,7 +139,7 @@ export function createPlayerStatsString(stats: PlayerStats): string {
     }
 
     if (stats.attacksWithoutLossPercentage < 1 && stats.inactiveTime.accuracy > 0) {
-      parts.push(formatTimeFrame(stats.inactiveTime))
+      parts.push(formatTimeFrame(stats.inactiveTime, timeZone))
     }
 
     parts.push(`${emoji.losslessBattle}${Math.round(stats.attacksWithoutLossPercentage * 100)}%`)

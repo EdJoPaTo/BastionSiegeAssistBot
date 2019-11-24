@@ -163,7 +163,7 @@ async function generateResponseText(ctx: any, report: Battlereport, timestamp: n
     }
 
     if ((Date.now() / 1000) - MAX_AGE_REPORT_FOR_STATS < timestamp) {
-      const statsString = allianceBattle ? createTwoSidesStatsString(attackerStats, defenderStats) : createPlayerStatsString(enemyStats[0])
+      const statsString = allianceBattle ? createTwoSidesStatsString(attackerStats, defenderStats) : createPlayerStatsString(enemyStats[0], session.timeZone || 'UTC')
       text += '\n\n' + statsString
     }
 

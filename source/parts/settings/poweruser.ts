@@ -47,7 +47,7 @@ function menuText(ctx: any): string {
     if (name) {
       const stats = playerStatsDb.get(name)
       text += '\n\n'
-      text += createPlayerStatsString(stats)
+      text += createPlayerStatsString(stats, session.timeZone || 'UTC')
     }
   }
 

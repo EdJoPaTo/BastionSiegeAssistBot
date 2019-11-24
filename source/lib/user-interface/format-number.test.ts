@@ -44,29 +44,23 @@ test('formatNumberShort NaN', t => {
 })
 
 test('formatTime', t => {
-  t.is(formatTime(0), '0:00')
-  t.is(formatTime(60), '0:01')
-  t.is(formatTime(58 * 60), '0:58')
-  t.is(formatTime(60 * 60), '1:00')
-  t.is(formatTime((60 * 60) + (2 * 60)), '1:02')
-  t.is(formatTime((3 * 60 * 60) + (2 * 60)), '3:02')
-
-  t.is(formatTime(0, true), '0:00:00')
-  t.is(formatTime(4, true), '0:00:04')
-  t.is(formatTime(42, true), '0:00:42')
-  t.is(formatTime(60, true), '0:01:00')
-  t.is(formatTime((3 * 60 * 60) + (2 * 60) + 4, true), '3:02:04')
+  t.is(formatTime(0, 'UTC'), '0:00')
+  t.is(formatTime(60, 'UTC'), '0:01')
+  t.is(formatTime(58 * 60, 'UTC'), '0:58')
+  t.is(formatTime(60 * 60, 'UTC'), '1:00')
+  t.is(formatTime((60 * 60) + (2 * 60), 'UTC'), '1:02')
+  t.is(formatTime((3 * 60 * 60) + (2 * 60), 'UTC'), '3:02')
 })
 
 test('formatTimeFrame', t => {
   t.is(formatTimeFrame({
     seconds: 60 * 60 * 2,
     stdDeviation: 0
-  }), '2:00')
+  }, 'UTC'), '2:00')
   t.is(formatTimeFrame({
     seconds: 60 * 60 * 2,
     stdDeviation: 60 * 60
-  }), '1:00 - 3:00')
+  }, 'UTC'), '1:00 - 3:00')
 })
 
 test('formatTimeAmount', t => {

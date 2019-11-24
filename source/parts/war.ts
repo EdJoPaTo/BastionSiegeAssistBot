@@ -1,6 +1,8 @@
 import {Composer, Extra, Markup} from 'telegraf'
 import {Gamescreen, BattleSolo, BattleAlliance} from 'bastion-siege-logic'
 
+import {Session} from '../lib/types'
+
 import * as playerStatsDb from '../lib/data/playerstats-db'
 import * as poweruser from '../lib/data/poweruser'
 import * as wars from '../lib/data/wars'
@@ -15,6 +17,7 @@ import {formatNumberShort} from '../lib/user-interface/format-number'
 export const bot = new Composer()
 
 bot.on('text', whenScreenIsOfType('war', async (ctx: any) => {
+  const {timeZone} = ctx.session as Session
   const screen = ctx.state.screen as Gamescreen
   const {domainStats, battle, timestamp} = screen
   let text = `*${ctx.i18n.t('bs.war')}*\n`
@@ -37,7 +40,7 @@ bot.on('text', whenScreenIsOfType('war', async (ctx: any) => {
 
     if (isBattleSolo(battle)) {
       const stats = playerStatsDb.get(battle.enemy.name)
-      text += createPlayerStatsString(stats)
+      text += createPlayerStatsString(stats, timeZone || 'UTC')
       extra = extra.markup(
         Markup.inlineKeyboard([
           createPlayerShareButton(stats) as any

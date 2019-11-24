@@ -1,5 +1,3 @@
-import {ONE_DAY_IN_SECONDS} from '../math/unix-timestamp'
-
 const allLetters = ['', 'k', 'M', 'B', 'T']
 
 export function formatNumberShort(value?: number | null, isInteger = false): string {
@@ -27,44 +25,26 @@ export function formatNumberShort(value?: number | null, isInteger = false): str
   return (isNegative ? '-' : '') + valueString + letter
 }
 
-export function formatTime(secondsOfDay: number, includeSeconds = false): string {
-  const fixedSecondsOfDay = (secondsOfDay + ONE_DAY_IN_SECONDS) % ONE_DAY_IN_SECONDS
-
-  const seconds = Math.floor(fixedSecondsOfDay % 60)
-  const totalMinutes = fixedSecondsOfDay / 60
-  const minutes = Math.floor(totalMinutes % 60)
-  const hour = Math.floor(totalMinutes / 60)
-
-  let text = String(hour)
-  text += ':'
-  if (minutes < 10) {
-    text += '0'
-  }
-
-  text += String(minutes)
-
-  if (includeSeconds) {
-    text += ':'
-    if (seconds < 10) {
-      text += '0'
-    }
-
-    text += String(seconds)
-  }
-
-  return text
+export function formatTime(secondsOfDay: number, timeZone: string): string {
+  const date = new Date(secondsOfDay * 1000)
+  return date.toLocaleTimeString('en-GB', {
+    timeZone,
+    hour12: false,
+    hour: 'numeric',
+    minute: '2-digit'
+  })
 }
 
-export function formatTimeFrame({seconds, stdDeviation}: {seconds: number; stdDeviation: number}): string {
+export function formatTimeFrame({seconds, stdDeviation}: {seconds: number; stdDeviation: number}, timeZone: string): string {
   const start = seconds - stdDeviation
   const end = seconds + stdDeviation
 
   let text = ''
-  text += formatTime(start)
+  text += formatTime(start, timeZone)
 
   if (stdDeviation >= 60) {
     text += ' - '
-    text += formatTime(end)
+    text += formatTime(end, timeZone)
   }
 
   return text
