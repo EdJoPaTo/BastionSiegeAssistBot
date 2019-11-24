@@ -7,6 +7,7 @@ import {emoji} from '../../lib/user-interface/output-text'
 import * as alertsMenu from './alerts'
 import * as buildingsMenu from './buildings'
 import * as languageMenu from './language'
+import * as timezoneMenu from './timezone'
 import * as listMenu from './list'
 import * as poweruserMenu from './poweruser'
 
@@ -18,6 +19,8 @@ settingsMenu.submenu(buttonText(emoji.alertEnabled, 'alerts'), 'alerts', alertsM
 settingsMenu.submenu(buttonText(emoji.houses, 'bs.buildings'), 'buildings', buildingsMenu.menu)
 
 settingsMenu.submenu(buttonText(emoji.language, 'language.title'), 'language', languageMenu.menu)
+
+settingsMenu.submenu(buttonText(emoji.timezone, 'setting.timezone'), 'timezone', timezoneMenu.menu)
 
 settingsMenu.submenu(buttonText(emoji.list, 'list.title'), 'list', listMenu.menu)
 

@@ -191,6 +191,7 @@ setting:
     infotext: Enable the alerts you want to get from me.
   buildings:
     infotext: You can set which buildings are of interest for you in /buildings and the Alerts.
+  timezone: Timezone
 upcoming:
   title: Upcoming Alerts
   info: You can select which alerts you want to receive in the /settings.

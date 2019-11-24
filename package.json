@@ -31,6 +31,7 @@
     "d3-node": "^2.1.0",
     "debounce-promise": "^3.1.0",
     "emoji-tree": "^1.1.2",
+    "full-icu": "^1.3.0",
     "fuzzysort": "^1.1.4",
     "json-stable-stringify": "^1.0.1",
     "locale-emoji": "^0.3.0",
@@ -41,7 +42,8 @@
     "telegraf-i18n": "^6.5.0",
     "telegraf-inline-menu": "^4.0.0",
     "telegraf-session-local": "^1.0.2",
-    "telegram-format": "^1.1.0"
+    "telegram-format": "^1.1.0",
+    "timezone-support": "^2.0.2"
   },
   "devDependencies": {
     "@sindresorhus/tsconfig": "^0.6.0",

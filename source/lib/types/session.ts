@@ -43,4 +43,6 @@ export interface Session {
   disableImmunity?: boolean;
   gameInformation: GameInformation;
   lastHintTimestamp?: number;
+  page?: number;
+  timeZone?: string;
 }

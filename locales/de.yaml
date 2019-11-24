@@ -189,6 +189,7 @@ setting:
     infotext: Schalte die jeweiligen Erinnerungen ein, die du von mir erhalten willst.
   buildings:
     infotext: Du kannst einstellen, welche Gebäude für dich in den /buildings und den Erinnerungen von Interesse sind.
+  timezone: Zeitzone
 upcoming:
   title: Die nächsten Ereignisse
   info: Welche Erinnerungen du erhalten willst, kannst du in den /settings einstellen.
