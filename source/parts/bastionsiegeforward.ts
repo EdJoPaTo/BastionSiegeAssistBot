@@ -33,7 +33,7 @@ bot.on('text', Composer.optional(forwardedFromClone, async ctx => {
 bot.on('text', Composer.optional(isForwardedFromBastionSiege, async (ctx, next) => {
   const {text, forward_date: timestamp} = ctx.message
 
-  ctx.state = parseAndSave(ctx.from!.id, timestamp, text)
+  ctx.state = await parseAndSave(ctx.from!.id, timestamp, text)
 
   if (next) {
     await next()

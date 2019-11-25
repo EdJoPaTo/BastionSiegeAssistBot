@@ -27,8 +27,6 @@ import * as partPlayerStats from './parts/playerstats'
 import * as partSettings from './parts/settings'
 import * as partWar from './parts/war'
 
-initData()
-
 const tokenFilePath = existsSync('/run/secrets') ? '/run/secrets/bot-token.txt' : 'bot-token.txt'
 const token = readFileSync(tokenFilePath, 'utf8').trim()
 const bot = new Telegraf(token)
@@ -173,6 +171,7 @@ bot.catch((error: any) => {
 })
 
 async function startup(): Promise<void> {
+  await initData()
   await bot.launch()
   console.log(new Date(), 'Bot started as', bot.options.username)
 }

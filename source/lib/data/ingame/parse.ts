@@ -10,7 +10,7 @@ export interface AnalysedGamescreen {
   isNewBattlereport?: boolean;
 }
 
-export function parseAndSave(providingTgUser: number, time: number, text: string): AnalysedGamescreen {
+export async function parseAndSave(providingTgUser: number, time: number, text: string): Promise<AnalysedGamescreen> {
   const raw = {providingTgUser, text, time}
 
   try {

@@ -6,7 +6,7 @@ import arrayReduceGroupBy from 'array-reduce-group-by'
 import {failed} from './messages'
 import {parseAndSave} from './parse'
 
-export function tryRemoveFailed(): void {
+export async function tryRemoveFailed(): Promise<void> {
   console.time('tryRemoveFailed')
   const allFailed = failed.values()
   console.timeLog('tryRemoveFailed', allFailed.length)
@@ -14,7 +14,8 @@ export function tryRemoveFailed(): void {
   for (const o of allFailed) {
     try {
       const {providingTgUser, text, time} = o
-      parseAndSave(providingTgUser, time, text)
+      /* eslint no-await-in-loop: warn */
+      await parseAndSave(providingTgUser, time, text)
       failed.remove(o)
     } catch (_) {}
   }
@@ -52,7 +53,7 @@ export function writeAllGrouped(): void {
         parseGamescreenContent(o.text)
       } catch (error) {
         return error.message
-      } 
+      }
 
       return ''
     }), {})

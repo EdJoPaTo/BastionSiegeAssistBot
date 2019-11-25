@@ -12,7 +12,7 @@ import * as messages from './ingame/messages'
 
 import * as playerStatsDb from './playerstats-db'
 
-export function initData(): void {
+export async function initData(): Promise<void> {
   console.time('init data-ingame')
 
   console.time('migrate-old')
@@ -36,7 +36,7 @@ export function initData(): void {
 
   console.timeEnd('migrate-old')
 
-  tryRemoveFailed()
+  await tryRemoveFailed()
 
   console.time('init attackscouts')
   initAttackscouts()
