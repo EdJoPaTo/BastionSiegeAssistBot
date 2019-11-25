@@ -172,5 +172,9 @@ bot.catch((error: any) => {
   console.error('Telegraf Error', error.response || error)
 })
 
-bot.startPolling()
-console.log(new Date(), 'Bot started')
+async function startup(): Promise<void> {
+  await bot.launch()
+  console.log(new Date(), 'Bot started as', bot.options.username)
+}
+
+startup()
