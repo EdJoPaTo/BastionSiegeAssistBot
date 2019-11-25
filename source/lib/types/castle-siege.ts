@@ -1,7 +1,13 @@
+type UnixTimestamp = number
+
+export interface CastleInfo {
+  nextSiege?: UnixTimestamp;
+}
+
 export interface CastleSiegeEntry {
   alliance: string;
   player?: string;
-  timestamp: number;
+  timestamp: UnixTimestamp;
 }
 
 export interface CastleSiegePlayerEntry extends CastleSiegeEntry {

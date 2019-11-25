@@ -1,5 +1,7 @@
 import {parseGamescreen, Gamescreen} from 'bastion-siege-logic'
 
+import * as castles from '../castles'
+
 import {isEmptyContent} from './failed-bs-messages'
 import * as attackscouts from './attackscouts'
 import * as battlereports from './battlereports'
@@ -37,6 +39,10 @@ export async function parseAndSave(providingTgUser: number, time: number, text: 
 
     if (content.type === 'rankingGold') {
       messages.goldrankings.add(raw)
+    }
+
+    if (content.castle && content.castleSiegeEnds) {
+      await castles.siegeEnded(content.castle, content.ingameTimestamp)
     }
 
     if (isEmptyContent(content)) {

@@ -1,5 +1,6 @@
 buildings - get your remaining time until building upgrade
 battlestats - get battle stats
+castle - show castle infos
 upcoming - show upcoming alerts
 botstats - show statistics about the bot
 settings - open the settings

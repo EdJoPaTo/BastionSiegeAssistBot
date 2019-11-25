@@ -1,3 +1,4 @@
+import {CASTLE_SIEGE_SECONDS} from 'bastion-siege-logic'
 import {RawObjectInMemoryFile} from '@edjopato/datastore'
 import arrayFilterUnique from 'array-filter-unique'
 
@@ -7,8 +8,7 @@ import {sortBy} from '../javascript-abstraction/array'
 
 const data = new RawObjectInMemoryFile<CastleSiegeEntry[]>('tmp/castle-siege.json')
 
-export const MAXIMUM_JOIN_MINUTES = 60 * 5 // 5 hours
-export const MAXIMUM_JOIN_SECONDS = 60 * MAXIMUM_JOIN_MINUTES
+export const MAXIMUM_JOIN_SECONDS = CASTLE_SIEGE_SECONDS
 
 export async function add(timestamp: number, alliance: string, player: string | undefined): Promise<void> {
   if (!alliance) {
