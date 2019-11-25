@@ -17,15 +17,17 @@ let alertHandler: AlertHandler
 
 export function start(telegram: Telegram): void {
   console.time('recreateAlerts')
+  const now = Date.now() / 1000
   alertHandler = new AlertHandler(telegram)
   userSessions.getRaw()
     .forEach(({user, data}) => {
-      alertHandler.recreateAlerts(user, data)
+      alertHandler.recreateAlerts(user, data, now)
     })
   console.timeEnd('recreateAlerts')
 }
 
 bot.use(async (ctx: any, next) => {
+  const now = Date.now() / 1000
   const before = stringify(ctx.session)
   if (next) {
     await next()
@@ -34,7 +36,7 @@ bot.use(async (ctx: any, next) => {
   const after = stringify(ctx.session)
 
   if (before !== after) {
-    alertHandler.recreateAlerts(ctx.from.id, ctx.session)
+    alertHandler.recreateAlerts(ctx.from.id, ctx.session, now)
   }
 })
 
@@ -61,7 +63,7 @@ function generateUpcomingText(ctx: any): {text: string; extra: any} {
   const session = ctx.session as Session
   const enabledAlerts = session.alerts || []
   const now = Date.now() / 1000
-  const eventList = alertHandler.generateUpcomingEventsList(session)
+  const eventList = alertHandler.generateUpcomingEventsList(session, now)
     .filter(o => o.timestamp > now)
     .sort(sortBy(o => o.timestamp))
 

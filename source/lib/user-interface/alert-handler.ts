@@ -58,7 +58,8 @@ export class AlertHandler {
     private readonly _telegram: Telegram
   ) {}
 
-  generateUpcomingEventsList({buildings: buildingsToShowSession, gameInformation, __language_code: language}: Session = {gameInformation: {}}): EventEntry[] {
+  generateUpcomingEventsList(session: Session, now: number): EventEntry[] {
+    const {buildings: buildingsToShowSession, gameInformation, __language_code: language} = session || {gameInformation: {}}
     const eventList: EventEntry[] = []
 
     const {battleSoloTimestamp, battleAllianceTimestamp, domainStats} = gameInformation
@@ -102,6 +103,7 @@ export class AlertHandler {
         .filter(({cost}) => cost.wood <= storageCapacity)
         .filter(({cost}) => cost.stone <= storageCapacity)
         .filter(o => o.minutesNeeded > 0)
+        .filter(o => o.timestamp > now)
         .map((o): EventEntry => ({
           type: 'buildingUpgrade',
           timestamp: o.timestamp,
@@ -135,6 +137,7 @@ export class AlertHandler {
     const {effects, effectsTimestamp} = gameInformation
     if (effects && effectsTimestamp) {
       const effectEvents = effects
+        .filter(o => o.timestamp && o.timestamp > now)
         .map((effect): EventEntry => {
           let {timestamp, minutesRemaining} = effect
           if (!timestamp) {
@@ -155,7 +158,7 @@ export class AlertHandler {
     return eventList
   }
 
-  recreateAlerts(user: number, session: Session): void {
+  recreateAlerts(user: number, session: Session, now: number): void {
     const oldAlerts = this._alertsOfUsers[user] || []
     oldAlerts
       .filter(o => o.timeoutId)
@@ -164,7 +167,7 @@ export class AlertHandler {
       })
 
     const enabledAlerts = session.alerts || []
-    const eventList = this.generateUpcomingEventsList(session)
+    const eventList = this.generateUpcomingEventsList(session, now)
       .filter(o => enabledAlerts.includes(o.type))
 
     const newAlerts = eventList.map(event => this.createAlertForEvent(user, event))
