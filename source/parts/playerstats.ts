@@ -83,10 +83,16 @@ bot.on('text', whenScreenContainsInformation('allianceBattleSupport', notNewMidd
   return ctx.reply(text, extra)
 }))
 
-bot.on('text', whenScreenContainsInformation('allianceJoinRequest', notNewMiddleware(), (ctx: any) => {
+bot.on('text', whenScreenContainsInformation([
+  'allianceJoinRequest',
+  'alreadyInFight',
+  'conqueror',
+  'notRecoveredFromFight'
+], notNewMiddleware(), (ctx: any) => {
   const {timeZone} = ctx.session as Session
-  const {allianceJoinRequest} = ctx.state.screen as Gamescreen
-  const {text, extra} = generatePlayerStats(allianceJoinRequest!.name, false, timeZone)
+  const {allianceJoinRequest, alreadyInFight, conqueror, notRecoveredFromFight} = ctx.state.screen as Gamescreen
+  const player = allianceJoinRequest || alreadyInFight || conqueror || notRecoveredFromFight!
+  const {text, extra} = generatePlayerStats(player.name, false, timeZone)
   return ctx.reply(text, extra)
 }))
 
@@ -138,13 +144,6 @@ bot.on('text', whenScreenContainsInformation('chat', notNewMiddleware('forward.o
 
   text += statsText
 
-  return ctx.reply(text, extra)
-}))
-
-bot.on('text', whenScreenContainsInformation('conqueror', notNewMiddleware('forward.old'), (ctx: any) => {
-  const {timeZone} = ctx.session as Session
-  const {conqueror} = ctx.state.screen as Gamescreen
-  const {text, extra} = generatePlayerStats(conqueror!.name, false, timeZone)
   return ctx.reply(text, extra)
 }))
 
