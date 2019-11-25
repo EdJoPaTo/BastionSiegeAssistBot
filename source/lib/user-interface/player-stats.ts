@@ -76,7 +76,7 @@ export function createPlayerStatsString(stats: PlayerStats, timeZone: string): s
 
   const strengthLine = []
 
-  if (stats.army.min) {
+  if (stats.army.min && !stats.seemsCanned) {
     strengthLine.push(createArmyStatsBarLine(stats.army))
   }
 
@@ -96,7 +96,7 @@ export function createPlayerStatsString(stats: PlayerStats, timeZone: string): s
     randomFacs.push(formatBattleHoursAgo(hoursAgo))
   }
 
-  if (stats.loot.amount > 0) {
+  if (!stats.seemsCanned && stats.loot.amount > 0) {
     randomFacs.push(formatTypeOfData(stats.loot, 'max', true) + emoji.gold)
   }
 
@@ -106,7 +106,7 @@ export function createPlayerStatsString(stats: PlayerStats, timeZone: string): s
 
   text += '\n' + randomFacs.join('  ')
 
-  if (stats.activeTime.accuracy > 0 || stats.lootActive.amount > 0) {
+  if (!stats.seemsCanned && (stats.activeTime.accuracy > 0 || stats.lootActive.amount > 0)) {
     const parts = []
     parts.push(emoji.active)
 
@@ -129,7 +129,7 @@ export function createPlayerStatsString(stats: PlayerStats, timeZone: string): s
     text += '\n' + parts.join(' ')
   }
 
-  if (stats.attacksWithoutLossPercentage > 0) {
+  if (!stats.seemsCanned && stats.attacksWithoutLossPercentage > 0) {
     const parts = []
     parts.push(emoji.inactive)
     parts.push(formatTypeOfData(stats.lootInactive, 'avg', false) + emoji.gold)
@@ -143,6 +143,14 @@ export function createPlayerStatsString(stats: PlayerStats, timeZone: string): s
     }
 
     parts.push(`${emoji.losslessBattle}${Math.round(stats.attacksWithoutLossPercentage * 100)}%`)
+
+    text += '\n' + parts.join(' ')
+  }
+
+  if (stats.seemsCanned) {
+    const parts = []
+    parts.push(emoji.canned)
+    parts.push(`0${emoji.gold}`)
 
     text += '\n' + parts.join(' ')
   }

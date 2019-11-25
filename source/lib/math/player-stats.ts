@@ -8,6 +8,8 @@ import {replaceLookingLikeAsciiChars} from '../javascript-abstraction/strings'
 import {averageTimeOfDay, getMidnightXDaysEarlier} from './unix-timestamp'
 import {getSumAverageAmount} from './number-array'
 
+const CANNED_REPORT_AMOUNT = 3
+
 export function generate(allBattlereports: readonly Battlereport[], playername: string, now: number): PlayerStats {
   const allWithTarget = allBattlereports
     .filter(o => o.enemies.includes(playername))
@@ -37,6 +39,11 @@ export function generate(allBattlereports: readonly Battlereport[], playername: 
 
   const lastBattleTime = Math.max(...allWithTarget.map(o => o.time))
 
+  const reportsRelevantForCanned = soloReports
+    .slice(-CANNED_REPORT_AMOUNT)
+  const seemsCanned = reportsRelevantForCanned.length === CANNED_REPORT_AMOUNT &&
+    reportsRelevantForCanned.every(o => o.won && o.gold === 0 && o.soldiersAlive === o.soldiersTotal)
+
   return {
     player: playername,
     playerNameLookingLike: replaceLookingLikeAsciiChars(playername),
@@ -45,6 +52,7 @@ export function generate(allBattlereports: readonly Battlereport[], playername: 
     battlesObserved: allWithTarget.length,
     battlesObservedNearPast: nearPastReports.length,
     lastBattleTime,
+    seemsCanned,
     ...generateActivity(nearPastReports, playername),
     ...generateLoot(nearPastReports),
     army: assumeArmy(soloReports),

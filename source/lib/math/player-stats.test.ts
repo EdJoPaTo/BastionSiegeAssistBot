@@ -93,6 +93,7 @@ test('generate example A', t => {
       seconds: NaN,
       stdDeviation: NaN
     },
+    seemsCanned: false,
     loot: {
       amount: 1,
       avg: 1000,
@@ -157,6 +158,7 @@ test('generate example B', t => {
       seconds: NaN,
       stdDeviation: NaN
     },
+    seemsCanned: false,
     loot: {
       amount: 1,
       avg: 2000,

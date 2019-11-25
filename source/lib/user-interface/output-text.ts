@@ -31,6 +31,7 @@ export const emoji: Record<string, string> = {...EMOJI,
   lose: '😭',
   active: '🌞',
   inactive: '🌒', // Gets updated by updateInactiveEmoji()
+  canned: '🥫',
   losslessBattle: '💤'
 }
 

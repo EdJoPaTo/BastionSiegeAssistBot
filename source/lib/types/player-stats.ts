@@ -32,4 +32,5 @@ export interface PlayerStats extends PlayerStatsLoot, PlayerStatsActivity {
   lastBattleTime: number;
   army: ArmyEstimate;
   terra: number;
+  seemsCanned: boolean;
 }
