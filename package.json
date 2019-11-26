@@ -93,8 +93,8 @@
       "ava/no-ignored-test-files": "off",
       "prefer-named-capture-group": "off",
       "@typescript-eslint/array-type": "off",
-      "@typescript-eslint/restrict-template-expressions": "warn",
       "@typescript-eslint/no-untyped-public-signature": "off",
+      "@typescript-eslint/restrict-template-expressions": "warn",
       "@typescript-eslint/indent": [
         "error",
         2
