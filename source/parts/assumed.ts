@@ -37,13 +37,14 @@ bot.action('assumed', async ctx => {
     const oldStats = ctx.callbackQuery!.message!.text!
 
     if (compareStrAsSimpleOne(newStats, oldStats) === 0) {
-      return ctx.answerCbQuery('thats already as good as I can estimate!')
+      await ctx.answerCbQuery('thats already as good as I can estimate!')
+      return
     }
 
     await ctx.editMessageText(newStats, updateMarkup)
-    return ctx.answerCbQuery('updated!')
+    await ctx.answerCbQuery('updated!')
   } catch (_) {
-    return ctx.answerCbQuery('please provide new game screens')
+    await ctx.answerCbQuery('please provide new game screens')
   }
 })
 
