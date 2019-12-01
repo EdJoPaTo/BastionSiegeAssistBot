@@ -90,26 +90,35 @@ bot.command('castle', async ctx => {
       part += ' - '
       part += castleFormattedTimestampEnd(castle, lang, timeZone)
 
-      if (castles.isCurrentlySiegeAvailable(castle, now) && userIsPoweruser && alliance) {
-        const participants = castleSiege.getParticipants(castle, alliance, now)
-        const missing = getMissingMates(alliance, participants.map(o => o.player), now)
-
-        if (missing.length > 0) {
+      if (castles.isCurrentlySiegeAvailable(castle, now)) {
+        const participatingAlliances = castleSiege.getAlliances(castle, now)
+        if (participatingAlliances.length > 0) {
           part += '\n'
-          part += alliance + ' '
-          part += `Missing (${missing.length}): `
-          part += missing
-            .sort((a, b) => a.player.localeCompare(b.player))
-            .map(o => createPlayerMarkdownLink(o.user, o))
-            .join(', ')
+          part += (ctx as any).i18n.t('bs.siege')
+          part += ': '
+          part += participatingAlliances.join('')
         }
 
-        part += '\n'
-        part += alliance + ' '
-        part += `Participants (${participants.length}): `
-        part += participants
-          .map(o => createPlayerNameString({player: o.player}, true))
-          .join(', ')
+        if (userIsPoweruser && alliance && participatingAlliances.includes(alliance)) {
+          const participants = castleSiege.getParticipants(castle, alliance, now)
+          const missing = getMissingMates(alliance, participants.map(o => o.player), now)
+          if (missing.length > 0) {
+            part += '\n'
+            part += alliance + ' '
+            part += `Missing (${missing.length}): `
+            part += missing
+              .sort((a, b) => a.player.localeCompare(b.player))
+              .map(o => createPlayerMarkdownLink(o.user, o))
+              .join(', ')
+          }
+
+          part += '\n'
+          part += alliance + ' '
+          part += `Participants (${participants.length}): `
+          part += participants
+            .map(o => createPlayerNameString({player: o.player}, true))
+            .join(', ')
+        }
       }
 
       return part
