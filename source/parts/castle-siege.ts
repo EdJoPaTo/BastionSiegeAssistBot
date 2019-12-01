@@ -174,14 +174,23 @@ async function replyCastleParticipants(ctx: ContextMessageUpdate, castle: Castle
   await ctx.replyWithMarkdown(text)
 }
 
-bot.on('text', whenScreenContainsInformation('castleSiegeAllianceJoined', notNewMiddleware('forward.old', castleSiege.MAXIMUM_JOIN_SECONDS / 60), async ctx => {
-  return ctx.reply((ctx as any).i18n.t('castle.updated'))
-}))
+bot.on('text', whenScreenContainsInformation('castleSiegeAllianceJoined', notNewMiddleware('forward.old', castleSiege.MAXIMUM_JOIN_SECONDS / 60), castleInformationUpdatedMiddleware))
 
 bot.on('text', whenScreenIsOfType('castleSiegeYouJoined', notNewMiddleware('forward.old', castleSiege.MAXIMUM_JOIN_SECONDS / 60), async ctx => {
   return ctx.reply('Thats fancy you joined but I currently only work with messages of others joining in. 😇')
 }))
 
-bot.on('text', whenScreenContainsInformation('castleSiegeEnds', notNewMiddleware('forward.old', CASTLE_HOLD_SECONDS / 60), async ctx => {
-  return ctx.reply((ctx as any).i18n.t('castle.updated'))
-}))
+bot.on('text', whenScreenContainsInformation('castleSiegeEnds', notNewMiddleware('forward.old', CASTLE_HOLD_SECONDS / 60), castleInformationUpdatedMiddleware))
+
+const debouncedUpdated: Record<number, (ctx: ContextMessageUpdate) => Promise<unknown>> = {}
+function castleInformationUpdatedMiddleware(ctx: ContextMessageUpdate): void {
+  const {id} = ctx.from!
+  if (!debouncedUpdated[id]) {
+    debouncedUpdated[id] = debounce(
+      async (ctx: ContextMessageUpdate) => ctx.reply((ctx as any).i18n.t('castle.updated')),
+      DEBOUNCE_TIME
+    )
+  }
+
+  debouncedUpdated[id](ctx)
+}
