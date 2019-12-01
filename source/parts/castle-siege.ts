@@ -74,17 +74,17 @@ bot.command('castle', async ctx => {
   const {alliance} = gameInformation.player || {}
 
   const castleParts = CASTLES
-    .map(o => {
+    .map(castle => {
       let part = ''
       part += '*'
-      part += castleGametext(o, lang === 'ru' ? 'ru' : 'en')
+      part += castleGametext(castle, lang === 'ru' ? 'ru' : 'en')
       part += '*'
       part += '\n'
-      part += castleFormattedTimestampBegin(o, lang, timeZone)
+      part += castleFormattedTimestampBegin(castle, lang, timeZone)
       part += ' - '
-      part += castleFormattedTimestampEnd(o, lang, timeZone)
+      part += castleFormattedTimestampEnd(castle, lang, timeZone)
 
-      if (castles.isCurrentlySiegeAvailable(o, now) && userIsPoweruser && alliance) {
+      if (castles.isCurrentlySiegeAvailable(castle, now) && userIsPoweruser && alliance) {
         const participants = castleSiege.getParticipants(now, alliance)
         const missing = getMissingMates(alliance, participants.map(o => o.player), now)
 
