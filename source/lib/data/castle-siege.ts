@@ -39,12 +39,14 @@ export function getAlliances(currentTimestamp: number): readonly string[] {
 }
 
 export function getParticipants(currentTimestamp: number, alliance: string): readonly CastleSiegePlayerEntry[] {
+  const minTimestamp = currentTimestamp - MAXIMUM_JOIN_SECONDS
+
   // Joined alliances have no player
   const onlyPlayerEntries: CastleSiegePlayerEntry[] = (data.get() || [])
     .filter(o => o.player) as CastleSiegePlayerEntry[]
 
   return onlyPlayerEntries
-    .filter(o => o.timestamp > currentTimestamp - MAXIMUM_JOIN_SECONDS)
+    .filter(o => o.timestamp > minTimestamp)
     .filter(o => o.alliance === alliance)
     .sort(sortBy(o => o.timestamp))
 }
