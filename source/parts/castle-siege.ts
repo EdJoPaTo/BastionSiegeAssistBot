@@ -85,7 +85,7 @@ bot.command('castle', async ctx => {
       part += castleFormattedTimestampEnd(castle, lang, timeZone)
 
       if (castles.isCurrentlySiegeAvailable(castle, now) && userIsPoweruser && alliance) {
-        const participants = castleSiege.getParticipants(now, alliance)
+        const participants = castleSiege.getParticipants(castle, alliance, now)
         const missing = getMissingMates(alliance, participants.map(o => o.player), now)
 
         if (missing.length > 0) {
@@ -114,22 +114,22 @@ bot.command('castle', async ctx => {
   return ctx.replyWithMarkdown(text)
 })
 
-const debouncedParticipants: Record<number, (ctx: ContextMessageUpdate, timestamp: number, alliance: string) => Promise<void>> = {}
+const debouncedParticipants: Record<number, (ctx: ContextMessageUpdate, castle: Castle, alliance: string, timestamp: number) => Promise<void>> = {}
 bot.on('text', whenScreenContainsInformation('castleSiegePlayerJoined', notNewMiddleware('forward.old', castleSiege.MAXIMUM_JOIN_SECONDS / 60), async ctx => {
-  const {castleSiegePlayerJoined, timestamp} = (ctx as any).state.screen as Gamescreen
+  const {castle, castleSiegePlayerJoined, timestamp} = (ctx as any).state.screen as Gamescreen
   const {alliance, name} = castleSiegePlayerJoined!
-  await castleSiege.add(timestamp, alliance!, name)
+  await castleSiege.add(castle!, alliance!, name, timestamp)
 
   const {id} = ctx.from!
   if (!debouncedParticipants[id]) {
     debouncedParticipants[id] = debounce(replyCastleParticipants, DEBOUNCE_TIME)
   }
 
-  debouncedParticipants[id](ctx, timestamp, alliance!)
+  debouncedParticipants[id](ctx, castle!, alliance!, timestamp)
 }))
 
-async function replyCastleParticipants(ctx: ContextMessageUpdate, timestamp: number, alliance: string): Promise<void> {
-  const participants = castleSiege.getParticipants(timestamp, alliance)
+async function replyCastleParticipants(ctx: ContextMessageUpdate, castle: Castle, alliance: string, timestamp: number): Promise<void> {
+  const participants = castleSiege.getParticipants(castle, alliance, timestamp)
     .map(o => o.player)
 
   const missingMates = getMissingMates(alliance, participants, timestamp)
@@ -161,8 +161,8 @@ async function replyCastleParticipants(ctx: ContextMessageUpdate, timestamp: num
 }
 
 bot.on('text', whenScreenContainsInformation('castleSiegeAllianceJoined', notNewMiddleware('forward.old', castleSiege.MAXIMUM_JOIN_SECONDS / 60), async ctx => {
-  const {castleSiegeAllianceJoined, timestamp} = (ctx as any).state.screen as Gamescreen
-  await castleSiege.add(timestamp, castleSiegeAllianceJoined!.alliance, undefined)
+  const {castle, castleSiegeAllianceJoined, timestamp} = (ctx as any).state.screen as Gamescreen
+  await castleSiege.add(castle!, castleSiegeAllianceJoined!.alliance, undefined, timestamp)
   return ctx.reply(`Thats fancy ${castleSiegeAllianceJoined!.alliance} joined but I dont know what to do with that information. 😇`)
 }))
 

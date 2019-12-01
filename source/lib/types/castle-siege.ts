@@ -1,3 +1,5 @@
+import {Castle} from 'bastion-siege-logic'
+
 type UnixTimestamp = number
 
 export interface CastleInfo {
@@ -5,6 +7,7 @@ export interface CastleInfo {
 }
 
 export interface CastleSiegeEntry {
+  castle: Castle;
   alliance: string;
   player?: string;
   timestamp: UnixTimestamp;
