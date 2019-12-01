@@ -34,7 +34,7 @@ export function nextSiegeBeginsFight(castle: Castle): number {
 
 export function isCurrentlySiegeAvailable(castle: Castle, now: number): boolean {
   const siegeAvailable = nextSiegeAvailable(castle)
-  return now > siegeAvailable && now < siegeAvailable + CASTLE_SIEGE_SECONDS
+  return now > siegeAvailable || !isFinite(siegeAvailable)
 }
 
 export function currentKeeperAlliance(castle: Castle): string | undefined {
