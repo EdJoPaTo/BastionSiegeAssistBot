@@ -116,6 +116,9 @@ buildings:
 
       Denk dran, dass in Allianz Kämpfen nur vom jeweils Ersten der beiden Streitmächte der Wall oder das Katapult wirkt.
       Wenn du einem Kampf beitrittst zählt nur noch deine Armee.
+castle:
+  updated: >
+    Großartig! Dank dir weiß ich nun mehr über die aktuelle /castle Situation.
 effects:
   updated: >
     Effekte aktualisiert! 👌

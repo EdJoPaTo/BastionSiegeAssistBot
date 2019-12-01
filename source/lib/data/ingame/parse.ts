@@ -42,7 +42,7 @@ export async function parseAndSave(providingTgUser: number, time: number, text: 
     }
 
     if (content.castle && content.castleSiegeEnds) {
-      await castles.siegeEnded(content.castle, content.ingameTimestamp)
+      await castles.siegeEnded(content.castle, content.ingameTimestamp, content.castleSiegeEnds.newAlliance)
     }
 
     if (isEmptyContent(content)) {

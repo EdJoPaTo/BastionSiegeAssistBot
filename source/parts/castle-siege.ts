@@ -1,5 +1,5 @@
 import {Composer, ContextMessageUpdate} from 'telegraf'
-import {Gamescreen, CASTLES, castleGametext, Castle} from 'bastion-siege-logic'
+import {Gamescreen, CASTLES, castleGametext, Castle, CASTLE_HOLD_SECONDS} from 'bastion-siege-logic'
 import debounce from 'debounce-promise'
 
 import {whenScreenContainsInformation, whenScreenIsOfType} from '../lib/input/gamescreen'
@@ -75,7 +75,13 @@ bot.command('castle', async ctx => {
 
   const castleParts = CASTLES
     .map(castle => {
+      const keeper = castles.currentKeeperAlliance(castle)
+
       let part = ''
+      if (keeper) {
+        part += keeper
+      }
+
       part += '*'
       part += castleGametext(castle, lang === 'ru' ? 'ru' : 'en')
       part += '*'
@@ -168,4 +174,8 @@ bot.on('text', whenScreenContainsInformation('castleSiegeAllianceJoined', notNew
 
 bot.on('text', whenScreenIsOfType('castleSiegeYouJoined', notNewMiddleware('forward.old', castleSiege.MAXIMUM_JOIN_SECONDS / 60), async ctx => {
   return ctx.reply('Thats fancy you joined but I currently only work with messages of others joining in. 😇')
+}))
+
+bot.on('text', whenScreenContainsInformation('castleSiegeEnds', notNewMiddleware('forward.old', CASTLE_HOLD_SECONDS / 60), async ctx => {
+  return ctx.reply((ctx as any).i18n.t('castle.updated'))
 }))

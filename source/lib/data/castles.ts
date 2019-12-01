@@ -10,12 +10,15 @@ function getOrDefault(castle: Castle): CastleInfo {
   }
 }
 
-export async function siegeEnded(castle: Castle, siegeEndedIngameTimestamp: number): Promise<void> {
+export async function siegeEnded(castle: Castle, siegeEndedIngameTimestamp: number, newKeeperAlliance: string | undefined): Promise<void> {
   const current = getOrDefault(castle)
 
   const nextSiegeAvailableTimestamp = siegeEndedIngameTimestamp + CASTLE_HOLD_SECONDS
+  const currentIsOld = !current.nextSiege || current.nextSiege < nextSiegeAvailableTimestamp
+  const currentKeeperIsUnknown = !current.keeperAlliance && newKeeperAlliance && current.nextSiege === nextSiegeAvailableTimestamp
 
-  if (!current.nextSiege || current.nextSiege < nextSiegeAvailableTimestamp) {
+  if (currentIsOld || currentKeeperIsUnknown) {
+    current.keeperAlliance = newKeeperAlliance
     current.nextSiege = nextSiegeAvailableTimestamp
     await data.set(castle, current)
   }
@@ -32,4 +35,8 @@ export function nextSiegeBeginsFight(castle: Castle): number {
 export function isCurrentlySiegeAvailable(castle: Castle, now: number): boolean {
   const siegeAvailable = nextSiegeAvailable(castle)
   return now > siegeAvailable && now < siegeAvailable + CASTLE_SIEGE_SECONDS
+}
+
+export function currentKeeperAlliance(castle: Castle): string | undefined {
+  return getOrDefault(castle).keeperAlliance
 }

@@ -116,6 +116,9 @@ buildings:
 
       Keep in mind that only the trebuchet and wall of the first ones of each battling side are considered.
       When you are just joining in on a battle your wall and trebuchet are ignored.
+castle:
+  updated: >
+    Awesome! I updated what I know about the current /castle situation.
 effects:
   updated: >
     Updated your effects. 👌

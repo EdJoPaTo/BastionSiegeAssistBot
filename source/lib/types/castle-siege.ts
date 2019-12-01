@@ -3,6 +3,7 @@ import {Castle} from 'bastion-siege-logic'
 type UnixTimestamp = number
 
 export interface CastleInfo {
+  keeperAlliance?: string;
   nextSiege?: UnixTimestamp;
 }
 
