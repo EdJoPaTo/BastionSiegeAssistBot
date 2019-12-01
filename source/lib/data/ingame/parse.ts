@@ -1,6 +1,7 @@
 import {parseGamescreen, Gamescreen} from 'bastion-siege-logic'
 
 import * as castles from '../castles'
+import * as castleSiege from '../castle-siege'
 
 import {isEmptyContent} from './failed-bs-messages'
 import * as attackscouts from './attackscouts'
@@ -41,8 +42,19 @@ export async function parseAndSave(providingTgUser: number, time: number, text: 
       messages.goldrankings.add(raw)
     }
 
-    if (content.castle && content.castleSiegeEnds) {
-      await castles.siegeEnded(content.castle, content.ingameTimestamp, content.castleSiegeEnds.newAlliance)
+    if (content.castle) {
+      if (content.castleSiegeAllianceJoined) {
+        await castleSiege.add(content.castle, content.castleSiegeAllianceJoined.alliance, undefined, content.timestamp)
+      }
+
+      if (content.castleSiegePlayerJoined) {
+        const {alliance, name} = content.castleSiegePlayerJoined
+        await castleSiege.add(content.castle, alliance!, name, content.timestamp)
+      }
+
+      if (content.castleSiegeEnds) {
+        await castles.siegeEnded(content.castle, content.ingameTimestamp, content.castleSiegeEnds.newAlliance)
+      }
     }
 
     if (isEmptyContent(content)) {

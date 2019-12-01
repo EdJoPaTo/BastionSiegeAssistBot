@@ -132,8 +132,7 @@ bot.command('castle', async ctx => {
 const debouncedParticipants: Record<number, (ctx: ContextMessageUpdate, castle: Castle, alliance: string, timestamp: number) => Promise<void>> = {}
 bot.on('text', whenScreenContainsInformation('castleSiegePlayerJoined', notNewMiddleware('forward.old', castleSiege.MAXIMUM_JOIN_SECONDS / 60), async ctx => {
   const {castle, castleSiegePlayerJoined, timestamp} = (ctx as any).state.screen as Gamescreen
-  const {alliance, name} = castleSiegePlayerJoined!
-  await castleSiege.add(castle!, alliance!, name, timestamp)
+  const {alliance} = castleSiegePlayerJoined!
 
   const {id} = ctx.from!
   if (!debouncedParticipants[id]) {
@@ -176,9 +175,7 @@ async function replyCastleParticipants(ctx: ContextMessageUpdate, castle: Castle
 }
 
 bot.on('text', whenScreenContainsInformation('castleSiegeAllianceJoined', notNewMiddleware('forward.old', castleSiege.MAXIMUM_JOIN_SECONDS / 60), async ctx => {
-  const {castle, castleSiegeAllianceJoined, timestamp} = (ctx as any).state.screen as Gamescreen
-  await castleSiege.add(castle!, castleSiegeAllianceJoined!.alliance, undefined, timestamp)
-  return ctx.reply(`Thats fancy ${castleSiegeAllianceJoined!.alliance} joined but I dont know what to do with that information. 😇`)
+  return ctx.reply((ctx as any).i18n.t('castle.updated'))
 }))
 
 bot.on('text', whenScreenIsOfType('castleSiegeYouJoined', notNewMiddleware('forward.old', castleSiege.MAXIMUM_JOIN_SECONDS / 60), async ctx => {
