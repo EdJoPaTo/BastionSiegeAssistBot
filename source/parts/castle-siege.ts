@@ -116,7 +116,13 @@ bot.command('castle', async ctx => {
           part += alliance + ' '
           part += `Participants (${participants.length}): `
           part += participants
-            .map(o => createPlayerNameString({player: o.player}, true))
+            .map(o => {
+              const playerWithoutAlliance = {player: o.player}
+              const userId = userSessions.getUserIdByName(o.player)
+              return userId ?
+                createPlayerMarkdownLink(userId, playerWithoutAlliance) :
+                createPlayerNameString(playerWithoutAlliance, true)
+            })
             .join(', ')
         }
       }
