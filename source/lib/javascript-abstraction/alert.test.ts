@@ -1,3 +1,4 @@
+/* eslint @typescript-eslint/no-empty-function: warn */
 import test from 'ava'
 
 import {
