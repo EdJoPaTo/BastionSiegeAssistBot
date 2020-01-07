@@ -22,7 +22,7 @@ import * as battleStats from '../lib/math/battle-stats'
 
 import {createAverageMaxString} from '../lib/user-interface/number-array-strings'
 import {createBattleStatsString, createRanking} from '../lib/user-interface/battle-stats'
-import {createPlayerNameString} from '../lib/user-interface/player-stats'
+import {createPlayerMarkdownLink} from '../lib/user-interface/player-stats'
 import {emoji} from '../lib/user-interface/output-text'
 
 const DEFAULT_TIMEFRAME = '24h'
@@ -335,7 +335,7 @@ function createAllianceMates(ctx: any): string {
 
       return {
         playername,
-        nameMarkdown: createPlayerNameString({player: playername}, true),
+        nameMarkdown: createPlayerMarkdownLink(user, {player: playername}),
         battlereport: reports.length,
         gems: getSumAverageAmount(mystics.map(o => o.gems)),
         gold: getSumAverageAmount(solo.map(o => o.gold)),
