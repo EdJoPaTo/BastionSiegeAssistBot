@@ -216,7 +216,7 @@ function createSolo(ctx: any): string {
   return text
 }
 
-function getAllianceRelevantData(ctx: any): {allianceMates: SessionRaw[]; header: string; firstTimeRelevant: number} {
+function getAllianceRelevantData(ctx: any): {allianceMates: readonly SessionRaw[]; header: string; firstTimeRelevant: number} {
   const session = ctx.session as Session
   const timeframe = getCurrentTimeframe(ctx)
   const firstTimeRelevant = getFirstTimeRelevantForTimeframe(timeframe)
