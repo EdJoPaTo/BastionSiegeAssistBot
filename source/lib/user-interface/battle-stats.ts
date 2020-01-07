@@ -115,7 +115,7 @@ export function createRanking(data: any[], key: string, title: string, forceIncl
       o.rank = i + 1
       return o
     })
-    .filter((o, i) => o.playername === forceIncludeName || i < 3)
+    .filter((o, i) => o.playername === forceIncludeName || i < 5)
     .map(o => {
       const prefix = `${o.rank}. ${o.nameMarkdown}`
 
