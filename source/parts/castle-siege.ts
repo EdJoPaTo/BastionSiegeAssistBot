@@ -1,5 +1,6 @@
 import {Composer, ContextMessageUpdate} from 'telegraf'
 import {Gamescreen, CASTLES, castleGametext, Castle, CASTLE_HOLD_SECONDS} from 'bastion-siege-logic'
+import arrayFilterUnique from 'array-filter-unique'
 import debounce from 'debounce-promise'
 
 import {whenScreenContainsInformation, whenScreenIsOfType} from '../lib/input/gamescreen'
@@ -92,7 +93,10 @@ bot.command('castle', async ctx => {
       part += castleFormattedTimestampEnd(castle, lang, timeZone)
 
       if (castles.isCurrentlySiegeAvailable(castle, now)) {
-        const participatingAlliances = castleSiege.getAlliances(castle, now)
+        const participatingAlliances = [
+          keeper,
+          ...castleSiege.getAlliances(castle, now)
+        ].filter(o => o).filter(arrayFilterUnique()) as string[]
         if (participatingAlliances.length > 0) {
           part += '\n'
           part += (ctx as any).i18n.t('bs.siege')
