@@ -5,7 +5,7 @@ import {PlayerStats, PlayerStatsActivity, PlayerStatsLoot, ArmyEstimate} from '.
 
 import {replaceLookingLikeAsciiChars} from '../javascript-abstraction/strings'
 
-import {averageTimeOfDay, getMidnightXDaysEarlier} from './unix-timestamp'
+import {averageTimeOfDay, filterMaxDays} from './unix-timestamp'
 import {getSumAverageAmount} from './number-array'
 
 const CANNED_REPORT_AMOUNT = 3
@@ -28,9 +28,8 @@ export function generate(allBattlereports: readonly Battlereport[], playername: 
 
   const alliance = allAlliances.slice(-1)[0]
 
-  const nearPastMinTimestamp = getMidnightXDaysEarlier(now, 30)
   const nearPastReports = allWithTarget
-    .filter(o => o.time > nearPastMinTimestamp)
+    .filter(filterMaxDays(30, o => o.time, now))
 
   const soloReports = nearPastReports
     .filter(o => o.enemies.length === 1)

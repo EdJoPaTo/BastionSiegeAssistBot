@@ -8,7 +8,7 @@ import {PlayerStats} from '../lib/types'
 import * as playerStatsDb from '../lib/data/playerstats-db'
 import * as poweruser from '../lib/data/poweruser'
 
-import {getMidnightXDaysEarlier} from '../lib/math/unix-timestamp'
+import {filterMaxDays} from '../lib/math/unix-timestamp'
 
 import {createMultipleStatsConclusion} from '../lib/user-interface/player-stats'
 
@@ -21,10 +21,8 @@ bot.command('alliances', (ctx: any) => {
     return ctx.replyWithMarkdown(text)
   }
 
-  const minDate = getMidnightXDaysEarlier(Date.now() / 1000, 7) // Seen within 7 days
-
   const playerStats = playerStatsDb.list()
-    .filter(o => o.lastBattleTime > minDate)
+    .filter(filterMaxDays(7, o => o.lastBattleTime))
 
   const groupedByAlliance = playerStats
     .reduce(arrayReduceGroupBy<string, PlayerStats>(o => o.alliance!), {})

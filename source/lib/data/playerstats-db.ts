@@ -4,7 +4,7 @@ import {replaceLookingLikeAsciiChars} from '../javascript-abstraction/strings'
 import {sortBy} from '../javascript-abstraction/array'
 
 import {generate} from '../math/player-stats'
-import {getMidnightXDaysEarlier} from '../math/unix-timestamp'
+import {filterMaxDays} from '../math/unix-timestamp'
 
 import * as battlereports from './ingame/battlereports'
 
@@ -39,7 +39,7 @@ export function getLookingLike(player: string, terra = NaN, onlyFromNearPast = t
     .sort(sortBy(o => o.lastBattleTime, true))
     .sort(sortBy(o => Math.abs(o.terra - terra)))
 
-  return onlyFromNearPast ? filterNearPast(allLookingAlike) : allLookingAlike
+  return onlyFromNearPast ? filterNearPastWithFallback(allLookingAlike) : allLookingAlike
 }
 
 export function getFromShortened(playerShortened: string, onlyFromNearPast = true): PlayerStats[] {
@@ -52,17 +52,17 @@ export function getFromShortened(playerShortened: string, onlyFromNearPast = tru
     .filter(o => o.player.startsWith(searched))
     .sort(sortBy(o => o.lastBattleTime, true))
 
-  return onlyFromNearPast ? filterNearPast(allLookingAlike) : allLookingAlike
+  return onlyFromNearPast ? filterNearPastWithFallback(allLookingAlike) : allLookingAlike
 }
 
-function filterNearPast(all: PlayerStats[]): PlayerStats[] {
-  const minDate = getMidnightXDaysEarlier(Date.now() / 1000, 30)
-  const newEnoughExist = all.some(o => o.lastBattleTime > minDate)
-  if (!newEnoughExist) {
+function filterNearPastWithFallback(all: PlayerStats[], days = 30, fallbackOlder = true): PlayerStats[] {
+  const filtered = all.filter(filterMaxDays(days, o => o.lastBattleTime))
+
+  if (filtered.length === 0 && fallbackOlder) {
     return all
   }
 
-  return all.filter(o => o.lastBattleTime > minDate)
+  return filtered
 }
 
 export function list(): PlayerStats[] {

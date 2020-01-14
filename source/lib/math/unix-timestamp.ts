@@ -61,3 +61,8 @@ export function averageTimeOfDay(unixTimestamps: number[]): AverageTimeOfDay {
     accuracy
   }
 }
+
+export function filterMaxDays<T>(days: number, unixTimestampSelector: (o: T) => number, now = Date.now() / 1000): (o: T) => boolean {
+  const minTimestamp = getMidnightXDaysEarlier(now, days)
+  return o => unixTimestampSelector(o) > minTimestamp
+}
