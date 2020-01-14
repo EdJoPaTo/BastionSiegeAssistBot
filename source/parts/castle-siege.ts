@@ -10,8 +10,9 @@ import {Session} from '../lib/types'
 
 import * as castles from '../lib/data/castles'
 import * as castleSiege from '../lib/data/castle-siege'
-import * as userSessions from '../lib/data/user-sessions'
+import * as playerStatsDb from '../lib/data/playerstats-db'
 import * as poweruser from '../lib/data/poweruser'
+import * as userSessions from '../lib/data/user-sessions'
 
 import {notNewMiddleware} from '../lib/telegraf-middlewares'
 
@@ -101,14 +102,31 @@ bot.command('castle', async ctx => {
 
         if (userIsPoweruser && alliance && participatingAlliances.includes(alliance)) {
           const participants = castleSiege.getParticipants(castle, alliance, now)
-          const missing = getMissingMates(alliance, participants.map(o => o.player), now)
-          if (missing.length > 0) {
+          const missingUsers = getMissingMates(alliance, participants.map(o => o.player), now)
+
+          const knownNames = [
+            ...missingUsers.map(o => o.player),
+            ...participants.map(o => o.player)
+          ]
+          const missingNonUsers = playerStatsDb.getInAlliance(alliance, 7)
+            .map(o => o.player)
+            .filter(o => !knownNames.includes(o))
+
+          const missingEntries: string[] = []
+          missingEntries.push(...missingUsers
+            .sort((a, b) => a.player.localeCompare(b.player))
+            .map(o => createPlayerMarkdownLink(o.user, o))
+          )
+          missingEntries.push(...missingNonUsers
+            .sort((a, b) => a.localeCompare(b))
+            .map(o => createPlayerNameString({player: o}, true) + '?')
+          )
+
+          if (missingEntries.length > 0) {
             part += '\n'
             part += alliance + ' '
-            part += `Missing (${missing.length}): `
-            part += missing
-              .sort((a, b) => a.player.localeCompare(b.player))
-              .map(o => createPlayerMarkdownLink(o.user, o))
+            part += `Missing (${missingEntries.length}): `
+            part += missingEntries
               .join(', ')
           }
 

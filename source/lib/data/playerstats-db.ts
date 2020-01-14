@@ -55,6 +55,14 @@ export function getFromShortened(playerShortened: string, onlyFromNearPast = tru
   return onlyFromNearPast ? filterNearPastWithFallback(allLookingAlike) : allLookingAlike
 }
 
+export function getInAlliance(alliance: string | undefined, maxAgeDays: number): PlayerStats[] {
+  const searched = list()
+    .filter(o => o.alliance === alliance)
+    .filter(filterMaxDays(maxAgeDays, o => o.lastBattleTime))
+
+  return searched
+}
+
 function filterNearPastWithFallback(all: PlayerStats[], days = 30, fallbackOlder = true): PlayerStats[] {
   const filtered = all.filter(filterMaxDays(days, o => o.lastBattleTime))
 
