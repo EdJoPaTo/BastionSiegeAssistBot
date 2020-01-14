@@ -1,5 +1,5 @@
 import {Composer, ContextMessageUpdate} from 'telegraf'
-import {Gamescreen, CASTLES, castleGametext, Castle, CASTLE_HOLD_SECONDS} from 'bastion-siege-logic'
+import {CASTLES, castleGametext, Castle, CASTLE_HOLD_SECONDS} from 'bastion-siege-logic'
 import arrayFilterUnique from 'array-filter-unique'
 import debounce from 'debounce-promise'
 
@@ -157,51 +157,7 @@ bot.command('castle', async ctx => {
   return ctx.replyWithMarkdown(text)
 })
 
-const debouncedParticipants: Record<number, (ctx: ContextMessageUpdate, castle: Castle, alliance: string, timestamp: number) => Promise<void>> = {}
-bot.on('text', whenScreenContainsInformation('castleSiegePlayerJoined', notNewMiddleware('forward.old', castleSiege.MAXIMUM_JOIN_SECONDS / 60), async ctx => {
-  const {castle, castleSiegePlayerJoined, timestamp} = (ctx as any).state.screen as Gamescreen
-  const {alliance} = castleSiegePlayerJoined!
-
-  const {id} = ctx.from!
-  if (!debouncedParticipants[id]) {
-    debouncedParticipants[id] = debounce(replyCastleParticipants, DEBOUNCE_TIME)
-  }
-
-  debouncedParticipants[id](ctx, castle!, alliance!, timestamp)
-}))
-
-async function replyCastleParticipants(ctx: ContextMessageUpdate, castle: Castle, alliance: string, timestamp: number): Promise<void> {
-  const participants = castleSiege.getParticipants(castle, alliance, timestamp)
-    .map(o => o.player)
-
-  const missingMates = getMissingMates(alliance, participants, timestamp)
-
-  let text = ''
-  text += `*${(ctx as any).i18n.t('bs.siege')}*\n`
-  text += '\n'
-
-  if (missingMates.length > 0) {
-    text += alliance + ' '
-    text += `Missing (${missingMates.length}): `
-    text += missingMates
-      .sort((a, b) => a.player.localeCompare(b.player))
-      .map(o => createPlayerMarkdownLink(o.user, o))
-      .join(', ')
-    text += '\n\n'
-  }
-
-  text += alliance + ' '
-  text += `Participants (${participants.length}): `
-  text += participants
-    .map(o => createPlayerNameString({player: o}, true))
-    .join(', ')
-  text += '\n\n'
-
-  text += 'Check /castle'
-
-  await ctx.replyWithMarkdown(text)
-}
-
+bot.on('text', whenScreenContainsInformation('castleSiegePlayerJoined', notNewMiddleware('forward.old', castleSiege.MAXIMUM_JOIN_SECONDS / 60), castleInformationUpdatedMiddleware))
 bot.on('text', whenScreenContainsInformation('castleSiegeAllianceJoined', notNewMiddleware('forward.old', castleSiege.MAXIMUM_JOIN_SECONDS / 60), castleInformationUpdatedMiddleware))
 
 bot.on('text', whenScreenIsOfType('castleSiegeYouJoined', notNewMiddleware('forward.old', castleSiege.MAXIMUM_JOIN_SECONDS / 60), async ctx => {
