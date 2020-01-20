@@ -8,22 +8,26 @@ export interface RawMessage {
 
 console.time('load messages')
 
-export const attackscouts = new ManyFilesStore<RawMessage>('persist/messages/attackscouts', rawMessageKeyFunc)
+export const attackscouts = new ManyFilesStore<RawMessage>('persist/messages/attackscouts', rawMessageKeyFunc, rawMessageSortFunc)
 console.timeLog('load messages', 'attackscouts', attackscouts.values().length)
 
-export const battlereports = new ManyFilesStore<RawMessage>('persist/messages/battlereports', rawMessageKeyFunc)
+export const battlereports = new ManyFilesStore<RawMessage>('persist/messages/battlereports', rawMessageKeyFunc, rawMessageSortFunc)
 console.timeLog('load messages', 'battlereports', battlereports.values().length)
 
-export const failed = new ManyFilesStore<RawMessage>('persist/messages/failed', rawMessageKeyFunc)
+export const failed = new ManyFilesStore<RawMessage>('persist/messages/failed', rawMessageKeyFunc, rawMessageSortFunc)
 console.timeLog('load messages', 'failed', failed.values().length)
 
-export const goldrankings = new ManyFilesStore<RawMessage>('persist/messages/goldrankings', rawMessageKeyFunc)
+export const goldrankings = new ManyFilesStore<RawMessage>('persist/messages/goldrankings', rawMessageKeyFunc, rawMessageSortFunc)
 console.timeLog('load messages', 'goldrankings', goldrankings.values().length)
 
 console.timeEnd('load messages')
 
 function rawMessageKeyFunc(msg: RawMessage): string {
   return unixTimestampKeyFunction(msg.time)
+}
+
+function rawMessageSortFunc(a: RawMessage, b: RawMessage): number {
+  return a.time - b.time
 }
 
 function unixTimestampKeyFunction(unixTimestamp: number): string {
