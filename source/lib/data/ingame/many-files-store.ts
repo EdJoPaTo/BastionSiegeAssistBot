@@ -10,7 +10,8 @@ export class ManyFilesStore<T> {
   constructor(
     public readonly directory: string,
     public readonly keyFunc: (entry: T) => string,
-    public readonly sortFunc: ((a: T, b: T) => number)
+    public readonly sortFunc: ((a: T, b: T) => number),
+    public readonly existStringFunc: (o: T) => string = o => stringify(o)
   ) {
     mkdirSync(directory, {recursive: true})
     const allEntries = loadAll(directory) as T[]
@@ -28,9 +29,9 @@ export class ManyFilesStore<T> {
 
   exists(entry: T): boolean {
     const key = this.keyFunc(entry)
-    const stringified = stringify(entry)
+    const stringified = this.existStringFunc(entry)
     return this.valuesOfKey(key)
-      .some(o => stringify(o) === stringified)
+      .some(o => this.existStringFunc(o) === stringified)
   }
 
   add(entry: T | readonly T[]): void {
@@ -41,7 +42,7 @@ export class ManyFilesStore<T> {
         ...this.valuesOfKey(key),
         ...grouped[key]
       ]
-        .filter(arrayFilterUnique(o => stringify(o)))
+        .filter(arrayFilterUnique(o => this.existStringFunc(o)))
         .sort(this.sortFunc)
 
       saveSubset(this.directory, key, this._entries[key])
