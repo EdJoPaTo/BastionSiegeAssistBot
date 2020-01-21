@@ -26,5 +26,7 @@ test('calculateSecondsFromTimeframeString examples', t => {
 test('calculateSecondsFromTimeframeString undefined unit', t => {
   t.throws(() => {
     calculateSecondsFromTimeframeString('7f')
-  }, 'unknown unit')
+  }, {
+    message: 'unknown unit'
+  })
 })
