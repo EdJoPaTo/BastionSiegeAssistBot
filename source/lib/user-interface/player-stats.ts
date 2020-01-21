@@ -242,7 +242,7 @@ export function createTwoSidesOneLineString(side1stats: readonly PlayerStats[], 
   return text
 }
 
-export function createTwoSidesStatsString(side1stats: readonly PlayerStats[], side2stats: readonly PlayerStats[], playerArmyOverride: Record<string, number> = {}): string {
+export function createTwoSidesStatsString(side1stats: readonly PlayerStats[], side2stats: readonly PlayerStats[], playerArmyOverride: Record<string, number>, playerTelegramIds: Record<string, number>): string {
   const side1 = createMultipleStatsConclusion(side1stats, playerArmyOverride)
   const side2 = createMultipleStatsConclusion(side2stats, playerArmyOverride)
 
@@ -250,15 +250,16 @@ export function createTwoSidesStatsString(side1stats: readonly PlayerStats[], si
   text += createTwoSidesArmyStrengthString(side1stats, side2stats, playerArmyOverride)
 
   text += '\n\n'
-  text += createMultipleStatsPlayerList(side1.alliance, side1stats, Object.keys(playerArmyOverride))
+  text += createMultipleStatsPlayerList(side1.alliance, side1stats, playerTelegramIds)
 
   text += '\n\n'
-  text += createMultipleStatsPlayerList(side2.alliance, side2stats, Object.keys(playerArmyOverride))
+  text += createMultipleStatsPlayerList(side2.alliance, side2stats, playerTelegramIds)
 
   return text
 }
 
-function createMultipleStatsPlayerList(allianceEmoji: string, statsArr: readonly PlayerStats[], playerNamesOverridden: readonly string[]): string {
+function createMultipleStatsPlayerList(allianceEmoji: string, statsArr: readonly PlayerStats[], playerTelegramIds: Record<string, number>): string {
+  const playerNamesOverridden = Object.keys(playerTelegramIds)
   const immuneEntries = statsArr
     .filter(o => isImmune(o.player))
     .map(o => o.player)
@@ -286,7 +287,10 @@ function createMultipleStatsPlayerList(allianceEmoji: string, statsArr: readonly
     text += emoji.immunity
     text += ' '
     text += immuneEntries
-      .map(o => createPlayerNameString({player: o}, true))
+      .map(o => {
+        const id = playerTelegramIds[o]
+        return id ? createPlayerMarkdownLink(id, {player: o}) : createPlayerNameString({player: o}, true)
+      })
       .join(', ')
 
     textParts.push(text)
@@ -297,7 +301,7 @@ function createMultipleStatsPlayerList(allianceEmoji: string, statsArr: readonly
     text += allianceEmoji
     text += ' '
     text += overriddenEntries
-      .map(o => createPlayerNameString({player: o}, true))
+      .map(o => createPlayerMarkdownLink(playerTelegramIds[o], {player: o}))
       .join(', ')
 
     textParts.push(text)

@@ -25,19 +25,37 @@ export function createWarOneLineString(battle: BattleAlliance): string {
 export function createWarStats(timestamp: number, battle: BattleAlliance, player: {name: string; alliance?: string}): string {
   const friends = battle.attack.includes(player.name) ? battle.attack : battle.defence
   const poweruserFriends = userSessions.getRaw()
-    .map(o => o.data.gameInformation)
-    .filter(o => o.player && friends.includes(o.player.name))
-    .filter(o => o.buildingsTimestamp && o.buildingsTimestamp + MAXIMUM_BUILDINGS_AGE > timestamp)
-    .map(o => ({
-      alliance: o.player!.alliance,
-      player: o.player!.name,
-      barracks: o.buildings!.barracks,
-      army: calcBarracksCapacity(o.buildings!.barracks)
-    }))
+    .filter(o => {
+      const {player, buildingsTimestamp} = o.data.gameInformation
+      if (!player || !friends.includes(player.name)) {
+        return false
+      }
+
+      if (!buildingsTimestamp || buildingsTimestamp + MAXIMUM_BUILDINGS_AGE < timestamp) {
+        return false
+      }
+
+      return true
+    })
+    .map(o => {
+      const {player, buildings} = o.data.gameInformation
+      return {
+        id: o.user,
+        alliance: player!.alliance,
+        player: player!.name,
+        barracks: buildings!.barracks,
+        army: calcBarracksCapacity(buildings!.barracks)
+      }
+    })
 
   const additionalArmyInformation: Record<string, number> = {}
   for (const o of poweruserFriends) {
     additionalArmyInformation[o.player] = o.army
+  }
+
+  const userIds: Record<string, number> = {}
+  for (const o of poweruserFriends) {
+    userIds[o.player] = o.id
   }
 
   const notPowerusers = friends
@@ -63,7 +81,7 @@ export function createWarStats(timestamp: number, battle: BattleAlliance, player
     .map(o => playerStatsDb.get(o))
   const defenceStats = battle.defence
     .map(o => playerStatsDb.get(o))
-  const statsString = createTwoSidesStatsString(attackStats, defenceStats, additionalArmyInformation)
+  const statsString = createTwoSidesStatsString(attackStats, defenceStats, additionalArmyInformation, userIds)
 
   let text = ''
 
