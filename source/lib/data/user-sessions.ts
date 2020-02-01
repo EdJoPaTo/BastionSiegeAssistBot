@@ -1,9 +1,13 @@
 import {ContextMessageUpdate} from 'telegraf'
 import arrayReduceGroupBy from 'array-reduce-group-by'
 
+import {DAY_IN_SECONDS} from '../math/timeframe'
+
 import {Session} from '../types'
 
 import {sortBy} from '../javascript-abstraction/array'
+
+import {MAX_PLAYER_AGE_DAYS} from './poweruser'
 
 /* eslint @typescript-eslint/no-var-requires: warn */
 const LocalSession = require('telegraf-session-local')
@@ -50,15 +54,18 @@ let playernameCacheAge = 0
 const PLAYERNAME_CACHE_MAX_AGE = 30 * 1000 // 30 seconds
 
 function updatePlayernameCache(): void {
-  const minAge = Date.now() - PLAYERNAME_CACHE_MAX_AGE
-  if (playernameCacheAge > minAge) {
+  const minCacheAge = Date.now() - PLAYERNAME_CACHE_MAX_AGE
+  if (playernameCacheAge > minCacheAge) {
     return
   }
+
+  const minPlayerTimestamp = (Date.now() / 1000) - (MAX_PLAYER_AGE_DAYS * DAY_IN_SECONDS)
 
   const raw = getRaw()
     .filter(o =>
       o.data.gameInformation &&
       o.data.gameInformation.playerTimestamp &&
+      o.data.gameInformation.playerTimestamp > minPlayerTimestamp &&
       o.data.gameInformation.player &&
       o.data.gameInformation.player.name
     )
