@@ -63,7 +63,7 @@ export function getInAlliance(alliance: string | undefined, maxAgeDays: number):
   return searched
 }
 
-function filterNearPastWithFallback(all: PlayerStats[], days = 30, fallbackOlder = true): PlayerStats[] {
+function filterNearPastWithFallback(all: PlayerStats[], days = 14, fallbackOlder = true): PlayerStats[] {
   const filtered = all.filter(filterMaxDays(days, o => o.lastBattleTime))
 
   if (filtered.length === 0 && fallbackOlder) {
