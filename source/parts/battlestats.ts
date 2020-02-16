@@ -325,7 +325,6 @@ function createAllianceMates(ctx: any): string {
         .filter(o => o.time > firstTimeRelevant)
 
       const solo = reports
-        .filter(o => o.won)
         .filter(o => o.friends.length === 1)
         .filter(o => !o.enemyMystic)
 
@@ -335,7 +334,7 @@ function createAllianceMates(ctx: any): string {
       return {
         playername,
         nameMarkdown: createPlayerMarkdownLink(user, {player: playername}),
-        battlereport: reports.length,
+        battlereport: solo.length,
         gems: getSumAverageAmount(mystics.map(o => o.gems)),
         gold: getSumAverageAmount(solo.map(o => o.gold)),
         karma: getSumAverageAmount(solo.map(o => o.karma)),
