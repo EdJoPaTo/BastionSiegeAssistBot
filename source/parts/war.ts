@@ -1,10 +1,11 @@
-import {Composer, Extra, Markup} from 'telegraf'
+import {Composer, Extra, Markup, Button, Telegram} from 'telegraf'
 import {Gamescreen, BattleSolo, BattleAlliance} from 'bastion-siege-logic'
 
-import {Session} from '../lib/types'
+import {Session, War, WarNotificationMessage} from '../lib/types'
 
 import * as playerStatsDb from '../lib/data/playerstats-db'
 import * as poweruser from '../lib/data/poweruser'
+import * as userSessions from '../lib/data/user-sessions'
 import * as wars from '../lib/data/wars'
 
 import {whenScreenIsOfType} from '../lib/input/gamescreen'
@@ -75,10 +76,20 @@ bot.on('text', whenScreenIsOfType('war', async (ctx: any) => {
       text += ' '
       text += ctx.i18n.t('battle.inlineWar.share')
 
-      extra = extra.markup(
-        Markup.inlineKeyboard([
-          Markup.switchToChatButton('Share War…', 'war') as any
+      const buttons: Button[][] = []
+
+      if (user.alliance) {
+        buttons.push([
+          Markup.callbackButton('Notify alliance ' + user.alliance, 'war-notify-alliance')
         ])
+      }
+
+      buttons.push([
+        Markup.switchToChatButton('Share War…', 'war')
+      ])
+
+      extra = extra.markup(
+        Markup.inlineKeyboard(buttons as any)
       ) as any
     }
   }
@@ -88,4 +99,62 @@ bot.on('text', whenScreenIsOfType('war', async (ctx: any) => {
 
 function isBattleSolo(battle: BattleSolo | BattleAlliance): battle is BattleSolo {
   return Boolean((battle as any).enemy)
+}
+
+bot.action('war-notify-alliance', async ctx => {
+  const now = Date.now() / 1000
+  const {gameInformation} = (ctx as any).session as Session
+  const {player} = gameInformation
+
+  if (!player || !player.alliance) {
+    await ctx.answerCbQuery((ctx as any).i18n.t('name.need'))
+    return
+  }
+
+  const currentWar = wars.getCurrent(now, player.name)
+  if (!currentWar) {
+    throw new Error('there is no war?')
+  }
+
+  const lastSentMessageTimestamp = Math.max(...currentWar.notificationMessages.map(o => o.timestamp))
+  if (lastSentMessageTimestamp + 60 > now) {
+    // Already sent a notification within 60 seconds.
+    await ctx.answerCbQuery('Dont spam your alliance mates!')
+    return
+  }
+
+  const allParticipants = [...currentWar.battle.attack, ...currentWar.battle.defence]
+  const missingMates = userSessions.getRawInAlliance(player.alliance)
+    .filter(o => !allParticipants.includes(o.data.gameInformation.player!.name))
+
+  const allNotificationAttempts = await Promise.all(
+    missingMates.map(async o => notifyPlayer(ctx.telegram, o.data.gameInformation.player!.name, o.user, currentWar))
+  )
+  const allNotifications = allNotificationAttempts
+    .filter(o => o) as WarNotificationMessage[]
+
+  await wars.addNotificationMessages(now, {name: player.name, alliance: player.alliance}, ...allNotifications)
+  await ctx.answerCbQuery('all notified 😎')
+})
+
+async function notifyPlayer(telegram: Telegram, playerName: string, playerId: number, war: War): Promise<WarNotificationMessage | undefined> {
+  try {
+    let text = ''
+    text += emoji.alertEnabled
+    text += emoji.war
+    text += ' '
+    text += createWarOneLineString(war.battle)
+
+    const notificationMessage = await telegram.sendMessage(playerId, text)
+
+    return {
+      timestamp: notificationMessage.date,
+      chatId: playerId,
+      player: playerName,
+      messageId: notificationMessage.message_id
+    }
+  } catch (error) {
+    console.error('failed to send war notification', error.message)
+    return undefined
+  }
 }

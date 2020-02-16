@@ -10,9 +10,17 @@ export interface WarInlineMessage {
   };
 }
 
+export interface WarNotificationMessage {
+  timestamp: UnixTimestamp;
+  player: string;
+  chatId: number;
+  messageId: number;
+}
+
 export interface War {
   battle: BattleAlliance;
   beginTimestamp: UnixTimestamp;
   timestamp: UnixTimestamp;
   inlineMessages: WarInlineMessage[];
+  notificationMessages: WarNotificationMessage[];
 }

@@ -2,7 +2,7 @@ import {BattleAlliance} from 'bastion-siege-logic'
 import {Extra, Telegram} from 'telegraf'
 import {RawObjectInMemoryFile} from '@edjopato/datastore'
 
-import {War, WarInlineMessage} from '../types'
+import {War, WarInlineMessage, WarNotificationMessage} from '../types'
 
 import {sortBy} from '../javascript-abstraction/array'
 
@@ -15,6 +15,25 @@ const MAX_BATTLE_AGE = 60 * 12 // 12 minutes
 let telegram: Telegram
 export function init(tg: Telegram): void {
   telegram = tg
+
+  setInterval(cleanupInInterval, 30 * 1000)
+  cleanupInInterval()
+}
+
+async function cleanupInInterval(): Promise<void> {
+  try {
+    const now = Date.now() / 1000
+    const all = data.get() || []
+    const entriesBefore = all.length
+    const cleanedUp = await cleanupWars(all, now)
+    const entriesAfter = cleanedUp.length
+
+    if (entriesBefore !== entriesAfter) {
+      await data.set(cleanedUp)
+    }
+  } catch (error) {
+    console.error('war cleanup interval failed', error)
+  }
 }
 
 export async function add(timestamp: number, battle: BattleAlliance): Promise<void> {
@@ -39,6 +58,15 @@ async function updateInlineMessage(timestamp: number, battle: BattleAlliance, in
   }
 }
 
+async function removeNotification(notification: WarNotificationMessage): Promise<void> {
+  const {chatId, messageId, player} = notification
+  try {
+    await telegram.deleteMessage(chatId, messageId)
+  } catch (error) {
+    console.warn('failed to delete notification', chatId, player, error.message)
+  }
+}
+
 async function addInternal(timestamp: number, battle: BattleAlliance, initial = {}): Promise<readonly WarInlineMessage[]> {
   const content = data.get() || []
 
@@ -48,6 +76,7 @@ async function addInternal(timestamp: number, battle: BattleAlliance, initial = 
   if (!replaces) {
     content.push({
       inlineMessages: [],
+      notificationMessages: [],
       ...initial,
       battle,
       beginTimestamp: timestamp,
@@ -60,11 +89,25 @@ async function addInternal(timestamp: number, battle: BattleAlliance, initial = 
     replaces.beginTimestamp = timestamp
   }
 
-  const cleanedUp = content
-    .filter(o => o.beginTimestamp > timestamp - MAX_BATTLE_AGE)
-
+  const cleanedUp = await cleanupWars(content, timestamp)
   await data.set(cleanedUp)
   return (replaces || {}).inlineMessages || []
+}
+
+async function cleanupWars(list: readonly War[], timestamp: number): Promise<War[]> {
+  const remaining = list
+    .filter(o => o.beginTimestamp > timestamp - MAX_BATTLE_AGE)
+  const removed = list
+    .filter(o => o.beginTimestamp <= timestamp - MAX_BATTLE_AGE)
+
+  await Promise.all(
+    removed.flatMap(
+      async w => w.notificationMessages
+        .map(async o => removeNotification(o))
+    )
+  )
+
+  return remaining
 }
 
 export function getCurrent(currentTimestamp: number, playername: string): War | undefined {
@@ -92,5 +135,15 @@ export async function addInlineMessageToUpdate(currentTimestamp: number, player:
     player
   })
 
+  await data.set(all)
+}
+
+export async function addNotificationMessages(currentTimestamp: number, playerSendingTheNotification: {name: string; alliance: string}, ...notification: WarNotificationMessage[]): Promise<void> {
+  const {all, relevant} = getCurrentInternal(currentTimestamp, playerSendingTheNotification.name)
+  if (!relevant) {
+    throw new Error('there is no war to notify about')
+  }
+
+  relevant.notificationMessages.push(...notification)
   await data.set(all)
 }
