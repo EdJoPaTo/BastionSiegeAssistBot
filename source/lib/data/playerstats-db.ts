@@ -43,7 +43,7 @@ export function getLookingLike(player: string, terra = NaN, onlyFromNearPast = t
 }
 
 export function getFromShortened(playerShortened: string, onlyFromNearPast = true): PlayerStats[] {
-  const searched = playerShortened.endsWith('~') ? playerShortened.slice(0, playerShortened.length - 1) : playerShortened
+  const searched = playerShortened.endsWith('~') ? playerShortened.slice(0, -1) : playerShortened
   if (searched.length !== 13) {
     throw new Error('shortened name does not seem to be from a ranking')
   }
