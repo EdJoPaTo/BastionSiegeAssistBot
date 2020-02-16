@@ -91,11 +91,13 @@ bot.command('castle', async ctx => {
           keeper,
           ...castleSiege.getAlliances(castle, now)
         ].filter(o => o).filter(arrayFilterUnique()) as string[]
-        if (participatingAlliances.length > 0) {
+        const onlyAttackers = participatingAlliances
+          .filter(o => o !== keeper)
+        if (onlyAttackers.length > 0) {
           part += '\n'
           part += (ctx as any).i18n.t('bs.siege')
           part += ': '
-          part += participatingAlliances.join('')
+          part += onlyAttackers.join('')
         }
 
         if (userIsPoweruser && alliance && participatingAlliances.includes(alliance)) {
