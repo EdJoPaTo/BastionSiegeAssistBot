@@ -102,7 +102,7 @@ async function cleanupWars(list: readonly War[], timestamp: number): Promise<War
 
   await Promise.all(
     removed.flatMap(
-      async w => w.notificationMessages
+      async w => (w.notificationMessages || [])
         .map(async o => removeNotification(o))
     )
   )
