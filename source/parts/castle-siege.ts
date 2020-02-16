@@ -5,8 +5,6 @@ import debounce from 'debounce-promise'
 
 import {whenScreenContainsInformation, whenScreenIsOfType} from '../lib/input/gamescreen'
 
-import {ONE_DAY_IN_SECONDS} from '../lib/math/unix-timestamp'
-
 import {Session} from '../lib/types'
 
 import * as castles from '../lib/data/castles'
@@ -22,12 +20,8 @@ import {emoji} from '../lib/user-interface/output-text'
 
 const DEBOUNCE_TIME = 200 // Milliseconds
 
-const MAXIMUM_PLAYER_AGE = ONE_DAY_IN_SECONDS * poweruser.MAX_PLAYER_AGE_DAYS
-
-function getMissingMates(alliance: string, participants: string[], timestamp: number): Array<{user: number; player: string}> {
-  const missingMates = userSessions.getRaw()
-    .filter(o => o.data.gameInformation.playerTimestamp && o.data.gameInformation.playerTimestamp + MAXIMUM_PLAYER_AGE > timestamp)
-    .filter(o => o.data.gameInformation.player!.alliance === alliance)
+function getMissingMates(alliance: string, participants: string[]): Array<{user: number; player: string}> {
+  const missingMates = userSessions.getRawInAlliance(alliance)
     .filter(o => !participants.includes(o.data.gameInformation.player!.name))
     .map(({user, data}) => ({user, player: data.gameInformation.player!.name}))
 
@@ -106,7 +100,7 @@ bot.command('castle', async ctx => {
 
         if (userIsPoweruser && alliance && participatingAlliances.includes(alliance)) {
           const participants = castleSiege.getParticipants(castle, alliance, now)
-          const missingUsers = getMissingMates(alliance, participants.map(o => o.player), now)
+          const missingUsers = getMissingMates(alliance, participants.map(o => o.player))
 
           const knownNames = [
             ...missingUsers.map(o => o.player),

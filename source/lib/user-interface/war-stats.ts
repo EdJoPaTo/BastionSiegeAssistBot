@@ -2,14 +2,13 @@ import {calcBarracksCapacity, BattleAlliance} from 'bastion-siege-logic'
 
 import * as playerStatsDb from '../data/playerstats-db'
 import * as userSessions from '../data/user-sessions'
-import {MAX_PLAYER_AGE_DAYS, MAX_BUILDING_AGE_DAYS} from '../data/poweruser'
+import {MAX_BUILDING_AGE_DAYS} from '../data/poweruser'
 
 import {ONE_DAY_IN_SECONDS} from '../math/unix-timestamp'
 
 import {createPlayerMarkdownLink, createPlayerNameString, createTwoSidesStatsString, createTwoSidesOneLineString} from './player-stats'
 
 const MAXIMUM_BUILDINGS_AGE = ONE_DAY_IN_SECONDS * MAX_BUILDING_AGE_DAYS
-const MAXIMUM_PLAYER_AGE = ONE_DAY_IN_SECONDS * MAX_PLAYER_AGE_DAYS
 
 const MINIMUM_BATTLE_SOLO_AGE = 60 * 10
 const MINIMUM_BATTLE_ALLIANCE_AGE = 60 * 60
@@ -61,17 +60,10 @@ export function createWarStats(timestamp: number, battle: BattleAlliance, player
   const notPowerusers = friends
     .filter(o => !poweruserFriends.map(o => o.player).includes(o))
 
-  const missingFriends = userSessions.getRaw()
+  const missingFriends = player.alliance && userSessions.getRawInAlliance(player.alliance)
     .filter(o => {
       const {gameInformation} = o.data
-      if (!gameInformation.playerTimestamp || !gameInformation.player) {
-        return false
-      }
-
-      return gameInformation.playerTimestamp + MAXIMUM_PLAYER_AGE > timestamp &&
-        player.alliance &&
-        gameInformation.player.alliance === player.alliance &&
-        !friends.includes(gameInformation.player.name) &&
+      return !friends.includes(gameInformation.player!.name) &&
         (gameInformation.battleAllianceTimestamp || 0) + MINIMUM_BATTLE_ALLIANCE_AGE < timestamp &&
         (gameInformation.battleSoloTimestamp || 0) + MINIMUM_BATTLE_SOLO_AGE < timestamp
     })
@@ -85,7 +77,7 @@ export function createWarStats(timestamp: number, battle: BattleAlliance, player
 
   let text = ''
 
-  if (missingFriends.length > 0) {
+  if (missingFriends && missingFriends.length > 0) {
     text += player.alliance
     text += ' '
     text += `Missing (${missingFriends.length}): `
