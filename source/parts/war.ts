@@ -17,7 +17,7 @@ import {formatNumberShort} from '../lib/user-interface/format-number'
 export const bot = new Composer()
 
 bot.on('text', whenScreenIsOfType('war', async (ctx: any) => {
-  const {timeZone} = ctx.session as Session
+  const {timeZone, gameInformation} = ctx.session as Session
   const screen = ctx.state.screen as Gamescreen
   const {domainStats, battle, timestamp} = screen
   let text = `*${ctx.i18n.t('bs.war')}*\n`
@@ -65,8 +65,8 @@ bot.on('text', whenScreenIsOfType('war', async (ctx: any) => {
         ...battle.attack,
         ...battle.defence
       ]
-      const user = ctx.session.gameInformation.player || {}
-      if (!user.name || !allPlayersInvolved.includes(user.name)) {
+      const user = gameInformation.player
+      if (!user || !allPlayersInvolved.includes(user.name)) {
         text += ctx.i18n.t('name.need')
         return ctx.replyWithMarkdown(text)
       }
