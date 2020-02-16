@@ -102,7 +102,7 @@ bot.on('text', whenScreenContainsInformation('list', notNewMiddleware('forward.o
   }
 
   const {timeZone} = ctx.session as Session
-  const {list} = ctx.state.screen as Gamescreen
+  const {list, type} = ctx.state.screen as Gamescreen
   const names = list!.map(o => o.name)
 
   if (names.length === 0) {
@@ -110,7 +110,16 @@ bot.on('text', whenScreenContainsInformation('list', notNewMiddleware('forward.o
   }
 
   const {text, extra} = generatePlayerStats(names, true, timeZone)
-  return ctx.reply(text, extra)
+  let appendix = ''
+
+  if (type === 'allianceMembers') {
+    const armySAA = getSumAverageAmount(list!.map(o => Number(o.value)))
+    appendix += armySAA.amount
+    appendix += ': '
+    appendix += createSimpleDataString(armySAA, emoji.barracks, ['avg', 'stdDeviation', 'sum'], true) + '\n'
+  }
+
+  return ctx.reply(text + appendix, extra)
 }))
 
 bot.on('text', whenScreenContainsInformation('castleSiegeParticipants', notNewMiddleware('forward.old', 60 * 12), (ctx: any) => {
