@@ -1,5 +1,5 @@
 import {BattleAlliance} from 'bastion-siege-logic'
-import {Extra} from 'telegraf'
+import {Extra, Telegram} from 'telegraf'
 import {RawObjectInMemoryFile} from '@edjopato/datastore'
 
 import {War, WarInlineMessage} from '../types'
@@ -12,8 +12,8 @@ const data = new RawObjectInMemoryFile<War[]>('tmp/wars.json')
 
 const MAX_BATTLE_AGE = 60 * 12 // 12 minutes
 
-let telegram: any
-export function init(tg: any): void {
+let telegram: Telegram
+export function init(tg: Telegram): void {
   telegram = tg
 }
 
@@ -27,7 +27,7 @@ export async function add(timestamp: number, battle: BattleAlliance): Promise<vo
 async function updateInlineMessage(timestamp: number, battle: BattleAlliance, inlineMessage: WarInlineMessage): Promise<void> {
   const {inlineMessageId, player} = inlineMessage
   try {
-    await telegram.editMessageText(undefined, undefined, inlineMessageId, createWarStats(timestamp, battle, player), Extra.markdown())
+    await telegram.editMessageText(undefined, undefined, inlineMessageId, createWarStats(timestamp, battle, player), Extra.markdown() as any)
   } catch (error) {
     if (error.message.startsWith('400: Bad Request: message is not modified') ||
       error.message.includes('400: Bad Request: MESSAGE_ID_INVALID')

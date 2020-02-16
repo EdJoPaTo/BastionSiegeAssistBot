@@ -1,5 +1,7 @@
 import {BattleAlliance} from 'bastion-siege-logic'
 
+type UnixTimestamp = number
+
 export interface WarInlineMessage {
   inlineMessageId: string;
   player: {
@@ -10,7 +12,7 @@ export interface WarInlineMessage {
 
 export interface War {
   battle: BattleAlliance;
-  beginTimestamp: number;
-  timestamp: number;
+  beginTimestamp: UnixTimestamp;
+  timestamp: UnixTimestamp;
   inlineMessages: WarInlineMessage[];
 }
