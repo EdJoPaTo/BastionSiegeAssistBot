@@ -37,6 +37,27 @@ export function getRaw(): readonly SessionRaw[] {
     })
 }
 
+export function getRawNameTrusted(): SessionRaw[] {
+  const minPlayerTimestamp = (Date.now() / 1000) - (MAX_PLAYER_AGE_DAYS * DAY_IN_SECONDS)
+  return getRaw()
+    .filter(o =>
+      o.data.gameInformation &&
+      o.data.gameInformation.playerTimestamp &&
+      o.data.gameInformation.playerTimestamp > minPlayerTimestamp &&
+      o.data.gameInformation.player &&
+      o.data.gameInformation.player.name
+    )
+}
+
+export function getRawInAlliance(alliance: string): SessionRaw[] {
+  if (!alliance) {
+    throw new Error('you cant spy on users without alliance')
+  }
+
+  return getRawNameTrusted()
+    .filter(o => o.data.gameInformation.player!.alliance === alliance)
+}
+
 export function getUser(userId: number): Session {
   const fallback: Session = {
     gameInformation: {}
@@ -59,17 +80,7 @@ function updatePlayernameCache(): void {
     return
   }
 
-  const minPlayerTimestamp = (Date.now() / 1000) - (MAX_PLAYER_AGE_DAYS * DAY_IN_SECONDS)
-
-  const raw = getRaw()
-    .filter(o =>
-      o.data.gameInformation &&
-      o.data.gameInformation.playerTimestamp &&
-      o.data.gameInformation.playerTimestamp > minPlayerTimestamp &&
-      o.data.gameInformation.player &&
-      o.data.gameInformation.player.name
-    )
-
+  const raw = getRawNameTrusted()
   const groupedByName = raw.reduce(arrayReduceGroupBy(o => o.data.gameInformation.player!.name), {})
 
   playernameCacheAge = Date.now()
