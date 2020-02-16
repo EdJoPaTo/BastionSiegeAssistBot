@@ -309,7 +309,6 @@ function createAllianceAttacks(ctx: any): string {
 }
 
 function createAllianceMates(ctx: any): string {
-  const {gameInformation} = ctx.session as Session
   const {firstTimeRelevant, allianceMates, header} = getAllianceRelevantData(ctx)
 
   let text = ''
@@ -344,11 +343,10 @@ function createAllianceMates(ctx: any): string {
       }
     })
 
-  const {name} = gameInformation.player!
   text += '\n'
-  text += createRanking(mateInfo, 'battlereport', ctx.i18n.t('battlereports'), name)
+  text += createRanking(mateInfo, 'battlereport', ctx.i18n.t('battlereports'))
   const type = getCurrentType(ctx)
-  text += createRanking(mateInfo, type, ctx.i18n.t('bs.resources.resources'), name)
+  text += createRanking(mateInfo, type, ctx.i18n.t('bs.resources.resources'))
 
   return text
 }

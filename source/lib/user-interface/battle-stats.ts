@@ -107,7 +107,7 @@ function numberOfSAAOrNumber(saaOrNumber: number | SumAverageAmount, saaKey: key
   return typeof saaOrNumber === 'number' ? saaOrNumber : saaOrNumber[saaKey]
 }
 
-export function createRanking(data: any[], key: string, title: string, forceIncludeName: string): string {
+export function createRanking(data: any[], key: string, title: string): string {
   const entries = data
     .filter(o => numberOfSAAOrNumber(o[key], 'amount') > 0)
     .sort(sortBy(o => numberOfSAAOrNumber(o[key], 'sum'), true))
@@ -115,7 +115,6 @@ export function createRanking(data: any[], key: string, title: string, forceIncl
       o.rank = i + 1
       return o
     })
-    .filter((o, i) => o.playername === forceIncludeName || i < 5)
     .map(o => {
       const prefix = `${o.rank}. ${o.nameMarkdown}`
 
