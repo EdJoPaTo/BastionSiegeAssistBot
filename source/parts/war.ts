@@ -145,7 +145,11 @@ async function notifyPlayer(telegram: Telegram, playerName: string, playerId: nu
     text += ' '
     text += createWarOneLineString(war.battle)
 
-    const notificationMessage = await telegram.sendMessage(playerId, text)
+    const keyboard = Markup.inlineKeyboard([
+      Markup.urlButton(emoji.backTo + 'Open BastionSiege…', 'https://t.me/BastionSiegeBot')
+    ])
+
+    const notificationMessage = await telegram.sendMessage(playerId, text, Extra.markup(keyboard))
 
     return {
       timestamp: notificationMessage.date,
