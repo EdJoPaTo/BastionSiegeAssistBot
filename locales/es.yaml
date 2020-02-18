@@ -9,7 +9,7 @@ bs:
   war: Guerra
   workshop: Taller
   building:
-    townhall: Ayuntamiento 
+    townhall: Ayuntamiento
     storage: Almacén
     houses: Casas
     farm: Granjas
@@ -18,14 +18,14 @@ bs:
     barracks: Barracas
     wall: Muralla
     trebuchet: Catapulta
-    ballista: Ballesta 
+    ballista: Ballesta
   resources:
     resources: Recursos
     gold: Oro
     wood: Madera
     stone: Piedra
     food: Comida
-    terra: Territorio   
+    terra: Territorio
     karma: Karma
     gems: Gemas
 alerts: Alertas
@@ -37,7 +37,7 @@ alert:
     name: Efecto terminado
     upcoming: El Efecto ${name} a terminado
   nextBattle:
-    name: Siguiente Batalla Diponible 
+    name: Siguiente Batalla Diponible
     alliance:
       alert: Tu próximo ataque de alianza estará disponible en 1 min. ¡Prepárate y difunde la Informacion! 🥳😎
       upcoming:  Ya puedes hacer tu proximo ataque de alianza.
@@ -53,7 +53,7 @@ alert:
       upcoming: Sin Comida
       alert: Sin comida en 12 horas
 battle:
-  solo: Batallas en Solitario 
+  solo: Batallas en Solitario
   alliance: Batallas con la Alianza
   over: Esta batalla terminó hace tiempo… Envíame el reporte mejor. 😉
   scoutsGone: Tus exploradores no han estado allí por mucho tiempo. Te ayudaré cuando vayas por allí la próxima vez. 😊
@@ -64,8 +64,8 @@ battle:
     info: >
       💙 Una vez que inicies el mecanismo de actualización de este mensaje, se actualizará automáticamente con el estado actual de la batalla de tu alianza.
       Esto es especialmente útil en los chats grupales con tus compañeros de alianza. 😎
-      
-      
+
+
       Para proporcionar el estado actual de la batalla, reenvía tu informe de guerra al bot directamente.
       Cada participante en la batalla puede modificar su estado.
 battlereport:
@@ -83,14 +83,14 @@ battlestats:
   wonDefences: Defensas Exitosas
   total: Todo
 botstats:
-  title: Estadisticas del Bot	
+  title: Estadisticas del Bot
   analysedPlayers: Jugadores Analizados
   within24h: En 24 horas
   within30d: En 30 dias
   users: Usuarios
 buildings:
   capacity: Capacidad
-  fillStorage: Llenar almacén 
+  fillStorage: Llenar almacén
   history: Historial
   income: Ingresos
   maxPossible: Max. actualizaciones posibles
@@ -119,7 +119,7 @@ buildings:
 effects:
   updated: >
     Actualizado tus efectos. 👌
-  
+
     Mira /upcoming o habilita alertas con /settings.
 forward:
   known: Eso ya lo sé. Lo ignoraré.
@@ -150,7 +150,7 @@ language:
     Necesitas cambiar o adaptar eso.
 list:
   title: Lista
-  clearParticipants: Limpiar Participantes 
+  clearParticipants: Limpiar Participantes
   description: Tu lista
   share: Comparte tu lista
   shareAttack: Planifica un ataque conjunto
@@ -169,11 +169,11 @@ list:
 mystics: Criaturas Míticas
 name:
   need: Necesito tu nombre para eso. Envíame tu pantalla principal primero. 😅
-  noAlliance: No estás en ninguna Alianza en este momento. 
+  noAlliance: No estás en ninguna Alianza en este momento.
   update: Envía la pantalla del menú principal desde @BastionSiegeBot para actualizar tu nombre actual en el juego.
 poweruser:
   poweruser: Usuario Avanzado
-  immunity: Imunidad 
+  immunity: Imunidad
   youare: ¡Eres un Usuario Avanzado!
   notyet: Tu no eres (todavia) un Usario Avanzado.
   usefulWhen: ¡Esto se vuelve mucho más útil tan pronto como seas un usuario avanzado!
@@ -183,19 +183,18 @@ poweruser:
   workshopOld: Para ser un usuario avanzado, necesito tu taller actual. Debe actualizarlos al menos cada 14 días.
   nearlyOld: Casi se ha agotado el tiempo disponible, deberías actualizarlos cuando tengas algo de tiempo. 😎
   immunityTo: Actualmente se le otorga su inmunidad a ser localizado en mi base de datos a ${name}.
-  noname: No tengo tu nombre, *no* puedo darte la inmunidad a ser localizado en mi base de datos.
   immunityDisabled: Actualmente *no* recibirás la inmunidad a ser localizado en mi base de datos.
 settings: Ajustes
 setting:
   alert:
     infotext: Habilite las alertas que deseas recibir de mí.
   buildings:
-    infotext: Puedes establecer qué edificios son de tu interés en /buildings y las alertas en /alerts. 
+    infotext: Puedes establecer qué edificios son de tu interés en /buildings y las alertas en /alerts.
 upcoming:
   title: Proximas Alertas
   info: Tu puedes puedes seleccionar qué alertas deseas recibir en /settings.
   noevents: No hay eventos próximos…
-  update: Actualizar 
+  update: Actualizar
 help:
   joinBSAGroupButton: Únete al grupo de soporte de BastionSiegeAssist (ENG)
   short: >
@@ -204,7 +203,7 @@ help:
     Debes reenviar las pantallas del juego de @BastionSiegeBot a mí.
 
 
-    Consulte /help para obtener ayuda adicional o únase al grupo de soporte (ENG).    
+    Consulte /help para obtener ayuda adicional o únase al grupo de soporte (ENG).
   trySearchButton: Prueba la busqueda de jugadores…
   search: >
     Para buscar un jugador, escriba `@BastionSiegeAssistBot ${name}` en cualquier chat.
@@ -215,20 +214,20 @@ help:
 
 
     Debes reenviar las pantallas del juego desde @BastionSiegeBot a mí.
-    
-    
+
+
     Con pantallas reenviadas que contienen sus edificios o recursos actuales, puedo predecir cuándo estarán listas las actualizaciones.
-    
-    
+
+
     Con informes de batalla puedo mostrar tu historia en batallas.
     El reenvío del mensaje "Tus exploradores han encontrado..." muestra información sobre ese jugador como un posible botín y el ejército requerido.
-    
-    
+
+
     Los informes de batalla que proporciones solo se usarán para asumir la fuerza del enemigo, nunca la tuya.
     Sus propios datos que conozco no se considerarán para contarle a otros su fortaleza.
     Se pone aún mejor: siempre y cuando me proporcione datos activamente, obtendrá inmunidad y nadie podrá usarme para controlarlo. ¡Serás un Usuario Avanzado aquí!
-    
-    
+
+
     Vea /settings para usos más detallados de este bot.
 
 

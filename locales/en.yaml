@@ -122,7 +122,7 @@ castle:
 effects:
   updated: >
     Updated your effects. 👌
-    
+
     See /upcoming or enable alerts in the /settings.
 forward:
   known: I already know that. I will just ignore it.
@@ -186,7 +186,6 @@ poweruser:
   workshopOld: To be a power user I need your current workshop. You must update these at least every 14 days.
   nearlyOld: As this time is nearly reached you should update them when you have time to spare. 😎
   immunityTo: Currently your immunity is granted to ${name}.
-  noname: I do not have your name. *No one* will get immunity.
   immunityDisabled: Currently *no one* will get immunity.
 settings: Settings
 setting:

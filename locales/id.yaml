@@ -99,7 +99,7 @@ buildings:
 effects:
   updated:
     Perbarui efekmu. 👌
-  
+
     Lihat /upcoming atau aktifkan peringatan di /settings.
 forward:
   known: Aku sudah tahu itu. Aku hanya akan mengabaikannya.
@@ -146,7 +146,6 @@ poweruser:
   workshopOld: Untuk menjadi pengguna daya, aku membutuhkan bengkelmu saat ini. Kamu harus memperbarui ini setidaknya setiap 14 hari.
   nearlyOld: Karena sisa waktu hampir tercapai, kamu harus memperbaruinya ketika kamu punya waktu luang. 😎
   immunityTo: Saat ini kekebalanmu diberikan kepada ${name}.
-  noname: Aku tidak punya namamu. *Tidak seorangpun* akan mendapatkan kekebalan.
   immunityDisabled: Saat ini *tidak seorangpun* akan mendapatkan kekebalan.
 settings: Pengaturan
 setting:

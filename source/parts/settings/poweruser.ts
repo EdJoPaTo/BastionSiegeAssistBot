@@ -28,17 +28,13 @@ function menuText(ctx: any): string {
 
   if (isPoweruser) {
     text += '\n'
-    const {name} = session.gameInformation.player || {}
+    const {name} = session.gameInformation.player!
     if (session.disableImmunity) {
       text += '\n'
       text += ctx.i18n.t('poweruser.immunityDisabled')
     } else {
       text += '\n'
-      if (name) {
-        text += ctx.i18n.t('poweruser.immunityTo', {name: '`' + name + '`'})
-      } else {
-        text += ctx.i18n.t('poweruser.noname')
-      }
+      text += ctx.i18n.t('poweruser.immunityTo', {name: '`' + name + '`'})
 
       text += '\n'
       text += ctx.i18n.t('name.update')

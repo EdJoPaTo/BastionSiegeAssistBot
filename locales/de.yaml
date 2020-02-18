@@ -122,7 +122,7 @@ castle:
 effects:
   updated: >
     Effekte aktualisiert! 👌
-    
+
     Schau dir /upcoming an oder aktiviere Benachrichtungen in den /settings.
 forward:
   known: Das kenne ich schon. Ich ignoriere es einfach.
@@ -184,7 +184,6 @@ poweruser:
   workshopOld: Um ein Poweruser zu sein brauche ich deine aktuelle Werkstatt. Diese musst du mir mindestens alle 14 Tage bereitstellen, damit ich immer auf aktuellem Stand bin.
   nearlyOld: Da dies fast erreicht ist, schick mir bei Gelegenheit etwas neues.
   immunityTo: Deine Immunität wird aktuell ${name} verliehen.
-  noname: Mir fehlt dein Name. *Niemand* erhält aktuell deine Immunität.
   immunityDisabled: Aktuell bekommt *niemand* deine Immunität.
 settings: Einstellungen
 setting:
