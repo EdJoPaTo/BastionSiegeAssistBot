@@ -57,6 +57,8 @@ export function conditionTypeTranslation(ctx: any, type: PoweruserConditionType)
   switch (type) {
     case 'battlereports':
       return ctx.i18n.t('battlereports')
+    case 'name':
+      return ctx.i18n.t('name.nameAndAlliance')
     case 'buildings':
     case 'workshop':
       return ctx.i18n.t('bs.' + type)

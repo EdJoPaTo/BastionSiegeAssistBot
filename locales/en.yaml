@@ -171,6 +171,7 @@ list:
     Just hit 'Join' again to avoid being dropped before the time runs out. :)
 mystics: Mystic Creatures
 name:
+  nameAndAlliance: Name and Alliance (main menu)
   need: I need your name for that. Send me your main screen first. 😅
   noAlliance: You are not in an alliance right now.
   update: Send your main menu screen from @BastionSiegeBot to update your current ingame name.

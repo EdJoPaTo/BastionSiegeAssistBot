@@ -169,6 +169,7 @@ list:
     Du kannst aber auch den ‘Join’ Button nochmal benutzen um in der Liste zu bleiben.
 mystics: Mystische Kreaturen
 name:
+  nameAndAlliance: Name und Allianz (Hauptmenü)
   need: Dafür brauche ich deinen Namen. Leite mir dafür dein Hauptmenü zuerst weiter. 😅
   noAlliance: Aktuell bist du in keiner Allianz.
   update: Leite mir dein Hauptmenü vom @BastionSiegeBot weiter, damit ich deinen aktuellen Ingame Namen aktualisieren kann.
