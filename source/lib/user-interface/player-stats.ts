@@ -10,7 +10,7 @@ import {getSumAverageAmount, SumAverageAmount} from '../math/number-array'
 import {isImmune} from '../data/poweruser'
 
 import {emoji} from './output-text'
-import {createAverageMaxString, formatTypeOfData, createSimpleDataString} from './number-array-strings'
+import {createAverageMaxString, createSimpleDataString} from './number-array-strings'
 import {formatNumberShort, formatTimeFrame, formatBattleHoursAgo} from './format-number'
 
 interface MultipleStatsConclusion {
@@ -333,9 +333,8 @@ export function createMultipleStatsConclusion(statsArr: readonly PlayerStats[], 
   army.amount = armyArr.length
   army.sum = army.amount * army.avg
 
-  const avgString = formatTypeOfData(army, 'avg', false) + emoji.army
-  const sumString = formatTypeOfData(army, 'sum', false) + emoji.army
-  const armyString = `${alliance} ${army.amount}x ${avgString} ${sumString}`
+  const statsString = createSimpleDataString(army, emoji.army, ['avg', 'sum'], true)
+  const armyString = `${alliance} ${army.amount}x ${statsString}`
 
   return {
     alliance,
