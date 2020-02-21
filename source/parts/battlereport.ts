@@ -12,8 +12,9 @@ import {whenScreenContainsInformation} from '../lib/input/gamescreen'
 
 import {createPlayerShareButton, createPlayerStatsString, createTwoSidesStatsString} from '../lib/user-interface/player-stats'
 import {createSingleBattleShortStatsLine, createSingleAllianceBattleShortStatsLine} from '../lib/user-interface/battle-stats'
-import {formatNumberShort} from '../lib/user-interface/format-number'
 import {emoji} from '../lib/user-interface/output-text'
+import {formatNumberShort} from '../lib/user-interface/format-number'
+import {getSupportGroupLink} from '../lib/user-interface/support-group'
 
 const MAX_AGE_BUILDINGS = ONE_DAY_IN_SECONDS // 24h
 const MAX_AGE_REPORT_FOR_STATS = ONE_DAY_IN_SECONDS * 2 // 2 days
@@ -183,7 +184,7 @@ async function generateResponseText(ctx: any, report: Battlereport, timestamp: n
     text += '`'
 
     const keyboard = Markup.inlineKeyboard([
-      Markup.urlButton('Join BastionSiegeAssist Support Group', 'https://t.me/joinchat/AC0dV1dG2Y7sOFQPtZm9Dw')
+      Markup.urlButton('Join BastionSiegeAssist Support Group', getSupportGroupLink(ctx.i18n.locale()))
     ], {columns: 1})
 
     return {

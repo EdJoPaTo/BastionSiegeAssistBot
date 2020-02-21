@@ -7,13 +7,14 @@ import {Session, GameInformation} from '../lib/types'
 
 import {emoji} from '../lib/user-interface/output-text'
 import {formatNumberShort, formatTimeAmount} from '../lib/user-interface/format-number'
+import {getSupportGroupLink} from '../lib/user-interface/support-group'
 
 export const bot = new Composer()
 const prefix = '*Currently Assumed Data*\nBattlereports and time influences what the bot expects from your game data.\nKnown issues: people in houses are not considered for gold income\n\n'
 
 const updateMarkup = Extra.markdown().markup(Markup.inlineKeyboard([
   Markup.callbackButton('estimate current situation', 'assumed'),
-  Markup.urlButton('Join BastionSiegeAssist Support Group', 'https://t.me/joinchat/AC0dV1dG2Y7sOFQPtZm9Dw')
+  Markup.urlButton('Join BastionSiegeAssist Support Group', getSupportGroupLink())
 ] as any, {columns: 1}))
 
 bot.command('assumed', sendAssumed)

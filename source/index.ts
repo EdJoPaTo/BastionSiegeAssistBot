@@ -9,6 +9,8 @@ import {initData} from './lib/data'
 import * as userSessions from './lib/data/user-sessions'
 import * as wars from './lib/data/wars'
 
+import {getSupportGroupLink} from './lib/user-interface/support-group'
+
 import * as bastionsiegeforward from './parts/bastionsiegeforward'
 import * as inlineQuery from './parts/inline-query'
 import * as partAlerts from './parts/alerts'
@@ -85,7 +87,7 @@ bot.use(async (ctx, next) => {
 
     const target = (ctx.chat || ctx.from!).id
     const keyboard = Markup.inlineKeyboard([
-      Markup.urlButton('Join BastionSiegeAssist Support Group', 'https://t.me/joinchat/AC0dV1dG2Y7sOFQPtZm9Dw')
+      Markup.urlButton('Join BastionSiegeAssist Support Group', getSupportGroupLink())
     ], {columns: 1})
     await ctx.telegram.sendMessage(target, text, Extra.markdown().markup(keyboard))
   }

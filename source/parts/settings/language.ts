@@ -3,6 +3,7 @@ import I18n from 'telegraf-i18n'
 import TelegrafInlineMenu from 'telegraf-inline-menu'
 
 import {emoji} from '../../lib/user-interface/output-text'
+import {getSupportGroupLink} from '../../lib/user-interface/support-group'
 
 /* eslint @typescript-eslint/no-var-requires: warn */
 /* eslint @typescript-eslint/no-require-imports: warn */
@@ -48,7 +49,7 @@ menu.simpleButton((ctx: any) => ctx.i18n.t('language.translateButton'), 'transla
       caption: ctx.i18n.t('language.helpTranslate')
     }).markdown().markup(
       Markup.inlineKeyboard([
-        Markup.urlButton(ctx.i18n.t('help.joinBSAGroupButton'), 'https://t.me/joinchat/AC0dV1dG2Y7sOFQPtZm9Dw')
+        Markup.urlButton(ctx.i18n.t('help.joinBSAGroupButton'), getSupportGroupLink(ctx.i18n.locale()))
       ])
     ))
 
@@ -70,4 +71,4 @@ menu.simpleButton((ctx: any) => ctx.i18n.t('language.translateButton'), 'transla
   }
 })
 
-menu.urlButton((ctx: any) => ctx.i18n.t('help.joinBSAGroupButton'), 'https://t.me/joinchat/AC0dV1dG2Y7sOFQPtZm9Dw')
+menu.urlButton((ctx: any) => ctx.i18n.t('help.joinBSAGroupButton'), (ctx: any) => getSupportGroupLink(ctx.i18n.locale()))
