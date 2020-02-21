@@ -189,7 +189,7 @@ export function createPlayerStatsTwoLineString(stats: PlayerStats, markdown: boo
 
   if (stats.loot.amount > 0) {
     infos.push(
-      formatTypeOfData(stats.loot, 'max', true) + emoji.gold
+      createSimpleDataString(stats.loot, emoji.gold, ['avg', 'max'], true)
     )
   }
 
