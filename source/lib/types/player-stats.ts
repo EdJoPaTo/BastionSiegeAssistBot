@@ -10,8 +10,6 @@ export interface ArmyEstimate {
 export interface PlayerStatsLoot {
   gems: SumAverageAmount;
   loot: SumAverageAmount;
-  lootActive: SumAverageAmount;
-  lootInactive: SumAverageAmount;
 }
 
 export interface PlayerStatsActivity {

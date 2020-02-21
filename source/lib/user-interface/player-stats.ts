@@ -10,7 +10,7 @@ import {getSumAverageAmount, SumAverageAmount} from '../math/number-array'
 import {isImmune} from '../data/poweruser'
 
 import {emoji} from './output-text'
-import {createAverageMaxString, formatTypeOfData} from './number-array-strings'
+import {createAverageMaxString, formatTypeOfData, createSimpleDataString} from './number-array-strings'
 import {formatNumberShort, formatTimeFrame, formatBattleHoursAgo} from './format-number'
 
 interface MultipleStatsConclusion {
@@ -97,26 +97,18 @@ export function createPlayerStatsString(stats: PlayerStats, timeZone: string): s
   }
 
   if (!stats.seemsCanned && stats.loot.amount > 0) {
-    randomFacs.push(formatTypeOfData(stats.loot, 'max', true) + emoji.gold)
+    randomFacs.push(createSimpleDataString(stats.loot, emoji.gold, ['avg', 'max'], true))
   }
 
   if (stats.gems.amount > 0) {
-    randomFacs.push(formatTypeOfData(stats.gems, 'max', true) + emoji.gems)
+    randomFacs.push(createSimpleDataString(stats.gems, emoji.gems, ['avg', 'max'], true))
   }
 
   text += '\n' + randomFacs.join('  ')
 
-  if (!stats.seemsCanned && (stats.activeTime.accuracy > 0 || stats.lootActive.amount > 0)) {
+  if (!stats.seemsCanned && stats.activeTime.accuracy > 0) {
     const parts = []
     parts.push(emoji.active)
-
-    if (stats.lootActive.amount > 0) {
-      parts.push(formatTypeOfData(stats.lootActive, 'avg', false) + emoji.gold)
-    }
-
-    if (stats.gems.amount > 0) {
-      parts.push(formatTypeOfData(stats.gems, 'avg', false) + emoji.gem)
-    }
 
     if (isFinite(stats.lastTimeObservedActive)) {
       parts.push(formatBattleHoursAgo((now - stats.lastTimeObservedActive) / ONE_HOUR_IN_SECONDS))
@@ -132,7 +124,6 @@ export function createPlayerStatsString(stats: PlayerStats, timeZone: string): s
   if (!stats.seemsCanned && stats.attacksWithoutLossPercentage > 0) {
     const parts = []
     parts.push(emoji.inactive)
-    parts.push(formatTypeOfData(stats.lootInactive, 'avg', false) + emoji.gold)
 
     if (isFinite(stats.lastTimeObservedInactive)) {
       parts.push(formatBattleHoursAgo((now - stats.lastTimeObservedInactive) / ONE_HOUR_IN_SECONDS))

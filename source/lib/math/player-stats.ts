@@ -96,22 +96,10 @@ function generateLoot(allReports: readonly Battlereport[]): PlayerStatsLoot {
     lootRelevantReports
       .map(o => o.gold * o.friends.length)
   )
-  const lootActive = getSumAverageAmount(
-    lootRelevantReports
-      .filter(o => o.soldiersAlive !== o.soldiersTotal)
-      .map(o => o.gold * o.friends.length)
-  )
-  const lootInactive = getSumAverageAmount(
-    lootRelevantReports
-      .filter(o => o.soldiersAlive === o.soldiersTotal)
-      .map(o => o.gold * o.friends.length)
-  )
   const gems = getSumAverageAmount(allReports.map(o => o.gems))
 
   return {
     loot,
-    lootActive,
-    lootInactive,
     gems
   }
 }
