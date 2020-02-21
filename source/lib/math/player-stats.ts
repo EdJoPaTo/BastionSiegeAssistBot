@@ -70,6 +70,9 @@ function generateActivity(allReports: readonly Battlereport[], playername: strin
     .filter(o => o.attack)
     // There has to be only one party involved we know the army about
     .filter(o => o.friends.length === 1)
+  const activityUnclearTimes = attacks
+    .filter(o => o.soldiersAlive < o.soldiersTotal)
+    .map(o => o.time)
   const attacksWithoutLoss = attacks
     .filter(o => o.soldiersAlive === o.soldiersTotal)
   const attacksWithoutLossPercentage = attacksWithoutLoss.length / attacks.length
@@ -82,6 +85,7 @@ function generateActivity(allReports: readonly Battlereport[], playername: strin
     attacksWithoutLossPercentage,
     inactiveTime,
     lastTimeObservedActive: Math.max(...activeTimes),
+    lastTimeObservedActivityUnclear: Math.max(...activityUnclearTimes),
     lastTimeObservedInactive: Math.max(...inactiveTimes)
   }
 }

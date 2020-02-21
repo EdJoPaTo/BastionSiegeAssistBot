@@ -75,6 +75,7 @@ test('generate example A', t => {
     allAlliances: [undefined],
     lastBattleTime: 1000000030,
     lastTimeObservedActive: 1000000030,
+    lastTimeObservedActivityUnclear: 1000000020,
     lastTimeObservedInactive: -Infinity,
     activeTime: {
       seconds: 6415,
@@ -124,6 +125,7 @@ test('generate example B', t => {
     allAlliances: [undefined],
     lastBattleTime: 1000000040,
     lastTimeObservedActive: 1000000030,
+    lastTimeObservedActivityUnclear: 1000000040,
     lastTimeObservedInactive: -Infinity,
     activeTime: {
       seconds: 6425,

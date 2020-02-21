@@ -121,9 +121,20 @@ export function createPlayerStatsString(stats: PlayerStats, timeZone: string): s
     text += '\n' + parts.join(' ')
   }
 
+  if (!stats.seemsCanned && stats.attacksWithoutLossPercentage < 1) {
+    const parts = []
+    parts.push(emoji.wall + emoji.activityUnclear)
+
+    if (isFinite(stats.lastTimeObservedActivityUnclear)) {
+      parts.push(formatBattleHoursAgo((now - stats.lastTimeObservedActivityUnclear) / ONE_HOUR_IN_SECONDS))
+    }
+
+    text += '\n' + parts.join(' ')
+  }
+
   if (!stats.seemsCanned && stats.attacksWithoutLossPercentage > 0) {
     const parts = []
-    parts.push(emoji.inactive)
+    parts.push(emoji.wall + emoji.inactive)
 
     if (isFinite(stats.lastTimeObservedInactive)) {
       parts.push(formatBattleHoursAgo((now - stats.lastTimeObservedInactive) / ONE_HOUR_IN_SECONDS))

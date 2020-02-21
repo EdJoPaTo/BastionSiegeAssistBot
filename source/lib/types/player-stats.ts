@@ -17,6 +17,7 @@ export interface PlayerStatsActivity {
   attacksWithoutLossPercentage: number;
   inactiveTime: AverageTimeOfDay;
   lastTimeObservedActive: number;
+  lastTimeObservedActivityUnclear: number;
   lastTimeObservedInactive: number;
 }
 
