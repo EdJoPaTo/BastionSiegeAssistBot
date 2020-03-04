@@ -37,7 +37,7 @@ function menuText(ctx: any): string {
 
   let text = ''
   text += emoji.timezone
-  text += format.bold(ctx.i18n.t('setting.timezone'))
+  text += format.bold(format.escape(ctx.i18n.t('setting.timezone')))
   text += '\n\n'
 
   text += format.escape(current)
@@ -48,7 +48,7 @@ function menuText(ctx: any): string {
   text += '\n\n'
 
   if (ctx.match instanceof Object && ctx.match[1]) {
-    text += format.bold(ctx.match[1])
+    text += format.bold(format.escape(ctx.match[1]))
     text += '\n\n'
   }
 

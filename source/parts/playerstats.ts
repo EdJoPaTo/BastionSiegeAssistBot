@@ -170,7 +170,7 @@ function userMarkdownTagWhenKnown(name: string, now: number): string | undefined
   }
 
   let text = ''
-  text += format.url(player.name, `tg://user?id=${userId}`)
+  text += format.url(format.escape(player.name), `tg://user?id=${userId}`)
 
   return text
 }
