@@ -10,6 +10,7 @@ import {
   calcMaxBuildingLevel,
   calcMinutesNeeded,
   calcMinutesNeededToFillStorage,
+  calcNeeded,
   calcProduction,
   calcProductionFood,
   calcSemitotalGold,
@@ -17,6 +18,7 @@ import {
   calcStorageLevelNeededForUpgrade,
   calcTownhallLevelNeededForUpgrade,
   ConstructionName,
+  ConstructionResources,
   Constructions,
   estimateResourcesAfter,
   Resources
@@ -78,10 +80,15 @@ export function createBuildingTimeStatsString(buildingName: ConstructionName, bu
     text += '✅'
   } else {
     text += `${formatTimeAmount(minutesNeeded)}`
-  }
 
-  const neededMaterialString = createNeededMaterialStatString(cost, resources)
-  if (neededMaterialString.length > 0) {
+    const neededResources = calcNeeded(cost, resources)
+    const goldNeededWithCurrentResources = calcSemitotalGold(neededResources) + resources.gold
+    const neededMaterialString = createMaterialStatString(neededResources)
+
+    if (goldNeededWithCurrentResources > goldCapacity) {
+      text += ' ' + emoji.gold + emoji.warning
+    }
+
     text += ` ${neededMaterialString}`
   }
 
@@ -179,27 +186,18 @@ export function createIncomeStatsString(buildings: Buildings, timeInMinutes: num
   return text
 }
 
-export function createNeededMaterialStatString(cost: {gold?: number; wood?: number; stone?: number; food?: number}, currentResources: Resources): string {
-  const goldNeeded = (cost.gold || 0) - currentResources.gold
-  const woodNeeded = (cost.wood || 0) - currentResources.wood
-  const stoneNeeded = (cost.stone || 0) - currentResources.stone
-  const foodNeeded = (cost.food || 0) - currentResources.food
-
+export function createMaterialStatString(resources: ConstructionResources): string {
   const neededMaterial = []
-  if (goldNeeded > 0) {
-    neededMaterial.push(`${formatNumberShort(goldNeeded, true)}${emoji.gold}`)
+  if (resources.gold > 0) {
+    neededMaterial.push(`${formatNumberShort(resources.gold, true)}${emoji.gold}`)
   }
 
-  if (woodNeeded > 0) {
-    neededMaterial.push(`${formatNumberShort(woodNeeded, true)}${emoji.wood}`)
+  if (resources.wood > 0) {
+    neededMaterial.push(`${formatNumberShort(resources.wood, true)}${emoji.wood}`)
   }
 
-  if (stoneNeeded > 0) {
-    neededMaterial.push(`${formatNumberShort(stoneNeeded, true)}${emoji.stone}`)
-  }
-
-  if (foodNeeded > 0) {
-    neededMaterial.push(`${formatNumberShort(foodNeeded, true)}${emoji.food}`)
+  if (resources.stone > 0) {
+    neededMaterial.push(`${formatNumberShort(resources.stone, true)}${emoji.stone}`)
   }
 
   return neededMaterial.join(' ')
