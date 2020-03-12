@@ -36,7 +36,7 @@
     "json-stable-stringify": "^1.0.1",
     "locale-emoji": "^0.3.0",
     "moonmoji": "^1.1.10",
-    "sharp": "^0.24.0",
+    "sharp": "^0.25.1",
     "source-map-support": "^0.5.13",
     "telegraf": "^3.28.0",
     "telegraf-i18n": "^6.5.0",
@@ -57,7 +57,7 @@
     "nyc": "^15.0.0",
     "ts-node": "^8.3.0",
     "typescript": "^3.7.4",
-    "xo": "^0.27.2"
+    "xo": "^0.28.0"
   },
   "nyc": {
     "extension": [
@@ -85,6 +85,7 @@
     "rules": {
       "ava/no-ignored-test-files": "off",
       "prefer-named-capture-group": "off",
+      "unicorn/prevent-abbreviations": "warn",
       "@typescript-eslint/array-type": "off",
       "@typescript-eslint/no-untyped-public-signature": "off",
       "@typescript-eslint/prefer-nullish-coalescing": "off",
