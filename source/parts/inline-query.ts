@@ -1,6 +1,7 @@
-import {inputTextCleanup, MYSTICS_TEXT_EN} from 'bastion-siege-logic'
-import fuzzysort from 'fuzzysort'
 import {Composer, Extra, Markup} from 'telegraf'
+import {inputTextCleanup, MYSTICS_TEXT_EN} from 'bastion-siege-logic'
+import arrayFilterUnique from 'array-filter-unique'
+import fuzzysort from 'fuzzysort'
 
 import {replaceLookingLikeAsciiChars} from '../lib/javascript-abstraction/strings'
 
@@ -12,10 +13,10 @@ import * as wars from '../lib/data/wars'
 
 import {getMidnightXDaysEarlier} from '../lib/math/unix-timestamp'
 
+import {createList} from '../lib/user-interface/inline-list'
 import {createPlayerNameString, createPlayerStatsString, createPlayerStatsShortString} from '../lib/user-interface/player-stats'
 import {createWarOneLineString, createWarStats} from '../lib/user-interface/war-stats'
 import {emoji} from '../lib/user-interface/output-text'
-import {createList} from '../lib/user-interface/inline-list'
 
 interface AnswerInlineQueryOptions {
   cache_time?: number;
@@ -94,7 +95,9 @@ bot.on('inline_query', async ctx => {
     const result = await fuzzysort.goAsync(cleanedUpQuery, allPlayers, {
       key: 'playerNameLookingLike'
     })
-    players = result.map(o => o.obj.player)
+    players = result
+      .map(o => o.obj.player)
+      .filter(arrayFilterUnique())
   } else {
     // TODO: Currently only the english ones are in default search, mystics should be grouped by mystic, not by name
     const freeOptions = [...Object.values(MYSTICS_TEXT_EN)]
