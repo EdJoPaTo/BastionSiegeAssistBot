@@ -74,7 +74,7 @@ bot.use(async (ctx, next) => {
       return
     }
 
-    console.error('try to send error to user', ctx.update, error)
+    console.error('try to send error to user', ctx.update, error, error?.on?.payload)
     let text = '🔥 Something went wrong here!'
     text += '\n'
     text += 'You should join the Support Group and report this error. Let us make this bot even better together. ☺️'
