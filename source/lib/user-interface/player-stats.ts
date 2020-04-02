@@ -28,7 +28,7 @@ export function createPlayerShareButton(infos: Player): SwitchToChatButton {
 export function createPlayerMarkdownLink(user: number, {player, alliance}: Player): string {
   let namePart = ''
   if (alliance) {
-    namePart += alliance + ' '
+    namePart += alliance
   }
 
   namePart += player
@@ -41,7 +41,7 @@ export function createPlayerMarkdownLink(user: number, {player, alliance}: Playe
 export function createPlayerNameString({player, alliance}: Player, markdown: boolean): string {
   let text = ''
   if (alliance) {
-    text += alliance + ' '
+    text += alliance
   }
 
   if (markdown) {
