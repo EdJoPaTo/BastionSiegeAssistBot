@@ -88,11 +88,9 @@
       "prefer-named-capture-group": "off",
       "unicorn/prevent-abbreviations": "warn",
       "@typescript-eslint/array-type": "off",
-      "@typescript-eslint/no-untyped-public-signature": "off",
       "@typescript-eslint/prefer-nullish-coalescing": "off",
       "@typescript-eslint/prefer-optional-chain": "off",
       "@typescript-eslint/restrict-template-expressions": "warn",
-      "@typescript-eslint/return-await": "off",
       "@typescript-eslint/indent": [
         "error",
         2
