@@ -14,7 +14,7 @@ import * as wars from '../lib/data/wars'
 import {getMidnightXDaysEarlier} from '../lib/math/unix-timestamp'
 import {getSumAverageAmount} from '../lib/math/number-array'
 
-import {createPlayerShareButton, createPlayerStatsString, createPlayerStatsTwoLineString, createMultipleStatsConclusion} from '../lib/user-interface/player-stats'
+import {createPlayerShareButton, createPlayerStatsString, createMultipleStatsConclusion, createPlayerStatsSingleLineString} from '../lib/user-interface/player-stats'
 import {createSimpleDataString} from '../lib/user-interface/number-array-strings'
 import {emoji} from '../lib/user-interface/output-text'
 
@@ -194,7 +194,7 @@ function generatePlayerStats(players: string | string[], short: boolean, timeZon
 
   let text = ''
   if (short) {
-    text += allStats.map(o => createPlayerStatsTwoLineString(o, true)).join('\n')
+    text += allStats.map(o => createPlayerStatsSingleLineString(o, undefined)).join('\n')
   } else {
     text += allStats.map(o => createPlayerStatsString(o, timeZone || 'UTC')).join('\n\n')
   }

@@ -77,7 +77,7 @@ export function createPlayerStatsString(stats: PlayerStats, timeZone: string): s
   const strengthLine = []
 
   if (stats.army.min && !stats.seemsCanned) {
-    strengthLine.push(createArmyStatsBarLine(stats.army))
+    strengthLine.push(createArmyStatsPart(stats.army, true))
   }
 
   if (isFinite(stats.terra)) {
@@ -160,41 +160,42 @@ export function createPlayerStatsString(stats: PlayerStats, timeZone: string): s
   return text
 }
 
-function createArmyStatsBarLine(data: ArmyEstimate): string {
+function createArmyStatsPart(data: ArmyEstimate, includeBarracksLevel: boolean): string {
   if (!data.min || !isFinite(data.min)) {
     return '?????' + emoji.army
   }
 
   let text = ''
-  text += `${data.min}${emoji.army}`
-  text += ` (${calcBarracksNeeded(data.min)}${emoji.barracks})`
+  text += `${formatNumberShort(data.min, true)}${emoji.army}`
+  if (includeBarracksLevel) {
+    text += ` (${calcBarracksNeeded(data.min)}${emoji.barracks})`
+  }
 
   return text
 }
 
-export function createPlayerStatsTwoLineString(stats: PlayerStats, markdown: boolean): string {
-  let text = createPlayerNameString(stats, markdown)
-  text += '\n  '
+export function createPlayerStatsSingleLineString(stats: PlayerStats, telegramId: number | undefined): string {
+  const namePart = telegramId ? createPlayerMarkdownLink(telegramId, stats) : createPlayerNameString(stats, true)
 
   if (isImmune(stats.player)) {
-    text += 'Active user of this bot. ' + emoji.immunity + emoji.poweruser
-    return text
+    return emoji.immunity + emoji.poweruser + ' ' + namePart
   }
 
-  const infos = []
+  const infos: string[] = []
 
   infos.push(
-    createArmyStatsBarLine(stats.army)
+    createArmyStatsPart(stats.army, false)
   )
 
-  if (stats.loot.amount > 0) {
-    infos.push(
-      createSimpleDataString(stats.loot, emoji.gold, ['avg', 'max'], true)
-    )
-  }
+  infos.push(
+    stats.loot.amount > 0 ?
+      createSimpleDataString(stats.loot, emoji.gold, ['avg'], true) :
+      `???????${emoji.gold}`
+  )
 
-  text += infos.join('  ')
-  return text
+  infos.push(namePart)
+
+  return infos.join(' ')
 }
 
 export function createPlayerStatsShortString(stats: PlayerStats): string {
@@ -245,71 +246,22 @@ export function createTwoSidesOneLineString(side1stats: readonly PlayerStats[], 
 }
 
 export function createTwoSidesStatsString(side1stats: readonly PlayerStats[], side2stats: readonly PlayerStats[], playerArmyOverride: Record<string, number>, playerTelegramIds: Record<string, number>): string {
-  const side1 = createMultipleStatsConclusion(side1stats, playerArmyOverride)
-  const side2 = createMultipleStatsConclusion(side2stats, playerArmyOverride)
-
   let text = ''
   text += createTwoSidesArmyStrengthString(side1stats, side2stats, playerArmyOverride)
 
   text += '\n\n'
-  text += createMultipleStatsPlayerList(side1.alliance, side1stats, playerTelegramIds)
+  text += createMultipleStatsPlayerList(side1stats, playerTelegramIds)
 
   text += '\n\n'
-  text += createMultipleStatsPlayerList(side2.alliance, side2stats, playerTelegramIds)
+  text += createMultipleStatsPlayerList(side2stats, playerTelegramIds)
 
   return text
 }
 
-function createMultipleStatsPlayerList(allianceEmoji: string, statsArr: readonly PlayerStats[], playerTelegramIds: Record<string, number>): string {
-  const playerNamesOverridden = Object.keys(playerTelegramIds)
-  const immuneEntries = statsArr
-    .filter(o => isImmune(o.player))
-    .map(o => o.player)
-  const overriddenEntries = statsArr
-    .filter(o => playerNamesOverridden.includes(o.player))
-    .filter(o => !immuneEntries.includes(o.player))
-    .map(o => o.player)
-  const normalEntries = statsArr
-    .filter(o => !immuneEntries.includes(o.player))
-    .filter(o => !overriddenEntries.includes(o.player))
-
-  const textParts = []
-
-  if (normalEntries.length > 0) {
-    textParts.push(normalEntries
-      .map(o => createPlayerStatsTwoLineString(o, true))
-      .join('\n')
-    )
-  }
-
-  if (immuneEntries.length > 0) {
-    let text = ''
-    text += allianceEmoji
-    text += emoji.poweruser
-    text += emoji.immunity
-    text += ' '
-    text += immuneEntries
-      .map(o => {
-        const id = playerTelegramIds[o]
-        return id ? createPlayerMarkdownLink(id, {player: o}) : createPlayerNameString({player: o}, true)
-      })
-      .join(', ')
-
-    textParts.push(text)
-  }
-
-  if (overriddenEntries.length > 0) {
-    let text = ''
-    text += allianceEmoji
-    text += ' '
-    text += overriddenEntries
-      .map(o => createPlayerMarkdownLink(playerTelegramIds[o], {player: o}))
-      .join(', ')
-
-    textParts.push(text)
-  }
-
-  return textParts.join('\n')
+function createMultipleStatsPlayerList(statsArray: readonly PlayerStats[], playerTelegramIds: Record<string, number>): string {
+  return statsArray
+    .map(o => createPlayerStatsSingleLineString(o, playerTelegramIds[o.player]))
+    .join('\n')
 }
 
 export function createMultipleStatsConclusion(statsArr: readonly PlayerStats[], playerArmyOverride: Record<string, number> = {}): MultipleStatsConclusion {
