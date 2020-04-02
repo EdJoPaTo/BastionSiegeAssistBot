@@ -41,6 +41,7 @@
     "telegraf": "^3.28.0",
     "telegraf-i18n": "^6.5.0",
     "telegraf-inline-menu": "^4.0.0",
+    "telegraf-middleware-console-time": "^1.0.0",
     "telegraf-session-local": "^1.0.2",
     "telegram-format": "^2.0.0",
     "timezone-support": "^2.0.2"
