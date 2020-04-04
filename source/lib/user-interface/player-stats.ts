@@ -175,25 +175,28 @@ function createArmyStatsPart(data: ArmyEstimate, includeBarracksLevel: boolean):
 }
 
 export function createPlayerStatsSingleLineString(stats: PlayerStats, telegramId: number | undefined): string {
-  const namePart = telegramId ? createPlayerMarkdownLink(telegramId, stats) : createPlayerNameString(stats, true)
-
-  if (isImmune(stats.player)) {
-    return emoji.immunity + emoji.poweruser + ' ' + namePart
-  }
-
+  const immune = isImmune(stats.player)
   const infos: string[] = []
 
   infos.push(
-    createArmyStatsPart(stats.army, false)
+    ((!immune && stats.army.min) ?
+      formatNumberShort(stats.army.min) :
+      '?????'
+    ) + (immune ? emoji.poweruser : emoji.army)
   )
 
   infos.push(
-    stats.loot.amount > 0 ?
-      createSimpleDataString(stats.loot, emoji.gold, ['avg'], true) :
-      `???????${emoji.gold}`
+    ((!immune && stats.loot.amount > 0) ?
+      formatNumberShort(stats.loot.avg) :
+      '??????'
+    ) + (immune ? emoji.poweruser : emoji.gold)
   )
 
-  infos.push(namePart)
+  infos.push(
+    telegramId ?
+      createPlayerMarkdownLink(telegramId, stats) :
+      createPlayerNameString(stats, true)
+  )
 
   return infos.join(' ')
 }
