@@ -1,11 +1,13 @@
 import {Extra, Markup, Composer, SwitchToChatButton} from 'telegraf'
 import {Gamescreen} from 'bastion-siege-logic'
 import {markdown as format} from 'telegram-format'
+import debounce from 'debounce-promise'
 
 import {PlayerStats, Session} from '../lib/types'
 
 import {whenScreenContainsInformation} from '../lib/input/gamescreen'
 
+import * as attackscouts from '../lib/data/ingame/attackscouts'
 import * as playerStatsDb from '../lib/data/playerstats-db'
 import * as poweruser from '../lib/data/poweruser'
 import * as userSessions from '../lib/data/user-sessions'
@@ -29,10 +31,23 @@ bot.on('text', whenScreenContainsInformation('attackIncoming', notNewMiddleware(
   return ctx.reply(text, extra)
 }))
 
+const DEBOUNCE_TIME = 200 // Milliseconds
+const debouncedAttackscout: Record<number, (ctx: any) => Promise<void>> = {}
+
 bot.on('text', whenScreenContainsInformation('attackscout', notNewMiddleware('battle.scoutsGone', 2), (ctx: any) => {
+  console.time('wat')
+  const {id} = ctx.from
+  if (!debouncedAttackscout[id]) {
+    debouncedAttackscout[id] = debounce(attackscoutResponse, DEBOUNCE_TIME)
+  }
+
+  debouncedAttackscout[id](ctx)
+  console.timeEnd('wat')
+}))
+
+async function attackscoutResponse(ctx: any): Promise<void> {
   const {timeZone} = ctx.session as Session
-  const {attackscout} = ctx.state.screen as Gamescreen
-  const {player, terra} = attackscout!
+  const {player, terra} = attackscouts.getLastAttackscoutOfUser(ctx.from.id)!
   const {name} = player
 
   const possible = playerStatsDb.getLookingLike(name, terra, true)
@@ -48,7 +63,7 @@ bot.on('text', whenScreenContainsInformation('attackscout', notNewMiddleware('ba
   ] as any[])
 
   return ctx.reply(text, Extra.markdown().markup(keyboard))
-}))
+}
 
 bot.on('text', whenScreenContainsInformation('allianceBattleStart', notNewMiddleware('battle.over'), async (ctx: any) => {
   const now = Date.now() / 1000
