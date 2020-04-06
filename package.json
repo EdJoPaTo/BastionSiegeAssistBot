@@ -79,10 +79,6 @@
   "xo": {
     "space": true,
     "semicolon": false,
-    "extends": "xo-typescript",
-    "extensions": [
-      "ts"
-    ],
     "rules": {
       "ava/no-ignored-test-files": "off",
       "prefer-named-capture-group": "off",
@@ -90,15 +86,7 @@
       "@typescript-eslint/array-type": "off",
       "@typescript-eslint/prefer-nullish-coalescing": "off",
       "@typescript-eslint/prefer-optional-chain": "off",
-      "@typescript-eslint/restrict-template-expressions": "warn",
-      "@typescript-eslint/indent": [
-        "error",
-        2
-      ],
-      "@typescript-eslint/semi": [
-        "error",
-        "never"
-      ]
+      "@typescript-eslint/restrict-template-expressions": "warn"
     },
     "overrides": [
       {
