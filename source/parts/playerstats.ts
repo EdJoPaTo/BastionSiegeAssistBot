@@ -209,7 +209,7 @@ function generatePlayerStats(players: string | string[], short: boolean, timeZon
 
   let text = ''
   if (short) {
-    text += allStats.map(o => createPlayerStatsSingleLineString(o, undefined)).join('\n')
+    text += allStats.map(o => createPlayerStatsSingleLineString(o, undefined, undefined)).join('\n')
   } else {
     text += allStats.map(o => createPlayerStatsString(o, timeZone || 'UTC')).join('\n\n')
   }

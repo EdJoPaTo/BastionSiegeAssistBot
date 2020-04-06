@@ -174,23 +174,27 @@ function createArmyStatsPart(data: ArmyEstimate, includeBarracksLevel: boolean):
   return text
 }
 
-export function createPlayerStatsSingleLineString(stats: PlayerStats, telegramId: number | undefined): string {
+export function createPlayerStatsSingleLineString(stats: PlayerStats, telegramId: number | undefined, armyOverride: number | undefined): string {
   const immune = isImmune(stats.player)
   const infos: string[] = []
 
-  infos.push(
-    ((!immune && stats.army.min) ?
-      formatNumberShort(stats.army.min) :
-      '?????'
-    ) + (immune ? emoji.poweruser : emoji.army)
-  )
+  if (armyOverride) {
+    infos.push(formatNumberShort(armyOverride) + emoji.army)
+  } else if (!immune) {
+    if (stats.army.min) {
+      infos.push(formatNumberShort(stats.army.min) + emoji.army)
+    } else {
+      infos.push('?????' + emoji.army)
+    }
+  }
 
-  infos.push(
-    ((!immune && stats.loot.amount > 0) ?
-      formatNumberShort(stats.loot.avg) :
-      '??????'
-    ) + (immune ? emoji.poweruser : emoji.gold)
-  )
+  if (immune) {
+    infos.push(emoji.poweruser + emoji.immunity)
+  } else if (stats.loot.amount > 0) {
+    infos.push(formatNumberShort(stats.loot.avg) + emoji.gold)
+  } else {
+    infos.push('??????' + emoji.gold)
+  }
 
   infos.push(
     telegramId ?
@@ -253,17 +257,17 @@ export function createTwoSidesStatsString(side1stats: readonly PlayerStats[], si
   text += createTwoSidesArmyStrengthString(side1stats, side2stats, playerArmyOverride)
 
   text += '\n\n'
-  text += createMultipleStatsPlayerList(side1stats, playerTelegramIds)
+  text += createMultipleStatsPlayerList(side1stats, playerArmyOverride, playerTelegramIds)
 
   text += '\n\n'
-  text += createMultipleStatsPlayerList(side2stats, playerTelegramIds)
+  text += createMultipleStatsPlayerList(side2stats, playerArmyOverride, playerTelegramIds)
 
   return text
 }
 
-function createMultipleStatsPlayerList(statsArray: readonly PlayerStats[], playerTelegramIds: Record<string, number>): string {
+function createMultipleStatsPlayerList(statsArray: readonly PlayerStats[], playerArmyOverride: Record<string, number>, playerTelegramIds: Record<string, number>): string {
   return statsArray
-    .map(o => createPlayerStatsSingleLineString(o, playerTelegramIds[o.player]))
+    .map(o => createPlayerStatsSingleLineString(o, playerTelegramIds[o.player], playerArmyOverride[o.player]))
     .join('\n')
 }
 
