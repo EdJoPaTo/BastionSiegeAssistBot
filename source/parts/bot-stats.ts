@@ -32,5 +32,5 @@ bot.command('botstats', async (ctx: any) => {
   text += `\n  ${ctx.i18n.t('botstats.within30d')}: ${enemiesWithin30d.length}`
   text += `\n${ctx.i18n.t('botstats.users')}: ${users} (${powerusers}${emoji.poweruser})`
 
-  return ctx.replyWithMarkdown(text)
+  await ctx.replyWithMarkdown(text)
 })

@@ -259,7 +259,7 @@ function createAllianceSolo(ctx: any): string {
   text += '\n'
 
   if (!allianceMates) {
-    return ctx.replyWithMarkdown(text)
+    return text
   }
 
   const reports = allianceMates
@@ -280,7 +280,7 @@ function createAllianceAttacks(ctx: any): string {
   text += header
 
   if (!allianceMates) {
-    return ctx.replyWithMarkdown(text)
+    return text
   }
 
   const allReports = allianceMates
@@ -315,7 +315,7 @@ function createAllianceMates(ctx: any): string {
   text += header
 
   if (!allianceMates) {
-    return ctx.replyWithMarkdown(text)
+    return text
   }
 
   const mateInfo = allianceMates

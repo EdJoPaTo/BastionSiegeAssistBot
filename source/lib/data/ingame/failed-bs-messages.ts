@@ -52,7 +52,7 @@ export function writeAllGrouped(): void {
       try {
         parseGamescreenContent(o.text)
       } catch (error) {
-        return error.message
+        return error instanceof Error ? error.message : String(error)
       }
 
       return ''

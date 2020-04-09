@@ -28,7 +28,7 @@ bot.on('text', whenScreenContainsInformation('battlereport', async (ctx: any) =>
 
   const {text, extra} = await generateResponseText(ctx, report, timestamp, isNew)
 
-  return ctx.reply(text, extra)
+  await ctx.reply(text, extra)
 }))
 
 function applyReportToGameInformation(ctx: any, report: Battlereport, timestamp: number, isNew: boolean): void {
@@ -43,7 +43,7 @@ function applyReportToGameInformation(ctx: any, report: Battlereport, timestamp:
     if (session.gameInformation.resources && session.gameInformation.resourcesTimestamp && timestamp > session.gameInformation.resourcesTimestamp) {
       session.gameInformation.resources.gold += gold
 
-      if (isFinite(soldiersLostResult.gold)) {
+      if (Number.isFinite(soldiersLostResult.gold)) {
         session.gameInformation.resources.gold += soldiersLostResult.gold
       }
 

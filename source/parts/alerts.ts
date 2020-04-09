@@ -58,7 +58,7 @@ bot.action('upcoming', async ctx => {
 
 function generateUpcomingText(ctx: any): {text: string; extra: any} {
   const session = ctx.session as Session
-  const enabledAlerts = session.alerts || []
+  const enabledAlerts = session.alerts ?? []
   const now = Date.now() / 1000
   const eventList = alertHandler.generateUpcomingEventsList(session, now)
     .filter(o => o.timestamp > now)

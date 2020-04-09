@@ -76,7 +76,7 @@ function generateText(information: GameInformation): string {
   text += '\n'
   text += '*Age of last well known Data*\n'
   text += ['resources', 'buildings', 'domainStats']
-    .filter(o => (information as any)[o + 'Timestamp'])
+    .filter(o => Boolean((information as any)[o + 'Timestamp']))
     .map(o => {
       const timestamp: number = (information as any)[o + 'Timestamp']
       const ageInMinutes = currentTimestamp - Math.floor(timestamp / 60)

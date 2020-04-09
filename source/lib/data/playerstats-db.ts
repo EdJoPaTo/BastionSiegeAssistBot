@@ -31,7 +31,7 @@ export function get(player: string): PlayerStats {
   return playerStats[player].stats
 }
 
-export function getLookingLike(player: string, terra = NaN, onlyFromNearPast = true): PlayerStats[] {
+export function getLookingLike(player: string, terra = Number.NaN, onlyFromNearPast = true): PlayerStats[] {
   const searched = replaceLookingLikeAsciiChars(player)
   const allLookingAlike = list()
     .filter(o => o.playerNameLookingLike === searched)

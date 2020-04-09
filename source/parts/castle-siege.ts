@@ -104,13 +104,13 @@ bot.command('castle', async ctx => {
           const participants = castleSiege.getParticipants(castle, alliance, now)
           const missingUsers = getMissingMates(alliance, participants.map(o => o.player))
 
-          const knownNames = [
+          const knownNames = new Set([
             ...missingUsers.map(o => o.player),
             ...participants.map(o => o.player)
-          ]
+          ])
           const missingNonUsers = playerStatsDb.getInAlliance(alliance, 7)
             .map(o => o.player)
-            .filter(o => !knownNames.includes(o))
+            .filter(o => !knownNames.has(o))
 
           const missingEntries: string[] = []
           missingEntries.push(...missingUsers

@@ -119,7 +119,7 @@ function creationNotPossibleReason(ctx: any): string | false {
 function creationWarnings(ctx: any): string[] {
   const session = ctx.session as Session
   const information = session.gameInformation
-  const warnings = []
+  const warnings: string[] = []
 
   // Unix timestamp just without seconds (/60)
   const currentTimestamp = Math.floor(Date.now() / 1000 / 60)

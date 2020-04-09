@@ -22,10 +22,10 @@ menu.select('b', CONSTRUCTIONS, {
   textFunc: (ctx, key) => getBuildingText(ctx, key as ConstructionName),
   setFunc: (ctx: any, key) => {
     const session = ctx.session as Session
-    session.buildings = toggleInArray(session.buildings || [...defaultBuildingsToShow], key as ConstructionName)
+    session.buildings = toggleInArray(session.buildings || defaultBuildingsToShow, key as ConstructionName, (a, b) => a.localeCompare(b))
   },
   isSetFunc: (ctx: any, key) => {
     const session = ctx.session as Session
-    return (session.buildings || [...defaultBuildingsToShow]).includes(key as ConstructionName)
+    return (session.buildings || defaultBuildingsToShow).includes(key as ConstructionName)
   }
 })

@@ -84,7 +84,7 @@ const i18n = new I18n({
 
 bot.use(i18n.middleware())
 
-bot.use((ctx, next) => {
+bot.use(async (ctx, next) => {
   const {username} = ctx.from || {}
   const session = (ctx as any).session as Session
   if (username) {
@@ -93,11 +93,11 @@ bot.use((ctx, next) => {
     delete session.__username
   }
 
-  return next?.()
+  await next?.()
 })
 
 // Fix previous bot problems
-bot.use((ctx, next) => {
+bot.use(async (ctx, next) => {
   const {session} = (ctx as any)
   if (session.gameInformation) {
     const allKeys = Object.keys(session.gameInformation)
@@ -121,7 +121,7 @@ bot.use((ctx, next) => {
     delete session.gameInformation.attackscoutTimestamp
   }
 
-  return next?.()
+  await next?.()
 })
 
 partAlerts.start(bot.telegram)

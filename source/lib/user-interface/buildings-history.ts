@@ -58,7 +58,7 @@ function createHistorySeriesFromData(ctx: any, minTimestamp: number, allData: Da
 
   const lastEntry = data.slice(-1)[0]
   const keys = Object.keys(lastEntry.data)
-    .filter(o => isFinite(lastEntry.data[o]))
+    .filter(o => Number.isFinite(lastEntry.data[o]))
 
   const series = keys
     .map(key => ({

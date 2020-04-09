@@ -5,9 +5,10 @@ export function notNewMiddleware(i18nMessage = 'forward.old', maxAgeInMinutes = 
     const time = ctx.message!.forward_date!
     const minutesAgo = ((Date.now() / 1000) - time) / 60
     if (minutesAgo > maxAgeInMinutes) {
-      return ctx.reply((ctx as any).i18n.t(i18nMessage))
+      await ctx.reply((ctx as any).i18n.t(i18nMessage))
+      return
     }
 
-    return next?.()
+    await next?.()
   }
 }

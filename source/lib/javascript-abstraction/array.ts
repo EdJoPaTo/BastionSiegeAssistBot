@@ -47,14 +47,16 @@ export function sortBy<T>(weightSelector: (val: T) => number, reverse = false): 
   return (a, b) => weightSelector(a) - weightSelector(b)
 }
 
-export function toggleInArray<T>(array: T[], key: T): T[] {
+export function toggleInArray<T>(array: readonly T[], key: T, compare: (a: T, b: T) => number): T[] {
   if (array.includes(key)) {
-    array = array.filter(o => o !== key)
-  } else {
-    array.push(key)
-    /* eslint @typescript-eslint/require-array-sort-compare: warn */
-    array.sort()
+    return array.filter(o => o !== key)
   }
 
-  return array
+  const result = [
+    ...array,
+    key
+  ]
+
+  result.sort(compare)
+  return result
 }

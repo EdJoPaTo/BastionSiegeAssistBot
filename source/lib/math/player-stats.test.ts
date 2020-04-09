@@ -90,9 +90,9 @@ test('generate example A', t => {
     terra: 950,
     attacksWithoutLossPercentage: 0,
     inactiveTime: {
-      accuracy: NaN,
-      seconds: NaN,
-      stdDeviation: NaN
+      accuracy: Number.NaN,
+      seconds: Number.NaN,
+      stdDeviation: Number.NaN
     },
     seemsCanned: false,
     loot: {
@@ -105,10 +105,10 @@ test('generate example A', t => {
     },
     gems: {
       amount: 0,
-      avg: NaN,
+      avg: Number.NaN,
       min: Infinity,
       max: -Infinity,
-      stdDeviation: NaN,
+      stdDeviation: Number.NaN,
       sum: 0
     },
     battlesObserved: 4,
@@ -140,9 +140,9 @@ test('generate example B', t => {
     terra: 950,
     attacksWithoutLossPercentage: 0,
     inactiveTime: {
-      accuracy: NaN,
-      seconds: NaN,
-      stdDeviation: NaN
+      accuracy: Number.NaN,
+      seconds: Number.NaN,
+      stdDeviation: Number.NaN
     },
     seemsCanned: false,
     loot: {
@@ -155,10 +155,10 @@ test('generate example B', t => {
     },
     gems: {
       amount: 0,
-      avg: NaN,
+      avg: Number.NaN,
       min: Infinity,
       max: -Infinity,
-      stdDeviation: NaN,
+      stdDeviation: Number.NaN,
       sum: 0
     },
     battlesObserved: 3,

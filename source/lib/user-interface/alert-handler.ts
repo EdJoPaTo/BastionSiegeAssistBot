@@ -82,12 +82,12 @@ export class AlertHandler {
     const {resources, resourcesTimestamp} = gameInformation
     const resourceTimestampMinutes = Math.floor(resourcesTimestamp! / 60)
     const buildings = {...gameInformation.buildings!, ...gameInformation.workshop!}
-    const buildingsToShow = buildingsToShowSession || defaultBuildingsToShow
+    const buildingsToShow = new Set(buildingsToShowSession ?? defaultBuildingsToShow)
     if (resources && buildings.townhall) {
       const storageCapacity = calcStorageCapacity(buildings.storage)
       const goldCapacity = calcGoldCapacity(buildings.townhall)
       const buildingUpgradeEvents = CONSTRUCTIONS
-        .filter(o => buildingsToShow.includes(o))
+        .filter(o => buildingsToShow.has(o))
         .map(buildingName => {
           const cost = calcBuildingCost(buildingName, buildings[buildingName])
           const minutesNeeded = calcMinutesNeeded(cost, buildings, resources)
@@ -159,14 +159,14 @@ export class AlertHandler {
   }
 
   recreateAlerts(user: number, session: Session, now: number): void {
-    const oldAlerts = this._alertsOfUsers[user] || []
+    const oldAlerts = this._alertsOfUsers[user] ?? []
     oldAlerts
       .filter(o => o.timeoutId)
       .forEach(o => {
         clearTimeout(o.timeoutId!)
       })
 
-    const enabledAlerts = session.alerts || []
+    const enabledAlerts = session.alerts ?? []
     const eventList = this.generateUpcomingEventsList(session, now)
       .filter(o => enabledAlerts.includes(o.type))
 

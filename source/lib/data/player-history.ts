@@ -4,7 +4,7 @@ import stringify from 'json-stable-stringify'
 
 import {PlayerHistory, PlayerHistoryEntry} from '../types/player-history'
 
-const KEEP_ONLY_LATEST = ['effects', 'resources']
+const KEEP_ONLY_LATEST = new Set(['effects', 'resources'])
 
 console.time('player history')
 const playerData = new KeyValueInMemoryFiles<PlayerHistory>('persist/player-history')
@@ -36,7 +36,7 @@ export async function add(userId: number, type: keyof PlayerHistory, unixTimesta
     .filter(arrayFilterUnique())
     .length
 
-  if (KEEP_ONLY_LATEST.includes(type)) {
+  if (KEEP_ONLY_LATEST.has(type)) {
     current[type] = [{
       timestamp: unixTimestamp,
       data

@@ -14,11 +14,12 @@ import {createMultipleStatsConclusion} from '../lib/user-interface/player-stats'
 
 export const bot = new Composer()
 
-bot.command('alliances', (ctx: any) => {
+bot.command('alliances', async (ctx: any) => {
   let text = `*${ctx.i18n.t('bs.alliance')}*\n`
   if (!poweruser.isPoweruser(ctx.from.id)) {
     text += ctx.i18n.t('poweruser.usefulWhen')
-    return ctx.replyWithMarkdown(text)
+    await ctx.replyWithMarkdown(text)
+    return
   }
 
   const playerStats = playerStatsDb.list()
@@ -37,5 +38,5 @@ bot.command('alliances', (ctx: any) => {
     .map(o => o.armyString)
     .join('\n')
 
-  return ctx.replyWithMarkdown(text)
+  await ctx.replyWithMarkdown(text)
 })

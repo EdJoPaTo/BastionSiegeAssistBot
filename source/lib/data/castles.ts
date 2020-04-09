@@ -5,7 +5,7 @@ import {CastleInfo} from '../types/castle-siege'
 
 const data = new KeyValueInMemoryFile<CastleInfo>('persist/castles.json')
 function getOrDefault(castle: Castle): CastleInfo {
-  return data.get(castle) || {
+  return data.get(castle) ?? {
     nextSiege: undefined
   }
 }
@@ -25,7 +25,7 @@ export async function siegeEnded(castle: Castle, siegeEndedIngameTimestamp: numb
 }
 
 export function nextSiegeAvailable(castle: Castle): number {
-  return getOrDefault(castle).nextSiege || NaN
+  return getOrDefault(castle).nextSiege ?? Number.NaN
 }
 
 export function nextSiegeBeginsFight(castle: Castle): number {
@@ -34,7 +34,7 @@ export function nextSiegeBeginsFight(castle: Castle): number {
 
 export function isCurrentlySiegeAvailable(castle: Castle, now: number): boolean {
   const siegeAvailable = nextSiegeAvailable(castle)
-  return now > siegeAvailable || !isFinite(siegeAvailable)
+  return now > siegeAvailable || !Number.isFinite(siegeAvailable)
 }
 
 export function currentKeeperAlliance(castle: Castle): string | undefined {

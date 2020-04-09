@@ -19,7 +19,7 @@ test('alert in past is not created', t => {
 })
 
 test('alert at timestamp NaN is not created', t => {
-  const result = createAlertAtTimestamp(NaN, () => {}, 0)
+  const result = createAlertAtTimestamp(Number.NaN, () => {}, 0)
   t.falsy(result)
 })
 

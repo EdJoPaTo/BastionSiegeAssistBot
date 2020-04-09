@@ -24,10 +24,10 @@ menu.select('type', ALERTS, {
   textFunc: (ctx, key) => getAlertText(ctx, key as Alert),
   setFunc: (ctx: any, key) => {
     const session = ctx.session as Session
-    session.alerts = toggleInArray(session.alerts || [], key as Alert)
+    session.alerts = toggleInArray(session.alerts ?? [], key as Alert, (a, b) => a.localeCompare(b))
   },
   isSetFunc: (ctx: any, key) => {
     const session = ctx.session as Session
-    return (session.alerts || []).includes(key as Alert)
+    return (session.alerts ?? []).includes(key as Alert)
   }
 })

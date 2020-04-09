@@ -19,10 +19,10 @@ test('getSumAverageAmount', t => {
 test('getSumAverageAmount empty', t => {
   t.deepEqual(getSumAverageAmount([]), {
     amount: 0,
-    avg: NaN,
+    avg: Number.NaN,
     min: Infinity,
     max: -Infinity,
-    stdDeviation: NaN,
+    stdDeviation: Number.NaN,
     sum: 0
   })
 })
@@ -30,10 +30,10 @@ test('getSumAverageAmount empty', t => {
 test('getSumAverageAmount null as value is ignored', t => {
   t.deepEqual(getSumAverageAmount([null]), {
     amount: 0,
-    avg: NaN,
+    avg: Number.NaN,
     min: Infinity,
     max: -Infinity,
-    stdDeviation: NaN,
+    stdDeviation: Number.NaN,
     sum: 0
   })
 })

@@ -36,7 +36,8 @@ bot.on('text', whenScreenIsOfType('war', async (ctx: any) => {
     const minutesAgo = (now - timestamp) / 60
     if (minutesAgo > 8) {
       text += ctx.i18n.t('battle.over')
-      return ctx.replyWithMarkdown(text)
+      await ctx.replyWithMarkdown(text)
+      return
     }
 
     if (isBattleSolo(battle)) {
@@ -59,17 +60,19 @@ bot.on('text', whenScreenIsOfType('war', async (ctx: any) => {
         text += emoji.poweruser
         text += ' '
         text += ctx.i18n.t('poweruser.usefulWhen')
-        return ctx.replyWithMarkdown(text)
+        await ctx.replyWithMarkdown(text)
+        return
       }
 
-      const allPlayersInvolved = [
+      const allPlayersInvolved = new Set([
         ...battle.attack,
         ...battle.defence
-      ]
+      ])
       const user = gameInformation.player
-      if (!user || !allPlayersInvolved.includes(user.name)) {
+      if (!user || !allPlayersInvolved.has(user.name)) {
         text += ctx.i18n.t('name.need')
-        return ctx.replyWithMarkdown(text)
+        await ctx.replyWithMarkdown(text)
+        return
       }
 
       text += emoji.poweruser
@@ -94,7 +97,7 @@ bot.on('text', whenScreenIsOfType('war', async (ctx: any) => {
     }
   }
 
-  return ctx.reply(text, extra)
+  await ctx.reply(text, extra)
 }))
 
 function isBattleSolo(battle: BattleSolo | BattleAlliance): battle is BattleSolo {
@@ -123,9 +126,9 @@ bot.action('war-notify-alliance', async ctx => {
     return
   }
 
-  const allParticipants = [...currentWar.battle.attack, ...currentWar.battle.defence]
+  const allParticipants = new Set([...currentWar.battle.attack, ...currentWar.battle.defence])
   const missingMates = userSessions.getRawInAlliance(player.alliance)
-    .filter(o => !allParticipants.includes(o.data.gameInformation.player!.name))
+    .filter(o => !allParticipants.has(o.data.gameInformation.player!.name))
 
   const allNotificationAttempts = await Promise.all(
     missingMates.map(async o => notifyPlayer(ctx.telegram, o.data.gameInformation.player!.name, o.user, currentWar))

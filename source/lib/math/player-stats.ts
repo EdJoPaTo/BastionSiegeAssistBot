@@ -108,6 +108,7 @@ function generateLoot(allReports: readonly Battlereport[]): PlayerStatsLoot {
   }
 }
 
+// TODO: simplify: max and estimate are not relevant (currently?)
 export function assumeArmy(relevantReports: readonly Battlereport[]): ArmyEstimate {
   const result: any = {}
   let estimate = 0
@@ -121,7 +122,7 @@ export function assumeArmy(relevantReports: readonly Battlereport[]): ArmyEstima
   const armyAssumptionBasedOnLoot = highestEnemyLoot * 0.002 // One army can carry up to 500 gold
 
   const min = Math.round(Math.max(strongestArmyLost, mostSoldiersDied, armyAssumptionBasedOnLoot))
-  if (isFinite(min)) {
+  if (Number.isFinite(min)) {
     result.min = min
     estimate += min
   }
@@ -135,7 +136,7 @@ export function assumeArmy(relevantReports: readonly Battlereport[]): ArmyEstima
     ...relevantSuccessful
       .map(o => o.soldiersTotal)
   )
-  if (isFinite(smallestSuccessfulArmy)) {
+  if (Number.isFinite(smallestSuccessfulArmy)) {
     result.max = smallestSuccessfulArmy
     estimate += smallestSuccessfulArmy
     if (estimate > smallestSuccessfulArmy) {
@@ -143,12 +144,12 @@ export function assumeArmy(relevantReports: readonly Battlereport[]): ArmyEstima
     }
   }
 
-  result.estimate = estimate || NaN
+  result.estimate = estimate || Number.NaN
   return result
 }
 
 function assumeTerra(soloReports: readonly Battlereport[]): number {
-  let currentEstimate = NaN
+  let currentEstimate = Number.NaN
 
   for (const report of soloReports) {
     if (!report.terra) {

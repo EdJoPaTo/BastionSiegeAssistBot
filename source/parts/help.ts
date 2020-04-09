@@ -5,17 +5,17 @@ import {getSupportGroupLink} from '../lib/user-interface/support-group'
 
 export const bot = new Composer()
 
-bot.command(['start', 'help'], (ctx: any) => {
+bot.command(['start', 'help'], async (ctx: any) => {
   const text = ctx.i18n.t('help.full')
 
   const keyboard = Markup.inlineKeyboard([
     Markup.switchToCurrentChatButton(ctx.i18n.t('help.trySearchButton'), ''),
     Markup.urlButton(ctx.i18n.t('help.joinBSAGroupButton'), getSupportGroupLink(ctx.i18n.locale()))
   ] as any, {columns: 1})
-  return ctx.replyWithMarkdown(text, Extra.markup(keyboard))
+  await ctx.replyWithMarkdown(text, Extra.markup(keyboard))
 })
 
-bot.command(['search', 'army'], (ctx: any) => {
+bot.command(['search', 'army'], async (ctx: any) => {
   ctx.match = /\S+ (.+)/.exec(ctx.message!.text!) || undefined
   const argument = ctx.match && ctx.match[1]
 
@@ -23,7 +23,7 @@ bot.command(['search', 'army'], (ctx: any) => {
   const keyboard = Markup.inlineKeyboard([
     Markup.switchToCurrentChatButton(ctx.i18n.t('help.trySearchButton'), argument || '')
   ] as any)
-  return ctx.replyWithMarkdown(text, Extra.markup(keyboard) as any)
+  await ctx.replyWithMarkdown(text, Extra.markup(keyboard) as any)
 })
 
 function isAnOwnInlineQuery(ctx: ContextMessageUpdate): boolean {
@@ -40,11 +40,11 @@ function isAnOwnInlineQuery(ctx: ContextMessageUpdate): boolean {
   return text.includes(emoji.battlereport) || text.includes(emoji.poweruser)
 }
 
-bot.on('text', Composer.optional(ctx => !isAnOwnInlineQuery(ctx), (ctx: any) => {
+bot.on('text', Composer.optional(ctx => !isAnOwnInlineQuery(ctx), async (ctx: any) => {
   const text = ctx.i18n.t('help.short')
 
   const keyboard = Markup.inlineKeyboard([
     Markup.urlButton(ctx.i18n.t('help.joinBSAGroupButton'), getSupportGroupLink(ctx.i18n.locale()))
   ])
-  return ctx.replyWithMarkdown(text, Extra.markup(keyboard) as any)
+  await ctx.replyWithMarkdown(text, Extra.markup(keyboard) as any)
 }))

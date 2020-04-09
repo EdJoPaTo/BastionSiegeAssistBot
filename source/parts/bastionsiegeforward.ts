@@ -18,7 +18,7 @@ bot.use(async (ctx: any, next) => {
     session.gameInformation = {}
   }
 
-  return next?.()
+  await next?.()
 })
 
 function forwardedFromClone(ctx: Context): boolean {
@@ -26,7 +26,7 @@ function forwardedFromClone(ctx: Context): boolean {
 }
 
 bot.on('text', Composer.optional(forwardedFromClone, async ctx => {
-  return ctx.reply('🙃')
+  await ctx.reply('🙃')
 }))
 
 // Load game screen type and information
@@ -54,13 +54,15 @@ bot.on('text', Composer.optional(isForwardedFromBastionSiege, async (ctx: any, n
   const dataAvailable = WANTED_DATA
     .filter(o => newInformation[o])
   if (dataAvailable.length === 0) {
-    return next?.()
+    await next?.()
+    return
   }
 
   const newData = dataAvailable
     .filter(data => ((session.gameInformation as any)[data + 'Timestamp'] || 0) < timestamp)
   if (newData.length === 0) {
-    return ctx.reply(ctx.i18n.t('forward.known'))
+    await ctx.reply(ctx.i18n.t('forward.known'))
+    return
   }
 
   await Promise.all(newData.map(async data => {
@@ -69,5 +71,5 @@ bot.on('text', Composer.optional(isForwardedFromBastionSiege, async (ctx: any, n
     await playerHistory.add(ctx.from.id, data, timestamp, newInformation[data])
   }))
 
-  return next?.()
+  await next?.()
 }))

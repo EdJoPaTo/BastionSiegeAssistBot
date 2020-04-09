@@ -1,3 +1,5 @@
+import I18n from 'telegraf-i18n'
+
 import {PoweruserCondition, PoweruserConditionType} from '../types'
 
 import {emoji} from './output-text'
@@ -54,14 +56,15 @@ export function conditionEmoji(condition: PoweruserCondition): string {
 }
 
 export function conditionTypeTranslation(ctx: any, type: PoweruserConditionType): string {
+  const i18n = ctx.i18n as I18n
   switch (type) {
     case 'battlereports':
-      return ctx.i18n.t('battlereports')
+      return i18n.t('battlereports')
     case 'name':
-      return ctx.i18n.t('name.nameAndAlliance')
+      return i18n.t('name.nameAndAlliance')
     case 'buildings':
     case 'workshop':
-      return ctx.i18n.t('bs.' + type)
+      return i18n.t('bs.' + type)
     default:
       return type
   }

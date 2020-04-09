@@ -24,11 +24,11 @@ import {notNewMiddleware} from '../lib/telegraf-middlewares'
 
 export const bot = new Composer()
 
-bot.on('text', whenScreenContainsInformation('attackIncoming', notNewMiddleware('battle.over'), (ctx: any) => {
+bot.on('text', whenScreenContainsInformation('attackIncoming', notNewMiddleware('battle.over'), async (ctx: any) => {
   const {timeZone} = ctx.session as Session
   const {attackIncoming} = ctx.state.screen as Gamescreen
   const {text, extra} = generatePlayerStats(attackIncoming!.name, false, timeZone)
-  return ctx.reply(text, extra)
+  await ctx.reply(text, extra)
 }))
 
 const DEBOUNCE_TIME = 200 // Milliseconds
@@ -62,7 +62,7 @@ async function attackscoutResponse(ctx: any): Promise<void> {
     Markup.switchToChatButton(emoji.alliance + emoji.list + (ctx.i18n.t('list.shareAttack') as string), 'list')
   ] as any[])
 
-  return ctx.reply(text, Extra.markdown().markup(keyboard))
+  await ctx.reply(text, Extra.markdown().markup(keyboard))
 }
 
 bot.on('text', whenScreenContainsInformation('allianceBattleStart', notNewMiddleware('battle.over'), async (ctx: any) => {
@@ -88,14 +88,14 @@ bot.on('text', whenScreenContainsInformation('allianceBattleStart', notNewMiddle
   const {text: statsText, extra} = generatePlayerStats(allianceBattleStart!.enemy.name, false, timeZone)
   text += statsText
 
-  return ctx.reply(text, extra)
+  await ctx.reply(text, extra)
 }))
 
-bot.on('text', whenScreenContainsInformation('allianceBattleSupport', notNewMiddleware('battle.over'), (ctx: any) => {
+bot.on('text', whenScreenContainsInformation('allianceBattleSupport', notNewMiddleware('battle.over'), async (ctx: any) => {
   const {timeZone} = ctx.session as Session
   const {allianceBattleSupport} = ctx.state.screen as Gamescreen
   const {text, extra} = generatePlayerStats(allianceBattleSupport!.name, false, timeZone)
-  return ctx.reply(text, extra)
+  await ctx.reply(text, extra)
 }))
 
 bot.on('text', whenScreenContainsInformation([
@@ -103,17 +103,18 @@ bot.on('text', whenScreenContainsInformation([
   'alreadyInFight',
   'conqueror',
   'notRecoveredFromFight'
-], notNewMiddleware(), (ctx: any) => {
+], notNewMiddleware(), async (ctx: any) => {
   const {timeZone} = ctx.session as Session
   const {allianceJoinRequest, alreadyInFight, conqueror, notRecoveredFromFight} = ctx.state.screen as Gamescreen
   const player = allianceJoinRequest || alreadyInFight || conqueror || notRecoveredFromFight!
   const {text, extra} = generatePlayerStats(player.name, false, timeZone)
-  return ctx.reply(text, extra)
+  await ctx.reply(text, extra)
 }))
 
-bot.on('text', whenScreenContainsInformation('list', notNewMiddleware('forward.old'), (ctx: any) => {
+bot.on('text', whenScreenContainsInformation('list', notNewMiddleware('forward.old'), async (ctx: any) => {
   if (!poweruser.isPoweruser(ctx.from.id)) {
-    return ctx.replyWithMarkdown(ctx.i18n.t('poweruser.usefulWhen'))
+    await ctx.replyWithMarkdown(ctx.i18n.t('poweruser.usefulWhen'))
+    return
   }
 
   const {timeZone} = ctx.session as Session
@@ -121,7 +122,8 @@ bot.on('text', whenScreenContainsInformation('list', notNewMiddleware('forward.o
   const names = list!.map(o => o.name)
 
   if (names.length === 0) {
-    return ctx.reply('not players…')
+    await ctx.reply('not players…')
+    return
   }
 
   const {text, extra} = generatePlayerStats(names, true, timeZone)
@@ -134,14 +136,15 @@ bot.on('text', whenScreenContainsInformation('list', notNewMiddleware('forward.o
     appendix += createSimpleDataString(armySAA, emoji.barracks, ['avg', 'stdDeviation', 'sum'], true) + '\n'
   }
 
-  return ctx.reply(text + appendix, extra)
+  await ctx.reply(text + appendix, extra)
 }))
 
-bot.on('text', whenScreenContainsInformation('castleSiegeParticipants', notNewMiddleware('forward.old', 60 * 12), (ctx: any) => {
+bot.on('text', whenScreenContainsInformation('castleSiegeParticipants', notNewMiddleware('forward.old', 60 * 12), async (ctx: any) => {
   let text = `*${ctx.i18n.t('bs.siege')}*\n`
   if (!poweruser.isPoweruser(ctx.from.id)) {
     text += ctx.i18n.t('poweruser.usefulWhen')
-    return ctx.replyWithMarkdown(text)
+    await ctx.replyWithMarkdown(text)
+    return
   }
 
   const {castleSiegeParticipants} = ctx.state.screen as Gamescreen
@@ -151,10 +154,10 @@ bot.on('text', whenScreenContainsInformation('castleSiegeParticipants', notNewMi
     .map(o => createMultipleStatsConclusion(o).armyString)
     .join('\n')
 
-  return ctx.replyWithMarkdown(text)
+  await ctx.replyWithMarkdown(text)
 }))
 
-bot.on('text', whenScreenContainsInformation('chat', notNewMiddleware('forward.old', 60 * 4), (ctx: any) => {
+bot.on('text', whenScreenContainsInformation('chat', notNewMiddleware('forward.old', 60 * 4), async (ctx: any) => {
   const now = Date.now() / 1000
   const {timeZone} = ctx.session as Session
   const {chat} = ctx.state.screen as Gamescreen
@@ -168,7 +171,7 @@ bot.on('text', whenScreenContainsInformation('chat', notNewMiddleware('forward.o
 
   text += statsText
 
-  return ctx.reply(text, extra)
+  await ctx.reply(text, extra)
 }))
 
 function userMarkdownTagWhenKnown(name: string, now: number): string | undefined {

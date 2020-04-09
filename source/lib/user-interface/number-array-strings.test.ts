@@ -31,10 +31,10 @@ test('createAmountAverageDeviationString', t => {
 test('createAmountAverageDeviationString no entries', t => {
   const data = {
     amount: 0,
-    avg: NaN,
-    min: NaN,
-    max: NaN,
-    stdDeviation: NaN,
+    avg: Number.NaN,
+    min: Number.NaN,
+    max: Number.NaN,
+    stdDeviation: Number.NaN,
     sum: 0
   }
   t.is(createAmountAverageDeviationString(data, 'Test', '€'), 'Test (0)')
@@ -46,7 +46,7 @@ test('createAmountAverageDeviationString one entry', t => {
     avg: 2,
     min: 2,
     max: 2,
-    stdDeviation: NaN,
+    stdDeviation: Number.NaN,
     sum: 2
   }
   t.is(createAmountAverageDeviationString(data, 'Test', '€'), 'Test (1): 2.00€')

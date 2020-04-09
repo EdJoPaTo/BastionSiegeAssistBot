@@ -80,7 +80,7 @@ export function createPlayerStatsString(stats: PlayerStats, timeZone: string): s
     strengthLine.push(createArmyStatsPart(stats.army, true))
   }
 
-  if (isFinite(stats.terra)) {
+  if (Number.isFinite(stats.terra)) {
     strengthLine.push(formatNumberShort(stats.terra, true) + emoji.terra)
   }
 
@@ -92,7 +92,7 @@ export function createPlayerStatsString(stats: PlayerStats, timeZone: string): s
   randomFacs.push(`${stats.battlesObservedNearPast}${emoji.battlereport}`)
 
   const hoursAgo = (now - stats.lastBattleTime) / ONE_HOUR_IN_SECONDS
-  if (isFinite(hoursAgo)) {
+  if (Number.isFinite(hoursAgo)) {
     randomFacs.push(formatBattleHoursAgo(hoursAgo))
   }
 
@@ -110,7 +110,7 @@ export function createPlayerStatsString(stats: PlayerStats, timeZone: string): s
     const parts = []
     parts.push(emoji.active)
 
-    if (isFinite(stats.lastTimeObservedActive)) {
+    if (Number.isFinite(stats.lastTimeObservedActive)) {
       parts.push(formatBattleHoursAgo((now - stats.lastTimeObservedActive) / ONE_HOUR_IN_SECONDS))
     }
 
@@ -125,7 +125,7 @@ export function createPlayerStatsString(stats: PlayerStats, timeZone: string): s
     const parts = []
     parts.push(emoji.wall + emoji.activityUnclear)
 
-    if (isFinite(stats.lastTimeObservedActivityUnclear)) {
+    if (Number.isFinite(stats.lastTimeObservedActivityUnclear)) {
       parts.push(formatBattleHoursAgo((now - stats.lastTimeObservedActivityUnclear) / ONE_HOUR_IN_SECONDS))
     }
 
@@ -136,7 +136,7 @@ export function createPlayerStatsString(stats: PlayerStats, timeZone: string): s
     const parts = []
     parts.push(emoji.wall + emoji.inactive)
 
-    if (isFinite(stats.lastTimeObservedInactive)) {
+    if (Number.isFinite(stats.lastTimeObservedInactive)) {
       parts.push(formatBattleHoursAgo((now - stats.lastTimeObservedInactive) / ONE_HOUR_IN_SECONDS))
     }
 
@@ -161,7 +161,7 @@ export function createPlayerStatsString(stats: PlayerStats, timeZone: string): s
 }
 
 function createArmyStatsPart(data: ArmyEstimate, includeBarracksLevel: boolean): string {
-  if (!data.min || !isFinite(data.min)) {
+  if (!data.min || !Number.isFinite(data.min)) {
     return '?????' + emoji.army
   }
 
@@ -283,7 +283,7 @@ export function createMultipleStatsConclusion(statsArr: readonly PlayerStats[], 
       }
 
       if (isImmune(o.player)) {
-        return NaN
+        return Number.NaN
       }
 
       return o.army.min
