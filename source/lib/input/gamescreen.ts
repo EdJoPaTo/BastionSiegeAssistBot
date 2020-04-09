@@ -1,11 +1,11 @@
 import {Gamescreen} from 'bastion-siege-logic'
-import Telegraf, {Middleware, ContextMessageUpdate} from 'telegraf'
+import {Middleware, ContextMessageUpdate, Composer} from 'telegraf'
 
 type GamescreenKey = keyof Gamescreen
 type SingleOrArray<T> = T | (readonly T[])
 
 // When at least one of the name argument is available middlewares are executed
-export function whenScreenContainsInformation(names: SingleOrArray<GamescreenKey>, ...middlewares: Middleware<ContextMessageUpdate>[]): (ctx: any, next: any) => void {
+export function whenScreenContainsInformation(names: SingleOrArray<GamescreenKey>, ...middlewares: Middleware<ContextMessageUpdate>[]): (ctx: any, next: any) => unknown {
   const namesArray = Array.isArray(names) ? names : [names]
   const predicate = (ctx: any): boolean => {
     if (!ctx.state.screen) {
@@ -17,10 +17,10 @@ export function whenScreenContainsInformation(names: SingleOrArray<GamescreenKey
     return namesArray.some(n => available.includes(n))
   }
 
-  return (Telegraf as any).optional(predicate, ...middlewares)
+  return Composer.optional(predicate, ...middlewares)
 }
 
-export function whenScreenIsOfType(wantedTypes: SingleOrArray<string>, ...middlewares: Middleware<ContextMessageUpdate>[]): (ctx: any, next: any) => void {
+export function whenScreenIsOfType(wantedTypes: SingleOrArray<string>, ...middlewares: Middleware<ContextMessageUpdate>[]): (ctx: any, next: any) => unknown {
   const typeArray = Array.isArray(wantedTypes) ? wantedTypes : [wantedTypes]
 
   const predicate = (ctx: any): boolean => {
@@ -32,5 +32,5 @@ export function whenScreenIsOfType(wantedTypes: SingleOrArray<string>, ...middle
     return typeArray.some(n => screen.type === n)
   }
 
-  return (Telegraf as any).optional(predicate, ...middlewares)
+  return Composer.optional(predicate, ...middlewares)
 }

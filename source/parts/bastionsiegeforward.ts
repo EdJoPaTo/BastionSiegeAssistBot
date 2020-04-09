@@ -1,4 +1,4 @@
-import {Composer, ContextMessageUpdate} from 'telegraf'
+import {Composer, Context} from 'telegraf'
 import {Gamescreen} from 'bastion-siege-logic'
 
 import {PlayerHistory} from '../lib/types/player-history'
@@ -12,7 +12,7 @@ import {isForwardedFromBastionSiege} from '../lib/input/bastion-siege-bot'
 export const bot = new Composer()
 
 // Init User session
-bot.use((ctx: any, next) => {
+bot.use(async (ctx: any, next) => {
   const session = ctx.session as Session
   if (!session.gameInformation) {
     session.gameInformation = {}
@@ -21,8 +21,8 @@ bot.use((ctx: any, next) => {
   return next && next()
 })
 
-function forwardedFromClone(ctx: ContextMessageUpdate): boolean {
-  return Boolean(ctx && ctx.message && ctx.message.forward_from && ctx.message.forward_from.id === 741981483)
+function forwardedFromClone(ctx: Context): boolean {
+  return ctx.message?.forward_from?.id === 741981483
 }
 
 bot.on('text', Composer.optional(forwardedFromClone, async ctx => {
