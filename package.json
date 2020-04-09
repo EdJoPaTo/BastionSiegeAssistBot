@@ -82,10 +82,10 @@
     "rules": {
       "ava/no-ignored-test-files": "off",
       "prefer-named-capture-group": "off",
-      "unicorn/prevent-abbreviations": "warn",
+      "unicorn/prevent-abbreviations": "off",
       "@typescript-eslint/array-type": "off",
       "@typescript-eslint/prefer-nullish-coalescing": "off",
-      "@typescript-eslint/restrict-template-expressions": "warn"
+      "@typescript-eslint/restrict-template-expressions": "off"
     },
     "overrides": [
       {
