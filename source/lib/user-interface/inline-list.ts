@@ -114,7 +114,7 @@ function getEntryInformation(userId: number, listEntry: InlineListParticipant, s
 
   const player = playerTimestamp! > minPlayerTimestamp && information.player ? information.player : {name: '???'}
 
-  const karma = domainStats && domainStats.karma
+  const karma = domainStats?.karma
   const nextAllianceAttack = nextBattleTimestamp(battleSoloTimestamp, battleAllianceTimestamp, karma).alliance
 
   return {

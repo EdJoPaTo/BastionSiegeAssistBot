@@ -38,7 +38,7 @@ function viewOptions(ctx: any): BattlestatsView[] {
 
   const isPoweruser = poweruser.isPoweruser(ctx.from.id)
   const {player} = session.gameInformation
-  const alliance = player && player.alliance
+  const alliance = player?.alliance
   if (isPoweruser && alliance) {
     options.push('allianceMates')
     options.push('allianceSolo')
@@ -73,7 +73,7 @@ menu.select('view', viewOptions, {
 
 function getCurrentView(ctx: any): BattlestatsView {
   const {battlestats} = ctx.session as Session
-  const view = (battlestats && battlestats.view) || DEFAULT_VIEW
+  const view = (battlestats?.view) || DEFAULT_VIEW
   if (!viewOptions(ctx).includes(view)) {
     return DEFAULT_VIEW
   }
@@ -83,7 +83,7 @@ function getCurrentView(ctx: any): BattlestatsView {
 
 function getCurrentType(ctx: any): BattlereportResource {
   const {battlestats} = ctx.session as Session
-  const type = battlestats && battlestats.type
+  const type = battlestats?.type
   return type || DEFAULT_TYPE
 }
 
@@ -123,7 +123,7 @@ function isCurrentTimeframe(ctx: any, selected: string): boolean {
 
 function getCurrentTimeframe(ctx: any): string {
   const {battlestats} = ctx.session as Session
-  const timeframe = (battlestats && battlestats.timeframe) || DEFAULT_TIMEFRAME
+  const timeframe = (battlestats?.timeframe) || DEFAULT_TIMEFRAME
   const view = getCurrentView(ctx)
   if (timeframe.endsWith('h') || view === 'solo') {
     return timeframe
@@ -232,7 +232,7 @@ function getAllianceRelevantData(ctx: any): {allianceMates: readonly SessionRaw[
   }
 
   const {player} = session.gameInformation
-  const alliance = player && player.alliance
+  const alliance = player?.alliance
   if (!alliance) {
     text += ctx.i18n.t('name.noAlliance')
     return {header: text, firstTimeRelevant, allianceMates: []}

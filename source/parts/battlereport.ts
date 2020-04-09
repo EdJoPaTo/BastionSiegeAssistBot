@@ -108,7 +108,7 @@ async function generateResponseText(ctx: any, report: Battlereport, timestamp: n
     }
 
     const expectedPlayer = session.gameInformation.player
-    const expectedName = expectedPlayer && expectedPlayer.name
+    const expectedName = expectedPlayer?.name
 
     if (session.gameInformation.buildingsTimestamp && buildings && (Date.now() / 1000) - MAX_AGE_BUILDINGS < session.gameInformation.buildingsTimestamp) {
       const {soldiersAlive, soldiersTotal} = report

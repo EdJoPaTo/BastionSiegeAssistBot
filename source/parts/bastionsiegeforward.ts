@@ -18,7 +18,7 @@ bot.use(async (ctx: any, next) => {
     session.gameInformation = {}
   }
 
-  return next && next()
+  return next?.()
 })
 
 function forwardedFromClone(ctx: Context): boolean {
@@ -31,13 +31,9 @@ bot.on('text', Composer.optional(forwardedFromClone, async ctx => {
 
 // Load game screen type and information
 bot.on('text', Composer.optional(isForwardedFromBastionSiege, async (ctx, next) => {
-  const {text, forward_date: timestamp} = ctx.message
-
-  ctx.state = await parseAndSave(ctx.from!.id, timestamp, text)
-
-  if (next) {
-    await next()
-  }
+  const {text, forward_date: timestamp} = ctx.message!;
+  (ctx as any).state = await parseAndSave(ctx.from!.id, timestamp!, text!)
+  await next?.()
 }))
 
 const WANTED_DATA: (keyof PlayerHistory)[] = [
@@ -58,7 +54,7 @@ bot.on('text', Composer.optional(isForwardedFromBastionSiege, async (ctx: any, n
   const dataAvailable = WANTED_DATA
     .filter(o => newInformation[o])
   if (dataAvailable.length === 0) {
-    return next && next()
+    return next?.()
   }
 
   const newData = dataAvailable
@@ -73,5 +69,5 @@ bot.on('text', Composer.optional(isForwardedFromBastionSiege, async (ctx: any, n
     await playerHistory.add(ctx.from.id, data, timestamp, newInformation[data])
   }))
 
-  return next && next()
+  return next?.()
 }))

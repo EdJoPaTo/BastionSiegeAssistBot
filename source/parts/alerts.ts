@@ -29,10 +29,7 @@ export function start(telegram: Telegram): void {
 bot.use(async (ctx: any, next) => {
   const now = Date.now() / 1000
   const before = stringify(ctx.session)
-  if (next) {
-    await next()
-  }
-
+  await next?.()
   const after = stringify(ctx.session)
 
   if (before !== after) {

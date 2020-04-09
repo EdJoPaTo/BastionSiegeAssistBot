@@ -18,9 +18,7 @@ bot.action(/inlineList:(\d+):([^:]+):.+/, async (ctx, next) => {
     const creatorId = Number(ctx.match![1])
     const listId = ctx.match![2]
 
-    if (next) {
-      await next()
-    }
+    await next?.()
 
     const {text, keyboard} = createList(creatorId, listId, now)
     await ctx.answerCbQuery()

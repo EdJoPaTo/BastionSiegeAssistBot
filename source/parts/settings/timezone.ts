@@ -92,7 +92,7 @@ specificMenu.select('s', tzInPrefix, {
 })
 
 function createTz(match: RegExpMatchArray | undefined, key: string): string {
-  const prefix = match && match[1]
+  const prefix = match?.[1]
   const tz = prefix ? `${prefix}/${key}` : key
   return tz
 }

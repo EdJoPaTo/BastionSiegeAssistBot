@@ -40,9 +40,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 bot.use(async (ctx, next) => {
   try {
-    if (next) {
-      await next()
-    }
+    await next?.()
   } catch (error) {
     if (error.message.includes('Too Many Requests')) {
       console.warn('Telegraf Too Many Requests error. Skip.', error)
@@ -95,7 +93,7 @@ bot.use((ctx, next) => {
     delete session.__username
   }
 
-  return next && next()
+  return next?.()
 })
 
 // Fix previous bot problems
@@ -123,7 +121,7 @@ bot.use((ctx, next) => {
     delete session.gameInformation.attackscoutTimestamp
   }
 
-  return next && next()
+  return next?.()
 })
 
 partAlerts.start(bot.telegram)

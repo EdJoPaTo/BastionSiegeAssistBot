@@ -16,7 +16,7 @@ bot.on('text', async (ctx, next) => {
   const session = (ctx as any).session as Session
   const now = Date.now() / 1000
   if (session.lastHintTimestamp! + HINTS_MAX_INTERVAL > now) {
-    return next && next()
+    return next?.()
   }
 
   let poweruserHints: string[] = []
@@ -33,5 +33,5 @@ bot.on('text', async (ctx, next) => {
     await ctx.replyWithMarkdown(hints.join('\n\n'))
   }
 
-  return next && next()
+  return next?.()
 })

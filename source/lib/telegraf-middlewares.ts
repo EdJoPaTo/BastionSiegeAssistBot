@@ -8,6 +8,6 @@ export function notNewMiddleware(i18nMessage = 'forward.old', maxAgeInMinutes = 
       return ctx.reply((ctx as any).i18n.t(i18nMessage))
     }
 
-    return next && next()
+    return next?.()
   }
 }
