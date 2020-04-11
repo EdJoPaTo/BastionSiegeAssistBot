@@ -12,9 +12,6 @@ console.timeEnd('player history')
 
 export async function add(userId: number, type: keyof PlayerHistory, unixTimestamp: number, data: any): Promise<void> {
   const current = get(userId)
-  if (!current[type]) {
-    current[type] = []
-  }
 
   if (type === 'player') {
     data = {
@@ -36,15 +33,18 @@ export async function add(userId: number, type: keyof PlayerHistory, unixTimesta
     .filter(arrayFilterUnique())
     .length
 
-  if (KEEP_ONLY_LATEST.has(type)) {
-    current[type] = [{
+  if (KEEP_ONLY_LATEST.has(type) && current[type].length > 0) {
+    current[type][0] = {
       timestamp: unixTimestamp,
       data
-    }]
+    }
   } else if (checkForKnown.length === 3 && different === 1) {
     // Both last values are the same so just update the timestamp of the last
     const lastIndex = current[type].length - 1
-    current[type][lastIndex].timestamp = unixTimestamp
+    current[type][lastIndex] = {
+      ...current[type][lastIndex],
+      timestamp: unixTimestamp
+    }
   } else {
     // New
     current[type].push({
@@ -58,18 +58,13 @@ export async function add(userId: number, type: keyof PlayerHistory, unixTimesta
 
 export function get(userId: number): PlayerHistory {
   const current = playerData.get(String(userId))
-  if (current) {
-    // TODO: remove migration
-    delete (current as any).attackscout
-  }
-
-  return current || {
-    buildings: [],
-    domainStats: [],
-    effects: [],
-    player: [],
-    resources: [],
-    workshop: []
+  return {
+    buildings: current?.buildings ?? [],
+    domainStats: current?.domainStats ?? [],
+    effects: current?.effects ?? [],
+    player: current?.player ?? [],
+    resources: current?.resources ?? [],
+    workshop: current?.workshop ?? []
   }
 }
 
@@ -78,7 +73,7 @@ function getAsUnknown(playerHistory: PlayerHistory, type: keyof PlayerHistory): 
 }
 
 export function getAllTimestamps<Key extends keyof PlayerHistory>(userId: number, type: Key): PlayerHistory[Key] {
-  return get(userId)[type] || []
+  return get(userId)[type]
 }
 
 export function getLastTimeActive(userId: number): number {
