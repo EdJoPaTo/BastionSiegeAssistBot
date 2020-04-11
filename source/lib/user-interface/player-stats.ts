@@ -180,20 +180,16 @@ export function createPlayerStatsSingleLineString(stats: PlayerStats, telegramId
 
   if (armyOverride) {
     infos.push(formatNumberShort(armyOverride) + emoji.army)
-  } else if (!immune) {
-    if (stats.army.min) {
-      infos.push(formatNumberShort(stats.army.min) + emoji.army)
-    } else {
-      infos.push('?????' + emoji.army)
-    }
+  } else if (immune) {
+    infos.push(emoji.immunity)
+  } else if (stats.army.min) {
+    infos.push(formatNumberShort(stats.army.min) + emoji.army)
+  } else {
+    infos.push('?????' + emoji.army)
   }
 
   if (immune) {
-    infos.push(emoji.poweruser + emoji.immunity)
-  } else if (stats.loot.amount > 0) {
-    infos.push(formatNumberShort(stats.loot.avg) + emoji.gold)
-  } else {
-    infos.push('??????' + emoji.gold)
+    infos.push(emoji.poweruser)
   }
 
   infos.push(
