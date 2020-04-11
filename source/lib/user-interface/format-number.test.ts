@@ -40,7 +40,7 @@ test('formatNumberShort negative', t => {
 
 test('formatNumberShort NaN', t => {
   t.is(formatNumberShort(undefined), 'NaN')
-  t.is(formatNumberShort(null), 'NaN')
+  t.is(formatNumberShort(Number.NaN), 'NaN')
 })
 
 test('formatTime', t => {

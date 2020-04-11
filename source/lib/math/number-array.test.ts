@@ -38,6 +38,17 @@ test('getSumAverageAmount null as value is ignored', t => {
   })
 })
 
+test('getSumAverageAmount 0 is still averaged', t => {
+  t.deepEqual(getSumAverageAmount([0, 2]), {
+    amount: 2,
+    avg: 1,
+    min: 0,
+    max: 2,
+    stdDeviation: 1,
+    sum: 2
+  })
+})
+
 test('getSumAverageAmountGroupedBy example', t => {
   const input = [
     {key: 'A', value: 1},

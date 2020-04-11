@@ -1,7 +1,7 @@
 const allLetters = ['', 'k', 'M', 'B', 'T']
 
-export function formatNumberShort(value?: number | null, isInteger = false): string {
-  if (!value && value !== 0) {
+export function formatNumberShort(value: number | undefined, isInteger = false): string {
+  if (value === undefined || !Number.isFinite(value)) {
     return 'NaN'
   }
 
