@@ -82,11 +82,7 @@ test('generate example A', t => {
       stdDeviation: 15,
       accuracy: 0.9999994050441611
     },
-    army: {
-      estimate: 1500,
-      min: 1000,
-      max: 2000
-    },
+    army: 1000,
     terra: 950,
     attacksWithoutLossPercentage: 0,
     inactiveTime: {
@@ -132,11 +128,7 @@ test('generate example B', t => {
       stdDeviation: 5,
       accuracy: 0.9999999338937899
     },
-    army: {
-      estimate: 3750,
-      min: 2500,
-      max: 5000
-    },
+    army: 2500,
     terra: 950,
     attacksWithoutLossPercentage: 0,
     inactiveTime: {
@@ -186,7 +178,7 @@ test('alliance attack alone lost is ignored', t => {
   }]
 
   const result = generate(reports, 'A', testNow)
-  t.not(result.army.max, 1500, 'the lost alliance attack should not be considered')
+  t.not(result.army, 1500, 'the lost alliance attack should not be considered')
 })
 
 test('lost attacks are not considered for loot', t => {
@@ -284,45 +276,10 @@ test('two alliance repotts at the same time are counted only once for loot', t =
   t.is(result.loot.amount, 1)
 })
 
-test('alliance attack alone won', t => {
-  // This is an idea to consider but it is not implemented
-  const reports: Battlereport[] = [...testReports, {
-    attack: true,
-    enemies: [
-      'A',
-      'B'
-    ],
-    friends: [
-      'me'
-    ],
-    me: 'me',
-    gold: 100,
-    soldiersAlive: 750,
-    soldiersTotal: 1500,
-    terra: 50,
-    time: 1000000100,
-    won: true
-  }]
-
-  const result = generate(reports, 'A', testNow)
-  /*
-  // When this is implemented this should be the result
-  t.deepEqual(result.army, {
-    min: 1000,
-    max: 1500
-  })
-  */
-  t.not(result.army.max, 1500)
-})
-
 test('assumeArmy basic example', t => {
   // This ignores attack or defences and players in there, every report is looked at that is given
   const result = assumeArmy(testReports)
-  t.deepEqual(result, {
-    estimate: 2750,
-    min: 2500,
-    max: 3000
-  })
+  t.is(result, 2500)
 })
 
 test('assume Army based on gold lost', t => {
@@ -344,8 +301,5 @@ test('assume Army based on gold lost', t => {
   }]
 
   const result = assumeArmy(reports)
-  t.deepEqual(result, {
-    estimate: 1400,
-    min: 1400
-  })
+  t.is(result, 1400)
 })

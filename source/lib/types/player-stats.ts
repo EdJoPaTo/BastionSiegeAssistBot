@@ -1,12 +1,6 @@
 import {AverageTimeOfDay} from '../math/unix-timestamp'
 import {SumAverageAmount} from '../math/number-array'
 
-export interface ArmyEstimate {
-  estimate: number;
-  min?: number;
-  max?: number;
-}
-
 export interface PlayerStatsLoot {
   gems: SumAverageAmount;
   loot: SumAverageAmount;
@@ -29,7 +23,7 @@ export interface PlayerStats extends PlayerStatsLoot, PlayerStatsActivity {
   battlesObserved: number;
   battlesObservedNearPast: number;
   lastBattleTime: number;
-  army: ArmyEstimate;
+  army: number;
   terra: number;
   seemsCanned: boolean;
 }

@@ -220,7 +220,7 @@ function generatePlayerStats(players: string | string[], short: boolean, timeZon
   if (allStats.length > 4) {
     text += '\n\n'
 
-    const armySAA = getSumAverageAmount(allStats.map(o => o.army.min))
+    const armySAA = getSumAverageAmount(allStats.map(o => o.army))
     text += armySAA.amount
     text += ': '
     text += createSimpleDataString(armySAA, emoji.army, ['avg', 'stdDeviation'], true) + '\n'

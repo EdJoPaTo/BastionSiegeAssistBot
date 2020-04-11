@@ -1,7 +1,7 @@
 import {Battlereport} from 'bastion-siege-logic'
 import arrayFilterUnique from 'array-filter-unique'
 
-import {PlayerStats, PlayerStatsActivity, PlayerStatsLoot, ArmyEstimate} from '../types/player-stats'
+import {PlayerStats, PlayerStatsActivity, PlayerStatsLoot} from '../types/player-stats'
 
 import {replaceLookingLikeAsciiChars} from '../javascript-abstraction/strings'
 
@@ -108,10 +108,7 @@ function generateLoot(allReports: readonly Battlereport[]): PlayerStatsLoot {
   }
 }
 
-// TODO: simplify: max and estimate are not relevant (currently?)
-export function assumeArmy(relevantReports: readonly Battlereport[]): ArmyEstimate {
-  const result: any = {}
-  let estimate = 0
+export function assumeArmy(relevantReports: readonly Battlereport[]): number {
   const lost = relevantReports
     .filter(o => !o.won)
 
@@ -122,30 +119,7 @@ export function assumeArmy(relevantReports: readonly Battlereport[]): ArmyEstima
   const armyAssumptionBasedOnLoot = highestEnemyLoot * 0.002 // One army can carry up to 500 gold
 
   const min = Math.round(Math.max(strongestArmyLost, mostSoldiersDied, armyAssumptionBasedOnLoot))
-  if (Number.isFinite(min)) {
-    result.min = min
-    estimate += min
-  }
-
-  const relevantSuccessful = relevantReports
-    .filter(o => o.won)
-    .filter(o => o.soldiersAlive !== o.soldiersTotal)
-    .filter(o => o.soldiersTotal > min)
-
-  const smallestSuccessfulArmy = Math.min(
-    ...relevantSuccessful
-      .map(o => o.soldiersTotal)
-  )
-  if (Number.isFinite(smallestSuccessfulArmy)) {
-    result.max = smallestSuccessfulArmy
-    estimate += smallestSuccessfulArmy
-    if (estimate > smallestSuccessfulArmy) {
-      estimate /= 2
-    }
-  }
-
-  result.estimate = estimate || Number.NaN
-  return result
+  return min
 }
 
 function assumeTerra(soloReports: readonly Battlereport[]): number {

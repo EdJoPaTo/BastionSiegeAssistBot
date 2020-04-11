@@ -2,7 +2,7 @@ import {calcBarracksNeeded} from 'bastion-siege-logic'
 import {Markup, SwitchToChatButton} from 'telegraf'
 import arrayFilterUnique from 'array-filter-unique'
 
-import {Player, PlayerStats, ArmyEstimate} from '../types'
+import {Player, PlayerStats} from '../types'
 
 import {ONE_HOUR_IN_SECONDS} from '../math/unix-timestamp'
 import {getSumAverageAmount, SumAverageAmount} from '../math/number-array'
@@ -76,7 +76,7 @@ export function createPlayerStatsString(stats: PlayerStats, timeZone: string): s
 
   const strengthLine = []
 
-  if (stats.army.min && !stats.seemsCanned) {
+  if (!stats.seemsCanned) {
     strengthLine.push(createArmyStatsPart(stats.army, true))
   }
 
@@ -160,15 +160,15 @@ export function createPlayerStatsString(stats: PlayerStats, timeZone: string): s
   return text
 }
 
-function createArmyStatsPart(data: ArmyEstimate, includeBarracksLevel: boolean): string {
-  if (!data.min || !Number.isFinite(data.min)) {
+function createArmyStatsPart(armyAmount: number, includeBarracksLevel: boolean): string {
+  if (!Number.isFinite(armyAmount)) {
     return '?????' + emoji.army
   }
 
   let text = ''
-  text += `${formatNumberShort(data.min, true)}${emoji.army}`
+  text += `${formatNumberShort(armyAmount, true)}${emoji.army}`
   if (includeBarracksLevel) {
-    text += ` (${calcBarracksNeeded(data.min)}${emoji.barracks})`
+    text += ` (${calcBarracksNeeded(armyAmount)}${emoji.barracks})`
   }
 
   return text
@@ -182,8 +182,8 @@ export function createPlayerStatsSingleLineString(stats: PlayerStats, telegramId
     infos.push(formatNumberShort(armyOverride) + emoji.army)
   } else if (immune) {
     infos.push(emoji.immunity)
-  } else if (stats.army.min) {
-    infos.push(formatNumberShort(stats.army.min) + emoji.army)
+  } else if (Number.isFinite(stats.army)) {
+    infos.push(formatNumberShort(stats.army) + emoji.army)
   } else {
     infos.push('?????' + emoji.army)
   }
@@ -282,7 +282,7 @@ export function createMultipleStatsConclusion(statsArr: readonly PlayerStats[], 
         return Number.NaN
       }
 
-      return o.army.min
+      return o.army
     })
   const army = getSumAverageAmount(armyArr)
   army.amount = armyArr.length
