@@ -1,16 +1,27 @@
 import {CASTLE_SIEGE_SECONDS, Castle} from 'bastion-siege-logic'
 import {RawObjectInMemoryFile} from '@edjopato/datastore'
+import {Telegram, Extra} from 'telegraf'
 import arrayFilterUnique from 'array-filter-unique'
 
-import {CastleSiegeEntry, CastleSiegePlayerEntry} from '../types'
+import {CastleSiegeEntry, CastleSiegePlayerEntry, CastleSiegeInlineMessage} from '../types'
 
 import {sortBy} from '../javascript-abstraction/array'
 
+import {castlePart} from '../user-interface/castle-siege'
+
+type UnixTimestamp = number
+
 const data = new RawObjectInMemoryFile<CastleSiegeEntry[]>('tmp/castle-siege.json')
+const inlineMessages = new RawObjectInMemoryFile<CastleSiegeInlineMessage[]>('tmp/castle-siege-inline-messages.json')
 
 export const MAXIMUM_JOIN_SECONDS = CASTLE_SIEGE_SECONDS
 
-export async function add(castle: Castle, alliance: string, player: string | undefined, timestamp: number): Promise<void> {
+let telegram: Telegram
+export function init(tg: Telegram): void {
+  telegram = tg
+}
+
+export async function add(castle: Castle, alliance: string, player: string | undefined, timestamp: UnixTimestamp): Promise<void> {
   if (!alliance) {
     throw new Error('Its not possible to join the castle siege without an alliance.')
   }
@@ -39,7 +50,7 @@ export function getAlliances(castle: Castle, currentTimestamp: number): readonly
     .filter(arrayFilterUnique())
 }
 
-export function getParticipants(castle: Castle, alliance: string, currentTimestamp: number): readonly CastleSiegePlayerEntry[] {
+export function getParticipants(castle: Castle, alliance: string, currentTimestamp: UnixTimestamp): readonly CastleSiegePlayerEntry[] {
   const minTimestamp = currentTimestamp - MAXIMUM_JOIN_SECONDS
 
   // Joined alliances have no player
@@ -51,4 +62,56 @@ export function getParticipants(castle: Castle, alliance: string, currentTimesta
     .filter(o => o.timestamp > minTimestamp)
     .filter(o => o.alliance === alliance)
     .sort(sortBy(o => o.timestamp))
+}
+
+export async function updateInlineMessages(castle: Castle, onlyForAlliance: string | undefined, now: UnixTimestamp): Promise<void> {
+  const all = inlineMessages.get() ?? []
+  const filtered = all
+    .filter(o => o.castle === castle)
+    .filter(o => onlyForAlliance ? o.alliance === onlyForAlliance : true)
+
+  await Promise.all(filtered
+    .map(async o => {
+      const text = castlePart(o.castle, {
+        now,
+        userAlliance: o.alliance,
+        userIsPoweruser: true
+      })
+      await telegram.editMessageText(undefined, undefined, o.inlineMessageId, text, Extra.markdown() as any)
+        .catch(error => {
+          if (error instanceof Error && (
+            error.message.includes('message is not modified') ||
+            error.message.includes('MESSAGE_ID_INVALID')
+          )) {
+            return
+          }
+
+          throw error
+        })
+    })
+  )
+}
+
+export async function addInlineMessage(inlineMessageId: string, castle: Castle, alliance: string, now: UnixTimestamp): Promise<void> {
+  if (!alliance) {
+    throw new Error('you need an alliance for that')
+  }
+
+  const all = inlineMessages.get() ?? []
+  if (all.some(o => o.inlineMessageId === inlineMessageId)) {
+    throw new Error('The inline message is already automatically updated')
+  }
+
+  all.push({
+    castle,
+    alliance,
+    inlineMessageId,
+    timestamp: now
+  })
+
+  const minTimestamp = now - MAXIMUM_JOIN_SECONDS
+  const withoutOld = all
+    .filter(o => o.timestamp > minTimestamp)
+  await inlineMessages.set(withoutOld)
+  await updateInlineMessages(castle, alliance, now)
 }

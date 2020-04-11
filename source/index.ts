@@ -7,6 +7,7 @@ import {generateUpdateMiddleware} from 'telegraf-middleware-console-time'
 import {Session} from './lib/types'
 
 import {initData} from './lib/data'
+import * as castleSiege from './lib/data/castle-siege'
 import * as userSessions from './lib/data/user-sessions'
 import * as wars from './lib/data/wars'
 
@@ -72,6 +73,7 @@ bot.use(async (ctx, next) => {
 })
 
 bot.use(userSessions.middleware())
+castleSiege.init(bot.telegram)
 wars.init(bot.telegram)
 
 // See https://yaml-multiline.info/ for multiline yaml stuff

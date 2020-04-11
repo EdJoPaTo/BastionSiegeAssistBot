@@ -1,5 +1,5 @@
 import {Composer, ContextMessageUpdate} from 'telegraf'
-import {CASTLES, CASTLE_HOLD_SECONDS} from 'bastion-siege-logic'
+import {CASTLES, CASTLE_HOLD_SECONDS, Gamescreen} from 'bastion-siege-logic'
 import debounce from 'debounce-promise'
 
 import {whenScreenContainsInformation, whenScreenIsOfType} from '../lib/input/gamescreen'
@@ -64,7 +64,16 @@ function castleInformationUpdatedMiddleware(ctx: ContextMessageUpdate): void {
   const {id} = ctx.from!
   if (!debouncedUpdated[id]) {
     debouncedUpdated[id] = debounce(
-      async (ctx: ContextMessageUpdate) => ctx.reply((ctx as any).i18n.t('castle.updated')),
+      async (ctx: ContextMessageUpdate) => {
+        const now = Date.now() / 1000
+        const screen = (ctx as any).state.screen as Gamescreen
+        const {castle, castleSiegePlayerJoined} = screen
+        if (castle) {
+          await castleSiege.updateInlineMessages(castle, castleSiegePlayerJoined?.alliance, now)
+        }
+
+        await ctx.reply((ctx as any).i18n.t('castle.updated'))
+      },
       DEBOUNCE_TIME
     )
   }

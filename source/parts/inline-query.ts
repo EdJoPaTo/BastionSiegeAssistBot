@@ -1,5 +1,6 @@
 import {Composer, Extra, Markup} from 'telegraf'
-import {inputTextCleanup, MYSTICS_TEXT_EN} from 'bastion-siege-logic'
+import {InlineQueryResult} from 'telegraf/typings/telegram-types'
+import {inputTextCleanup, MYSTICS_TEXT_EN, Castle, CASTLES, castleGametext} from 'bastion-siege-logic'
 import arrayFilterUnique from 'array-filter-unique'
 import fuzzysort from 'fuzzysort'
 
@@ -7,12 +8,14 @@ import {replaceLookingLikeAsciiChars} from '../lib/javascript-abstraction/string
 
 import {Context} from '../lib/types'
 
+import * as castleSiege from '../lib/data/castle-siege'
 import * as playerStatsDb from '../lib/data/playerstats-db'
 import * as poweruser from '../lib/data/poweruser'
 import * as wars from '../lib/data/wars'
 
 import {getMidnightXDaysEarlier} from '../lib/math/unix-timestamp'
 
+import {castlePart} from '../lib/user-interface/castle-siege'
 import {createList} from '../lib/user-interface/inline-list'
 import {createPlayerNameString, createPlayerStatsString, createPlayerStatsShortString} from '../lib/user-interface/player-stats'
 import {createWarOneLineString, createWarStats} from '../lib/user-interface/war-stats'
@@ -37,7 +40,7 @@ bot.on('inline_query', async ctx => {
   const now = Date.now() / 1000
   const isPoweruser = poweruser.isPoweruser(ctx.from!.id)
 
-  const statics = []
+  const statics: InlineQueryResult[] = []
   const user = session.gameInformation.player!
   if (isPoweruser) {
     const {timestamp, battle} = wars.getCurrent(now, user.name) || {}
@@ -60,6 +63,34 @@ bot.on('inline_query', async ctx => {
           Markup.callbackButton(ctx.i18n.t('battle.inlineWar.updateButton'), `inlineWar:${user.alliance}:${user.name}`)
         ])
       })
+    }
+
+    const alliance = session.gameInformation.player?.alliance
+    if (alliance) {
+      const relevantCastles = CASTLES.filter(o => castleSiege.getAlliances(o, now).includes(alliance))
+      statics.push(...relevantCastles
+        .map((castle): InlineQueryResult => {
+          const text = castlePart(castle, {
+            now,
+            userAlliance: alliance,
+            userIsPoweruser: isPoweruser
+          })
+
+          return {
+            type: 'article',
+            id: `castle-${castle}`,
+            title: emoji.poweruser + ' ' + ctx.i18n.t('bs.siege'),
+            description: castleGametext(castle, 'en'),
+            input_message_content: {
+              message_text: text,
+              parse_mode: 'markdown'
+            },
+            reply_markup: Markup.inlineKeyboard([
+              Markup.callbackButton(ctx.i18n.t('battle.inlineWar.updateButton'), `inlineCastleSiege:${castle}:${alliance}`)
+            ])
+          }
+        })
+      )
     }
   }
 
@@ -164,4 +195,11 @@ bot.action(/inlineWar:(.*):(.+)/, async ctx => {
   const {timestamp, battle} = currentWar
   const warText = createWarStats(timestamp, battle, player)
   return ctx.editMessageText(warText, Extra.markdown() as any)
+})
+
+bot.action(/^inlineCastleSiege:(.+):(.+)$/, async ctx => {
+  const now = Date.now() / 1000
+  const castle = ctx.match![1] as Castle
+  const alliance = ctx.match![2]
+  await castleSiege.addInlineMessage(ctx.callbackQuery!.inline_message_id!, castle, alliance, now)
 })
