@@ -11,7 +11,6 @@ test('getSumAverageAmount', t => {
     avg: 2,
     min: 1,
     max: 3,
-    stdDeviation: 0.816496580927726,
     sum: 6
   })
 })
@@ -22,7 +21,6 @@ test('getSumAverageAmount empty', t => {
     avg: Number.NaN,
     min: Infinity,
     max: -Infinity,
-    stdDeviation: Number.NaN,
     sum: 0
   })
 })
@@ -33,7 +31,6 @@ test('getSumAverageAmount null as value is ignored', t => {
     avg: Number.NaN,
     min: Infinity,
     max: -Infinity,
-    stdDeviation: Number.NaN,
     sum: 0
   })
 })
@@ -44,7 +41,6 @@ test('getSumAverageAmount 0 is still averaged', t => {
     avg: 1,
     min: 0,
     max: 2,
-    stdDeviation: 1,
     sum: 2
   })
 })
@@ -64,7 +60,6 @@ test('getSumAverageAmountGroupedBy example', t => {
     avg: 3.75,
     min: 1,
     max: 8,
-    stdDeviation: 2.680951323690902,
     sum: 15
   })
   t.deepEqual(result.grouped, {
@@ -73,7 +68,6 @@ test('getSumAverageAmountGroupedBy example', t => {
       avg: 1,
       min: 1,
       max: 1,
-      stdDeviation: 0,
       sum: 1
     },
     B: {
@@ -81,7 +75,6 @@ test('getSumAverageAmountGroupedBy example', t => {
       avg: 3,
       min: 2,
       max: 4,
-      stdDeviation: 1,
       sum: 6
     },
     C: {
@@ -89,7 +82,6 @@ test('getSumAverageAmountGroupedBy example', t => {
       avg: 8,
       min: 8,
       max: 8,
-      stdDeviation: 0,
       sum: 8
     }
   })

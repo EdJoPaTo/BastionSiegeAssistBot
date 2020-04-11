@@ -2,14 +2,6 @@ import {SumAverageAmount} from '../math/number-array'
 
 import {formatNumberShort} from './format-number'
 
-export function createSumAverageAmountString(data: SumAverageAmount, name: string, unit: string, isInteger = false): string {
-  return createArrayDataString({data, name, unit}, ['avg', 'min', 'max', 'sum'], isInteger)
-}
-
-export function createAmountAverageDeviationString(data: SumAverageAmount, name: string, unit: string, isInteger = false): string {
-  return createArrayDataString({data, name, unit}, ['avg', 'stdDeviation'], isInteger)
-}
-
 export function createAverageMaxString(data: SumAverageAmount, name: string, unit: string, isInteger = false): string {
   return createArrayDataString({data, name, unit}, ['avg', 'max'], isInteger)
 }
@@ -51,8 +43,6 @@ export function formatTypeOfData(data: SumAverageAmount, type: keyof SumAverageA
     case 'average' as any:
     case 'avg':
       return '~' + formatNumberShort(data.avg)
-    case 'stdDeviation':
-      return '±' + formatNumberShort(data.stdDeviation)
     case 'sum':
       return '=' + formatNumberShort(data.sum, isInteger)
     case 'min':

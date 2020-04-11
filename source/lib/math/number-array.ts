@@ -3,7 +3,6 @@ export interface SumAverageAmount {
   avg: number;
   min: number;
   max: number;
-  stdDeviation: number;
   sum: number;
 }
 
@@ -28,14 +27,11 @@ export function getSumAverageAmount(numbers: readonly (number | null | undefined
   const amount = validNumbers.length
   const avg = sum / amount
 
-  const stdDeviation = getStdDeviation(validNumbers, avg)
-
   return {
     amount,
     avg,
     min: Math.min(...validNumbers),
     max: Math.max(...validNumbers),
-    stdDeviation,
     sum
   }
 }

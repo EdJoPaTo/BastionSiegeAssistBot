@@ -96,7 +96,6 @@ test('generate example A', t => {
       avg: 1000,
       min: 1000,
       max: 1000,
-      stdDeviation: 0,
       sum: 1000
     },
     gems: {
@@ -104,7 +103,6 @@ test('generate example A', t => {
       avg: Number.NaN,
       min: Infinity,
       max: -Infinity,
-      stdDeviation: Number.NaN,
       sum: 0
     },
     battlesObserved: 4,
@@ -142,7 +140,6 @@ test('generate example B', t => {
       avg: 2000,
       min: 2000,
       max: 2000,
-      stdDeviation: 0,
       sum: 2000
     },
     gems: {
@@ -150,7 +147,6 @@ test('generate example B', t => {
       avg: Number.NaN,
       min: Infinity,
       max: -Infinity,
-      stdDeviation: Number.NaN,
       sum: 0
     },
     battlesObserved: 3,

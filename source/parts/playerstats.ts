@@ -133,7 +133,7 @@ bot.on('text', whenScreenContainsInformation('list', notNewMiddleware('forward.o
     const armySAA = getSumAverageAmount(list!.map(o => Number(o.value)))
     appendix += armySAA.amount
     appendix += ': '
-    appendix += createSimpleDataString(armySAA, emoji.barracks, ['avg', 'stdDeviation', 'sum'], true) + '\n'
+    appendix += createSimpleDataString(armySAA, emoji.barracks, ['avg', 'sum'], true) + '\n'
   }
 
   await ctx.reply(text + appendix, extra)
@@ -223,7 +223,7 @@ function generatePlayerStats(players: string | string[], short: boolean, timeZon
     const armySAA = getSumAverageAmount(allStats.map(o => o.army))
     text += armySAA.amount
     text += ': '
-    text += createSimpleDataString(armySAA, emoji.army, ['avg', 'stdDeviation'], true) + '\n'
+    text += createSimpleDataString(armySAA, emoji.army, ['avg', 'sum'], true) + '\n'
   }
 
   return {
