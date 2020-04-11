@@ -17,7 +17,7 @@ export interface CastlePartOptions {
   readonly now: number;
 }
 
-function castleFormattedTimestampBegin(castle: Castle, locale: string | undefined, timeZone: string | undefined): string {
+function castleFormattedTimestampBegin(castle: Castle, locale: string | undefined, timeZone = 'UTC'): string {
   return new Date(castles.nextSiegeAvailable(castle) * 1000).toLocaleString(locale, {
     timeZone,
     hour12: false,
@@ -29,9 +29,10 @@ function castleFormattedTimestampBegin(castle: Castle, locale: string | undefine
   })
 }
 
-function castleFormattedTimestampEnd(castle: Castle, locale: string | undefined, timeZone: string | undefined): string {
+function castleFormattedTimestampEnd(castle: Castle, locale: string | undefined, timeZone = 'UTC'): string {
   return new Date(castles.nextSiegeBeginsFight(castle) * 1000).toLocaleTimeString(locale, {
     timeZone,
+    timeZoneName: 'short',
     hour12: false,
     hour: 'numeric',
     minute: '2-digit'
