@@ -9,7 +9,6 @@ import {Session} from '../lib/types'
 
 import * as castles from '../lib/data/castles'
 import * as castleSiege from '../lib/data/castle-siege'
-import * as playerStatsDb from '../lib/data/playerstats-db'
 import * as poweruser from '../lib/data/poweruser'
 import * as userSessions from '../lib/data/user-sessions'
 
@@ -18,16 +17,9 @@ import {notNewMiddleware} from '../lib/telegraf-middlewares'
 import {castleHeader} from '../lib/user-interface/castle-siege'
 import {createPlayerMarkdownLink, createPlayerNameString} from '../lib/user-interface/player-stats'
 import {emoji} from '../lib/user-interface/output-text'
+import {getMissingAllianceMateMarkdownList} from '../lib/user-interface/alliance'
 
 const DEBOUNCE_TIME = 200 // Milliseconds
-
-function getMissingMates(alliance: string, participants: string[]): Array<{user: number; player: string}> {
-  const missingMates = userSessions.getRawInAlliance(alliance)
-    .filter(o => !participants.includes(o.data.gameInformation.player!.name))
-    .map(({user, data}) => ({user, player: data.gameInformation.player!.name}))
-
-  return missingMates
-}
 
 export const bot = new Composer()
 
@@ -72,30 +64,12 @@ bot.command('castle', async ctx => {
 
         if (userIsPoweruser && alliance && participatingAlliances.includes(alliance)) {
           const participants = castleSiege.getParticipants(castle, alliance, now)
-          const missingUsers = getMissingMates(alliance, participants.map(o => o.player))
 
-          const knownNames = new Set([
-            ...missingUsers.map(o => o.player),
-            ...participants.map(o => o.player)
-          ])
-          const missingNonUsers = playerStatsDb.getInAlliance(alliance, 7)
-            .map(o => o.player)
-            .filter(o => !knownNames.has(o))
-
-          const missingEntries: string[] = []
-          missingEntries.push(...missingUsers
-            .sort((a, b) => a.player.localeCompare(b.player))
-            .map(o => createPlayerMarkdownLink(o.user, o))
-          )
-          missingEntries.push(...missingNonUsers
-            .sort((a, b) => a.localeCompare(b))
-            .map(o => createPlayerNameString({player: o}, true) + '?')
-          )
-
-          if (missingEntries.length > 0) {
+          const missing = getMissingAllianceMateMarkdownList(alliance, participants.map(o => o.player))
+          if (missing.length > 0) {
             part += alliance + ' '
-            part += `Missing (${missingEntries.length}): `
-            part += missingEntries
+            part += `Missing (${missing.length}): `
+            part += missing
               .join(', ')
             part += '\n'
           }

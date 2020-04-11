@@ -6,7 +6,8 @@ import {MAX_BUILDING_AGE_DAYS} from '../data/poweruser'
 
 import {ONE_DAY_IN_SECONDS} from '../math/unix-timestamp'
 
-import {createPlayerMarkdownLink, createPlayerNameString, createTwoSidesStatsString, createTwoSidesOneLineString} from './player-stats'
+import {createPlayerNameString, createTwoSidesStatsString, createTwoSidesOneLineString} from './player-stats'
+import {getMissingAllianceMates, createMissingMatesMarkdownList} from './alliance'
 
 const MAXIMUM_BUILDINGS_AGE = ONE_DAY_IN_SECONDS * MAX_BUILDING_AGE_DAYS
 
@@ -60,15 +61,6 @@ export function createWarStats(timestamp: number, battle: BattleAlliance, player
   const notPowerusers = friends
     .filter(o => !poweruserFriends.map(o => o.player).includes(o))
 
-  const missingFriends = player.alliance && userSessions.getRawInAlliance(player.alliance)
-    .filter(o => {
-      const {gameInformation} = o.data
-      return !friends.includes(gameInformation.player!.name) &&
-        (gameInformation.battleAllianceTimestamp || 0) + MINIMUM_BATTLE_ALLIANCE_AGE < timestamp &&
-        (gameInformation.battleSoloTimestamp || 0) + MINIMUM_BATTLE_SOLO_AGE < timestamp
-    })
-    .map(({user, data}) => ({user, player: data.gameInformation.player!.name}))
-
   const attackStats = battle.attack
     .map(o => playerStatsDb.get(o))
   const defenceStats = battle.defence
@@ -77,15 +69,27 @@ export function createWarStats(timestamp: number, battle: BattleAlliance, player
 
   let text = ''
 
-  if (missingFriends && missingFriends.length > 0) {
-    text += player.alliance
-    text += ' '
-    text += `Missing (${missingFriends.length}): `
-    text += missingFriends
-      .sort((a, b) => a.player.localeCompare(b.player))
-      .map(o => createPlayerMarkdownLink(o.user, o))
-      .join(', ')
-    text += '\n\n'
+  if (player.alliance) {
+    const missingMates = getMissingAllianceMates(player.alliance, friends)
+    const filteredUsers = missingMates.users
+      .filter(o => {
+        const {gameInformation} = o.data
+        return !friends.includes(gameInformation.player!.name) &&
+          (gameInformation.battleAllianceTimestamp || 0) + MINIMUM_BATTLE_ALLIANCE_AGE < timestamp &&
+          (gameInformation.battleSoloTimestamp || 0) + MINIMUM_BATTLE_SOLO_AGE < timestamp
+      })
+    const missing = createMissingMatesMarkdownList({
+      ...missingMates,
+      users: filteredUsers
+    })
+    if (missing.length > 0) {
+      text += player.alliance
+      text += ' '
+      text += `Missing (${missing.length}): `
+      text += missing
+        .join(', ')
+      text += '\n\n'
+    }
   }
 
   if (notPowerusers.length > 0) {
