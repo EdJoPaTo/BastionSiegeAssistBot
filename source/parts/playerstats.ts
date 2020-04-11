@@ -35,14 +35,12 @@ const DEBOUNCE_TIME = 200 // Milliseconds
 const debouncedAttackscout: Record<number, (ctx: any) => Promise<void>> = {}
 
 bot.on('text', whenScreenContainsInformation('attackscout', notNewMiddleware('battle.scoutsGone', 2), (ctx: any) => {
-  console.time('wat')
   const {id} = ctx.from
   if (!debouncedAttackscout[id]) {
     debouncedAttackscout[id] = debounce(attackscoutResponse, DEBOUNCE_TIME)
   }
 
   debouncedAttackscout[id](ctx)
-  console.timeEnd('wat')
 }))
 
 async function attackscoutResponse(ctx: any): Promise<void> {
