@@ -1,5 +1,5 @@
 import {Composer, ContextMessageUpdate} from 'telegraf'
-import {CASTLES, castleGametext, Castle, CASTLE_HOLD_SECONDS} from 'bastion-siege-logic'
+import {CASTLES, CASTLE_HOLD_SECONDS} from 'bastion-siege-logic'
 import arrayFilterUnique from 'array-filter-unique'
 import debounce from 'debounce-promise'
 
@@ -15,6 +15,7 @@ import * as userSessions from '../lib/data/user-sessions'
 
 import {notNewMiddleware} from '../lib/telegraf-middlewares'
 
+import {castleHeader} from '../lib/user-interface/castle-siege'
 import {createPlayerMarkdownLink, createPlayerNameString} from '../lib/user-interface/player-stats'
 import {emoji} from '../lib/user-interface/output-text'
 
@@ -26,27 +27,6 @@ function getMissingMates(alliance: string, participants: string[]): Array<{user:
     .map(({user, data}) => ({user, player: data.gameInformation.player!.name}))
 
   return missingMates
-}
-
-function castleFormattedTimestampBegin(castle: Castle, locale: string | undefined, timeZone: string | undefined): string {
-  return new Date(castles.nextSiegeAvailable(castle) * 1000).toLocaleString(locale, {
-    timeZone,
-    hour12: false,
-    year: undefined,
-    month: 'long',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit'
-  })
-}
-
-function castleFormattedTimestampEnd(castle: Castle, locale: string | undefined, timeZone: string | undefined): string {
-  return new Date(castles.nextSiegeBeginsFight(castle) * 1000).toLocaleTimeString(locale, {
-    timeZone,
-    hour12: false,
-    hour: 'numeric',
-    minute: '2-digit'
-  })
 }
 
 export const bot = new Composer()
@@ -74,17 +54,7 @@ bot.command('castle', async ctx => {
       const keeper = castles.currentKeeperAlliance(castle)
 
       let part = ''
-      if (keeper) {
-        part += keeper
-      }
-
-      part += '*'
-      part += castleGametext(castle, lang === 'ru' ? 'ru' : 'en')
-      part += '*'
-      part += '\n'
-      part += castleFormattedTimestampBegin(castle, lang, timeZone)
-      part += ' - '
-      part += castleFormattedTimestampEnd(castle, lang, timeZone)
+      part += castleHeader(castle, keeper, lang, timeZone)
 
       if (castles.isCurrentlySiegeAvailable(castle, now)) {
         const participatingAlliances = [
@@ -94,10 +64,10 @@ bot.command('castle', async ctx => {
         const onlyAttackers = participatingAlliances
           .filter(o => o !== keeper)
         if (onlyAttackers.length > 0) {
-          part += '\n'
           part += (ctx as any).i18n.t('bs.siege')
           part += ': '
           part += onlyAttackers.join('')
+          part += '\n'
         }
 
         if (userIsPoweruser && alliance && participatingAlliances.includes(alliance)) {
@@ -123,14 +93,13 @@ bot.command('castle', async ctx => {
           )
 
           if (missingEntries.length > 0) {
-            part += '\n'
             part += alliance + ' '
             part += `Missing (${missingEntries.length}): `
             part += missingEntries
               .join(', ')
+            part += '\n'
           }
 
-          part += '\n'
           part += alliance + ' '
           part += `Participants (${participants.length}): `
           part += participants
@@ -142,6 +111,7 @@ bot.command('castle', async ctx => {
                 createPlayerNameString(playerWithoutAlliance, true)
             })
             .join(', ')
+          part += '\n'
         }
       }
 
