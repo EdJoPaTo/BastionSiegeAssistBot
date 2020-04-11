@@ -9,6 +9,15 @@ export interface PlayerHistory {
   readonly workshop: PlayerHistoryEntry<Workshop>[];
 }
 
+export interface PlayerHistoryLatest {
+  readonly buildings?: PlayerHistoryEntry<Buildings>;
+  readonly domainStats?: PlayerHistoryEntry<DomainStats>;
+  readonly effects?: PlayerHistoryEntry<Effect[]>;
+  readonly player?: PlayerHistoryEntry<Player>;
+  readonly resources?: PlayerHistoryEntry<Resources>;
+  readonly workshop?: PlayerHistoryEntry<Workshop>;
+}
+
 export interface PlayerHistoryEntry<T> {
   readonly data: T;
   readonly timestamp: number;

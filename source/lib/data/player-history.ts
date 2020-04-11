@@ -2,7 +2,7 @@ import {KeyValueInMemoryFiles} from '@edjopato/datastore'
 import arrayFilterUnique from 'array-filter-unique'
 import stringify from 'json-stable-stringify'
 
-import {PlayerHistory, PlayerHistoryEntry} from '../types/player-history'
+import {PlayerHistory, PlayerHistoryEntry, PlayerHistoryLatest} from '../types/player-history'
 
 const KEEP_ONLY_LATEST = new Set(['effects', 'resources'])
 
@@ -65,6 +65,18 @@ export function get(userId: number): PlayerHistory {
     player: current?.player ?? [],
     resources: current?.resources ?? [],
     workshop: current?.workshop ?? []
+  }
+}
+
+export function getLatest(userId: number): PlayerHistoryLatest {
+  const current = get(userId)
+  return {
+    buildings: current.buildings.slice(-1)[0],
+    domainStats: current.domainStats.slice(-1)[0],
+    effects: current.effects.slice(-1)[0],
+    player: current.player.slice(-1)[0],
+    resources: current.resources.slice(-1)[0],
+    workshop: current.workshop.slice(-1)[0]
   }
 }
 
