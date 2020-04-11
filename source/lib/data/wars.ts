@@ -15,25 +15,6 @@ const MAX_BATTLE_AGE = 60 * 12 // 12 minutes
 let telegram: Telegram
 export function init(tg: Telegram): void {
   telegram = tg
-
-  setInterval(cleanupInInterval, 30 * 1000)
-  cleanupInInterval()
-}
-
-async function cleanupInInterval(): Promise<void> {
-  try {
-    const now = Date.now() / 1000
-    const all = data.get() || []
-    const entriesBefore = all.length
-    const cleanedUp = await cleanupWars(all, now)
-    const entriesAfter = cleanedUp.length
-
-    if (entriesBefore !== entriesAfter) {
-      await data.set(cleanedUp)
-    }
-  } catch (error) {
-    console.error('war cleanup interval failed', error)
-  }
 }
 
 export async function add(timestamp: number, battle: BattleAlliance): Promise<void> {
