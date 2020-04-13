@@ -16,7 +16,7 @@
     "node": ">=12"
   },
   "scripts": {
-    "build": "del dist && tsc",
+    "build": "del-cli dist && tsc",
     "prepack": "npm run build",
     "start": "ts-node source/index.ts",
     "test": "tsc && xo && nyc ava"
