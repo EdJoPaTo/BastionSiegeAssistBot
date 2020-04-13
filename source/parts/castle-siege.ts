@@ -1,6 +1,7 @@
-import {Composer, ContextMessageUpdate} from 'telegraf'
+import {Composer, ContextMessageUpdate as TelegrafContext} from 'telegraf'
 import {CASTLES, CASTLE_HOLD_SECONDS, Gamescreen} from 'bastion-siege-logic'
-import debounce from 'debounce-promise'
+
+import {ContextAwareDebounce} from '../lib/javascript-abstraction/context-aware-debounce'
 
 import {whenScreenContainsInformation, whenScreenIsOfType} from '../lib/input/gamescreen'
 
@@ -59,24 +60,17 @@ bot.on('text', whenScreenIsOfType('castleSiegeYouJoined', notNewMiddleware('forw
 
 bot.on('text', whenScreenContainsInformation('castleSiegeEnds', notNewMiddleware('forward.old', CASTLE_HOLD_SECONDS / 60), castleInformationUpdatedMiddleware))
 
-const debouncedUpdated: Record<number, (ctx: ContextMessageUpdate) => Promise<unknown>> = {}
-function castleInformationUpdatedMiddleware(ctx: ContextMessageUpdate): void {
-  const {id} = ctx.from!
-  if (!debouncedUpdated[id]) {
-    debouncedUpdated[id] = debounce(
-      async (ctx: ContextMessageUpdate) => {
-        const now = Date.now() / 1000
-        const screen = (ctx as any).state.screen as Gamescreen
-        const {castle, castleSiegePlayerJoined} = screen
-        if (castle) {
-          await castleSiege.updateInlineMessages(castle, castleSiegePlayerJoined?.alliance, now)
-        }
-
-        await ctx.reply((ctx as any).i18n.t('castle.updated'))
-      },
-      DEBOUNCE_TIME
-    )
+const debounceUpdatedCastle = new ContextAwareDebounce<number, (ctx: TelegrafContext) => Promise<void>>(async (ctx: TelegrafContext) => {
+  const now = Date.now() / 1000
+  const screen = (ctx as any).state.screen as Gamescreen
+  const {castle, castleSiegePlayerJoined} = screen
+  if (castle) {
+    await castleSiege.updateInlineMessages(castle, castleSiegePlayerJoined?.alliance, now)
   }
 
-  debouncedUpdated[id](ctx)
+  await ctx.reply((ctx as any).i18n.t('castle.updated'))
+}, DEBOUNCE_TIME)
+
+function castleInformationUpdatedMiddleware(ctx: TelegrafContext): void {
+  debounceUpdatedCastle.callFloating(ctx.from!.id, ctx)
 }

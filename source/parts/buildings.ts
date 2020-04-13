@@ -1,7 +1,8 @@
-import {Composer, ContextMessageUpdate} from 'telegraf'
+import {Composer} from 'telegraf'
 import {CONSTRUCTIONS, calcMaxBuildingLevel, estimateResourcesAfter, BattleBuilding} from 'bastion-siege-logic'
-import debounce from 'debounce-promise'
 import TelegrafInlineMenu from 'telegraf-inline-menu'
+
+import {ContextAwareDebounce} from '../lib/javascript-abstraction/context-aware-debounce'
 
 import {Session, BUILDING_VIEWS, BuildingView} from '../lib/types'
 
@@ -38,14 +39,9 @@ const menu = new TelegrafInlineMenu(generateStatsText, {
 
 const replyMenuMiddleware = menu.replyMenuMiddleware().middleware()
 
-const debouncedBuildStats: Record<number, (ctx: ContextMessageUpdate, next: any) => Promise<void>> = {}
+const debouncedBuildStats = new ContextAwareDebounce(replyMenuMiddleware, DEBOUNCE_TIME)
 bot.on('text', whenScreenContainsInformation(['buildings', 'resources', 'workshop'], (ctx: any) => {
-  const {id} = ctx.from
-  if (!debouncedBuildStats[id]) {
-    debouncedBuildStats[id] = debounce(replyMenuMiddleware, DEBOUNCE_TIME)
-  }
-
-  debouncedBuildStats[id](ctx, undefined)
+  debouncedBuildStats.callFloating(ctx.from.id, ctx, undefined)
 }))
 
 menu.submenu(ctx => `${emoji.houses} ${(ctx as any).i18n.t('bs.buildings')}`, 'buildings', buildingsMenu.menu, {

@@ -1,7 +1,8 @@
-import {Extra, Markup, Composer, SwitchToChatButton} from 'telegraf'
+import {Extra, Markup, Composer, SwitchToChatButton, ContextMessageUpdate as TelegrafContext} from 'telegraf'
 import {Gamescreen} from 'bastion-siege-logic'
 import {markdown as format} from 'telegram-format'
-import debounce from 'debounce-promise'
+
+import {ContextAwareDebounce} from '../lib/javascript-abstraction/context-aware-debounce'
 
 import {PlayerStats, Session} from '../lib/types'
 
@@ -32,15 +33,9 @@ bot.on('text', whenScreenContainsInformation('attackIncoming', notNewMiddleware(
 }))
 
 const DEBOUNCE_TIME = 200 // Milliseconds
-const debouncedAttackscout: Record<number, (ctx: any) => Promise<void>> = {}
-
-bot.on('text', whenScreenContainsInformation('attackscout', notNewMiddleware('battle.scoutsGone', 2), (ctx: any) => {
-  const {id} = ctx.from
-  if (!debouncedAttackscout[id]) {
-    debouncedAttackscout[id] = debounce(attackscoutResponse, DEBOUNCE_TIME)
-  }
-
-  debouncedAttackscout[id](ctx)
+const debouncedAttackscout = new ContextAwareDebounce<number, (ctx: TelegrafContext) => Promise<void>>(attackscoutResponse, DEBOUNCE_TIME)
+bot.on('text', whenScreenContainsInformation('attackscout', notNewMiddleware('battle.scoutsGone', 2), ctx => {
+  debouncedAttackscout.callFloating(ctx.from!.id, ctx)
 }))
 
 async function attackscoutResponse(ctx: any): Promise<void> {
