@@ -113,7 +113,10 @@ export function assumeArmy(relevantReports: readonly Battlereport[]): number {
     .filter(o => !o.won)
 
   const strongestArmyLost = Math.max(...lost.map(o => o.soldiersTotal))
-  const mostSoldiersDied = Math.max(...relevantReports.map(o => o.soldiersTotal - o.soldiersAlive))
+  const mostSoldiersDied = Math.max(...relevantReports
+    .map(o => o.soldiersTotal - o.soldiersAlive)
+    .filter(o => o > 0)
+  )
 
   const highestEnemyLoot = Math.max(...lost.map(o => -1 * o.gold))
   const armyAssumptionBasedOnLoot = highestEnemyLoot * 0.002 // One army can carry up to 500 gold
