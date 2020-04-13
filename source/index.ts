@@ -158,4 +158,5 @@ async function startup(): Promise<void> {
   console.log(new Date(), 'Bot started as', bot.options.username)
 }
 
+/* eslint @typescript-eslint/no-floating-promises: off */
 startup()
