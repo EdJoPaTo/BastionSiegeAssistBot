@@ -36,7 +36,6 @@
     "locale-emoji": "^0.3.0",
     "moonmoji": "^1.1.10",
     "sharp": "^0.25.1",
-    "source-map-support": "^0.5.13",
     "telegraf": "^3.28.0",
     "telegraf-i18n": "^6.5.0",
     "telegraf-inline-menu": "^4.0.0",
