@@ -53,7 +53,7 @@ bot.on('inline_query', async ctx => {
       statics.push({
         type: 'article',
         id: 'war',
-        title: emoji.poweruser + ' ' + ctx.i18n.t('bs.war'),
+        title: emoji.war + emoji.poweruser + ' War',
         description: createWarOneLineString(battle),
         input_message_content: {
           message_text,
@@ -79,7 +79,7 @@ bot.on('inline_query', async ctx => {
           return {
             type: 'article',
             id: `castle-${castle}`,
-            title: emoji.poweruser + ' ' + ctx.i18n.t('bs.siege'),
+            title: emoji.castle + emoji.poweruser + ' Siege',
             description: castleGametext(castle, 'en'),
             input_message_content: {
               message_text: text,
