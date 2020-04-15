@@ -1,4 +1,4 @@
-import {Composer, ContextMessageUpdate as TelegrafContext} from 'telegraf'
+import {Composer, ContextMessageUpdate as TelegrafContext, Markup, Extra, SwitchToChatButton} from 'telegraf'
 import {CASTLES, CASTLE_HOLD_SECONDS, Gamescreen} from 'bastion-siege-logic'
 
 import {ContextAwareDebounce} from '../lib/javascript-abstraction/context-aware-debounce'
@@ -35,8 +35,10 @@ bot.command('castle', async ctx => {
     text += '\n\n'
   }
 
+  const alliance = gameInformation.player?.alliance
+
   const options: CastlePartOptions = {
-    userAlliance: gameInformation.player?.alliance,
+    userAlliance: alliance,
     locale: lang,
     now,
     timeZone,
@@ -48,7 +50,14 @@ bot.command('castle', async ctx => {
 
   text += castleParts.join('\n\n')
 
-  return ctx.replyWithMarkdown(text)
+  const buttons: SwitchToChatButton[] = []
+
+  if (userIsPoweruser && alliance && castleSiege.getCastlesAllianceIsParticipatingInRecently(alliance, now).length > 0) {
+    buttons.push(Markup.switchToChatButton('Share Siege…', 'siege'))
+  }
+
+  const extra = Extra.markup(Markup.inlineKeyboard(buttons as any))
+  return ctx.replyWithMarkdown(text, extra)
 })
 
 bot.on('text', whenScreenContainsInformation('castleSiegePlayerJoined', notNewMiddleware('forward.old', castleSiege.MAXIMUM_JOIN_SECONDS / 60), castleInformationUpdatedMiddleware))
