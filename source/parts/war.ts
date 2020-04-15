@@ -134,7 +134,7 @@ bot.action('war-notify-alliance', async ctx => {
     missingMates.map(async o => notifyPlayer(ctx.telegram, o.data.gameInformation.player!.name, o.user, currentWar))
   )
   const allNotifications = allNotificationAttempts
-    .filter(o => o) as WarNotificationMessage[]
+    .filter((o): o is WarNotificationMessage => Boolean(o))
 
   await wars.addNotificationMessages(now, {name: player.name, alliance: player.alliance}, ...allNotifications)
   await ctx.answerCbQuery('all notified 😎')

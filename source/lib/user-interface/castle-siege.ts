@@ -81,7 +81,7 @@ export function castlePart(castle: Castle, options: CastlePartOptions): string {
   const participatingAlliances = [
     keeper,
     ...castleSiege.getAlliances(castle, now)
-  ].filter(o => o).filter(arrayFilterUnique()) as string[]
+  ].filter((o): o is string => Boolean(o)).filter(arrayFilterUnique())
 
   part += otherParticipantsArmyEstimation(participatingAlliances.filter(o => o !== userAlliance))
 

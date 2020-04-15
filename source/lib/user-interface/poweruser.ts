@@ -26,7 +26,7 @@ export function getHintStrings(ctx: any, conditions: readonly PoweruserCondition
   ))
 
   return hints
-    .filter(o => o) as string[]
+    .filter((o): o is string => Boolean(o))
 }
 
 function createHintText(condition: PoweruserCondition, badText: string, additionalWarningText: string): string | undefined {

@@ -55,7 +55,7 @@ export function getParticipants(castle: Castle, alliance: string, currentTimesta
 
   // Joined alliances have no player
   const onlyPlayerEntries: CastleSiegePlayerEntry[] = (data.get() || [])
-    .filter(o => o.player) as CastleSiegePlayerEntry[]
+    .filter((o): o is CastleSiegePlayerEntry => Boolean(o.player))
 
   return onlyPlayerEntries
     .filter(o => o.castle === castle)
