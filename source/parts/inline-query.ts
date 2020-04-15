@@ -1,6 +1,6 @@
 import {Composer, Extra, Markup} from 'telegraf'
 import {InlineQueryResult} from 'telegraf/typings/telegram-types'
-import {inputTextCleanup, MYSTICS_TEXT_EN, Castle, CASTLES, castleGametext} from 'bastion-siege-logic'
+import {inputTextCleanup, MYSTICS_TEXT_EN, Castle, castleGametext} from 'bastion-siege-logic'
 import arrayFilterUnique from 'array-filter-unique'
 import fuzzysort from 'fuzzysort'
 
@@ -67,7 +67,7 @@ bot.on('inline_query', async ctx => {
 
     const alliance = session.gameInformation.player?.alliance
     if (alliance) {
-      const relevantCastles = CASTLES.filter(o => castleSiege.getAlliances(o, now).includes(alliance))
+      const relevantCastles = castleSiege.getCastlesAllianceIsParticipatingInRecently(alliance, now)
       statics.push(...relevantCastles
         .map((castle): InlineQueryResult => {
           const text = castlePart(castle, {

@@ -64,6 +64,23 @@ export function getParticipants(castle: Castle, alliance: string, currentTimesta
     .sort(sortBy(o => o.timestamp))
 }
 
+export function getCastlesAllianceIsParticipatingInRecently(alliance: string, currentTimestamp: UnixTimestamp): Castle[] {
+  if (!alliance) {
+    throw new Error('you cant participate at a siege without alliance')
+  }
+
+  const minTimestamp = currentTimestamp - MAXIMUM_JOIN_SECONDS
+  const participatingInCastle = (data.get() ?? [])
+    .filter(o => o.timestamp > minTimestamp)
+    .filter(o => o.alliance === alliance)
+    .sort(sortBy(o => o.timestamp))
+    .map(o => o.castle)
+    .filter(arrayFilterUnique())
+    .reverse()
+
+  return participatingInCastle
+}
+
 export async function updateInlineMessages(castle: Castle, onlyForAlliance: string | undefined, now: UnixTimestamp): Promise<void> {
   const all = inlineMessages.get() ?? []
   const filtered = all
