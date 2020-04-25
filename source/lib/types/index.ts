@@ -1,4 +1,4 @@
-import {ContextMessageUpdate} from 'telegraf'
+import {Context as TelegrafContext} from 'telegraf'
 import {I18n} from 'telegraf-i18n'
 
 import {Session} from './session'
@@ -15,7 +15,7 @@ export * from './poweruser'
 export * from './session'
 export * from './war'
 
-export interface Context extends ContextMessageUpdate {
+export interface Context extends TelegrafContext {
   i18n: I18n;
   session: Session;
 }

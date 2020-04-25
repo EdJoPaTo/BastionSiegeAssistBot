@@ -1,5 +1,6 @@
 import {calcBarracksNeeded} from 'bastion-siege-logic'
-import {Markup, SwitchToChatButton} from 'telegraf'
+import {Markup} from 'telegraf'
+import {SwitchToChatButton} from 'telegraf/typings/markup'
 import arrayFilterUnique from 'array-filter-unique'
 
 import {Player, PlayerStats} from '../types'

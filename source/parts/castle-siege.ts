@@ -1,5 +1,6 @@
-import {Composer, ContextMessageUpdate as TelegrafContext, Markup, Extra, SwitchToChatButton} from 'telegraf'
 import {CASTLES, CASTLE_HOLD_SECONDS, Gamescreen} from 'bastion-siege-logic'
+import {Composer, Context as TelegrafContext, Markup, Extra} from 'telegraf'
+import {SwitchToChatButton} from 'telegraf/typings/markup'
 
 import {ContextAwareDebounce} from '../lib/javascript-abstraction/context-aware-debounce'
 

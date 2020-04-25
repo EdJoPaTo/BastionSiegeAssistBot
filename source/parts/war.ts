@@ -1,5 +1,6 @@
-import {Composer, Extra, Markup, Button, Telegram} from 'telegraf'
+import {Composer, Extra, Markup, Telegram} from 'telegraf'
 import {Gamescreen, BattleSolo, BattleAlliance} from 'bastion-siege-logic'
+import {InlineKeyboardButton} from 'telegraf/typings/markup'
 
 import {Session, War, WarNotificationMessage} from '../lib/types'
 
@@ -79,7 +80,7 @@ bot.on('text', whenScreenIsOfType('war', async (ctx: any) => {
       text += ' '
       text += ctx.i18n.t('battle.inlineWar.share')
 
-      const buttons: Button[][] = []
+      const buttons: InlineKeyboardButton[][] = []
 
       if (user.alliance) {
         buttons.push([

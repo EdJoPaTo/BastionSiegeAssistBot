@@ -41,7 +41,7 @@ const replyMenuMiddleware = menu.replyMenuMiddleware().middleware()
 
 const debouncedBuildStats = new ContextAwareDebounce(replyMenuMiddleware, DEBOUNCE_TIME)
 bot.on('text', whenScreenContainsInformation(['buildings', 'resources', 'workshop'], (ctx: any) => {
-  debouncedBuildStats.callFloating(ctx.from.id, ctx, undefined)
+  debouncedBuildStats.callFloating(ctx.from.id, ctx, async () => {/* do nothing */})
 }))
 
 menu.submenu(ctx => `${emoji.houses} ${(ctx as any).i18n.t('bs.buildings')}`, 'buildings', buildingsMenu.menu, {

@@ -1,4 +1,4 @@
-import {Composer, Extra, Markup, ContextMessageUpdate} from 'telegraf'
+import {Composer, Extra, Markup, Context as TelegrafContext} from 'telegraf'
 
 import {emoji} from '../lib/user-interface/output-text'
 import {getSupportGroupLink} from '../lib/user-interface/support-group'
@@ -26,7 +26,7 @@ bot.command(['search', 'army'], async (ctx: any) => {
   await ctx.replyWithMarkdown(text, Extra.markup(keyboard) as any)
 })
 
-function isAnOwnInlineQuery(ctx: ContextMessageUpdate): boolean {
+function isAnOwnInlineQuery(ctx: TelegrafContext): boolean {
   if (!ctx.message || !ctx.message.text || ctx.message.forward_from) {
     return false
   }

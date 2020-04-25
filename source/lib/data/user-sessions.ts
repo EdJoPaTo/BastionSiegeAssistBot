@@ -1,4 +1,4 @@
-import {ContextMessageUpdate} from 'telegraf'
+import {Context as TelegrafContext} from 'telegraf'
 import arrayReduceGroupBy from 'array-reduce-group-by'
 
 import {DAY_IN_SECONDS} from '../math/timeframe'
@@ -25,7 +25,7 @@ const localSession = new LocalSession({
     serialize: (obj: any) => JSON.stringify(obj, undefined, '\t'),
     deserialize: (str: string) => JSON.parse(str)
   },
-  getSessionKey: (ctx: ContextMessageUpdate) => `${ctx.from!.id}:${ctx.from!.id}`
+  getSessionKey: (ctx: TelegrafContext) => `${ctx.from!.id}:${ctx.from!.id}`
 })
 
 export function getRaw(): readonly SessionRaw[] {

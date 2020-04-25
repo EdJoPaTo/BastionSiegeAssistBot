@@ -1,4 +1,4 @@
-import {Composer, Extra, Markup, ContextMessageUpdate} from 'telegraf'
+import {Composer, Extra, Markup, Context as TelegrafContext} from 'telegraf'
 import {estimateResourcesAfter, Constructions, ResourceName, DomainStats} from 'bastion-siege-logic'
 
 import {compareStrAsSimpleOne} from '../lib/javascript-abstraction/strings'
@@ -19,7 +19,7 @@ const updateMarkup = Extra.markdown().markup(Markup.inlineKeyboard([
 
 bot.command('assumed', sendAssumed)
 
-async function sendAssumed(ctx: ContextMessageUpdate): Promise<void> {
+async function sendAssumed(ctx: TelegrafContext): Promise<void> {
   const session = (ctx as any).session as Session
   const information = session.gameInformation
 
