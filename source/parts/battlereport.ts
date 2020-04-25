@@ -41,24 +41,31 @@ function applyReportToGameInformation(ctx: any, report: Battlereport, timestamp:
 
   if (isNew) {
     if (session.gameInformation.resources && session.gameInformation.resourcesTimestamp && timestamp > session.gameInformation.resourcesTimestamp) {
-      session.gameInformation.resources.gold += gold
+      let newGold = session.gameInformation.resources.gold
+      let newFood = session.gameInformation.resources.food
+      newGold += gold
 
       if (Number.isFinite(soldiersLostResult.gold)) {
-        session.gameInformation.resources.gold += soldiersLostResult.gold
+        newGold += soldiersLostResult.gold
       }
 
       if (attack) {
-        session.gameInformation.resources.food -= soldiersTotal // 1 food per send soldier required to start war
+        newFood -= soldiersTotal // 1 food per send soldier required to start war
       }
 
-      session.gameInformation.resources.gold = Math.max(session.gameInformation.resources.gold, 0)
-      session.gameInformation.resources.food = Math.max(session.gameInformation.resources.food, 0)
+      session.gameInformation.resources = {
+        ...session.gameInformation.resources,
+        gold: Math.max(newGold, 0),
+        food: Math.max(newFood, 0)
+      }
     }
 
     if (session.gameInformation.domainStats && session.gameInformation.domainStatsTimestamp && timestamp > session.gameInformation.domainStatsTimestamp) {
-      session.gameInformation.domainStats.karma += karma ? karma : 0
-      session.gameInformation.domainStats.terra += terra ? terra : 0
-      session.gameInformation.domainStats.wins += won ? 1 : 0
+      session.gameInformation.domainStats = {
+        karma: session.gameInformation.domainStats.karma + (karma ?? 0),
+        terra: session.gameInformation.domainStats.terra + (terra ?? 0),
+        wins: session.gameInformation.domainStats.wins + (won ? 1 : 0)
+      }
     }
   }
 
