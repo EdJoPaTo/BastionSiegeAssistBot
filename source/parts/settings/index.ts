@@ -1,5 +1,7 @@
 import {Composer} from 'telegraf'
-import TelegrafInlineMenu from 'telegraf-inline-menu'
+import {MenuTemplate, MenuMiddleware} from 'telegraf-inline-menu'
+
+import {Context} from '../../lib/types'
 
 import {buttonText} from '../../lib/user-interface/menu'
 import {emoji} from '../../lib/user-interface/output-text'
@@ -11,8 +13,7 @@ import * as timezoneMenu from './timezone'
 import * as listMenu from './list'
 import * as poweruserMenu from './poweruser'
 
-const settingsMenu = new TelegrafInlineMenu((ctx: any) => `*${ctx.i18n.t('settings')}*`)
-settingsMenu.setCommand('settings')
+const settingsMenu = new MenuTemplate<Context>(ctx => ({text: `*${ctx.i18n.t('settings')}*`, parse_mode: 'Markdown'}))
 
 settingsMenu.submenu(buttonText(emoji.alertEnabled, 'alerts'), 'alerts', alertsMenu.menu)
 
@@ -26,8 +27,8 @@ settingsMenu.submenu(buttonText(emoji.list, 'list.title'), 'list', listMenu.menu
 
 settingsMenu.submenu(buttonText(emoji.poweruser, 'poweruser.poweruser'), 'poweruser', poweruserMenu.menu)
 
-export const bot = new Composer()
-bot.use(settingsMenu.init({
-  backButtonText: (ctx: any) => `🔙 ${ctx.i18n.t('menu.back')}…`,
-  actionCode: 'settings'
-}))
+const menuMiddleware = new MenuMiddleware('settings/', settingsMenu)
+
+export const bot = new Composer<Context>()
+bot.command('settings', async ctx => menuMiddleware.replyToContext(ctx))
+bot.use(menuMiddleware)

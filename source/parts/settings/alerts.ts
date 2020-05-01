@@ -1,33 +1,32 @@
-import TelegrafInlineMenu from 'telegraf-inline-menu'
+import {MenuTemplate, Body} from 'telegraf-inline-menu'
 
 import {toggleInArray} from '../../lib/javascript-abstraction/array'
 
-import {Session, ALERTS, Alert} from '../../lib/types'
+import {Context, ALERTS, Alert} from '../../lib/types'
 
+import {backButtons} from '../../lib/user-interface/menu'
 import {emoji} from '../../lib/user-interface/output-text'
 import {getAlertText} from '../../lib/user-interface/alert-handler'
 
-function menuText(ctx: any): string {
+function menuBody(ctx: Context): Body {
   let text = `*${ctx.i18n.t('alerts')}*`
   text += '\n'
   text += ctx.i18n.t('setting.alert.infotext')
-  return text
+  return {text, parse_mode: 'Markdown'}
 }
 
-export const menu = new TelegrafInlineMenu(menuText)
+export const menu = new MenuTemplate<Context>(menuBody)
 
 menu.select('type', ALERTS, {
   multiselect: true,
   columns: 1,
   prefixTrue: emoji.alertEnabled,
   prefixFalse: emoji.alertDisabled,
-  textFunc: (ctx, key) => getAlertText(ctx, key as Alert),
-  setFunc: (ctx: any, key) => {
-    const session = ctx.session as Session
-    session.alerts = toggleInArray(session.alerts ?? [], key as Alert, (a, b) => a.localeCompare(b))
+  buttonText: (ctx, key) => getAlertText(ctx, key as Alert),
+  set: (ctx, key) => {
+    ctx.session.alerts = toggleInArray(ctx.session.alerts ?? [], key as Alert, (a, b) => a.localeCompare(b))
   },
-  isSetFunc: (ctx: any, key) => {
-    const session = ctx.session as Session
-    return (session.alerts ?? []).includes(key as Alert)
-  }
+  isSet: (ctx, key) => (ctx.session.alerts ?? []).includes(key as Alert)
 })
+
+menu.manualRow(backButtons)

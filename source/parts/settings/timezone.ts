@@ -1,10 +1,11 @@
 import {listTimeZones} from 'timezone-support'
 import {markdown as format} from 'telegram-format'
+import {MenuTemplate, Body} from 'telegraf-inline-menu'
 import arrayFilterUnique from 'array-filter-unique'
-import TelegrafInlineMenu from 'telegraf-inline-menu'
 
-import {Session} from '../../lib/types'
+import {Context} from '../../lib/types'
 
+import {backButtons} from '../../lib/user-interface/menu'
 import {emoji} from '../../lib/user-interface/output-text'
 
 const tzNormal = listTimeZones()
@@ -15,25 +16,24 @@ const tzPrefixesRaw = tzNormal
   .map(o => o[0])
   .filter(arrayFilterUnique())
 
-function tzPrefixes(ctx: any): string[] {
-  const {__language_code: locale} = ctx.session as Session
+function tzPrefixes(ctx: Context): string[] {
+  const {__language_code: locale} = ctx.session
   return tzPrefixesRaw
     .sort((a, b) => a.localeCompare(b, locale === 'wikidatanish' ? 'en' : locale))
 }
 
-function tzInPrefix(ctx: any): string[] {
-  const {__language_code: locale} = ctx.session as Session
-  const prefix = ctx.match[1]
+function tzInPrefix(ctx: Context): string[] {
+  const {__language_code: locale} = ctx.session
+  const prefix = ctx.match![1]
   return tzNormal
     .filter(o => o[0] === prefix)
     .map(o => o.slice(1).join('/'))
     .sort((a, b) => a.localeCompare(b, locale === 'wikidatanish' ? 'en' : locale))
 }
 
-function menuText(ctx: any): string {
-  const {__language_code: locale} = ctx.session as Session
-  const session = ctx.session as Session
-  const current = session.timeZone || 'UTC'
+function menuBody(ctx: Context): Body {
+  const {__language_code: locale} = ctx.session
+  const current = ctx.session.timeZone || 'UTC'
 
   let text = ''
   text += emoji.timezone
@@ -52,17 +52,16 @@ function menuText(ctx: any): string {
     text += '\n\n'
   }
 
-  return text
+  return {text, parse_mode: format.parse_mode}
 }
 
-export const menu = new TelegrafInlineMenu(menuText)
+export const menu = new MenuTemplate<Context>(menuBody)
 
-const specificMenu = new TelegrafInlineMenu(menuText)
+const specificMenu = new MenuTemplate<Context>(menuBody)
 
-function utcButtonText(ctx: any): string {
-  const session = ctx.session as Session
+function utcButtonText(ctx: Context): string {
   let text = ''
-  if (!session.timeZone) {
+  if (!ctx.session.timeZone) {
     text += '✅'
   }
 
@@ -70,49 +69,39 @@ function utcButtonText(ctx: any): string {
   return text
 }
 
-menu.button(utcButtonText, 'utc', {
-  doFunc: (ctx: any) => {
-    const session = ctx.session as Session
-    delete session.timeZone
+menu.interact(utcButtonText, 'utc', {
+  do: async (ctx, next) => {
+    delete ctx.session.timeZone
+    return next()
   }
 })
 
-menu.selectSubmenu('s', tzPrefixes, specificMenu, {
+menu.chooseIntoSubmenu('s', tzPrefixes, specificMenu, {
   columns: 2,
-  getCurrentPage,
-  setPage
+  getCurrentPage: ctx => ctx.session.page,
+  setPage: (ctx, page) => {
+    ctx.session.page = page
+  }
 })
 
 specificMenu.select('s', tzInPrefix, {
   columns: 2,
-  isSetFunc,
-  setFunc,
-  getCurrentPage,
-  setPage
+  isSet: (ctx, key) => ctx.session.timeZone === createTz(ctx.match, key),
+  set: (ctx, key) => {
+    ctx.session.timeZone = createTz(ctx.match, key)
+  },
+  getCurrentPage: ctx => ctx.session.page,
+  setPage: (ctx, page) => {
+    ctx.session.page = page
+  }
 })
 
-function createTz(match: RegExpMatchArray | undefined, key: string): string {
+specificMenu.manualRow(backButtons)
+
+menu.manualRow(backButtons)
+
+function createTz(match: RegExpMatchArray | undefined | null, key: string): string {
   const prefix = match?.[1]
   const tz = prefix ? `${prefix}/${key}` : key
   return tz
-}
-
-function isSetFunc(ctx: any, key: string): boolean {
-  const session = ctx.session as Session
-  return session.timeZone === createTz(ctx.match, key)
-}
-
-function setFunc(ctx: any, key: string): void {
-  const session = ctx.session as Session
-  session.timeZone = createTz(ctx.match, key)
-}
-
-function getCurrentPage(ctx: any): number | undefined {
-  const session = ctx.session as Session
-  return session.page
-}
-
-function setPage(ctx: any, page: number): void {
-  const session = ctx.session as Session
-  session.page = page
 }

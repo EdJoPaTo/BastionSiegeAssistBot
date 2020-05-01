@@ -1,7 +1,10 @@
 import {Extra, Markup} from 'telegraf'
+import {MenuTemplate, Body} from 'telegraf-inline-menu'
 import I18n from 'telegraf-i18n'
-import TelegrafInlineMenu from 'telegraf-inline-menu'
 
+import {Context} from '../../lib/types'
+
+import {backButtons} from '../../lib/user-interface/menu'
 import {emoji} from '../../lib/user-interface/output-text'
 import {getSupportGroupLink} from '../../lib/user-interface/support-group'
 
@@ -13,20 +16,20 @@ const i18n = new I18n({
   directory: 'locales'
 })
 
-function menuText(ctx: any): string {
+function menuBody(ctx: Context): Body {
   let text = emoji.language + ` *${ctx.i18n.t('language.title')}*`
   text += '\n'
   text += ctx.i18n.t('language.info')
-  return text
+  return {text, parse_mode: 'Markdown'}
 }
 
-export const menu = new TelegrafInlineMenu(menuText)
+export const menu = new MenuTemplate<Context>(menuBody)
 
 menu.select('lang', i18n.availableLocales(), {
   columns: 2,
-  isSetFunc: (ctx: any, key) => key.toLowerCase().startsWith(ctx.i18n.locale().toLowerCase()),
-  setFunc: (ctx: any, key) => ctx.i18n.locale(key),
-  textFunc: (_ctx, key) => {
+  isSet: (ctx, key) => key.toLowerCase().startsWith(ctx.i18n.locale().toLowerCase()),
+  set: (ctx, key) => ctx.i18n.locale(key),
+  buttonText: (_ctx, key) => {
     let result = ''
     result += localeEmoji(key)
     result += ' '
@@ -41,8 +44,8 @@ menu.select('lang', i18n.availableLocales(), {
   }
 })
 
-menu.simpleButton((ctx: any) => ctx.i18n.t('language.translateButton'), 'translate', {
-  doFunc: async (ctx: any) => {
+menu.interact(ctx => ctx.i18n.t('language.translateButton'), 'translate', {
+  do: async ctx => {
     await ctx.replyWithDocument({
       source: `locales/${ctx.i18n.locale()}.yaml`
     }, new Extra({
@@ -51,14 +54,14 @@ menu.simpleButton((ctx: any) => ctx.i18n.t('language.translateButton'), 'transla
       Markup.inlineKeyboard([
         Markup.urlButton(ctx.i18n.t('help.joinBSAGroupButton'), getSupportGroupLink(ctx.i18n.locale()))
       ])
-    ))
+    ) as any)
 
     if (ctx.i18n.locale() !== 'en') {
       await ctx.replyWithDocument({
         source: 'locales/en.yaml'
       }, new Extra({
         caption: 'Reference Translation'
-      }))
+      }) as any)
     }
 
     const missingTranslations = i18n.missingKeys(ctx.i18n.locale())
@@ -71,4 +74,6 @@ menu.simpleButton((ctx: any) => ctx.i18n.t('language.translateButton'), 'transla
   }
 })
 
-menu.urlButton((ctx: any) => ctx.i18n.t('help.joinBSAGroupButton'), (ctx: any) => getSupportGroupLink(ctx.i18n.locale()))
+menu.url(ctx => ctx.i18n.t('help.joinBSAGroupButton'), ctx => getSupportGroupLink(ctx.i18n.locale()))
+
+menu.manualRow(backButtons)

@@ -1,14 +1,14 @@
 import {Composer} from 'telegraf'
 import arrayFilterUnique from 'array-filter-unique'
 import arrayReduceGroupBy from 'array-reduce-group-by'
-import TelegrafInlineMenu from 'telegraf-inline-menu'
+import {MenuTemplate, MenuMiddleware, Body} from 'telegraf-inline-menu'
 import {
   sameBattleResourceAssumption,
   uniqueBattlereportIdentifier,
   BattlereportResource
 } from 'bastion-siege-logic'
 
-import {Session, BattlestatsView} from '../lib/types'
+import {Context, BattlestatsView} from '../lib/types'
 
 import * as regexHelper from '../lib/javascript-abstraction/regex-helper'
 
@@ -29,15 +29,13 @@ const DEFAULT_TIMEFRAME = '24h'
 const DEFAULT_TYPE = 'gold'
 const DEFAULT_VIEW = 'solo'
 
-const menu = new TelegrafInlineMenu(getBattlestatsText)
-menu.setCommand('battlestats')
+const menu = new MenuTemplate<Context>(getBattlestatsBody)
 
-function viewOptions(ctx: any): BattlestatsView[] {
-  const session = ctx.session as Session
+function viewOptions(ctx: Context): BattlestatsView[] {
   const options: BattlestatsView[] = ['solo']
 
-  const isPoweruser = poweruser.isPoweruser(ctx.from.id)
-  const {player} = session.gameInformation
+  const isPoweruser = poweruser.isPoweruser(ctx.from!.id)
+  const {player} = ctx.session.gameInformation
   const alliance = player?.alliance
   if (isPoweruser && alliance) {
     options.push('allianceMates')
@@ -50,17 +48,16 @@ function viewOptions(ctx: any): BattlestatsView[] {
 
 menu.select('view', viewOptions, {
   columns: 2,
-  hide: (ctx: any) => viewOptions(ctx).length === 1,
-  isSetFunc: (ctx, key) => getCurrentView(ctx) === key,
-  setFunc: (ctx: any, key) => {
-    const session = ctx.session as Session
-    if (!session.battlestats) {
-      session.battlestats = {}
+  hide: ctx => viewOptions(ctx).length === 1,
+  isSet: (ctx, key) => getCurrentView(ctx) === key,
+  set: (ctx, key) => {
+    if (!ctx.session.battlestats) {
+      ctx.session.battlestats = {}
     }
 
-    session.battlestats.view = key as BattlestatsView
+    ctx.session.battlestats.view = key as BattlestatsView
   },
-  textFunc: (ctx: any, key) => {
+  buttonText: (ctx, key) => {
     switch (key) {
       case 'allianceAttacks': return `${emoji.alliance}${ctx.i18n.t('battle.alliance')}`
       case 'allianceMates': return `${emoji.alliance}${ctx.i18n.t('bs.allianceMembers')}`
@@ -71,8 +68,8 @@ menu.select('view', viewOptions, {
   }
 })
 
-function getCurrentView(ctx: any): BattlestatsView {
-  const {battlestats} = ctx.session as Session
+function getCurrentView(ctx: Context): BattlestatsView {
+  const {battlestats} = ctx.session
   const view = (battlestats?.view) || DEFAULT_VIEW
   if (!viewOptions(ctx).includes(view)) {
     return DEFAULT_VIEW
@@ -81,48 +78,43 @@ function getCurrentView(ctx: any): BattlestatsView {
   return view
 }
 
-function getCurrentType(ctx: any): BattlereportResource {
-  const {battlestats} = ctx.session as Session
+function getCurrentType(ctx: Context): BattlereportResource {
+  const {battlestats} = ctx.session
   const type = battlestats?.type
   return type || DEFAULT_TYPE
 }
 
 menu.select('rewardType', {gold: emoji.gold, terra: emoji.terra, karma: emoji.karma, gems: emoji.gem}, {
-  isSetFunc: (ctx: any, key) => getCurrentType(ctx) === key,
-  setFunc: (ctx: any, key) => {
-    const session = ctx.session as Session
-    if (!session.battlestats) {
-      session.battlestats = {}
+  isSet: (ctx, key) => getCurrentType(ctx) === key,
+  set: (ctx, key) => {
+    if (!ctx.session.battlestats) {
+      ctx.session.battlestats = {}
     }
 
-    session.battlestats.type = key as BattlereportResource
+    ctx.session.battlestats.type = key as BattlereportResource
   }
 })
 
 menu.select('hours', ['6h', '12h', '24h', '48h'], {
-  setFunc: setCurrentTimeframe,
-  isSetFunc: isCurrentTimeframe
+  set: setCurrentTimeframe,
+  isSet: (ctx, key) => getCurrentTimeframe(ctx) === key
 })
 
 menu.select('days', ['7d', '30d'], {
-  hide: (ctx: any) => getCurrentView(ctx) !== 'solo',
-  setFunc: setCurrentTimeframe,
-  isSetFunc: isCurrentTimeframe
+  hide: ctx => getCurrentView(ctx) !== 'solo',
+  set: setCurrentTimeframe,
+  isSet: (ctx, key) => getCurrentTimeframe(ctx) === key
 })
 
 menu.select('specific', ['all'], {
-  hide: (ctx: any) => getCurrentView(ctx) !== 'solo',
-  textFunc: (ctx: any) => ctx.i18n.t('battlestats.alltime'),
-  setFunc: ctx => setCurrentTimeframe(ctx, 'all'),
-  isSetFunc: ctx => isCurrentTimeframe(ctx, 'all')
+  hide: ctx => getCurrentView(ctx) !== 'solo',
+  buttonText: ctx => ctx.i18n.t('battlestats.alltime'),
+  set: ctx => setCurrentTimeframe(ctx, 'all'),
+  isSet: ctx => getCurrentTimeframe(ctx) === 'all'
 })
 
-function isCurrentTimeframe(ctx: any, selected: string): boolean {
-  return getCurrentTimeframe(ctx) === selected
-}
-
-function getCurrentTimeframe(ctx: any): string {
-  const {battlestats} = ctx.session as Session
+function getCurrentTimeframe(ctx: Context): string {
+  const {battlestats} = ctx.session
   const timeframe = (battlestats?.timeframe) || DEFAULT_TIMEFRAME
   const view = getCurrentView(ctx)
   if (timeframe.endsWith('h') || view === 'solo') {
@@ -132,13 +124,12 @@ function getCurrentTimeframe(ctx: any): string {
   return '24h'
 }
 
-function setCurrentTimeframe(ctx: any, newValue: string): void {
-  const session = ctx.session as Session
-  if (!session.battlestats) {
-    session.battlestats = {}
+function setCurrentTimeframe(ctx: Context, newValue: string): void {
+  if (!ctx.session.battlestats) {
+    ctx.session.battlestats = {}
   }
 
-  session.battlestats.timeframe = newValue
+  ctx.session.battlestats.timeframe = newValue
 }
 
 function getFirstTimeRelevantForTimeframe(timeframe: string, now = Date.now() / 1000): number {
@@ -155,21 +146,21 @@ function getFirstTimeRelevantForTimeframe(timeframe: string, now = Date.now() / 
   return getHoursEarlier(now, amount)
 }
 
-function getBattlestatsText(ctx: any): string {
+function getBattlestatsBody(ctx: Context): Body {
   const view = getCurrentView(ctx)
   switch (view) {
     case 'allianceAttacks':
-      return createAllianceAttacks(ctx)
+      return createAllianceAttacksBody(ctx)
     case 'allianceMates':
-      return createAllianceMates(ctx)
+      return createAllianceMatesBody(ctx)
     case 'allianceSolo':
-      return createAllianceSolo(ctx)
+      return createAllianceSoloBody(ctx)
     default:
-      return createSolo(ctx)
+      return createSoloBody(ctx)
   }
 }
 
-function createHeader(ctx: any, timeframe: string, isAllianceRelated: boolean): string {
+function createHeader(ctx: Context, timeframe: string, isAllianceRelated: boolean): string {
   let text = ''
   text += '*'
   if (isAllianceRelated) {
@@ -193,16 +184,16 @@ function createHeader(ctx: any, timeframe: string, isAllianceRelated: boolean): 
   return text
 }
 
-function createSolo(ctx: any): string {
+function createSoloBody(ctx: Context): Body {
   const timeframe = getCurrentTimeframe(ctx)
   const firstTimeRelevant = getFirstTimeRelevantForTimeframe(timeframe)
-  const reports = battlereports.getByProvidingUser(ctx.from.id)
+  const reports = battlereports.getByProvidingUser(ctx.from!.id)
     .filter(report => report.time > firstTimeRelevant)
 
   let text = createHeader(ctx, timeframe, false)
   text += '\n\n'
 
-  if (!poweruser.isPoweruser(ctx.from.id)) {
+  if (!poweruser.isPoweruser(ctx.from!.id)) {
     text += emoji.poweruser
     text += ' '
     text += ctx.i18n.t('poweruser.usefulWhen')
@@ -213,25 +204,24 @@ function createSolo(ctx: any): string {
   const stats = battleStats.generate(reports, o => o[type])
   text += createBattleStatsString(stats, type, ctx.i18n.locale())
 
-  return text
+  return {text, parse_mode: 'Markdown'}
 }
 
-function getAllianceRelevantData(ctx: any): {allianceMates: readonly SessionRaw[]; header: string; firstTimeRelevant: number} {
-  const session = ctx.session as Session
+function getAllianceRelevantData(ctx: Context): {allianceMates: readonly SessionRaw[]; header: string; firstTimeRelevant: number} {
   const timeframe = getCurrentTimeframe(ctx)
   const firstTimeRelevant = getFirstTimeRelevantForTimeframe(timeframe)
 
   let text = createHeader(ctx, timeframe, true)
   text += '\n'
 
-  if (!poweruser.isPoweruser(ctx.from.id)) {
+  if (!poweruser.isPoweruser(ctx.from!.id)) {
     text += emoji.poweruser
     text += ' '
     text += ctx.i18n.t('poweruser.usefulWhen')
     return {header: text, firstTimeRelevant, allianceMates: []}
   }
 
-  const {player} = session.gameInformation
+  const {player} = ctx.session.gameInformation
   const alliance = player?.alliance
   if (!alliance) {
     text += ctx.i18n.t('name.noAlliance')
@@ -251,7 +241,7 @@ function getAllianceRelevantData(ctx: any): {allianceMates: readonly SessionRaw[
   }
 }
 
-function createAllianceSolo(ctx: any): string {
+function createAllianceSoloBody(ctx: Context): Body {
   const {firstTimeRelevant, allianceMates, header} = getAllianceRelevantData(ctx)
 
   let text = ''
@@ -270,10 +260,10 @@ function createAllianceSolo(ctx: any): string {
   const stats = battleStats.generate(reports, o => o[type])
   text += createBattleStatsString(stats, type, ctx.i18n.locale())
 
-  return text
+  return {text, parse_mode: 'Markdown'}
 }
 
-function createAllianceAttacks(ctx: any): string {
+function createAllianceAttacksBody(ctx: Context): Body {
   const {firstTimeRelevant, allianceMates, header} = getAllianceRelevantData(ctx)
 
   let text = ''
@@ -305,10 +295,10 @@ function createAllianceAttacks(ctx: any): string {
   ))
   text += createBattleStatsString(stats, type, ctx.i18n.locale())
 
-  return text
+  return {text, parse_mode: 'Markdown'}
 }
 
-function createAllianceMates(ctx: any): string {
+function createAllianceMatesBody(ctx: Context): Body {
   const {firstTimeRelevant, allianceMates, header} = getAllianceRelevantData(ctx)
 
   let text = ''
@@ -347,10 +337,10 @@ function createAllianceMates(ctx: any): string {
   const type = getCurrentType(ctx)
   text += createRanking(mateInfo, type, ctx.i18n.t('bs.resources.resources'))
 
-  return text
+  return {text, parse_mode: 'Markdown'}
 }
 
-export const bot = new Composer()
-bot.use(menu.init({
-  actionCode: 'battlestats'
-}))
+export const bot = new Composer<Context>()
+const menuMiddleware = new MenuMiddleware('battlestats/', menu)
+bot.command('battlestats', async ctx => menuMiddleware.replyToContext(ctx))
+bot.use(menuMiddleware)

@@ -1,15 +1,16 @@
 import {Composer} from 'telegraf'
 import {CONSTRUCTIONS, calcMaxBuildingLevel, estimateResourcesAfter, BattleBuilding} from 'bastion-siege-logic'
-import TelegrafInlineMenu from 'telegraf-inline-menu'
+import {MenuTemplate, MenuMiddleware, Body} from 'telegraf-inline-menu'
 
 import {ContextAwareDebounce} from '../lib/javascript-abstraction/context-aware-debounce'
 
-import {Session, BUILDING_VIEWS, BuildingView} from '../lib/types'
+import {Context, BUILDING_VIEWS, BuildingView} from '../lib/types'
 
 import {calculateSecondsFromTimeframeString} from '../lib/math/timeframe'
 
 import {whenScreenContainsInformation} from '../lib/input/gamescreen'
 
+import {DEFAULT_HISTORY_TIMEFRAME, buildingsHistoryGraphFromContext} from '../lib/user-interface/buildings-history'
 import {emoji} from '../lib/user-interface/output-text'
 import {
   createBuildingCostPerWinChanceLine,
@@ -20,7 +21,6 @@ import {
   createIncomeStatsString,
   defaultBuildingsToShow
 } from '../lib/user-interface/buildings'
-import {DEFAULT_HISTORY_TIMEFRAME, buildingsHistoryGraphFromContext} from '../lib/user-interface/buildings-history'
 
 import * as buildingsMenu from './settings/buildings'
 
@@ -30,75 +30,46 @@ const DEFAULT_VIEW = BUILDING_VIEWS[0]
 
 const WIN_CHANCE_INFLUENCERS: BattleBuilding[] = ['barracks', 'trebuchet', 'wall']
 
-export const bot = new Composer()
+async function menuBody(ctx: Context): Promise<Body> {
+  const photo = await generateStatsPhoto(ctx)
+  const text = generateStatsText(ctx)
+  return {photo, text, parse_mode: 'Markdown'}
+}
 
-const menu = new TelegrafInlineMenu(generateStatsText, {
-  photo: generateStatsPhoto
-})
-  .setCommand('buildings')
+const menu = new MenuTemplate<Context>(menuBody)
 
-const replyMenuMiddleware = menu.replyMenuMiddleware().middleware()
-
-const debouncedBuildStats = new ContextAwareDebounce(replyMenuMiddleware, DEBOUNCE_TIME)
-bot.on('text', whenScreenContainsInformation(['buildings', 'resources', 'workshop'], (ctx: any) => {
-  debouncedBuildStats.callFloating(ctx.from.id, ctx, async () => {/* do nothing */})
-}))
-
-menu.submenu(ctx => `${emoji.houses} ${(ctx as any).i18n.t('bs.buildings')}`, 'buildings', buildingsMenu.menu, {
-  hide: (ctx: any) => {
-    const session = ctx.session as Session
-    return (session.buildingsView || DEFAULT_VIEW) !== 'upgrades'
-  }
+menu.submenu(ctx => `${emoji.houses} ${ctx.i18n.t('bs.buildings')}`, 'buildings', buildingsMenu.menu, {
+  hide: ctx => (ctx.session.buildingsView || DEFAULT_VIEW) !== 'upgrades'
 })
 
 menu.select('t', ['1 min', '15 min', '30 min', '1h', '6h', '12h', '1d', '2d', '7d', '30d'], {
   columns: 5,
-  setFunc: (ctx: any, key) => {
-    const session = ctx.session as Session
-    session.buildingsTimeframe = key
+  set: (ctx, key) => {
+    ctx.session.buildingsTimeframe = key
   },
-  isSetFunc: (ctx: any, key) => {
-    const session = ctx.session as Session
-    return key === (session.buildingsTimeframe || '1 min')
-  },
-  hide: (ctx: any) => (ctx.session.buildingsView || DEFAULT_VIEW) !== 'income'
+  isSet: (ctx, key) => key === (ctx.session.buildingsTimeframe || '1 min'),
+  hide: ctx => (ctx.session.buildingsView || DEFAULT_VIEW) !== 'income'
 })
 
 menu.select('historyT', ['7d', '14d', '28d', '90d'], {
-  hide: (ctx: any) => {
-    const session = ctx.session as Session
-    return (session.buildingsView || DEFAULT_VIEW) !== 'history'
-  },
-  isSetFunc: (ctx: any, key) => {
-    const session = ctx.session as Session
-    return key === (session.buildingsHistoryTimeframe || DEFAULT_HISTORY_TIMEFRAME)
-  },
-  setFunc: (ctx: any, key) => {
-    const session = ctx.session as Session
-    session.buildingsHistoryTimeframe = key
+  hide: ctx => (ctx.session.buildingsView || DEFAULT_VIEW) !== 'history',
+  isSet: (ctx, key) => key === (ctx.session.buildingsHistoryTimeframe || DEFAULT_HISTORY_TIMEFRAME),
+  set: (ctx, key) => {
+    ctx.session.buildingsHistoryTimeframe = key
   }
 })
 
 menu.select('view', BUILDING_VIEWS, {
   columns: 2,
-  hide: (ctx: any) => creationNotPossibleReason(ctx) !== false,
-  textFunc: (ctx: any, key) => ctx.i18n.t('buildings.' + key),
-  isSetFunc: (ctx: any, key) => {
-    const session = ctx.session as Session
-    return (session.buildingsView || DEFAULT_VIEW) === key
-  },
-  setFunc: (ctx: any, key) => {
-    const session = ctx.session as Session
-    session.buildingsView = key as BuildingView
+  hide: ctx => creationNotPossibleReason(ctx) !== false,
+  buttonText: (ctx, key) => ctx.i18n.t('buildings.' + key),
+  isSet: (ctx, key) => (ctx.session.buildingsView || DEFAULT_VIEW) === key,
+  set: (ctx, key) => {
+    ctx.session.buildingsView = key as BuildingView
   }
 })
 
-bot.use(menu.init({
-  backButtonText: (ctx: any) => `🔙 ${ctx.i18n.t('menu.back')}…`,
-  actionCode: 'buildings'
-}))
-
-function creationNotPossibleReason(ctx: any): string | false {
+function creationNotPossibleReason(ctx: Context): string | false {
   const information = ctx.session.gameInformation
 
   if (!information.buildingsTimestamp) {
@@ -112,9 +83,8 @@ function creationNotPossibleReason(ctx: any): string | false {
   return false
 }
 
-function creationWarnings(ctx: any): string[] {
-  const session = ctx.session as Session
-  const information = session.gameInformation
+function creationWarnings(ctx: Context): string[] {
+  const information = ctx.session.gameInformation
   const warnings: string[] = []
 
   // Unix timestamp just without seconds (/60)
@@ -133,7 +103,7 @@ function creationWarnings(ctx: any): string[] {
   return warnings
 }
 
-async function generateStatsPhoto(ctx: any): Promise<undefined | {source: Buffer}> {
+async function generateStatsPhoto(ctx: Context): Promise<undefined | {source: Buffer}> {
   if (creationNotPossibleReason(ctx)) {
     return undefined
   }
@@ -147,18 +117,18 @@ async function generateStatsPhoto(ctx: any): Promise<undefined | {source: Buffer
   return undefined
 }
 
-function generateStatsText(ctx: any): string {
+function generateStatsText(ctx: Context): string {
   const notPossibleReason = creationNotPossibleReason(ctx)
   if (notPossibleReason) {
     return notPossibleReason
   }
 
   const information = ctx.session.gameInformation
-  const buildings = {...information.buildings, ...information.workshop}
+  const buildings = {...information.buildings!, ...information.workshop!}
 
   const currentTimestamp = Math.floor(Date.now() / 1000 / 60)
-  const resourceAgeMinutes = currentTimestamp - Math.floor(information.resourcesTimestamp / 60)
-  const estimatedResources = estimateResourcesAfter(information.resources, buildings, resourceAgeMinutes)
+  const resourceAgeMinutes = currentTimestamp - Math.floor(information.resourcesTimestamp! / 60)
+  const estimatedResources = estimateResourcesAfter(information.resources!, buildings, resourceAgeMinutes)
 
   let text = ''
 
@@ -227,3 +197,13 @@ function generateStatsText(ctx: any): string {
 
   return text
 }
+
+export const bot = new Composer<Context>()
+const menuMiddleware = new MenuMiddleware('buildings/', menu)
+bot.command('buildings', async ctx => menuMiddleware.replyToContext(ctx))
+bot.use(menuMiddleware)
+
+const debouncedBuildStats = new ContextAwareDebounce((ctx: Context) => menuMiddleware.replyToContext(ctx), DEBOUNCE_TIME)
+bot.on('text', whenScreenContainsInformation(['buildings', 'resources', 'workshop'], ctx => {
+  debouncedBuildStats.callFloating(ctx.from!.id, ctx)
+}))
