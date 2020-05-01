@@ -18,13 +18,15 @@ export function generate(allBattlereports: readonly Battlereport[], playername: 
 
   const allAlliances = allWithTarget
     .map(o => o.enemyAlliance)
-    .reduce((sum, a) => {
+    /* eslint-disable @typescript-eslint/indent */
+    .reduce<Array<string | undefined>>((sum, a) => {
       if (sum.length === 0 || sum[sum.length - 1] !== a) {
         sum.push(a)
       }
 
       return sum
-    }, [] as (string | undefined)[])
+    }, [])
+    /* eslint-enable */
 
   const alliance = allAlliances.slice(-1)[0]
 

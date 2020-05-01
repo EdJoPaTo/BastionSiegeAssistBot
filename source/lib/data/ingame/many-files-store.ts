@@ -53,9 +53,9 @@ export class ManyFilesStore<T> {
     const entries: T[] = Array.isArray(entry) ? entry : [entry]
     const grouped = entries.reduce(arrayReduceGroupBy(this.keyFunc), {})
     for (const key of Object.keys(grouped)) {
-      const stringifiedToBeDeleted = grouped[key].map(o => stringify(o))
+      const stringifiedToBeDeleted = new Set(grouped[key].map(o => stringify(o)))
       this._entries[key] = this.valuesOfKey(key)
-        .filter(o => !stringifiedToBeDeleted.includes(stringify(o)))
+        .filter(o => !stringifiedToBeDeleted.has(stringify(o)))
 
       saveSubset(this.directory, key, this._entries[key])
     }
