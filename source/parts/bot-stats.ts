@@ -7,11 +7,13 @@ import * as userSessions from '../lib/data/user-sessions'
 
 import {getHoursEarlier, getMidnightXDaysEarlier} from '../lib/math/unix-timestamp'
 
+import {Context} from '../lib/types'
+
 import {emoji} from '../lib/user-interface/output-text'
 
-export const bot = new Composer()
+export const bot = new Composer<Context>()
 
-bot.command('botstats', async (ctx: any) => {
+bot.command('botstats', async ctx => {
   const allBattlereports = messages.battlereports.values()
   const enemies = playerStatsDb.list()
   const users = userSessions.getRaw().length

@@ -4,7 +4,7 @@ import Telegraf, {Extra, Markup} from 'telegraf'
 import I18n from 'telegraf-i18n'
 import {generateUpdateMiddleware} from 'telegraf-middleware-console-time'
 
-import {Session} from './lib/types'
+import {Context} from './lib/types'
 
 import {initData} from './lib/data'
 import * as castleSiege from './lib/data/castle-siege'
@@ -33,7 +33,7 @@ import * as partWar from './parts/war'
 
 const tokenFilePath = existsSync('/run/secrets') ? '/run/secrets/bot-token.txt' : 'bot-token.txt'
 const token = readFileSync(tokenFilePath, 'utf8').trim()
-const bot = new Telegraf(token)
+const bot = new Telegraf<Context>(token)
 
 if (process.env.NODE_ENV !== 'production') {
   bot.use(generateUpdateMiddleware())
@@ -88,11 +88,10 @@ bot.use(i18n.middleware())
 
 bot.use(async (ctx, next) => {
   const {username} = ctx.from || {}
-  const session = (ctx as any).session as Session
   if (username) {
-    session.__username = username
+    ctx.session.__username = username
   } else {
-    delete session.__username
+    delete ctx.session.__username
   }
 
   await next?.()
@@ -100,7 +99,7 @@ bot.use(async (ctx, next) => {
 
 // Fix previous bot problems
 bot.use(async (ctx, next) => {
-  const {session} = (ctx as any)
+  const session = ctx.session as any
   if (session.gameInformation) {
     const allKeys = Object.keys(session.gameInformation)
     const keysWithValueNull = allKeys
@@ -123,14 +122,14 @@ bot.use(async (ctx, next) => {
     delete session.gameInformation.attackscoutTimestamp
   }
 
-  await next?.()
+  await next()
 })
 
 partAlerts.start(bot.telegram)
 bot.use(partAlerts.bot.middleware())
 
 bot.use(bastionsiegeforward.bot.middleware())
-bot.use(inlineQuery.bot.middleware() as any)
+bot.use(inlineQuery.bot.middleware())
 bot.use(partHints.bot.middleware())
 
 bot.use(partAlliances.bot.middleware())
