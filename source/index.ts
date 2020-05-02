@@ -152,6 +152,16 @@ bot.catch((error: any) => {
 })
 
 async function startup(): Promise<void> {
+  await bot.telegram.setMyCommands([
+    {command: 'buildings', description: 'get your remaining time until building upgrade'},
+    {command: 'battlestats', description: 'get battle stats'},
+    {command: 'castle', description: 'show castle infos'},
+    {command: 'upcoming', description: 'show upcoming alerts'},
+    {command: 'botstats', description: 'show statistics about the bot'},
+    {command: 'settings', description: 'open the settings'},
+    {command: 'help', description: 'show the help'}
+  ])
+
   await initData()
   await bot.launch()
   console.log(new Date(), 'Bot started as', bot.options.username)
