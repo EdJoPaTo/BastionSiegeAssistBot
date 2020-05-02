@@ -13,7 +13,7 @@
   "homepage": "https://github.com/EdJoPaTo/BastionSiegeAssistBot#readme",
   "main": "source",
   "engines": {
-    "node": ">=12"
+    "node": ">=14"
   },
   "scripts": {
     "build": "del-cli dist && tsc",

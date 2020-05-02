@@ -1,4 +1,4 @@
-FROM node:12-alpine
+FROM node:14-alpine
 WORKDIR /build
 
 COPY package.json package-lock.json tsconfig.json ./
@@ -12,7 +12,7 @@ RUN rm -rf node_modules && \
   npm i source-map-support
 
 
-FROM node:12-alpine
+FROM node:14-alpine
 WORKDIR /app
 VOLUME /app/persist
 VOLUME /app/tmp
