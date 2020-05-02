@@ -203,7 +203,7 @@ const menuMiddleware = new MenuMiddleware('buildings/', menu)
 bot.command('buildings', async ctx => menuMiddleware.replyToContext(ctx))
 bot.use(menuMiddleware)
 
-const debouncedBuildStats = new ContextAwareDebounce((ctx: Context) => menuMiddleware.replyToContext(ctx), DEBOUNCE_TIME)
+const debouncedBuildStats = new ContextAwareDebounce(async (ctx: Context) => menuMiddleware.replyToContext(ctx), DEBOUNCE_TIME)
 bot.on('text', whenScreenContainsInformation(['buildings', 'resources', 'workshop'], ctx => {
   debouncedBuildStats.callFloating(ctx.from!.id, ctx)
 }))
