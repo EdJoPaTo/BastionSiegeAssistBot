@@ -42,24 +42,22 @@ export async function add(castle: Castle, alliance: string, player: string | und
   await data.set(filtered)
 }
 
-export function getAlliances(castle: Castle, currentTimestamp: number): readonly string[] {
+export function getAlliances(castle: Castle, sinceTimestamp: number): readonly string[] {
   return (data.get() || [])
-    .filter(o => o.castle === castle && o.timestamp > currentTimestamp - MAXIMUM_JOIN_SECONDS)
+    .filter(o => o.castle === castle && o.timestamp > sinceTimestamp)
     .sort(sortBy(o => o.timestamp))
     .map(o => o.alliance)
     .filter(arrayFilterUnique())
 }
 
-export function getParticipants(castle: Castle, alliance: string, currentTimestamp: UnixTimestamp): readonly CastleSiegePlayerEntry[] {
-  const minTimestamp = currentTimestamp - MAXIMUM_JOIN_SECONDS
-
+export function getParticipants(castle: Castle, alliance: string, sinceTimestamp: UnixTimestamp): readonly CastleSiegePlayerEntry[] {
   // Joined alliances have no player
   const onlyPlayerEntries: CastleSiegePlayerEntry[] = (data.get() || [])
     .filter((o): o is CastleSiegePlayerEntry => Boolean(o.player))
 
   return onlyPlayerEntries
     .filter(o => o.castle === castle)
-    .filter(o => o.timestamp > minTimestamp)
+    .filter(o => o.timestamp > sinceTimestamp)
     .filter(o => o.alliance === alliance)
     .sort(sortBy(o => o.timestamp))
 }

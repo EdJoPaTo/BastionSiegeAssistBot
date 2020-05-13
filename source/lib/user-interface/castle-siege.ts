@@ -78,16 +78,18 @@ export function castlePart(castle: Castle, options: CastlePartOptions): string {
     return part
   }
 
+  const siegeBeginTimestamp = castles.nextSiegeAvailable(castle)
+
   const participatingAlliances = [
     keeper,
-    ...castleSiege.getAlliances(castle, now)
+    ...castleSiege.getAlliances(castle, siegeBeginTimestamp)
   ].filter((o): o is string => Boolean(o)).filter(arrayFilterUnique())
 
   part += otherParticipantsArmyEstimation(participatingAlliances.filter(o => o !== userAlliance))
 
   if (userAlliance && participatingAlliances.includes(userAlliance)) {
     part += '\n'
-    const participants = castleSiege.getParticipants(castle, userAlliance, now)
+    const participants = castleSiege.getParticipants(castle, userAlliance, siegeBeginTimestamp)
       .map(o => playerStatsDb.get(o.player))
 
     const missingMates = getMissingAllianceMates(userAlliance, participants.map(o => o.player))
