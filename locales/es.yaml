@@ -116,6 +116,9 @@ buildings:
 
       Ten en cuenta que solo se consideran el catapulta y la muralla de los primeros de cada lado de la batalla.
       Cuando te estás uniendo a una batalla, tu muralla y tu catapulta son ignorados.
+castle:
+  updated: >
+    ¡Genial! He actualizado mi información sobre la situación actual del castillo (/castle).
 effects:
   updated: >
     Actualizado tus efectos. 👌
@@ -168,6 +171,7 @@ list:
     Simplemente presione 'Unirse' nuevamente para evitar caerse antes de que se agote el tiempo. :)
 mystics: Criaturas Míticas
 name:
+  nameAndAlliance: Nombre y Alianza (menu principal)
   need: Necesito tu nombre para eso. Envíame tu pantalla principal primero. 😅
   noAlliance: No estás en ninguna Alianza en este momento.
   update: Envía la pantalla del menú principal desde @BastionSiegeBot para actualizar tu nombre actual en el juego.
@@ -190,6 +194,7 @@ setting:
     infotext: Habilite las alertas que deseas recibir de mí.
   buildings:
     infotext: Puedes establecer qué edificios son de tu interés en /buildings y las alertas en /alerts.
+  timezone: Zona horaria
 upcoming:
   title: Proximas Alertas
   info: Tu puedes puedes seleccionar qué alertas deseas recibir en /settings.
