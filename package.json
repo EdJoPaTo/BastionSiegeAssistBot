@@ -49,13 +49,13 @@
     "@types/d3": "^5.7.2",
     "@types/debounce-promise": "^3.1.1",
     "@types/json-stable-stringify": "^1.0.32",
-    "@types/node": "^13.1.4",
+    "@types/node": "^14.0.5",
     "@types/sharp": "^0.25.0",
     "ava": "^3.0.0",
     "del-cli": "^3.0.0",
     "nyc": "^15.0.0",
     "ts-node": "^8.3.0",
-    "typescript": "^3.7.4",
+    "typescript": "~3.8.3",
     "xo": "^0.30.0"
   },
   "nyc": {
