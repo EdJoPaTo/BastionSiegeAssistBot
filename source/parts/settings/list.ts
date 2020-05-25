@@ -40,13 +40,13 @@ menu.switchToChat(ctx => ctx.i18n.t('list.share'), 'list', {
 
 menu.interact(ctx => ctx.i18n.t('list.clearParticipants'), 'clear-participants', {
   hide: ctx => !poweruser.isPoweruser(ctx.from!.id) || Object.keys(lists.getList(ctx.from!.id, 'default', Date.now() / 1000).participants).length === 0,
-  do: async (ctx, next) => {
+  do: async ctx => {
     const now = Date.now() / 1000
     const {participants} = lists.getList(ctx.from!.id, 'default', now)
     const participantIds = Object.keys(participants).map(o => Number(o))
 
     await lists.leave(ctx.from!.id, 'default', now, participantIds)
-    return next()
+    return '.'
   }
 })
 

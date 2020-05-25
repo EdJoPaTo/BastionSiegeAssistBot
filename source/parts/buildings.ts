@@ -33,7 +33,17 @@ const WIN_CHANCE_INFLUENCERS: BattleBuilding[] = ['barracks', 'trebuchet', 'wall
 async function menuBody(ctx: Context): Promise<Body> {
   const photo = await generateStatsPhoto(ctx)
   const text = generateStatsText(ctx)
-  return {photo, text, parse_mode: 'Markdown'}
+
+  if (photo) {
+    return {
+      media: photo,
+      type: 'photo',
+      text,
+      parse_mode: 'Markdown'
+    }
+  }
+
+  return {text, parse_mode: 'Markdown'}
 }
 
 const menu = new MenuTemplate<Context>(menuBody)

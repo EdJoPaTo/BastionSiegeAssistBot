@@ -18,11 +18,9 @@ function menuBody(ctx: Context): Body {
 export const menu = new MenuTemplate<Context>(menuBody)
 
 menu.select('type', ALERTS, {
-  multiselect: true,
   columns: 1,
-  prefixTrue: emoji.alertEnabled,
-  prefixFalse: emoji.alertDisabled,
   buttonText: (ctx, key) => getAlertText(ctx, key as Alert),
+  formatState: (_, textResult, state) => `${state ? emoji.alertEnabled : emoji.alertDisabled} ${textResult}`,
   set: (ctx, key) => {
     ctx.session.alerts = toggleInArray(ctx.session.alerts ?? [], key as Alert, (a, b) => a.localeCompare(b))
   },

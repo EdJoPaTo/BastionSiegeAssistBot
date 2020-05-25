@@ -18,7 +18,7 @@ function menuBody(ctx: Context): Body {
 export const menu = new MenuTemplate<Context>(menuBody)
 
 menu.select('b', CONSTRUCTIONS, {
-  multiselect: true,
+  showFalseEmoji: true,
   columns: 2,
   buttonText: (ctx, key) => getBuildingText(ctx, key as ConstructionName),
   set: (ctx, key) => {

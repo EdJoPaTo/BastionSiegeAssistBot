@@ -70,9 +70,9 @@ function utcButtonText(ctx: Context): string {
 }
 
 menu.interact(utcButtonText, 'utc', {
-  do: async (ctx, next) => {
+  do: async ctx => {
     delete ctx.session.timeZone
-    return next()
+    return '.'
   }
 })
 
