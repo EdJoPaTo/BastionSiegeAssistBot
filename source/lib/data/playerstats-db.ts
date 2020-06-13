@@ -9,8 +9,8 @@ import {filterMaxDays} from '../math/unix-timestamp'
 import * as battlereports from './ingame/battlereports'
 
 interface PlayerReportEntry {
-  withReports: number;
-  stats: PlayerStats;
+  readonly withReports: number;
+  readonly stats: PlayerStats;
 }
 
 const playerStats: Record<string, PlayerReportEntry> = {}

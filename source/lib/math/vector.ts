@@ -1,6 +1,6 @@
 export interface Vector {
-  x: number;
-  y: number;
+  readonly x: number;
+  readonly y: number;
 }
 
 export function average(vectorArr: readonly Vector[]): Vector {

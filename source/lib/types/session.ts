@@ -3,10 +3,10 @@ import {ConstructionName, Buildings, DomainStats, Effect, Player, Resources, Wor
 import {BattlestatsSettings} from './battlestats-settings'
 
 export type BuildingView = 'upgrades' | 'history' | 'fillStorage' | 'income' | 'winChances'
-export const BUILDING_VIEWS: BuildingView[] = ['upgrades', 'history', 'fillStorage', 'income', 'winChances']
+export const BUILDING_VIEWS: readonly BuildingView[] = ['upgrades', 'history', 'fillStorage', 'income', 'winChances']
 
 export type Alert = 'buildingUpgrade' | 'effect' | 'nextBattle' | 'resourceWarning'
-export const ALERTS: Alert[] = ['buildingUpgrade', 'effect', 'nextBattle', 'resourceWarning']
+export const ALERTS: readonly Alert[] = ['buildingUpgrade', 'effect', 'nextBattle', 'resourceWarning']
 
 export interface GameInformation {
   battleAllianceTimestamp?: number;

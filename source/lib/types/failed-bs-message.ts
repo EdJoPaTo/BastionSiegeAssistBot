@@ -1,7 +1,7 @@
 export interface FailedBSMessage {
-  from: {
-    id: number;
+  readonly from: {
+    readonly id: number;
   };
-  text: string;
-  forward_date: number;
+  readonly text: string;
+  readonly forward_date: number;
 }

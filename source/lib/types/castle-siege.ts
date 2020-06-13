@@ -3,19 +3,19 @@ import {Castle} from 'bastion-siege-logic'
 type UnixTimestamp = number
 
 export interface CastleInfo {
-  keeperAlliance?: string;
-  nextSiege?: UnixTimestamp;
+  readonly keeperAlliance?: string;
+  readonly nextSiege?: UnixTimestamp;
 }
 
 export interface CastleSiegeEntry {
-  castle: Castle;
-  alliance: string;
-  player?: string;
-  timestamp: UnixTimestamp;
+  readonly castle: Castle;
+  readonly alliance: string;
+  readonly player?: string;
+  readonly timestamp: UnixTimestamp;
 }
 
 export interface CastleSiegePlayerEntry extends CastleSiegeEntry {
-  player: string;
+  readonly player: string;
 }
 
 export interface CastleSiegeInlineMessage {

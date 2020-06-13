@@ -25,11 +25,11 @@ import {
 } from './buildings'
 
 interface EventEntry {
-  type: Alert;
-  timestamp: number;
-  text: string;
-  alertHeadsUpTime?: number;
-  alertMessage?: string;
+  readonly type: Alert;
+  readonly timestamp: number;
+  readonly text: string;
+  readonly alertHeadsUpTime?: number;
+  readonly alertMessage?: string;
   timeoutId?: NodeJS.Timeout;
 }
 

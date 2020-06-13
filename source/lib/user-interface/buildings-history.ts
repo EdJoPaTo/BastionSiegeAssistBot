@@ -36,8 +36,8 @@ export async function buildingsHistoryGraphFromContext(ctx: any): Promise<Buffer
 }
 
 interface Data {
-  timestamp: number;
-  data: Record<string, number>;
+  readonly timestamp: number;
+  readonly data: Readonly<Record<string, number>>;
 }
 
 function createHistorySeriesFromData(ctx: any, minTimestamp: number, allData: Data[]): Series[] {

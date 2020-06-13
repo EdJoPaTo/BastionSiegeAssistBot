@@ -3,7 +3,7 @@ export interface InlineListParticipantAdd {
 }
 
 export interface InlineListParticipant extends InlineListParticipantAdd {
-  lastUpdate: number;
+  readonly lastUpdate: number;
 }
 
 export interface InlineList {

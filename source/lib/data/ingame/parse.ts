@@ -9,8 +9,8 @@ import * as battlereports from './battlereports'
 import * as messages from './messages'
 
 export interface AnalysedGamescreen {
-  screen: Gamescreen;
-  isNewBattlereport?: boolean;
+  readonly screen: Gamescreen;
+  readonly isNewBattlereport?: boolean;
 }
 
 export async function parseAndSave(providingTgUser: number, time: number, text: string): Promise<AnalysedGamescreen> {

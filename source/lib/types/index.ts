@@ -16,6 +16,6 @@ export * from './session'
 export * from './war'
 
 export interface Context extends TelegrafContext {
-  i18n: I18n;
-  session: Session;
+  readonly i18n: I18n;
+  readonly session: Session;
 }

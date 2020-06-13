@@ -15,9 +15,9 @@ import {createAverageMaxString, createSimpleDataString} from './number-array-str
 import {formatNumberShort, formatTimeFrame, formatBattleHoursAgo} from './format-number'
 
 interface MultipleStatsConclusion {
-  alliance: string;
-  army: SumAverageAmount;
-  armyString: string;
+  readonly alliance: string;
+  readonly army: SumAverageAmount;
+  readonly armyString: string;
 }
 
 export function createPlayerShareButton(infos: Player): SwitchToChatButton {
@@ -285,9 +285,12 @@ export function createMultipleStatsConclusion(statsArr: readonly PlayerStats[], 
 
       return o.army
     })
-  const army = getSumAverageAmount(armyArr)
-  army.amount = armyArr.length
-  army.sum = army.amount * army.avg
+  const armyRaw = getSumAverageAmount(armyArr)
+  const army = {
+    ...armyRaw,
+    amount: armyArr.length,
+    sum: armyArr.length * armyRaw.avg
+  }
 
   const statsString = createSimpleDataString(army, emoji.army, ['avg', 'sum'], true)
   const armyString = `${alliance} ${army.amount}x ${statsString}`

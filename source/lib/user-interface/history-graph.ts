@@ -7,20 +7,20 @@ const D3Node = require('d3-node')
 const COLORS = ['#e41a1c', '#377eb8', '#4daf4a', '#984ea3', '#ff7f00', '#a65628', '#f781bf', '#999999']
 
 export interface Options {
-  height: number;
-  width: number;
-  unit: string;
-  labelNumberFormatter: (number: number) => string;
+  readonly height: number;
+  readonly width: number;
+  readonly unit: string;
+  readonly labelNumberFormatter: (number: number) => string;
 }
 
 export interface Point {
-  timestamp: number;
-  value: number;
+  readonly timestamp: number;
+  readonly value: number;
 }
 
 export interface Series {
-  labelText: string;
-  points: Point[];
+  readonly labelText: string;
+  readonly points: readonly Point[];
 }
 
 export async function createPngBuffer(minUnixTimestamp: number, options: Options, ...series: Series[]): Promise<Buffer> {

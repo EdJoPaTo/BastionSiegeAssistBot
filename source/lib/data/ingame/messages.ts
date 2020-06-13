@@ -1,9 +1,9 @@
 import {ManyFilesStore} from './many-files-store'
 
 export interface RawMessage {
-  providingTgUser: number;
-  text: string;
-  time: number;
+  readonly providingTgUser: number;
+  readonly text: string;
+  readonly time: number;
 }
 
 console.time('load messages')

@@ -27,7 +27,7 @@ import {
 import {emoji} from './output-text'
 import {formatNumberShort, formatTimeAmount} from './format-number'
 
-export const defaultBuildingsToShow: ConstructionName[] = ['townhall', 'storage', 'houses', 'mine', 'barracks', 'wall', 'trebuchet', 'ballista']
+export const defaultBuildingsToShow: readonly ConstructionName[] = ['townhall', 'storage', 'houses', 'mine', 'barracks', 'wall', 'trebuchet', 'ballista']
 
 export function getBuildingText(ctx: any, building: ConstructionName): string {
   return `${emoji[building]} ${ctx.i18n.t('bs.building.' + building)}`

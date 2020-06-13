@@ -1,6 +1,6 @@
 import {Attackscout} from 'bastion-siege-logic'
 
 export interface AttackscoutInMemory extends Attackscout {
-  providingTgUser: number;
-  time: number;
+  readonly providingTgUser: number;
+  readonly time: number;
 }

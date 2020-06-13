@@ -5,9 +5,9 @@ import * as vector from './vector'
 import {getStdDeviation} from './number-array'
 
 export interface AverageTimeOfDay {
-  seconds: number;
-  stdDeviation: number;
-  accuracy: number;
+  readonly seconds: number;
+  readonly stdDeviation: number;
+  readonly accuracy: number;
 }
 
 export const ONE_HOUR_IN_SECONDS = 60 * 60

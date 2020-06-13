@@ -18,9 +18,10 @@ export async function siegeEnded(castle: Castle, siegeEndedIngameTimestamp: numb
   const currentKeeperIsUnknown = !current.keeperAlliance && newKeeperAlliance && current.nextSiege === nextSiegeAvailableTimestamp
 
   if (currentIsOld || currentKeeperIsUnknown) {
-    current.keeperAlliance = newKeeperAlliance
-    current.nextSiege = nextSiegeAvailableTimestamp
-    await data.set(castle, current)
+    await data.set(castle, {
+      keeperAlliance: newKeeperAlliance,
+      nextSiege: nextSiegeAvailableTimestamp
+    })
   }
 }
 

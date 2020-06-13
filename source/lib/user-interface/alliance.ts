@@ -5,9 +5,9 @@ import {createPlayerMarkdownLink, createPlayerNameString} from './player-stats'
 import {PlayerStats} from '../types'
 
 export interface MissingAllianceMates {
-  alliance: string;
-  users: userSessions.SessionRaw[];
-  nonUsers: PlayerStats[];
+  readonly alliance: string;
+  readonly users: readonly userSessions.SessionRaw[];
+  readonly nonUsers: readonly PlayerStats[];
 }
 
 export function getMissingAllianceMates(alliance: string, participants: string[]): MissingAllianceMates {

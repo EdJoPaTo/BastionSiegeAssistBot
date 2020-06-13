@@ -2,7 +2,7 @@ import {BattlereportResource} from 'bastion-siege-logic'
 
 export type BattlestatsView = 'solo' | 'allianceMates' | 'allianceSolo' | 'allianceAttacks'
 
-export const BATTLESTATS_VIEW: BattlestatsView[] = ['solo', 'allianceMates', 'allianceSolo', 'allianceAttacks']
+export const BATTLESTATS_VIEW: readonly BattlestatsView[] = ['solo', 'allianceMates', 'allianceSolo', 'allianceAttacks']
 
 export interface BattlestatsSettings {
   timeframe?: string;

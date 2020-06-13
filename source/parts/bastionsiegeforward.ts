@@ -36,7 +36,7 @@ bot.on('text', Composer.optional(isForwardedFromBastionSiege, async (ctx, next) 
   await next?.()
 }))
 
-const WANTED_DATA: (keyof PlayerHistory)[] = [
+const WANTED_DATA: ReadonlyArray<keyof PlayerHistory> = [
   'buildings',
   'domainStats',
   'effects',

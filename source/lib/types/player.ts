@@ -1,4 +1,4 @@
 export interface Player {
-  player: string;
-  alliance?: string;
+  readonly player: string;
+  readonly alliance?: string;
 }

@@ -3,24 +3,24 @@ import {BattleAlliance} from 'bastion-siege-logic'
 type UnixTimestamp = number
 
 export interface WarInlineMessage {
-  inlineMessageId: string;
-  player: {
-    alliance: string;
-    name: string;
+  readonly inlineMessageId: string;
+  readonly player: {
+    readonly alliance: string;
+    readonly name: string;
   };
 }
 
 export interface WarNotificationMessage {
-  timestamp: UnixTimestamp;
-  player: string;
-  chatId: number;
-  messageId: number;
+  readonly timestamp: UnixTimestamp;
+  readonly player: string;
+  readonly chatId: number;
+  readonly messageId: number;
 }
 
 export interface War {
   battle: BattleAlliance;
   beginTimestamp: UnixTimestamp;
   timestamp: UnixTimestamp;
-  inlineMessages: WarInlineMessage[];
-  notificationMessages: WarNotificationMessage[];
+  readonly inlineMessages: WarInlineMessage[];
+  readonly notificationMessages: WarNotificationMessage[];
 }

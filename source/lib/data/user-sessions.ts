@@ -11,8 +11,8 @@ import {sortBy} from '../javascript-abstraction/array'
 import {MAX_PLAYER_AGE_DAYS} from './poweruser'
 
 export interface SessionRaw {
-  user: number;
-  data: Session;
+  readonly user: number;
+  readonly data: Session;
 }
 
 const localSession = new LocalSession({

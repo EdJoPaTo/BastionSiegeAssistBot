@@ -1,14 +1,14 @@
 export interface SumAverageAmount {
-  amount: number;
-  avg: number;
-  min: number;
-  max: number;
-  sum: number;
+  readonly amount: number;
+  readonly avg: number;
+  readonly min: number;
+  readonly max: number;
+  readonly sum: number;
 }
 
 export interface GroupedSumAverageAmount {
-  all: SumAverageAmount;
-  grouped: Record<string, SumAverageAmount>;
+  readonly all: SumAverageAmount;
+  readonly grouped: Readonly<Record<string, SumAverageAmount>>;
 }
 
 export function getStdDeviation(numbers: readonly number[], average: number, distanceFunc = (base: number, other: number) => other - base): number {

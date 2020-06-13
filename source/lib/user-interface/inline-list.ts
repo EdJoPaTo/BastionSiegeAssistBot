@@ -20,14 +20,14 @@ import {formatNumberShort, formatTimeAmount} from './format-number'
 const ATTACK_SCOUT_MAX_AGE = 60 * 15 // 15 min
 
 interface EntryInformation {
-  id: number;
-  player: string;
-  alliance?: string;
-  isPoweruser: boolean;
-  lastUpdate: number;
-  nextAllianceAttack: number;
-  barracks?: number;
-  trebuchet?: number;
+  readonly id: number;
+  readonly player: string;
+  readonly alliance?: string;
+  readonly isPoweruser: boolean;
+  readonly lastUpdate: number;
+  readonly nextAllianceAttack: number;
+  readonly barracks?: number;
+  readonly trebuchet?: number;
 }
 
 export function createList(creatorId: number, listId: string, now: number): {text: string; keyboard: any} {
