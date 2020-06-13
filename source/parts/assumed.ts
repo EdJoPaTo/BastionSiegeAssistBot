@@ -44,7 +44,7 @@ bot.action('assumed', async ctx => {
 
     await ctx.editMessageText(newStats, updateMarkup)
     await ctx.answerCbQuery('updated!')
-  } catch (_) {
+  } catch {
     await ctx.answerCbQuery('please provide new game screens')
   }
 })
@@ -64,7 +64,7 @@ function generateText(information: GameInformation): string {
     ...estimatedResources,
     ...information.domainStats!
   }
-  const keys = Object.keys(combined) as (ResourceName | keyof DomainStats)[]
+  const keys = Object.keys(combined) as Array<ResourceName | keyof DomainStats>
   text += keys.map(key => {
     const value = combined[key]
     const short = formatNumberShort(value, true)

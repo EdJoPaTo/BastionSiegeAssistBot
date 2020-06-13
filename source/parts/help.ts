@@ -17,7 +17,7 @@ bot.command(['start', 'help'], async (ctx: any) => {
 
 bot.command(['search', 'army'], async (ctx: any) => {
   ctx.match = /\S+ (.+)/.exec(ctx.message!.text!) || undefined
-  const argument = ctx.match && ctx.match[1]
+  const argument = ctx.match?.[1]
 
   const text = ctx.i18n.t('help.search', {name: argument || 'Dragon'})
   const keyboard = Markup.inlineKeyboard([

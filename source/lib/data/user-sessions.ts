@@ -1,5 +1,6 @@
 import {Context as TelegrafContext} from 'telegraf'
 import arrayReduceGroupBy from 'array-reduce-group-by'
+import LocalSession from 'telegraf-session-local'
 
 import {DAY_IN_SECONDS} from '../math/timeframe'
 
@@ -8,9 +9,6 @@ import {Session} from '../types'
 import {sortBy} from '../javascript-abstraction/array'
 
 import {MAX_PLAYER_AGE_DAYS} from './poweruser'
-
-/* eslint @typescript-eslint/no-var-requires: warn */
-const LocalSession = require('telegraf-session-local')
 
 export interface SessionRaw {
   user: number;
@@ -29,7 +27,7 @@ const localSession = new LocalSession({
 })
 
 export function getRaw(): readonly SessionRaw[] {
-  return localSession.DB
+  return (localSession.DB as any)
     .get('sessions').value()
     .map(({id, data}: {id: string; data: any}) => {
       const user = Number(id.split(':')[0])
@@ -41,11 +39,9 @@ export function getRawNameTrusted(): SessionRaw[] {
   const minPlayerTimestamp = (Date.now() / 1000) - (MAX_PLAYER_AGE_DAYS * DAY_IN_SECONDS)
   return getRaw()
     .filter(o =>
-      o.data.gameInformation &&
-      o.data.gameInformation.playerTimestamp &&
+      o.data.gameInformation?.playerTimestamp &&
       o.data.gameInformation.playerTimestamp > minPlayerTimestamp &&
-      o.data.gameInformation.player &&
-      o.data.gameInformation.player.name
+      o.data.gameInformation.player?.name
     )
 }
 
@@ -63,7 +59,7 @@ export function getUser(userId: number): Session {
     gameInformation: {}
   }
 
-  return localSession.DB
+  return (localSession.DB as any)
     .get('sessions')
     .getById(`${userId}:${userId}`)
     .get('data')

@@ -10,7 +10,7 @@ export function createAverageSumString(data: SumAverageAmount, name: string, uni
   return createArrayDataString({data, name, unit}, ['avg', 'sum'], isInteger)
 }
 
-export function createArrayDataString({data, name, unit}: {data: SumAverageAmount; name: string; unit: string}, selection: readonly (keyof SumAverageAmount)[], isInteger = false): string {
+export function createArrayDataString({data, name, unit}: {data: SumAverageAmount; name: string; unit: string}, selection: ReadonlyArray<keyof SumAverageAmount>, isInteger = false): string {
   let line = name
   line += ` (${formatNumberShort(data.amount, true)})`
 
@@ -24,7 +24,7 @@ export function createArrayDataString({data, name, unit}: {data: SumAverageAmoun
   return line
 }
 
-export function createSimpleDataString(data: SumAverageAmount, unit: string, selection: readonly (keyof SumAverageAmount)[], isInteger: boolean): string {
+export function createSimpleDataString(data: SumAverageAmount, unit: string, selection: ReadonlyArray<keyof SumAverageAmount>, isInteger: boolean): string {
   if (data.amount === 0) {
     return 'NaN' + unit
   }

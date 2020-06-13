@@ -19,7 +19,7 @@ export interface PlayerStats extends PlayerStatsLoot, PlayerStatsActivity {
   player: string;
   playerNameLookingLike: string;
   alliance?: string;
-  allAlliances: (string | undefined)[];
+  allAlliances: ReadonlyArray<string | undefined>;
   battlesObserved: number;
   battlesObservedNearPast: number;
   lastBattleTime: number;

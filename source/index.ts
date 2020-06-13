@@ -48,11 +48,6 @@ bot.use(async (ctx, next) => {
       return
     }
 
-    if (error.message.includes('RESULT_ID_INVALID')) {
-      console.warn('ERROR', error.message)
-      return
-    }
-
     console.error('try to send error to user', ctx.update, error, error?.on?.payload)
     let text = '🔥 Something went wrong here!'
     text += '\n'
@@ -107,7 +102,7 @@ bot.use(async (ctx, next) => {
 
     keysWithValueNull
       .forEach(o => {
-        /* eslint @typescript-eslint/no-dynamic-delete: off */
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
         delete session.gameInformation[o]
       })
   }
@@ -167,5 +162,4 @@ async function startup(): Promise<void> {
   console.log(new Date(), 'Bot started as', bot.options.username)
 }
 
-/* eslint @typescript-eslint/no-floating-promises: off */
-startup()
+void startup()

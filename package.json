@@ -22,7 +22,7 @@
     "test": "tsc && xo && nyc ava"
   },
   "dependencies": {
-    "@edjopato/datastore": "^0.2.0",
+    "@edjopato/datastore": "^0.3.0",
     "angle-distance": "^1.0.0",
     "array-filter-unique": "^2.1.0",
     "array-reduce-group-by": "^1.0.0",
@@ -38,9 +38,9 @@
     "sharp": "^0.25.1",
     "telegraf": "^3.38.0",
     "telegraf-i18n": "^6.5.0",
-    "telegraf-inline-menu": "^5.0.0-beta.4",
+    "telegraf-inline-menu": "5.0.0-beta.8",
     "telegraf-middleware-console-time": "^1.0.1",
-    "telegraf-session-local": "^1.0.2",
+    "telegraf-session-local": "^1.0.3",
     "telegram-format": "^2.0.0",
     "timezone-support": "^2.0.2"
   },
@@ -55,8 +55,8 @@
     "del-cli": "^3.0.0",
     "nyc": "^15.0.0",
     "ts-node": "^8.3.0",
-    "typescript": "~3.8.3",
-    "xo": "^0.30.0"
+    "typescript": "^3.9.5",
+    "xo": "^0.32.0"
   },
   "nyc": {
     "extension": [
@@ -79,26 +79,13 @@
     "semicolon": false,
     "rules": {
       "ava/no-ignored-test-files": "off",
-      "prefer-named-capture-group": "off",
       "unicorn/no-fn-reference-in-iterator": "off",
+      "unicorn/no-reduce": "off",
       "unicorn/prevent-abbreviations": "off",
-      "@typescript-eslint/array-type": "off",
+      "@typescript-eslint/no-invalid-void-type": "off",
+      "@typescript-eslint/no-var-requires": "warn",
       "@typescript-eslint/prefer-nullish-coalescing": "off",
-      "@typescript-eslint/prefer-readonly-parameter-types": "off",
       "@typescript-eslint/restrict-template-expressions": "off"
-    },
-    "overrides": [
-      {
-        "files": [
-          "source/lib/types/failed-bs-message.*",
-          "source/lib/types/session.*",
-          "source/parts/inline-query.*"
-        ],
-        "rules": {
-          "@typescript-eslint/camelcase": "off",
-          "camelcase": "off"
-        }
-      }
-    ]
+    }
   }
 }

@@ -175,7 +175,7 @@ function getTestFunctionForQuery(query: string): (o: string) => boolean {
   try {
     const regex = new RegExp(query, 'i')
     return o => regex.test(o)
-  } catch (_) {
+  } catch {
     return o => o.includes(query)
   }
 }

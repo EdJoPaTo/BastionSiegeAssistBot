@@ -14,10 +14,10 @@ export async function tryRemoveFailed(): Promise<void> {
   for (const o of allFailed) {
     try {
       const {providingTgUser, text, time} = o
-      /* eslint no-await-in-loop: warn */
+      // eslint-disable-next-line no-await-in-loop
       await parseAndSave(providingTgUser, time, text)
       failed.remove(o)
-    } catch (_) {}
+    } catch {}
   }
 
   console.timeLog('tryRemoveFailed', failed.values().length, 'still failing')

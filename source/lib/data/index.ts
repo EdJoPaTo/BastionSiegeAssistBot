@@ -67,7 +67,7 @@ function initAttackscouts(): void {
         providingTgUser,
         time
       })
-    } catch (_) {
+    } catch {
       console.warn('failed to parse existing attackscout!', providingTgUser, time, new Date(time * 1000))
     }
   }
@@ -87,7 +87,7 @@ function initBattlereports(): void {
         providingTgUser,
         time
       })
-    } catch (_) {
+    } catch {
       console.warn('failed to parse existing battlereport!', providingTgUser, time, new Date(time * 1000))
     }
   }

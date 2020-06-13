@@ -1,5 +1,3 @@
-/* eslint @typescript-eslint/no-dynamic-delete: warn */
-
 import {KeyValueInMemoryFile} from '@edjopato/datastore'
 
 import {InlineList, InlineListParticipantAdd} from '../types'
@@ -21,6 +19,7 @@ export function getList(creatorId: number, listId: string, now: number): InlineL
 
   for (const key of Object.keys(participants).map(o => Number(o))) {
     if (participants[key].lastUpdate < minParticipantTimestamp) {
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete participants[key]
     }
   }
@@ -57,6 +56,7 @@ export async function leave(creatorId: number, listId: string, timestamp: number
 
   const leavingIds = Array.isArray(leaverId) ? leaverId : [leaverId]
   for (const id of leavingIds) {
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
     delete list.participants[id]
   }
 

@@ -8,8 +8,6 @@ import {backButtons} from '../../lib/user-interface/menu'
 import {emoji} from '../../lib/user-interface/output-text'
 import {getSupportGroupLink} from '../../lib/user-interface/support-group'
 
-/* eslint @typescript-eslint/no-var-requires: warn */
-/* eslint @typescript-eslint/no-require-imports: warn */
 const localeEmoji = require('locale-emoji')
 
 const i18n = new I18n({

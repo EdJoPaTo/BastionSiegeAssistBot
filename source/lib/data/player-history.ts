@@ -22,7 +22,7 @@ export async function add(userId: number, type: keyof PlayerHistory, unixTimesta
   }
 
   const checkForKnown = [
-    ...(current[type] as PlayerHistoryEntry<unknown>[])
+    ...(current[type] as Array<PlayerHistoryEntry<unknown>>)
       .slice(-2)
       .map((o: PlayerHistoryEntry<unknown>) => o.data),
     data
@@ -80,7 +80,7 @@ export function getLatest(userId: number): PlayerHistoryLatest {
   }
 }
 
-function getAsUnknown(playerHistory: PlayerHistory, type: keyof PlayerHistory): PlayerHistoryEntry<unknown>[] {
+function getAsUnknown(playerHistory: PlayerHistory, type: keyof PlayerHistory): Array<PlayerHistoryEntry<unknown>> {
   return playerHistory[type]
 }
 
@@ -90,7 +90,7 @@ export function getAllTimestamps<Key extends keyof PlayerHistory>(userId: number
 
 export function getLastTimeActive(userId: number): number {
   const data = get(userId)
-  const keys = Object.keys(data) as (keyof PlayerHistory)[]
+  const keys = Object.keys(data) as Array<keyof PlayerHistory>
   const lastTimestamps = keys
     .flatMap(o => getAsUnknown(data, o).slice(-1))
     .map(o => o.timestamp)

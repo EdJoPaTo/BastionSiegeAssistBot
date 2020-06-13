@@ -24,8 +24,7 @@ export class ContextAwareDebounce<Context, DebouncedFunction extends (...args: a
    * Call but do not await the return value. Can result in an unhandled rejection. Make sure to try catch in your debounced function!
    */
   callFloating(context: Context, ...args: Parameters<DebouncedFunction>): void {
-    // Eslint does not find this but this method is basically only there to hite from this rule
-    /* eslint @typescript-eslint/no-floating-promises: off */
+    // eslint doesnt find this but it should be disabled: @typescript-eslint/no-floating-promises
     this.call(context, ...args)
   }
 }

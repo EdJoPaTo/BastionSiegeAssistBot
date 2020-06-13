@@ -1,6 +1,5 @@
 import {EMOJI} from 'bastion-siege-logic'
 
-/* eslint @typescript-eslint/no-var-requires: warn */
 const moonmoji = require('moonmoji')
 
 export const emoji: Record<string, string> = {...EMOJI,

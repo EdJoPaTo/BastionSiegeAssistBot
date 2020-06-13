@@ -1,10 +1,6 @@
-/* eslint unicorn/no-for-loop: off */
-
 import * as d3 from 'd3'
 import sharp from 'sharp'
 
-/* eslint @typescript-eslint/no-var-requires: warn */
-/* eslint @typescript-eslint/no-require-imports: warn */
 const D3Node = require('d3-node')
 
 // https://projects.susielu.com/viz-palette
@@ -63,8 +59,8 @@ export function createSvgString(minUnixTimestamp: number, options: Options, ...s
   const legend = svg.append('g')
     .attr('font-family', 'sans-serif')
     .attr('font-size', 15)
-  for (let i = 0; i < series.length; i++) {
-    const lastValue = series[i].points.slice(-1)[0].value
+  for (const [i, element] of series.entries()) {
+    const lastValue = element.points.slice(-1)[0].value
 
     const color = COLORS[i % COLORS.length]
     const yVal = y(lastValue)
@@ -82,7 +78,7 @@ export function createSvgString(minUnixTimestamp: number, options: Options, ...s
         .attr('x', width - margin.right + 70)
         .attr('y', yVal)
         .attr('text-anchor', 'begin')
-        .text(series[i].labelText)
+        .text(element.labelText)
       )
   }
 
@@ -129,9 +125,7 @@ export function createSvgString(minUnixTimestamp: number, options: Options, ...s
     .call((g: any) => g.select('.domain').remove())
 
   // Series
-  for (let i = 0; i < series.length; i++) {
-    const {points} = series[i]
-
+  for (const [i, {points}] of series.entries()) {
     svg.append('path')
       .datum(points)
       .attr('fill', 'none')
