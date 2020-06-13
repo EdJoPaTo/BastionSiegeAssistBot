@@ -16,17 +16,7 @@ export function generate(allBattlereports: readonly Battlereport[], playername: 
     // Only one of the multiple alliance attack reports should be considered
     .filter(arrayFilterUnique(o => o.time))
 
-  const allAlliances = allWithTarget
-    .map(o => o.enemyAlliance)
-    /* eslint-disable @typescript-eslint/indent */
-    .reduce<Array<string | undefined>>((sum, a) => {
-      if (sum.length === 0 || sum[sum.length - 1] !== a) {
-        sum.push(a)
-      }
-
-      return sum
-    }, [])
-    /* eslint-enable */
+  const allAlliances = getAllAlliances(allWithTarget)
 
   const alliance = allAlliances.slice(-1)[0]
 
@@ -59,6 +49,18 @@ export function generate(allBattlereports: readonly Battlereport[], playername: 
     army: assumeArmy(soloReports),
     terra: assumeTerra(soloReports)
   }
+}
+
+function getAllAlliances(battlereports: readonly Battlereport[]): Array<string | undefined> {
+  const alliances = battlereports.map(o => o.enemyAlliance)
+  const result: Array<string | undefined> = []
+  for (const alliance of alliances) {
+    if (result.length === 0 || result[result.length - 1] !== alliance) {
+      result.push(alliance)
+    }
+  }
+
+  return result
 }
 
 function generateActivity(allReports: readonly Battlereport[], playername: string): PlayerStatsActivity {
