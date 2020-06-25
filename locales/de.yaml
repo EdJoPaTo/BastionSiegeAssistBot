@@ -57,6 +57,7 @@ battle:
   alliance: Allianz Kampf
   over: Der Kampf ist lange vorrüber… Schick mir stattdessen den Bericht. 😉
   scoutsGone: Deine Scouts sind schon lange weg. Wenn du das nächste Mal wieder dort umher wanderst, helfe ich dir gern. 😊
+  allianceNotified: alle benachrichtigt 😎
   inlineWar:
     updateButton: Starte Aktualisierungen 🤓
     updated: Kriegsdaten aktualisiert!

@@ -116,9 +116,9 @@ bot.action('war-notify-alliance', async ctx => {
   }
 
   const lastSentMessageTimestamp = Math.max(...currentWar.notificationMessages.map(o => o.timestamp))
-  if (lastSentMessageTimestamp + 60 > now) {
-    // Already sent a notification within 60 seconds.
-    await ctx.answerCbQuery('Dont spam your alliance mates!')
+  if (lastSentMessageTimestamp + 40 > now) {
+    // Already sent a notification within 40 seconds.
+    await ctx.answerCbQuery(ctx.i18n.t('battle.allianceNotified'))
     return
   }
 
@@ -133,7 +133,7 @@ bot.action('war-notify-alliance', async ctx => {
     .filter((o): o is WarNotificationMessage => Boolean(o))
 
   await wars.addNotificationMessages(now, {name: player.name, alliance: player.alliance}, ...allNotifications)
-  await ctx.answerCbQuery('all notified 😎')
+  await ctx.answerCbQuery(ctx.i18n.t('battle.allianceNotified'))
 })
 
 async function notifyPlayer(telegram: Telegram, playerName: string, playerId: number, war: War): Promise<WarNotificationMessage | undefined> {

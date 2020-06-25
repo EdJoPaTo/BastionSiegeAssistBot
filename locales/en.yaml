@@ -57,6 +57,7 @@ battle:
   alliance: Alliance Battles
   over: This battle is long over… Send me the report instead. 😉
   scoutsGone: Your scouts havn't been there for a long time. I'll help you when you wander around there next time. 😊
+  allianceNotified: all notified 😎
   inlineWar:
     updateButton: Start Updating 🤓
     updated: War information updated!
