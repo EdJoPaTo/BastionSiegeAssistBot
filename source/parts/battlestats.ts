@@ -56,6 +56,7 @@ menu.select('view', viewOptions, {
     }
 
     ctx.session.battlestats.view = key as BattlestatsView
+    return true
   },
   buttonText: (ctx, key) => {
     switch (key) {
@@ -92,6 +93,7 @@ menu.select('rewardType', {gold: emoji.gold, terra: emoji.terra, karma: emoji.ka
     }
 
     ctx.session.battlestats.type = key as BattlereportResource
+    return true
   }
 })
 
@@ -124,12 +126,13 @@ function getCurrentTimeframe(ctx: Context): string {
   return '24h'
 }
 
-function setCurrentTimeframe(ctx: Context, newValue: string): void {
+function setCurrentTimeframe(ctx: Context, newValue: string): true {
   if (!ctx.session.battlestats) {
     ctx.session.battlestats = {}
   }
 
   ctx.session.battlestats.timeframe = newValue
+  return true
 }
 
 function getFirstTimeRelevantForTimeframe(timeframe: string, now = Date.now() / 1000): number {

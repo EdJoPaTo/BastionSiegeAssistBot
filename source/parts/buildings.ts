@@ -56,6 +56,7 @@ menu.select('t', ['1 min', '15 min', '30 min', '1h', '6h', '12h', '1d', '2d', '7
   columns: 5,
   set: (ctx, key) => {
     ctx.session.buildingsTimeframe = key
+    return true
   },
   isSet: (ctx, key) => key === (ctx.session.buildingsTimeframe || '1 min'),
   hide: ctx => (ctx.session.buildingsView || DEFAULT_VIEW) !== 'income'
@@ -66,6 +67,7 @@ menu.select('historyT', ['7d', '14d', '28d', '90d'], {
   isSet: (ctx, key) => key === (ctx.session.buildingsHistoryTimeframe || DEFAULT_HISTORY_TIMEFRAME),
   set: (ctx, key) => {
     ctx.session.buildingsHistoryTimeframe = key
+    return true
   }
 })
 
@@ -76,6 +78,7 @@ menu.select('view', BUILDING_VIEWS, {
   isSet: (ctx, key) => (ctx.session.buildingsView || DEFAULT_VIEW) === key,
   set: (ctx, key) => {
     ctx.session.buildingsView = key as BuildingView
+    return true
   }
 })
 

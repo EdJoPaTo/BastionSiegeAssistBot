@@ -66,6 +66,8 @@ menu.toggle(buttonText(emoji.immunity, 'poweruser.immunity'), 'immunity', {
     } else {
       ctx.session.disableImmunity = true
     }
+
+    return true
   },
   isSet: ctx => {
     return !ctx.session.disableImmunity

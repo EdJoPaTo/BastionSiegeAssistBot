@@ -26,7 +26,10 @@ export const menu = new MenuTemplate<Context>(menuBody)
 menu.select('lang', i18n.availableLocales(), {
   columns: 2,
   isSet: (ctx, key) => key.toLowerCase().startsWith(ctx.i18n.locale().toLowerCase()),
-  set: (ctx, key) => ctx.i18n.locale(key),
+  set: (ctx, key) => {
+    ctx.i18n.locale(key)
+    return true
+  },
   buttonText: (_ctx, key) => {
     let result = ''
     result += localeEmoji(key)
@@ -69,6 +72,8 @@ menu.interact(ctx => ctx.i18n.t('language.translateButton'), 'translate', {
         .join('\n')
       await ctx.replyWithMarkdown(`Missing \`${ctx.i18n.locale()}\` translations:\n${missingTranslationsText}`)
     }
+
+    return false
   }
 })
 

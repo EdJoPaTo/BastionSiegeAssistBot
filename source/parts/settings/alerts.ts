@@ -23,6 +23,7 @@ menu.select('type', ALERTS, {
   formatState: (_, textResult, state) => `${state ? emoji.alertEnabled : emoji.alertDisabled} ${textResult}`,
   set: (ctx, key) => {
     ctx.session.alerts = toggleInArray(ctx.session.alerts ?? [], key as Alert, (a, b) => a.localeCompare(b))
+    return true
   },
   isSet: (ctx, key) => (ctx.session.alerts ?? []).includes(key as Alert)
 })

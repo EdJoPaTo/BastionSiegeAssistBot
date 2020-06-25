@@ -89,6 +89,7 @@ specificMenu.select('s', tzInPrefix, {
   isSet: (ctx, key) => ctx.session.timeZone === createTz(ctx.match, key),
   set: (ctx, key) => {
     ctx.session.timeZone = createTz(ctx.match, key)
+    return true
   },
   getCurrentPage: ctx => ctx.session.page,
   setPage: (ctx, page) => {

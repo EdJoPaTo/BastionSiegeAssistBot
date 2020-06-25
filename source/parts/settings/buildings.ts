@@ -23,6 +23,7 @@ menu.select('b', CONSTRUCTIONS, {
   buttonText: (ctx, key) => getBuildingText(ctx, key as ConstructionName),
   set: (ctx, key) => {
     ctx.session.buildings = toggleInArray(ctx.session.buildings || defaultBuildingsToShow, key as ConstructionName, (a, b) => a.localeCompare(b))
+    return true
   },
   isSet: (ctx, key) => (ctx.session.buildings || defaultBuildingsToShow).includes(key as ConstructionName)
 })
