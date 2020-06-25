@@ -1,4 +1,4 @@
-import {Session} from '../types'
+import {Context} from '../types'
 
 import {arrayFilterUniqueInBetween} from '../javascript-abstraction/array'
 
@@ -10,18 +10,17 @@ import {createPngBuffer, Options, Series} from './history-graph'
 
 export const DEFAULT_HISTORY_TIMEFRAME = '28d'
 
-export async function buildingsHistoryGraphFromContext(ctx: any): Promise<Buffer> {
-  const session = ctx.session as Session
-  const timeframe = session.buildingsHistoryTimeframe || DEFAULT_HISTORY_TIMEFRAME
+export async function buildingsHistoryGraphFromContext(ctx: Context): Promise<Buffer> {
+  const timeframe = ctx.session.buildingsHistoryTimeframe || DEFAULT_HISTORY_TIMEFRAME
   const timeframeInSeconds = calculateSecondsFromTimeframeString(timeframe)
   const minDate = Date.now() - (timeframeInSeconds * 1000)
   const minUnixTimestamp = minDate / 1000
 
   const buildingSeries = createHistorySeriesFromData(ctx, minUnixTimestamp,
-    playerHistory.getAllTimestamps(ctx.from.id, 'buildings') as any[]
+    playerHistory.getAllTimestamps(ctx.from!.id, 'buildings') as any[]
   )
   const workshopSeries = createHistorySeriesFromData(ctx, minUnixTimestamp,
-    playerHistory.getAllTimestamps(ctx.from.id, 'workshop') as any[]
+    playerHistory.getAllTimestamps(ctx.from!.id, 'workshop') as any[]
   )
 
   const options: Options = {
@@ -40,7 +39,7 @@ interface Data {
   readonly data: Readonly<Record<string, number>>;
 }
 
-function createHistorySeriesFromData(ctx: any, minTimestamp: number, allData: Data[]): Series[] {
+function createHistorySeriesFromData(ctx: Context, minTimestamp: number, allData: Data[]): Series[] {
   const data: Data[] = []
   for (let i = 0; i < allData.length; i++) {
     if (allData[i].timestamp > minTimestamp) {

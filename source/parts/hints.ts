@@ -1,6 +1,6 @@
 import {Composer} from 'telegraf'
 
-import {Session} from '../lib/types'
+import {Context} from '../lib/types'
 
 import * as poweruser from '../lib/data/poweruser'
 
@@ -10,13 +10,12 @@ import {getHintStrings} from '../lib/user-interface/poweruser'
 const POWERUSER_HINT_PREFIX = emoji.poweruser
 const HINTS_MAX_INTERVAL = 60 * 30 // 30 Minutes
 
-export const bot = new Composer()
+export const bot = new Composer<Context>()
 
 bot.on('text', async (ctx, next) => {
-  const session = (ctx as any).session as Session
   const now = Date.now() / 1000
-  if (session.lastHintTimestamp! + HINTS_MAX_INTERVAL > now) {
-    await next?.()
+  if (ctx.session.lastHintTimestamp! + HINTS_MAX_INTERVAL > now) {
+    await next()
     return
   }
 
@@ -30,9 +29,9 @@ bot.on('text', async (ctx, next) => {
     ...poweruserHints.map(o => POWERUSER_HINT_PREFIX + o)
   ]
   if (hints.length > 0) {
-    session.lastHintTimestamp = now
+    ctx.session.lastHintTimestamp = now
     await ctx.replyWithMarkdown(hints.join('\n\n'))
   }
 
-  await next?.()
+  await next()
 })

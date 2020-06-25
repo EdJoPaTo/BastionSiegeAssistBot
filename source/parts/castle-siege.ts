@@ -1,12 +1,12 @@
-import {CASTLES, CASTLE_HOLD_SECONDS, Gamescreen} from 'bastion-siege-logic'
-import {Composer, Context as TelegrafContext, Markup, Extra} from 'telegraf'
+import {CASTLES, CASTLE_HOLD_SECONDS} from 'bastion-siege-logic'
+import {Composer, Markup, Extra} from 'telegraf'
 import {SwitchToChatButton} from 'telegraf/typings/markup'
 
 import {ContextAwareDebounce} from '../lib/javascript-abstraction/context-aware-debounce'
 
 import {whenScreenContainsInformation, whenScreenIsOfType} from '../lib/input/gamescreen'
 
-import {Session} from '../lib/types'
+import {Context} from '../lib/types'
 
 import * as castleSiege from '../lib/data/castle-siege'
 import * as poweruser from '../lib/data/poweruser'
@@ -18,21 +18,21 @@ import {emoji} from '../lib/user-interface/output-text'
 
 const DEBOUNCE_TIME = 200 // Milliseconds
 
-export const bot = new Composer()
+export const bot = new Composer<Context>()
 
 bot.command('castle', async ctx => {
   const now = Date.now() / 1000
-  const {__language_code: lang, timeZone, gameInformation} = (ctx as any).session as Session
+  const {__language_code: lang, timeZone, gameInformation} = ctx.session
   const userIsPoweruser = poweruser.isPoweruser(ctx.from!.id)
 
   let text = ''
-  text += `*${(ctx as any).i18n.t('bs.siege')}*\n`
+  text += `*${ctx.i18n.t('bs.siege')}*\n`
   text += '\n'
 
   if (!userIsPoweruser) {
     text += emoji.poweruser
     text += ' '
-    text += (ctx as any).i18n.t('poweruser.usefulWhen')
+    text += ctx.i18n.t('poweruser.usefulWhen')
     text += '\n\n'
   }
 
@@ -57,7 +57,7 @@ bot.command('castle', async ctx => {
     buttons.push(Markup.switchToChatButton('Share Siege…', 'siege'))
   }
 
-  const extra = Extra.markup(Markup.inlineKeyboard(buttons as any))
+  const extra = Extra.markup(Markup.inlineKeyboard(buttons))
   return ctx.replyWithMarkdown(text, extra)
 })
 
@@ -70,17 +70,16 @@ bot.on('text', whenScreenIsOfType('castleSiegeYouJoined', notNewMiddleware('forw
 
 bot.on('text', whenScreenContainsInformation('castleSiegeEnds', notNewMiddleware('forward.old', CASTLE_HOLD_SECONDS / 60), castleInformationUpdatedMiddleware))
 
-const debounceUpdatedCastle = new ContextAwareDebounce<number, (ctx: TelegrafContext) => Promise<void>>(async (ctx: TelegrafContext) => {
+const debounceUpdatedCastle = new ContextAwareDebounce<number, (ctx: Context) => Promise<void>>(async (ctx: Context) => {
   const now = Date.now() / 1000
-  const screen = (ctx as any).state.screen as Gamescreen
-  const {castle, castleSiegePlayerJoined} = screen
+  const {castle, castleSiegePlayerJoined} = ctx.state!.screen
   if (castle) {
     await castleSiege.updateInlineMessages(castle, castleSiegePlayerJoined?.alliance, now)
   }
 
-  await ctx.reply((ctx as any).i18n.t('castle.updated'))
+  await ctx.reply(ctx.i18n.t('castle.updated'))
 }, DEBOUNCE_TIME)
 
-function castleInformationUpdatedMiddleware(ctx: TelegrafContext): void {
+function castleInformationUpdatedMiddleware(ctx: Context): void {
   debounceUpdatedCastle.callFloating(ctx.from!.id, ctx)
 }

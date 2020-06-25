@@ -1,10 +1,11 @@
 import {Composer, Extra, Markup, Telegram} from 'telegraf'
+import {ExtraEditMessage} from 'telegraf/typings/telegram-types'
 import stringify from 'json-stable-stringify'
 
 import {compareStrAsSimpleOne} from '../lib/javascript-abstraction/strings'
 import {sortBy} from '../lib/javascript-abstraction/array'
 
-import {Session} from '../lib/types'
+import {Context} from '../lib/types'
 
 import * as userSessions from '../lib/data/user-sessions'
 
@@ -12,7 +13,7 @@ import {emoji} from '../lib/user-interface/output-text'
 import {formatTimeAmount} from '../lib/user-interface/format-number'
 import {AlertHandler} from '../lib/user-interface/alert-handler'
 
-export const bot = new Composer()
+export const bot = new Composer<Context>()
 let alertHandler: AlertHandler
 
 export function start(telegram: Telegram): void {
@@ -26,14 +27,14 @@ export function start(telegram: Telegram): void {
   console.timeEnd('recreateAlerts')
 }
 
-bot.use(async (ctx: any, next) => {
+bot.use(async (ctx, next) => {
   const now = Date.now() / 1000
   const before = stringify(ctx.session)
-  await next?.()
+  await next()
   const after = stringify(ctx.session)
 
   if (before !== after) {
-    alertHandler.recreateAlerts(ctx.from.id, ctx.session, now)
+    alertHandler.recreateAlerts(ctx.from!.id, ctx.session, now)
   }
 })
 
@@ -47,7 +48,7 @@ bot.action('upcoming', async ctx => {
 
   const oldText = ctx.callbackQuery!.message!.text!
   if (compareStrAsSimpleOne(oldText, text) === 0) {
-    return ctx.answerCbQuery((ctx as any).i18n.t('menu.nothingchanged'))
+    return ctx.answerCbQuery(ctx.i18n.t('menu.nothingchanged'))
   }
 
   return Promise.all([
@@ -56,11 +57,10 @@ bot.action('upcoming', async ctx => {
   ])
 })
 
-function generateUpcomingText(ctx: any): {text: string; extra: any} {
-  const session = ctx.session as Session
-  const enabledAlerts = session.alerts ?? []
+function generateUpcomingText(ctx: Context): {text: string; extra: ExtraEditMessage} {
+  const enabledAlerts = ctx.session.alerts ?? []
   const now = Date.now() / 1000
-  const eventList = alertHandler.generateUpcomingEventsList(session, now)
+  const eventList = alertHandler.generateUpcomingEventsList(ctx.session, now)
     .filter(o => o.timestamp > now)
     .sort(sortBy(o => o.timestamp))
 

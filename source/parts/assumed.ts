@@ -1,27 +1,26 @@
-import {Composer, Extra, Markup, Context as TelegrafContext} from 'telegraf'
+import {Composer, Extra, Markup} from 'telegraf'
 import {estimateResourcesAfter, Constructions, ResourceName, DomainStats} from 'bastion-siege-logic'
 
 import {compareStrAsSimpleOne} from '../lib/javascript-abstraction/strings'
 
-import {Session, GameInformation} from '../lib/types'
+import {Context, GameInformation} from '../lib/types'
 
 import {emoji} from '../lib/user-interface/output-text'
 import {formatNumberShort, formatTimeAmount} from '../lib/user-interface/format-number'
 import {getSupportGroupLink} from '../lib/user-interface/support-group'
 
-export const bot = new Composer()
+export const bot = new Composer<Context>()
 const prefix = '*Currently Assumed Data*\nBattlereports and time influences what the bot expects from your game data.\nKnown issues: people in houses are not considered for gold income\n\n'
 
 const updateMarkup = Extra.markdown().markup(Markup.inlineKeyboard([
   Markup.callbackButton('estimate current situation', 'assumed'),
   Markup.urlButton('Join BastionSiegeAssist Support Group', getSupportGroupLink())
-] as any, {columns: 1}))
+], {columns: 1}))
 
 bot.command('assumed', sendAssumed)
 
-async function sendAssumed(ctx: TelegrafContext): Promise<void> {
-  const session = (ctx as any).session as Session
-  const information = session.gameInformation
+async function sendAssumed(ctx: Context): Promise<void> {
+  const information = ctx.session.gameInformation
 
   if (!information.resourcesTimestamp) {
     await ctx.replyWithMarkdown(prefix + 'Please forward me a screen from the game showing your current resources first.')
@@ -33,8 +32,7 @@ async function sendAssumed(ctx: TelegrafContext): Promise<void> {
 
 bot.action('assumed', async ctx => {
   try {
-    const session = (ctx as any).session as Session
-    const newStats = prefix + generateText(session.gameInformation)
+    const newStats = prefix + generateText(ctx.session.gameInformation)
     const oldStats = ctx.callbackQuery!.message!.text!
 
     if (compareStrAsSimpleOne(newStats, oldStats) === 0) {

@@ -1,8 +1,9 @@
+import {BattleSolo, BattleAlliance} from 'bastion-siege-logic'
 import {Composer, Extra, Markup, Telegram} from 'telegraf'
-import {Gamescreen, BattleSolo, BattleAlliance} from 'bastion-siege-logic'
+import {ExtraReplyMessage} from 'telegraf/typings/telegram-types'
 import {InlineKeyboardButton} from 'telegraf/typings/markup'
 
-import {Session, War, WarNotificationMessage} from '../lib/types'
+import {Context, War, WarNotificationMessage} from '../lib/types'
 
 import * as playerStatsDb from '../lib/data/playerstats-db'
 import * as poweruser from '../lib/data/poweruser'
@@ -16,14 +17,13 @@ import {createWarOneLineString} from '../lib/user-interface/war-stats'
 import {emoji} from '../lib/user-interface/output-text'
 import {formatNumberShort} from '../lib/user-interface/format-number'
 
-export const bot = new Composer()
+export const bot = new Composer<Context>()
 
-bot.on('text', whenScreenIsOfType('war', async (ctx: any) => {
-  const {timeZone, gameInformation} = ctx.session as Session
-  const screen = ctx.state.screen as Gamescreen
-  const {domainStats, battle, timestamp} = screen
+bot.on('text', whenScreenIsOfType('war', async ctx => {
+  const {timeZone, gameInformation} = ctx.session
+  const {domainStats, battle, timestamp} = ctx.state.screen
   let text = `*${ctx.i18n.t('bs.war')}*\n`
-  let extra = Extra.markdown()
+  const extra: ExtraReplyMessage = {parse_mode: 'Markdown'}
 
   const statsStrings = []
   statsStrings.push(formatNumberShort(domainStats!.wins, true) + emoji.wins)
@@ -44,11 +44,9 @@ bot.on('text', whenScreenIsOfType('war', async (ctx: any) => {
     if (isBattleSolo(battle)) {
       const stats = playerStatsDb.get(battle.enemy.name)
       text += createPlayerStatsString(stats, timeZone || 'UTC')
-      extra = extra.markup(
-        Markup.inlineKeyboard([
-          createPlayerShareButton(stats) as any
-        ])
-      ) as any
+      extra.reply_markup = Markup.inlineKeyboard([
+        createPlayerShareButton(stats)
+      ])
     } else {
       text += createWarOneLineString(battle)
       text += '\n'
@@ -92,9 +90,7 @@ bot.on('text', whenScreenIsOfType('war', async (ctx: any) => {
         Markup.switchToChatButton('Share War…', 'war')
       ])
 
-      extra = extra.markup(
-        Markup.inlineKeyboard(buttons as any)
-      ) as any
+      extra.reply_markup = Markup.inlineKeyboard(buttons)
     }
   }
 
@@ -102,16 +98,15 @@ bot.on('text', whenScreenIsOfType('war', async (ctx: any) => {
 }))
 
 function isBattleSolo(battle: BattleSolo | BattleAlliance): battle is BattleSolo {
-  return Boolean((battle as any).enemy)
+  return 'enemy' in battle
 }
 
 bot.action('war-notify-alliance', async ctx => {
   const now = Date.now() / 1000
-  const {gameInformation} = (ctx as any).session as Session
-  const {player} = gameInformation
+  const {player} = ctx.session.gameInformation
 
   if (!player || !player.alliance) {
-    await ctx.answerCbQuery((ctx as any).i18n.t('name.need'))
+    await ctx.answerCbQuery(ctx.i18n.t('name.need'))
     return
   }
 

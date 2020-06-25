@@ -1,4 +1,4 @@
-import {Battlereport} from 'bastion-siege-logic'
+import {BattlereportRaw} from 'bastion-siege-logic'
 import I18n from 'telegraf-i18n'
 
 import {BattleStats} from '../types'
@@ -58,7 +58,7 @@ function createBattleStatsStringPerAlliance(rewards: GroupedSumAverageAmount, ti
   return text
 }
 
-export function createSingleBattleShortStatsLine(report: Battlereport): string {
+export function createSingleBattleShortStatsLine(report: BattlereportRaw): string {
   const {attack, won, terra, gold, gems, karma, soldiersAlive, soldiersTotal} = report
   let text = ''
 
@@ -89,7 +89,7 @@ export function createSingleBattleShortStatsLine(report: Battlereport): string {
   return text
 }
 
-export function createSingleAllianceBattleShortStatsLine(report: Battlereport): string {
+export function createSingleAllianceBattleShortStatsLine(report: BattlereportRaw): string {
   const {won, friends, gold} = report
   let text = ''
 

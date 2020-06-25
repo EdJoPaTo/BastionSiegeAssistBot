@@ -41,7 +41,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 bot.use(async (ctx, next) => {
   try {
-    await next?.()
+    await next()
   } catch (error) {
     if (error.message.includes('Too Many Requests')) {
       console.warn('Telegraf Too Many Requests error. Skip.', error)
@@ -89,7 +89,7 @@ bot.use(async (ctx, next) => {
     delete ctx.session.__username
   }
 
-  await next?.()
+  await next()
 })
 
 // Fix previous bot problems

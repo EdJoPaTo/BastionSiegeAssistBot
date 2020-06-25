@@ -16,7 +16,7 @@ import {createAlertAtTimestamp} from '../javascript-abstraction/alert'
 
 import {ONE_HOUR_IN_SECONDS} from '../math/unix-timestamp'
 
-import {Alert, Session} from '../types'
+import {Alert, Session, Context} from '../types'
 
 import {emoji} from './output-text'
 import {
@@ -39,13 +39,13 @@ const i18n = new I18n({
   defaultLanguage: 'en'
 })
 
-function asContext(language: string | undefined): {i18n: any} {
+function asContext(language: string | undefined): {i18n: I18n} {
   return {
-    i18n: i18n.createContext(language || 'en', {})
+    i18n: i18n.createContext(language || 'en', {}) as any
   }
 }
 
-export function getAlertText(ctx: any, alertKey: Alert): string {
+export function getAlertText(ctx: Context, alertKey: Alert): string {
   const e = emoji[alertKey]
   const l = ctx.i18n.t('alert.' + alertKey + '.name')
   return `${e} ${l}`
@@ -107,7 +107,7 @@ export class AlertHandler {
         .map((o): EventEntry => ({
           type: 'buildingUpgrade',
           timestamp: o.timestamp,
-          text: i18n.t(language, 'alert.buildingUpgrade.upcoming', {name: getBuildingText(asContext(language), o.name)})
+          text: i18n.t(language, 'alert.buildingUpgrade.upcoming', {name: getBuildingText(asContext(language) as any, o.name)})
         }))
       eventList.push(...buildingUpgradeEvents)
 

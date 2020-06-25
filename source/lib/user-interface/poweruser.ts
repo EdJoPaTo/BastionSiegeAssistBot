@@ -1,10 +1,8 @@
-import I18n from 'telegraf-i18n'
-
-import {PoweruserCondition, PoweruserConditionType} from '../types'
+import {PoweruserCondition, PoweruserConditionType, Context} from '../types'
 
 import {emoji} from './output-text'
 
-export function getHintStrings(ctx: any, conditions: readonly PoweruserCondition[]): string[] {
+export function getHintStrings(ctx: Context, conditions: readonly PoweruserCondition[]): string[] {
   const hints = []
 
   hints.push(createHintText(
@@ -55,16 +53,15 @@ export function conditionEmoji(condition: PoweruserCondition): string {
   return emoji.warning
 }
 
-export function conditionTypeTranslation(ctx: any, type: PoweruserConditionType): string {
-  const i18n = ctx.i18n as I18n
+export function conditionTypeTranslation(ctx: Context, type: PoweruserConditionType): string {
   switch (type) {
     case 'battlereports':
-      return i18n.t('battlereports')
+      return ctx.i18n.t('battlereports')
     case 'name':
-      return i18n.t('name.nameAndAlliance')
+      return ctx.i18n.t('name.nameAndAlliance')
     case 'buildings':
     case 'workshop':
-      return i18n.t('bs.' + type)
+      return ctx.i18n.t('bs.' + type)
     default:
       return type
   }

@@ -218,5 +218,5 @@ bot.use(menuMiddleware)
 
 const debouncedBuildStats = new ContextAwareDebounce(async (ctx: Context) => menuMiddleware.replyToContext(ctx), DEBOUNCE_TIME)
 bot.on('text', whenScreenContainsInformation(['buildings', 'resources', 'workshop'], ctx => {
-  debouncedBuildStats.callFloating(ctx.from!.id, ctx)
+  debouncedBuildStats.callFloating(ctx.from.id, ctx)
 }))

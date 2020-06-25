@@ -22,7 +22,7 @@ export function getStdDeviation(numbers: readonly number[], average: number, dis
 }
 
 export function getSumAverageAmount(numbers: ReadonlyArray<number | null | undefined>): SumAverageAmount {
-  const validNumbers = numbers.filter(o => o !== undefined && o !== null && Number.isFinite(o)) as number[]
+  const validNumbers = numbers.filter((o): o is number => o !== undefined && o !== null && Number.isFinite(o))
   const sum = validNumbers.reduce((a, b) => a + b, 0)
   const amount = validNumbers.length
   const avg = sum / amount

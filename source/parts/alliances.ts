@@ -3,7 +3,7 @@ import arrayReduceGroupBy from 'array-reduce-group-by'
 
 import {sortBy} from '../lib/javascript-abstraction/array'
 
-import {PlayerStats} from '../lib/types'
+import {PlayerStats, Context} from '../lib/types'
 
 import * as playerStatsDb from '../lib/data/playerstats-db'
 import * as poweruser from '../lib/data/poweruser'
@@ -12,11 +12,11 @@ import {filterMaxDays} from '../lib/math/unix-timestamp'
 
 import {createMultipleStatsConclusion} from '../lib/user-interface/player-stats'
 
-export const bot = new Composer()
+export const bot = new Composer<Context>()
 
-bot.command('alliances', async (ctx: any) => {
+bot.command('alliances', async ctx => {
   let text = `*${ctx.i18n.t('bs.alliance')}*\n`
-  if (!poweruser.isPoweruser(ctx.from.id)) {
+  if (!poweruser.isPoweruser(ctx.from!.id)) {
     text += ctx.i18n.t('poweruser.usefulWhen')
     await ctx.replyWithMarkdown(text)
     return

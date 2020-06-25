@@ -1,7 +1,8 @@
+import {calcSemitotalGold, calcRecoveryMissingPeople, calcWallRepairCost, calcWallArcherCapacity, BattlereportRaw} from 'bastion-siege-logic'
 import {Composer, Extra, Markup} from 'telegraf'
-import {calcSemitotalGold, calcRecoveryMissingPeople, calcWallRepairCost, calcWallArcherCapacity, Battlereport} from 'bastion-siege-logic'
+import {ExtraReplyMessage} from 'telegraf/typings/telegram-types'
 
-import {Session} from '../lib/types'
+import {Context} from '../lib/types'
 
 import * as playerStatsDb from '../lib/data/playerstats-db'
 import {isImmune, getReportsTodayAmount} from '../lib/data/poweruser'
@@ -19,30 +20,29 @@ import {getSupportGroupLink} from '../lib/user-interface/support-group'
 const MAX_AGE_BUILDINGS = ONE_DAY_IN_SECONDS // 24h
 const MAX_AGE_REPORT_FOR_STATS = ONE_DAY_IN_SECONDS * 2 // 2 days
 
-export const bot = new Composer()
+export const bot = new Composer<Context>()
 
-bot.on('text', whenScreenContainsInformation('battlereport', async (ctx: any) => {
-  const report = ctx.state.screen.battlereport as Battlereport
+bot.on('text', whenScreenContainsInformation('battlereport', async ctx => {
+  const report = ctx.state.screen.battlereport!
   const {timestamp} = ctx.state.screen
-  const isNew = ctx.state.isNewBattlereport
+  const isNew = Boolean(ctx.state.isNewBattlereport)
 
   const {text, extra} = await generateResponseText(ctx, report, timestamp, isNew)
 
   await ctx.reply(text, extra)
 }))
 
-function applyReportToGameInformation(ctx: any, report: Battlereport, timestamp: number, isNew: boolean): void {
-  const session = ctx.session as Session
+function applyReportToGameInformation(ctx: Context, report: BattlereportRaw, timestamp: number, isNew: boolean): void {
   const {
     attack, enemies, friends, gold, soldiersAlive, soldiersTotal, karma, terra, won
   } = report
   const soldiersLost = soldiersTotal - soldiersAlive
-  const soldiersLostResult = calcRecoveryMissingPeople(session.gameInformation.buildings! || {}, soldiersLost)
+  const soldiersLostResult = calcRecoveryMissingPeople(ctx.session.gameInformation.buildings! || {}, soldiersLost)
 
   if (isNew) {
-    if (session.gameInformation.resources && session.gameInformation.resourcesTimestamp && timestamp > session.gameInformation.resourcesTimestamp) {
-      let newGold = session.gameInformation.resources.gold
-      let newFood = session.gameInformation.resources.food
+    if (ctx.session.gameInformation.resources && ctx.session.gameInformation.resourcesTimestamp && timestamp > ctx.session.gameInformation.resourcesTimestamp) {
+      let newGold = ctx.session.gameInformation.resources.gold
+      let newFood = ctx.session.gameInformation.resources.food
       newGold += gold
 
       if (Number.isFinite(soldiersLostResult.gold)) {
@@ -53,36 +53,35 @@ function applyReportToGameInformation(ctx: any, report: Battlereport, timestamp:
         newFood -= soldiersTotal // 1 food per send soldier required to start war
       }
 
-      session.gameInformation.resources = {
-        ...session.gameInformation.resources,
+      ctx.session.gameInformation.resources = {
+        ...ctx.session.gameInformation.resources,
         gold: Math.max(newGold, 0),
         food: Math.max(newFood, 0)
       }
     }
 
-    if (session.gameInformation.domainStats && session.gameInformation.domainStatsTimestamp && timestamp > session.gameInformation.domainStatsTimestamp) {
-      session.gameInformation.domainStats = {
-        karma: session.gameInformation.domainStats.karma + (karma ?? 0),
-        terra: session.gameInformation.domainStats.terra + (terra ?? 0),
-        wins: session.gameInformation.domainStats.wins + (won ? 1 : 0)
+    if (ctx.session.gameInformation.domainStats && ctx.session.gameInformation.domainStatsTimestamp && timestamp > ctx.session.gameInformation.domainStatsTimestamp) {
+      ctx.session.gameInformation.domainStats = {
+        karma: ctx.session.gameInformation.domainStats.karma + (karma ?? 0),
+        terra: ctx.session.gameInformation.domainStats.terra + (terra ?? 0),
+        wins: ctx.session.gameInformation.domainStats.wins + (won ? 1 : 0)
       }
     }
   }
 
   if (attack) {
     const timestampType = (friends.length > 1 || enemies.length > 1) ? 'battleAllianceTimestamp' : 'battleSoloTimestamp'
-    session.gameInformation[timestampType] = Math.max(session.gameInformation[timestampType] || 0, timestamp)
+    ctx.session.gameInformation[timestampType] = Math.max(ctx.session.gameInformation[timestampType] || 0, timestamp)
   }
 }
 
-async function generateResponseText(ctx: any, report: Battlereport, timestamp: number, isNew: boolean): Promise<{text: string; extra: any}> {
-  const session = ctx.session as Session
-  const {buildings} = session.gameInformation
+async function generateResponseText(ctx: Context, report: BattlereportRaw, timestamp: number, isNew: boolean): Promise<{text: string; extra: ExtraReplyMessage}> {
+  const {buildings} = ctx.session.gameInformation
 
   let text = '*Battlereport*'
   const baseExtra = Extra
     .markdown()
-    .inReplyTo(ctx.message.message_id)
+    .inReplyTo(ctx.message!.message_id)
 
   try {
     if (!report) {
@@ -103,7 +102,7 @@ async function generateResponseText(ctx: any, report: Battlereport, timestamp: n
     const buttons = [...attackerStats, ...defenderStats]
       .filter(o => !isImmune(o.player))
       .map(o => createPlayerShareButton(o))
-    const markup = Markup.inlineKeyboard(buttons as any[], {columns: 2})
+    const markup = Markup.inlineKeyboard(buttons, {columns: 2})
 
     text += '\n'
     text += createSingleBattleShortStatsLine(report)
@@ -114,10 +113,10 @@ async function generateResponseText(ctx: any, report: Battlereport, timestamp: n
       text += '\n\n'
     }
 
-    const expectedPlayer = session.gameInformation.player
+    const expectedPlayer = ctx.session.gameInformation.player
     const expectedName = expectedPlayer?.name
 
-    if (session.gameInformation.buildingsTimestamp && buildings && (Date.now() / 1000) - MAX_AGE_BUILDINGS < session.gameInformation.buildingsTimestamp) {
+    if (ctx.session.gameInformation.buildingsTimestamp && buildings && (Date.now() / 1000) - MAX_AGE_BUILDINGS < ctx.session.gameInformation.buildingsTimestamp) {
       const {soldiersAlive, soldiersTotal} = report
       const soldiersLost = soldiersTotal - soldiersAlive
       if (soldiersLost > 0) {
@@ -158,7 +157,7 @@ async function generateResponseText(ctx: any, report: Battlereport, timestamp: n
     }
 
     text += '\n'
-    const reportsToday = getReportsTodayAmount(ctx.from.id)
+    const reportsToday = getReportsTodayAmount(ctx.from!.id)
     const requiredReports = 10
     text += `📅 ${reportsToday} / ${requiredReports}${emoji.battlereport}`
 
@@ -171,7 +170,7 @@ async function generateResponseText(ctx: any, report: Battlereport, timestamp: n
     }
 
     if ((Date.now() / 1000) - MAX_AGE_REPORT_FOR_STATS < timestamp) {
-      const statsString = allianceBattle ? createTwoSidesStatsString(attackerStats, defenderStats, {}, {}) : createPlayerStatsString(enemyStats[0], session.timeZone || 'UTC')
+      const statsString = allianceBattle ? createTwoSidesStatsString(attackerStats, defenderStats, {}, {}) : createPlayerStatsString(enemyStats[0], ctx.session.timeZone || 'UTC')
       text += '\n\n' + statsString
     }
 
