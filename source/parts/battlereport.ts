@@ -40,7 +40,7 @@ function applyReportToGameInformation(ctx: Context, report: BattlereportRaw, tim
   const soldiersLostResult = calcRecoveryMissingPeople(ctx.session.gameInformation.buildings! || {}, soldiersLost)
 
   if (isNew) {
-    if (ctx.session.gameInformation.resources && ctx.session.gameInformation.resourcesTimestamp && timestamp > ctx.session.gameInformation.resourcesTimestamp) {
+    if (ctx.session.gameInformation.resources && timestamp > ctx.session.gameInformation.resourcesTimestamp!) {
       let newGold = ctx.session.gameInformation.resources.gold
       let newFood = ctx.session.gameInformation.resources.food
       newGold += gold
@@ -60,7 +60,7 @@ function applyReportToGameInformation(ctx: Context, report: BattlereportRaw, tim
       }
     }
 
-    if (ctx.session.gameInformation.domainStats && ctx.session.gameInformation.domainStatsTimestamp && timestamp > ctx.session.gameInformation.domainStatsTimestamp) {
+    if (ctx.session.gameInformation.domainStats && timestamp > ctx.session.gameInformation.domainStatsTimestamp!) {
       ctx.session.gameInformation.domainStats = {
         karma: ctx.session.gameInformation.domainStats.karma + (karma ?? 0),
         terra: ctx.session.gameInformation.domainStats.terra + (terra ?? 0),
@@ -76,6 +76,7 @@ function applyReportToGameInformation(ctx: Context, report: BattlereportRaw, tim
 }
 
 async function generateResponseText(ctx: Context, report: BattlereportRaw, timestamp: number, isNew: boolean): Promise<{text: string; extra: ExtraReplyMessage}> {
+  const now = Date.now() / 1000
   const {buildings} = ctx.session.gameInformation
 
   let text = '*Battlereport*'
@@ -116,7 +117,7 @@ async function generateResponseText(ctx: Context, report: BattlereportRaw, times
     const expectedPlayer = ctx.session.gameInformation.player
     const expectedName = expectedPlayer?.name
 
-    if (ctx.session.gameInformation.buildingsTimestamp && buildings && (Date.now() / 1000) - MAX_AGE_BUILDINGS < ctx.session.gameInformation.buildingsTimestamp) {
+    if (buildings && now - MAX_AGE_BUILDINGS < ctx.session.gameInformation.buildingsTimestamp!) {
       const {soldiersAlive, soldiersTotal} = report
       const soldiersLost = soldiersTotal - soldiersAlive
       if (soldiersLost > 0) {

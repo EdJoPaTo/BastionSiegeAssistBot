@@ -43,10 +43,10 @@ bot.on('inline_query', async ctx => {
   const statics: InlineQueryResult[] = []
   const user = session.gameInformation.player!
   if (isPoweruser) {
-    const {timestamp, battle} = wars.getCurrent(now, user.name) || {}
-    if (timestamp && battle) {
+    const war = wars.getCurrent(now, user.name)
+    if (war) {
       let message_text = ''
-      message_text += createWarStats(now, battle, user)
+      message_text += createWarStats(now, war.battle, user)
       message_text += '\n\n'
       message_text += ctx.i18n.t('battle.inlineWar.info')
 
@@ -54,7 +54,7 @@ bot.on('inline_query', async ctx => {
         type: 'article',
         id: 'war',
         title: emoji.war + emoji.poweruser + ' War',
-        description: createWarOneLineString(battle),
+        description: createWarOneLineString(war.battle),
         input_message_content: {
           message_text,
           parse_mode: 'markdown'
