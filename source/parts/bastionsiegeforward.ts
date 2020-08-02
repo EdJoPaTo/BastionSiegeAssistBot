@@ -45,7 +45,7 @@ const WANTED_DATA: ReadonlyArray<keyof PlayerHistory> = [
 
 // Save some gameInformation to session or ignore when already known
 bot.on('text', Composer.optional<Context>(isForwardedFromBastionSiege, async (ctx, next) => {
-  const newInformation = ctx.state!.screen
+  const newInformation = ctx.state!.screen!
   const {timestamp} = newInformation
 
   const dataAvailable = WANTED_DATA

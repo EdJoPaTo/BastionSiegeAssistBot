@@ -20,5 +20,5 @@ export * from './war'
 export interface Context extends TelegrafContext {
   readonly i18n: I18n;
   readonly session: Session;
-  readonly state?: AnalysedGamescreen;
+  readonly state?: Partial<AnalysedGamescreen>;
 }

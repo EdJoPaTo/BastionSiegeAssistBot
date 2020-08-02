@@ -72,7 +72,7 @@ bot.on('text', whenScreenContainsInformation('castleSiegeEnds', notNewMiddleware
 
 const debounceUpdatedCastle = new ContextAwareDebounce<number, (ctx: Context) => Promise<void>>(async (ctx: Context) => {
   const now = Date.now() / 1000
-  const {castle, castleSiegePlayerJoined} = ctx.state!.screen
+  const {castle, castleSiegePlayerJoined} = ctx.state!.screen!
   if (castle) {
     await castleSiege.updateInlineMessages(castle, castleSiegePlayerJoined?.alliance, now)
   }
