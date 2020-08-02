@@ -73,7 +73,7 @@ export function createBuildingTimeStatsString(buildingName: ConstructionName, bu
   if (cost.gold > goldCapacity) {
     const minTownhall = calcTownhallLevelNeededForUpgrade(buildingName, buildings[buildingName] + 1)
     const townhallDiff = minTownhall - buildings.townhall
-    text += `⚠️ townhall (gold capacity) +${townhallDiff} needed`
+    text += `⚠️ townhall +${townhallDiff} needed`
     return text
   }
 
