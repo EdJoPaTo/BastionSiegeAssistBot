@@ -1,4 +1,3 @@
-import {Context as TelegrafContext} from 'telegraf'
 import arrayReduceGroupBy from 'array-reduce-group-by'
 import LocalSession from 'telegraf-session-local'
 
@@ -20,10 +19,10 @@ const localSession = new LocalSession({
   database: 'persist/sessions.json',
   // Format of storage/database (default: JSON.stringify / JSON.parse)
   format: {
-    serialize: (obj: any) => JSON.stringify(obj, undefined, '\t'),
-    deserialize: (str: string) => JSON.parse(str)
+    serialize: object => JSON.stringify(object, undefined, '\t'),
+    deserialize: string => JSON.parse(string)
   },
-  getSessionKey: (ctx: TelegrafContext) => `${ctx.from!.id}:${ctx.from!.id}`
+  getSessionKey: ctx => `${ctx.from!.id}:${ctx.from!.id}`
 })
 
 export function getRaw(): readonly SessionRaw[] {
