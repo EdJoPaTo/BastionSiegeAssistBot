@@ -27,7 +27,7 @@ function tzInPrefix(ctx: Context): string[] {
   const prefix = ctx.match![1]
   return tzNormal
     .filter(o => o[0] === prefix)
-    .map(o => o.slice(1).join('/'))
+    .map(o => o.slice(1).join(':'))
     .sort((a, b) => a.localeCompare(b, locale === 'wikidatanish' ? 'en' : locale))
 }
 
@@ -102,7 +102,8 @@ specificMenu.manualRow(backButtons)
 menu.manualRow(backButtons)
 
 function createTz(match: RegExpMatchArray | undefined | null, key: string): string {
-  const prefix = match?.[1]
-  const tz = prefix ? `${prefix}/${key}` : key
+  const region = match?.[1]
+  const area = key.replace(/:/g, '/')
+  const tz = region ? `${region}/${area}` : area
   return tz
 }
