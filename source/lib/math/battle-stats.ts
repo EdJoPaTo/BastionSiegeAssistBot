@@ -11,7 +11,7 @@ export function generate(battlereports: readonly Battlereport[], valueSelector: 
     .filter(o => !o.enemyMystic)
 
   return {
-    reward: getSumAverageAmount(battlesWithoutDragonAndUndead.map(valueSelector)),
+    reward: getSumAverageAmount(battlesWithoutDragonAndUndead.map(o => valueSelector(o))),
     rewardAttackWon: generatePerAlliance(battlesWithoutDragonAndUndead.filter(o => o.attack && o.won), valueSelector),
     rewardAttackLost: generatePerAlliance(battlesWithoutDragonAndUndead.filter(o => o.attack && !o.won), valueSelector),
     rewardDefenseWon: generatePerAlliance(battlesWithoutDragonAndUndead.filter(o => !o.attack && o.won), valueSelector),

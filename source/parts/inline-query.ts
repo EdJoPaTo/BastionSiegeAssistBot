@@ -41,8 +41,8 @@ bot.on('inline_query', async ctx => {
   const isPoweruser = poweruser.isPoweruser(ctx.from!.id)
 
   const statics: InlineQueryResult[] = []
-  const user = session.gameInformation.player!
-  if (isPoweruser) {
+  const user = session.gameInformation.player
+  if (isPoweruser && user?.alliance) {
     const war = wars.getCurrent(now, user.name)
     if (war) {
       let message_text = ''

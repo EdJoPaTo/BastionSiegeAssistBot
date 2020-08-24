@@ -116,6 +116,7 @@ export function createRanking(data: any[], key: string, title: string): string {
       return o
     })
     .map(o => {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       const prefix = `${o.rank}. ${o.nameMarkdown}`
 
       if (Number.isFinite(o[key])) {

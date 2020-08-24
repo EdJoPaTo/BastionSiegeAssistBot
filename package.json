@@ -79,13 +79,11 @@
     "semicolon": false,
     "rules": {
       "ava/no-ignored-test-files": "off",
-      "unicorn/no-fn-reference-in-iterator": "off",
       "unicorn/no-reduce": "off",
       "unicorn/prevent-abbreviations": "off",
       "@typescript-eslint/no-invalid-void-type": "off",
       "@typescript-eslint/no-var-requires": "warn",
-      "@typescript-eslint/prefer-nullish-coalescing": "off",
-      "@typescript-eslint/restrict-template-expressions": "off"
+      "@typescript-eslint/prefer-nullish-coalescing": "off"
     }
   }
 }
