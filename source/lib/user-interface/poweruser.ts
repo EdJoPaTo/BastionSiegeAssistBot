@@ -6,19 +6,19 @@ export function getHintStrings(ctx: Context, conditions: readonly PoweruserCondi
   const hints = []
 
   hints.push(createHintText(
-    conditions.filter(o => o.type === 'name')[0],
+    conditions.find(o => o.type === 'name'),
     `${ctx.i18n.t('poweruser.nameOld')} ${ctx.i18n.t('name.update')}`,
     ctx.i18n.t('poweruser.nearlyOld')
   ))
 
   hints.push(createHintText(
-    conditions.filter(o => o.type === 'buildings')[0],
+    conditions.find(o => o.type === 'buildings'),
     ctx.i18n.t('poweruser.buildingsOld'),
     ctx.i18n.t('poweruser.nearlyOld')
   ))
 
   hints.push(createHintText(
-    conditions.filter(o => o.type === 'workshop')[0],
+    conditions.find(o => o.type === 'workshop'),
     ctx.i18n.t('poweruser.workshopOld'),
     ctx.i18n.t('poweruser.nearlyOld')
   ))
@@ -27,8 +27,8 @@ export function getHintStrings(ctx: Context, conditions: readonly PoweruserCondi
     .filter((o): o is string => Boolean(o))
 }
 
-function createHintText(condition: PoweruserCondition, badText: string, additionalWarningText: string): string | undefined {
-  if (condition.status && !condition.warning) {
+function createHintText(condition: PoweruserCondition | undefined, badText: string, additionalWarningText: string): string | undefined {
+  if (!condition || (condition.status && !condition.warning)) {
     return
   }
 

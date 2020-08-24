@@ -52,7 +52,7 @@ async function addInternal(timestamp: number, battle: BattleAlliance, initial = 
   const content = data.get() || []
 
   const replaces: War | undefined = content
-    .filter(o => o.battle.attack[0] === battle.attack[0] && o.battle.defence[0] === battle.defence[0])[0]
+    .find(o => o.battle.attack[0] === battle.attack[0] && o.battle.defence[0] === battle.defence[0])
 
   if (!replaces) {
     content.push({

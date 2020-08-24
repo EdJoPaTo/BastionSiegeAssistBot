@@ -271,7 +271,7 @@ function createMultipleStatsPlayerList(statsArray: readonly PlayerStats[], playe
 export function createMultipleStatsConclusion(statsArr: readonly PlayerStats[], playerArmyOverride: Record<string, number> = {}): MultipleStatsConclusion {
   const alliance = statsArr
     .map(o => o.alliance)
-    .filter(o => o)[0] || '❓'
+    .find(o => o) || '❓'
 
   const armyArr = statsArr
     .map(o => {
