@@ -51,8 +51,8 @@ export function createSvgString(minUnixTimestamp: number, options: Options, ...s
     .range([height - margin.bottom, margin.top])
 
   const line = d3.line()
-    .x(d => x((d as any).timestamp))
-    .y(d => y((d as any).value))
+    .x(d => x((d as any).timestamp)!)
+    .y(d => y((d as any).value)!)
 
   const svg = d3n.createSVG(width, height)
 
