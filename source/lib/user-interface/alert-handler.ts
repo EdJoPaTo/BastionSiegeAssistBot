@@ -59,7 +59,8 @@ export class AlertHandler {
   ) {}
 
   generateUpcomingEventsList(session: Session, now: number): EventEntry[] {
-    const {buildings: buildingsToShowSession, gameInformation, __language_code: language} = session || {gameInformation: {}}
+    const {buildings: buildingsToShowSession, gameInformation} = session
+    const language = session.__language_code ?? 'en'
     const eventList: EventEntry[] = []
 
     const {battleSoloTimestamp, battleAllianceTimestamp, domainStats} = gameInformation
