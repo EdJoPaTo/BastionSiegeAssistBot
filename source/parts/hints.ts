@@ -26,6 +26,7 @@ bot.on('text', async (ctx, next) => {
   }
 
   const hints = [
+    ctx.i18n.t('help.gameIsDead'),
     ...poweruserHints.map(o => POWERUSER_HINT_PREFIX + o)
   ]
   if (hints.length > 0) {

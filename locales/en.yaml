@@ -202,6 +202,22 @@ upcoming:
   noevents: There are no upcoming events…
   update: Update
 help:
+  gameIsDead: >
+    Hey! Sad news…
+
+    Looks like Bastion Siege 1 one is about to end.
+    It was fun to create this assist bot and I learned a lot.
+    It was also fun to play with you all.
+    But that time will come to an end.
+
+
+    Because of that BSA will soon also stop to work.
+
+
+    If you like, say "hello" or "thank you all it was fun" in the @BSASupport group.
+    Or for good measure: blame someone as a spy.
+
+    And if my server turns out to have some different, interesting BS1 alternative running: I will also share it there. 😏
   joinBSAGroupButton: Join BastionSiegeAssist Support Group
   short: >
     Hey! o/
