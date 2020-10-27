@@ -1,5 +1,5 @@
 import {Context as TelegrafContext} from 'telegraf'
-import {I18n} from 'telegraf-i18n'
+import {I18nContext} from '@edjopato/telegraf-i18n'
 
 import {AnalysedGamescreen} from '../data/ingame/parse'
 
@@ -18,7 +18,7 @@ export * from './session'
 export * from './war'
 
 export interface Context extends TelegrafContext {
-  readonly i18n: I18n;
+  readonly i18n: I18nContext;
   readonly session: Session;
   readonly state?: Partial<AnalysedGamescreen>;
 }

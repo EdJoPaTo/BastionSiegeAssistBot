@@ -1,5 +1,6 @@
 import test from 'ava'
-import I18n from 'telegraf-i18n'
+
+import {I18n} from '@edjopato/telegraf-i18n'
 
 const i18n = new I18n({
   directory: 'locales'

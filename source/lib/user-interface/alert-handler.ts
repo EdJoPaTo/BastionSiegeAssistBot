@@ -1,5 +1,5 @@
 import {Extra, Markup, Telegram} from 'telegraf'
-import I18n from 'telegraf-i18n'
+import {I18n, I18nContext} from '@edjopato/telegraf-i18n'
 
 import {
   CONSTRUCTIONS,
@@ -39,7 +39,7 @@ const i18n = new I18n({
   defaultLanguage: 'en'
 })
 
-function asContext(language: string | undefined): {i18n: I18n} {
+function asContext(language: string | undefined): {i18n: I18nContext} {
   return {
     i18n: i18n.createContext(language || 'en', {}) as any
   }

@@ -1,6 +1,6 @@
 import {Extra, Markup} from 'telegraf'
+import {I18n} from '@edjopato/telegraf-i18n'
 import {MenuTemplate, Body} from 'telegraf-inline-menu'
-import I18n from 'telegraf-i18n'
 
 import {Context} from '../../lib/types'
 

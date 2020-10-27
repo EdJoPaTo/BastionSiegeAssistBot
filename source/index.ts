@@ -1,8 +1,8 @@
 import {existsSync, readFileSync} from 'fs'
 
-import Telegraf, {Extra, Markup} from 'telegraf'
-import I18n from 'telegraf-i18n'
 import {generateUpdateMiddleware} from 'telegraf-middleware-console-time'
+import {I18n} from '@edjopato/telegraf-i18n'
+import Telegraf, {Extra, Markup} from 'telegraf'
 
 import {Context} from './lib/types'
 
