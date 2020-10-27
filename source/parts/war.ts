@@ -156,8 +156,8 @@ async function notifyPlayer(telegram: Telegram, playerName: string, playerId: nu
       player: playerName,
       messageId: notificationMessage.message_id
     }
-  } catch (error) {
-    console.error('failed to send war notification', error.message)
+  } catch (error: unknown) {
+    console.error('failed to send war notification', error instanceof Error ? error.message : error)
     return undefined
   }
 }

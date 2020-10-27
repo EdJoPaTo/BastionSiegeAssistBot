@@ -44,20 +44,20 @@ if (process.env.NODE_ENV !== 'production') {
 bot.use(async (ctx, next) => {
   try {
     await next()
-  } catch (error) {
-    if (error.message.includes('Too Many Requests')) {
+  } catch (error: unknown) {
+    if (error instanceof Error && error.message.includes('Too Many Requests')) {
       console.warn('Telegraf Too Many Requests error. Skip.', error)
       return
     }
 
-    console.error('try to send error to user', ctx.update, error, error?.on?.payload)
+    console.error('try to send error to user', ctx.update, error, (error as any)?.on?.payload)
     let text = '🔥 Something went wrong here!'
     text += '\n'
     text += 'You should join the Support Group and report this error. Let us make this bot even better together. ☺️'
 
     text += '\n'
     text += '\nError: `'
-    text += error.message
+    text += (error instanceof Error ? error.message : String(error))
       .replace(token, '')
     text += '`'
 

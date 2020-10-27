@@ -121,7 +121,7 @@ bot.on('inline_query', async ctx => {
     options.switch_pm_parameter = 'be-a-poweruser'
   }
 
-  if (isPoweruser && query && query.length >= 1) {
+  if (isPoweruser && query && query.length > 0) {
     const allPlayers = playerStatsDb.list()
     const result = await fuzzysort.goAsync(cleanedUpQuery, allPlayers, {
       key: 'playerNameLookingLike'

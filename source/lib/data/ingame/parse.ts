@@ -66,7 +66,7 @@ export async function parseAndSave(providingTgUser: number, time: number, text: 
       screen: content,
       isNewBattlereport
     }
-  } catch (error) {
+  } catch (error: unknown) {
     messages.failed.add(raw)
     throw error
   }

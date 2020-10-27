@@ -23,8 +23,8 @@ bot.action(/inlineList:(\d+):([^:]+):.+/, async (ctx, next) => {
     const {text, keyboard} = createList(creatorId, listId, now)
     await ctx.answerCbQuery()
     await ctx.editMessageText(text, Extra.markdown().markup(keyboard))
-  } catch (error) {
-    if (error.message.startsWith('400: Bad Request: message is not modified')) {
+  } catch (error: unknown) {
+    if (error instanceof Error && error.message.startsWith('400: Bad Request: message is not modified')) {
       return
     }
 

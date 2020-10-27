@@ -179,7 +179,7 @@ async function generateResponseText(ctx: Context, report: BattlereportRaw, times
       extra: baseExtra.markup(markup),
       text
     }
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error while showing added report to user', ctx.update, error)
 
     text += '\nSomething seems fishy here but your report has been saved successfully. 🐟'
@@ -187,7 +187,7 @@ async function generateResponseText(ctx: Context, report: BattlereportRaw, times
 
     text += '\n'
     text += '\nError: `'
-    text += error.message
+    text += (error instanceof Error ? error.message : String(error))
     text += '`'
 
     const keyboard = Markup.inlineKeyboard([

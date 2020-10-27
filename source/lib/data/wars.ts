@@ -28,10 +28,11 @@ async function updateInlineMessage(timestamp: number, battle: BattleAlliance, in
   const {inlineMessageId, player} = inlineMessage
   try {
     await telegram.editMessageText(undefined, undefined, inlineMessageId, createWarStats(timestamp, battle, player), Extra.markdown() as any)
-  } catch (error) {
-    if (error.message.startsWith('400: Bad Request: message is not modified') ||
+  } catch (error: unknown) {
+    if (error instanceof Error && (
+      error.message.startsWith('400: Bad Request: message is not modified') ||
       error.message.includes('400: Bad Request: MESSAGE_ID_INVALID')
-    ) {
+    )) {
       return
     }
 
@@ -43,8 +44,8 @@ async function removeNotification(notification: WarNotificationMessage): Promise
   const {chatId, messageId, player} = notification
   try {
     await telegram.deleteMessage(chatId, messageId)
-  } catch (error) {
-    console.warn('failed to delete notification', chatId, player, error.message)
+  } catch (error: unknown) {
+    console.warn('failed to delete notification', chatId, player, error instanceof Error ? error.message : error)
   }
 }
 

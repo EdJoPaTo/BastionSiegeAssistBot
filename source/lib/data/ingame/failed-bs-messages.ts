@@ -51,7 +51,7 @@ export function writeAllGrouped(): void {
     .reduce(arrayReduceGroupBy(o => {
       try {
         parseGamescreenContent(o.text)
-      } catch (error) {
+      } catch (error: unknown) {
         return error instanceof Error ? error.message : String(error)
       }
 

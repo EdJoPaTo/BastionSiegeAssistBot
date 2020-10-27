@@ -14,11 +14,7 @@ function menuBody(ctx: Context): Body {
   let text = emoji.poweruser + ` *${ctx.i18n.t('poweruser.poweruser')}*\n`
 
   const isPoweruser = poweruser.isPoweruser(ctx.from!.id)
-  if (isPoweruser) {
-    text += `${ctx.i18n.t('poweruser.youare')} 😍\n`
-  } else {
-    text += `${ctx.i18n.t('poweruser.notyet')} 😔\n`
-  }
+  text += isPoweruser ? `${ctx.i18n.t('poweruser.youare')} 😍\n` : `${ctx.i18n.t('poweruser.notyet')} 😔\n`
 
   const conditions = poweruser.getConditions(ctx.from!.id)
   text += conditions

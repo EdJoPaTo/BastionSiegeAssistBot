@@ -205,6 +205,7 @@ function generatePlayerStats(players: string | string[], short: boolean, timeZon
   const {allStats, buttons} = generatePlayerStatsRaw(players)
 
   let text = ''
+  // eslint-disable-next-line unicorn/prefer-ternary
   if (short) {
     text += allStats.map(o => createPlayerStatsSingleLineString(o, undefined, undefined)).join('\n')
   } else {

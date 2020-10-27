@@ -176,11 +176,7 @@ function createHeader(ctx: Context, timeframe: string, isAllianceRelated: boolea
   text += ' '
 
   text += '('
-  if (timeframe === 'all') {
-    text += ctx.i18n.t('battlestats.alltime')
-  } else {
-    text += timeframe
-  }
+  text += timeframe === 'all' ? ctx.i18n.t('battlestats.alltime') : timeframe
 
   text += ')'
 
